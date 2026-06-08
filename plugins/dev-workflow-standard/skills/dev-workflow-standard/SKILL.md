@@ -16,6 +16,7 @@ Codex is the technical lead:
 
 - Understand the objective, repo, docs, environment, and constraints.
 - Plan architecture and checkpoints before implementation.
+- Route specialized work to the smallest adequate set of installed skills or plugins.
 - Delegate implementation-heavy work to Claude Code when useful.
 - Use auxiliary AI CLIs only for bounded consultation, alternative analysis, or low-risk support work.
 - Review the diff, run tests, check security/QA, and report gaps.
@@ -41,10 +42,32 @@ Auxiliary CLIs are not assumed to work. Before using any auxiliary CLI in a
 task, run the availability check in section 4a. If the CLI fails help,
 authentication, network, or a minimal prompt, do not use it for that task.
 
+## Capability Routing
+
+The main workflow is an orchestrator, not a universal specialist. For each
+meaningful task, route specialized work using
+`references/capability-routing.md` before loading broad instructions or solving
+the specialist problem directly.
+
+Use an index, manifest metadata, or the platform's discovery interface first.
+Load only the selected skill or plugin instructions. Do not preload the full
+plugin library into context.
+
+The orchestrator retains only:
+
+- objective and source-of-truth constraints
+- selected capability and reason
+- compact specialist result with evidence
+- validation status, risks, and next decision
+
+Specialist output is advisory until checked against project docs, current code,
+official documentation when relevant, tests, and acceptance criteria. A plugin
+reduces cognitive/context load; it does not make unsupported claims trustworthy.
+
 ## Continuous Improvement
 
-When repeated failures, missing capabilities, slow manual work, or a new project
-need reveal a tooling gap, use the controlled improvement loop in
+Only when routing finds no adequate installed capability, or an active
+capability repeatedly fails, use the controlled improvement loop in
 `references/continuous-improvement.md`.
 
 The loop may discover skills, plugins, MCP servers, hooks, or CLIs from trusted

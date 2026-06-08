@@ -4,8 +4,12 @@ Use this protocol when the workflow repeatedly fails, lacks a capability, wastes
 time on a recurring manual task, or could benefit from a specialized skill,
 plugin, MCP server, hook, agent, or CLI.
 
-The objective is capability improvement with evidence. It is not autonomous
-installation or permission expansion.
+The objective is filling a verified routing gap with evidence. It is not the
+normal task workflow, autonomous installation, or permission expansion.
+
+Before starting this protocol, run capability routing and confirm that no
+installed capability adequately covers the task, or that the selected
+capability has repeatedly failed objective validation.
 
 ## Triggers
 

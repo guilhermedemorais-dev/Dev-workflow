@@ -38,13 +38,40 @@ Responsabilidades:
 - Uso opcional de CLIs auxiliares apos health check.
 - Pesquisa tecnica com codigo local, documentacao oficial, Context7 e `grep.app`.
 - Teste seguro de APIs e webhooks antes de producao.
-- Melhoria continua controlada por descoberta, auditoria, score, teste e rollback.
+- Roteamento sob demanda para plugins e skills especializados.
+- Melhoria controlada apenas quando existe uma lacuna real de capacidade.
 - QA, seguranca, testes e relatorio por camada: Banco, API/Backend e Frontend/UI.
+
+### Orquestrador leve e especialistas sob demanda
+
+O plugin principal nao deve tentar conter ou executar sozinho todo conhecimento
+de arquitetura, backend, frontend, QA, seguranca, DevOps e design. Ele atua como
+orquestrador:
+
+1. Classifica a tarefa.
+2. Consulta apenas o indice ou metadados das skills/plugins instalados.
+3. Seleciona uma ferramenta principal e, normalmente, no maximo uma de apoio.
+4. Envia somente objetivo, arquivos relevantes, restricoes e criterios de aceite.
+5. Exige retorno estruturado com evidencias, validacoes, riscos e incertezas.
+6. Confere as alegacoes no codigo, documentacao oficial, testes ou runtime.
+7. Mantem no contexto apenas a conclusao aceita e descarta o restante.
+
+Isso reduz contexto, consumo de tokens e perda de foco. Tambem diminui
+alucinacoes, mas nao elimina a necessidade de verificacao: plugins continuam
+sendo agentes/ferramentas e podem errar.
+
+O workflow nunca deve carregar todas as skills para decidir qual usar. Quando o
+`skill-router-orchestrator` estiver instalado, ele usa um indice local leve e
+ativa apenas a skill selecionada.
+
+O protocolo completo esta em
+[`capability-routing.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-routing.md).
 
 ### Melhoria continua controlada
 
-O workflow pode pesquisar skills, plugins, MCPs, hooks e ferramentas nas lojas
-e repositorios das plataformas quando identifica uma lacuna real. Exemplos:
+Somente quando o roteamento nao encontra uma ferramenta adequada, ou quando uma
+ferramenta ativa falha repetidamente, o workflow pode pesquisar skills,
+plugins, MCPs, hooks e ferramentas nas lojas e repositorios. Exemplos:
 
 - Erro ou correcao que se repete.
 - Processo manual recriado em varios projetos.
