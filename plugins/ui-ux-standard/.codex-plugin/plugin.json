@@ -1,0 +1,25 @@
+{
+  "name": "ui-ux-standard",
+  "version": "0.1.0+codex.20260608203301",
+  "description": "Reusable UI/UX workflow for design systems, mockups, media prompts, visual assets, accessibility, responsive QA, and frontend visual validation.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "UI/UX Standard",
+    "shortDescription": "Standardize mockups, design systems, assets, accessibility, and visual QA.",
+    "longDescription": "UI/UX Standard gives Codex a repeatable workflow for creating and reviewing product UI: inspect existing design systems, define design tokens, create approved mockups, manage media prompt PRDs, document components, validate accessibility and responsiveness, and verify rendered UI before frontend completion.",
+    "developerName": "Guilherme",
+    "category": "Design",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use UI/UX Standard to create the design plan and mockup workflow for this feature.",
+      "Use UI/UX Standard to initialize docs/design for this project.",
+      "Use UI/UX Standard to review this UI against the approved mockup and design system."
+    ]
+  }
+}

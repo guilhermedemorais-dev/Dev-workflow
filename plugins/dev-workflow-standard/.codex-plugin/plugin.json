@@ -1,0 +1,26 @@
+{
+  "name": "dev-workflow-standard",
+  "version": "0.1.0+codex.20260608204053",
+  "description": "Reusable project development standard for documentation structure, local project instructions, Codex planning, Claude Code implementation delegation, QA, security review, and delivery checkpoints.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Dev Workflow Standard",
+    "shortDescription": "Standardize docs, project instructions, planning, delegation, QA, and delivery.",
+    "longDescription": "Dev Workflow Standard gives Codex a reusable development methodology for any software project: establish project documentation structure, keep repo-local instructions and skills, inspect the environment, define checkpoints, plan architecture, delegate implementation to Claude Code when useful, review diffs, run validation, and report status by Banco, API/Backend, and Frontend/UI.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use Dev Workflow Standard to plan and implement this project with checkpoints.",
+      "Use Dev Workflow Standard to initialize this project's docs and local instruction structure.",
+      "Use Dev Workflow Standard to review this repository and create the next development plan.",
+      "Use Dev Workflow Standard to delegate implementation to Claude Code and then review the diff."
+    ]
+  }
+}
