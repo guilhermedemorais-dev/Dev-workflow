@@ -355,7 +355,13 @@ Validate:
 - no incoherent overlap
 - images/assets render correctly
 
-Use Playwright/browser screenshots when practical and record findings in:
+Use the project's existing Playwright setup when available for repeatable
+browser flows, responsive viewport checks, and screenshots. Use another
+approved browser tool as fallback. Do not mark visual QA complete from static
+code inspection or screenshots alone; interactions, states, accessibility, and
+runtime behavior must also be checked.
+
+Record findings in:
 
 ```text
 docs/design/visual-qa/report-YYYY-MM-DD-feature-name.md

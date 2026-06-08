@@ -9,7 +9,7 @@
       "name": "dev-workflow-standard",
       "source": "./plugins/dev-workflow-standard",
       "description": "Planning, research, implementation governance, controlled improvement, QA, and delivery workflow.",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "category": "development",
       "tags": ["workflow", "planning", "qa", "security", "skills"]
     },
@@ -17,9 +17,17 @@
       "name": "ui-ux-standard",
       "source": "./plugins/ui-ux-standard",
       "description": "Mockup-first UI/UX, design systems, media prompts, accessibility, and visual QA.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "category": "design",
       "tags": ["ui", "ux", "design-system", "mockup", "accessibility"]
+    },
+    {
+      "name": "security-standard",
+      "source": "./plugins/security-standard",
+      "description": "Risk-based AppSec review, threat modeling, validation, remediation, and security release gates.",
+      "version": "0.1.0",
+      "category": "security",
+      "tags": ["security", "appsec", "review", "threat-model", "owasp"]
     }
   ]
 }

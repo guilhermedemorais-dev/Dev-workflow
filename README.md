@@ -1,7 +1,7 @@
 # Dev Workflow
 
 Plugins publicos para padronizar planejamento, pesquisa tecnica,
-desenvolvimento, UI/UX, documentacao, QA e validacao em projetos de software.
+desenvolvimento, UI/UX, seguranca, documentacao, QA e validacao em projetos de software.
 
 O objetivo e manter uma rotina reutilizavel entre projetos sem substituir as
 regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
@@ -20,6 +20,11 @@ plugins/
     .claude-plugin/plugin.json
     plugin.json
     skills/ui-ux-standard/SKILL.md
+  security-standard/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/security-standard/SKILL.md
 ```
 
 Cada plugin mantem uma unica skill canonica e manifestos adaptadores para
@@ -36,11 +41,12 @@ Responsabilidades:
 - Fluxo de PRD, pesquisa, especificacao, implementacao e revisao.
 - Delegacao controlada para Claude Code.
 - Uso opcional de CLIs auxiliares apos health check.
-- Pesquisa tecnica com codigo local, documentacao oficial, Context7 e `grep.app`.
+- Pesquisa tecnica com codigo local, documentacao oficial, Context7, Firecrawl e `grep.app`.
 - Teste seguro de APIs e webhooks antes de producao.
 - Pesquisa e uso de plugins/skills apenas quando faltar uma capacidade real.
 - Criacao de skill/plugin quando a capacidade necessaria nao existir e for reutilizavel.
 - QA, seguranca, testes e relatorio por camada: Banco, API/Backend e Frontend/UI.
+- Validacao de fluxos web e UI com Playwright quando houver ambiente executavel.
 
 ### Plugin principal
 
@@ -130,6 +136,31 @@ documentacao oficial e reduz o risco de implementar APIs obsoletas.
 Exemplos publicos encontrados no `grep.app` nunca devem prevalecer sobre a
 documentacao oficial ou sobre os contratos existentes no projeto.
 
+### Firecrawl
+
+Firecrawl e uma ferramenta opcional para descobrir e extrair conteudo de sites
+publicos quando a documentacao local, oficial e o Context7 nao forem
+suficientes. Ele pode ajudar em documentacao fragmentada, release notes e
+pesquisa estruturada em varias paginas.
+
+O workflow deve preferir buscas e extracoes direcionadas antes de crawls
+amplos, limitar escopo e profundidade e confirmar afirmacoes tecnicas nas
+fontes oficiais. Firecrawl nao e fonte de verdade e sua indisponibilidade nao
+deve bloquear o desenvolvimento normal. Chaves de API ficam somente na
+configuracao local ou em variaveis de ambiente; nunca no repositorio.
+
+### Playwright
+
+Playwright e a ferramenta preferencial para validacao reproduzivel de paginas
+renderizadas e fluxos do usuario quando o projeto possui uma aplicacao web em
+execucao. Ele cobre navegacao, formularios, autenticacao, permissoes, estados de
+loading/empty/error, responsividade, screenshots e fluxos e2e criticos.
+
+O plugin deve reutilizar a configuracao Playwright e o ambiente canonico do
+projeto. Se Playwright estiver indisponivel, pode usar outra ferramenta de
+navegador aprovada, mas deve reportar a validacao de runtime como nao realizada
+quando nenhuma alternativa for executada.
+
 ### APIs e webhooks
 
 Para novas integracoes, o workflow recomenda mocks, ambientes sandbox/staging
@@ -167,6 +198,23 @@ Responsabilidades:
 - PRDs de prompts para imagens e videos.
 - Validacao visual, responsividade, acessibilidade e estados da UI.
 
+## Security Standard
+
+Plugin especializado em seguranca de aplicacoes e integrado ao ciclo principal.
+
+Responsabilidades:
+
+- Revisao de seguranca proporcional ao risco para diffs e pull requests.
+- Auditoria por modulo, integracao ou repositorio com escopo explicito.
+- Threat modeling baseado na arquitetura real do projeto.
+- Validacao de achados para reduzir falsos positivos.
+- Correcao minima, testes de regressao e verificacao de comportamento legitimo.
+- Relatorio por Banco, API/Backend, Frontend/UI, Infra e Supply Chain.
+
+O plugin e uma implementacao original e independente. Ferramentas e plugins de
+terceiros podem ser usados como segunda opiniao, mas seus textos, scripts,
+templates e fluxos proprietarios nao sao copiados ou redistribuidos.
+
 ## Instalacao
 
 ### Codex
@@ -182,6 +230,7 @@ Instalar os plugins:
 ```bash
 codex plugin add dev-workflow-standard@guilherme-dev-workflow
 codex plugin add ui-ux-standard@guilherme-dev-workflow
+codex plugin add security-standard@guilherme-dev-workflow
 ```
 
 ### Claude Code
@@ -197,13 +246,15 @@ Instalar os plugins:
 ```text
 /plugin install dev-workflow-standard@guilherme-dev-workflow
 /plugin install ui-ux-standard@guilherme-dev-workflow
+/plugin install security-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
 
 ```bash
 claude --plugin-dir ./plugins/dev-workflow-standard \
-  --plugin-dir ./plugins/ui-ux-standard
+  --plugin-dir ./plugins/ui-ux-standard \
+  --plugin-dir ./plugins/security-standard
 ```
 
 ### Antigravity
@@ -232,6 +283,7 @@ Copiar para a pasta local de plugins:
 mkdir -p ~/plugins
 cp -a plugins/dev-workflow-standard ~/plugins/
 cp -a plugins/ui-ux-standard ~/plugins/
+cp -a plugins/security-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao
@@ -256,7 +308,11 @@ Use `ui-ux-standard` sempre que a tarefa envolver telas, mockups, design system,
 assets visuais, prompts de imagem/video, responsividade, acessibilidade ou
 validacao visual.
 
+Use `security-standard` para revisoes de seguranca, threat modeling, validacao
+de vulnerabilidades, remediacao e gates de release proporcionais ao risco.
+
 Para conhecer todas as regras, consulte diretamente:
 
 - [`dev-workflow-standard/SKILL.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md)
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)
+- [`security-standard/SKILL.md`](plugins/security-standard/skills/security-standard/SKILL.md)

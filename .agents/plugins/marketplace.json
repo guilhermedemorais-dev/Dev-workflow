@@ -27,6 +27,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Design"
+    },
+    {
+      "name": "security-standard",
+      "source": {
+        "source": "local",
+        "path": "./plugins/security-standard"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Security"
     }
   ]
 }

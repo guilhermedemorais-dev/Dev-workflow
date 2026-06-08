@@ -1,6 +1,6 @@
 {
   "name": "dev-workflow-standard",
-  "version": "0.1.0+codex.20260608213340",
+  "version": "0.1.0+codex.20260608214619",
   "description": "Reusable project development standard for documentation structure, local project instructions, Codex planning, Claude Code implementation delegation, QA, security review, and delivery checkpoints.",
   "author": {
     "name": "Guilherme"

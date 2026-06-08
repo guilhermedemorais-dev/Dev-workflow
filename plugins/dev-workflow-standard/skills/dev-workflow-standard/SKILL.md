@@ -293,6 +293,22 @@ external service:
 4. Prefer official examples, maintained repos, and high-signal code over random snippets.
 5. Record what was accepted, rejected, and why when the decision affects architecture or shared code.
 
+Use Firecrawl only when web content must be discovered or extracted and the
+local project, official documentation, and Context7 do not provide enough
+usable context. Suitable cases include documentation sites with fragmented
+navigation, release-note discovery, multi-page vendor research, and extracting
+structured content from public pages.
+
+Firecrawl rules:
+
+- Treat Firecrawl as a collection tool, not a source of truth.
+- Prefer targeted page fetches before broad crawling.
+- Restrict crawl scope, page count, and depth to the minimum needed.
+- Respect site access rules, licenses, rate limits, and terms of service.
+- Never submit credentials, private URLs, customer data, cookies, or production secrets.
+- Verify technical claims against official/current sources before implementation.
+- If Firecrawl is unavailable, continue with official docs, Context7, direct browser access, or manual research instead of blocking ordinary development.
+
 Rules:
 
 - Local code and project docs outrank public examples.
@@ -327,6 +343,20 @@ landing pages, dashboards, responsiveness, accessibility, or visual QA:
 2. Let `ui-ux-standard` define the design docs, mockup workflow, media prompts, and visual QA criteria.
 3. Do not implement frontend until the required mockup/design reference is approved when visual fidelity matters.
 4. After implementation, Codex still owns final integration review and reports `Frontend/UI` status.
+
+### Security Delegation Protocol
+
+When a task changes authentication, authorization, tenant boundaries, secrets,
+payments, uploads, parsers, webhooks, infrastructure, privileged operations, or
+sensitive data, invoke `security-standard` for risk-adaptive review.
+
+Use change review for ordinary diffs, scoped audit for a defined subsystem, and
+repository audit only when broad assurance is explicitly needed. Security tool
+output remains advisory until validated against code, tests, and runtime.
+
+An installed proprietary security plugin may provide an independent second
+opinion, but it must not replace the canonical project rules or the original
+`security-standard` workflow.
 
 ### Documentation Protocol
 
@@ -547,6 +577,21 @@ Run the project's canonical checks when available:
 - e2e/browser checks for UI
 - security checks for auth, secrets, injection, exposed data
 - webhook/API capture tests with sanitized payloads for outbound integrations
+
+Use Playwright for browser validation when the changed behavior depends on a
+real rendered page or user flow. Prefer the project's existing Playwright
+configuration and tests. Appropriate checks include navigation, forms,
+authentication and permissions, loading/empty/error states, responsive
+breakpoints, screenshots, and critical end-to-end flows.
+
+Playwright rules:
+
+- Reuse the canonical running environment; do not start a duplicate stack.
+- Use test accounts and sanitized fixtures, never production credentials or data.
+- Add or update automated tests when the flow is stable and regression-prone.
+- Use focused interactive checks for exploratory QA, then record reproducible evidence.
+- A screenshot alone does not validate behavior, accessibility, or business rules.
+- If Playwright is unavailable, use another approved browser tool or report the UI/runtime check as `NOT VALIDATED`.
 
 Do not invent a new runtime if the project already defines one.
 

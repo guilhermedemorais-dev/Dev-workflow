@@ -1,0 +1,10 @@
+{
+  "name": "security-standard",
+  "description": "Risk-based application security workflow for review, threat modeling, validation, and remediation.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow"
+}

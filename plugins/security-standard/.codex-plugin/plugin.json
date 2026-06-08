@@ -1,0 +1,26 @@
+{
+  "name": "security-standard",
+  "version": "0.1.0+codex.20260608215500",
+  "description": "Risk-based application security workflow for code changes, repositories, threat modeling, validation, and remediation.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "keywords": ["security", "appsec", "code-review", "threat-model", "owasp"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Security Standard",
+    "shortDescription": "Review security risks and produce validated fixes.",
+    "longDescription": "Security Standard provides an original, risk-based AppSec workflow for reviewing diffs or repositories, modeling threats, validating findings, reducing false positives, fixing vulnerabilities, and reporting evidence by application layer.",
+    "developerName": "Guilherme",
+    "category": "Security",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "defaultPrompt": [
+      "Review this diff for security regressions.",
+      "Run a scoped security audit on this repository.",
+      "Validate and fix this security finding."
+    ]
+  }
+}
