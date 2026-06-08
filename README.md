@@ -38,40 +38,27 @@ Responsabilidades:
 - Uso opcional de CLIs auxiliares apos health check.
 - Pesquisa tecnica com codigo local, documentacao oficial, Context7 e `grep.app`.
 - Teste seguro de APIs e webhooks antes de producao.
-- Roteamento sob demanda para plugins e skills especializados.
-- Melhoria controlada apenas quando existe uma lacuna real de capacidade.
+- Pesquisa e uso de plugins/skills apenas quando faltar uma capacidade real.
+- Criacao de skill/plugin quando a capacidade necessaria nao existir e for reutilizavel.
 - QA, seguranca, testes e relatorio por camada: Banco, API/Backend e Frontend/UI.
 
-### Orquestrador leve e especialistas sob demanda
+### Plugin principal
 
-O plugin principal nao deve tentar conter ou executar sozinho todo conhecimento
-de arquitetura, backend, frontend, QA, seguranca, DevOps e design. Ele atua como
-orquestrador:
+O `dev-workflow-standard` e o responsavel principal por administrar e desenvolver
+o software de ponta a ponta. Ele conduz descoberta, PRD, pesquisa, arquitetura,
+planejamento, implementacao, revisao, testes, QA, seguranca, documentacao e
+entrega. Claude Code pode executar partes pesadas de implementacao, mas o plugin
+principal continua responsavel pelo processo e pela validacao.
 
-1. Classifica a tarefa.
-2. Consulta apenas o indice ou metadados das skills/plugins instalados.
-3. Seleciona uma ferramenta principal e, normalmente, no maximo uma de apoio.
-4. Envia somente objetivo, arquivos relevantes, restricoes e criterios de aceite.
-5. Exige retorno estruturado com evidencias, validacoes, riscos e incertezas.
-6. Confere as alegacoes no codigo, documentacao oficial, testes ou runtime.
-7. Mantem no contexto apenas a conclusao aceita e descarta o restante.
-
-Isso reduz contexto, consumo de tokens e perda de foco. Tambem diminui
-alucinacoes, mas nao elimina a necessidade de verificacao: plugins continuam
-sendo agentes/ferramentas e podem errar.
-
-O workflow nunca deve carregar todas as skills para decidir qual usar. Quando o
-`skill-router-orchestrator` estiver instalado, ele usa um indice local leve e
-ativa apenas a skill selecionada.
-
-O protocolo completo esta em
-[`capability-routing.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-routing.md).
+Ele nao deve procurar outro plugin para tarefas que ja consegue executar com
+suas regras, ferramentas e recursos atuais.
 
 ### Melhoria continua controlada
 
-Somente quando o roteamento nao encontra uma ferramenta adequada, ou quando uma
-ferramenta ativa falha repetidamente, o workflow pode pesquisar skills,
-plugins, MCPs, hooks e ferramentas nas lojas e repositorios. Exemplos:
+Somente quando identifica uma capacidade necessaria que realmente nao possui, o
+workflow pesquisa primeiro skills e plugins instalados e depois marketplaces
+confiaveis. Se nao existir uma solucao adequada e a necessidade for recorrente,
+ele propoe criar uma skill ou plugin focado. Exemplos de lacunas:
 
 - Erro ou correcao que se repete.
 - Processo manual recriado em varios projetos.
@@ -89,7 +76,8 @@ O ciclo e:
 6. Pedir aprovacao humana antes de instalar ou habilitar codigo de terceiros.
 7. Testar no menor escopo possivel e comparar com o baseline.
 8. Promover com versao fixada ou fazer rollback.
-9. Registrar o aprendizado e remover capacidades que nao compensam seu custo.
+9. Se nenhuma capacidade adequada existir, propor criar uma skill ou plugin.
+10. Registrar o aprendizado e remover capacidades que nao compensam seu custo.
 
 Nao existe instalacao autonoma silenciosa. Plugins podem executar scripts,
 hooks, binarios ou servidores MCP e, por isso, toda nova capacidade passa por

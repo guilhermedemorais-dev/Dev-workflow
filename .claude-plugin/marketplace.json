@@ -9,7 +9,7 @@
       "name": "dev-workflow-standard",
       "source": "./plugins/dev-workflow-standard",
       "description": "Planning, research, implementation governance, controlled improvement, QA, and delivery workflow.",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "category": "development",
       "tags": ["workflow", "planning", "qa", "security", "skills"]
     },

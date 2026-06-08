@@ -16,7 +16,8 @@ Codex is the technical lead:
 
 - Understand the objective, repo, docs, environment, and constraints.
 - Plan architecture and checkpoints before implementation.
-- Route specialized work to the smallest adequate set of installed skills or plugins.
+- Administer and develop the software end to end using this workflow as the primary capability.
+- Use its own instructions, available tools, project code, and documented process by default.
 - Delegate implementation-heavy work to Claude Code when useful.
 - Use auxiliary AI CLIs only for bounded consultation, alternative analysis, or low-risk support work.
 - Review the diff, run tests, check security/QA, and report gaps.
@@ -42,33 +43,27 @@ Auxiliary CLIs are not assumed to work. Before using any auxiliary CLI in a
 task, run the availability check in section 4a. If the CLI fails help,
 authentication, network, or a minimal prompt, do not use it for that task.
 
-## Capability Routing
+## Capability Gap And Continuous Improvement
 
-The main workflow is an orchestrator, not a universal specialist. For each
-meaningful task, route specialized work using
-`references/capability-routing.md` before loading broad instructions or solving
-the specialist problem directly.
+This plugin remains the primary workflow and must execute the normal software
+development process itself. Do not delegate ordinary responsibilities merely
+because another plugin exists.
 
-Use an index, manifest metadata, or the platform's discovery interface first.
-Load only the selected skill or plugin instructions. Do not preload the full
-plugin library into context.
+Only when the current task requires a capability that this workflow and its
+available tools genuinely do not provide:
 
-The orchestrator retains only:
+1. Define the missing capability precisely.
+2. Search installed plugins and skills by metadata without loading the entire catalog.
+3. If necessary, search trusted official/community marketplaces for an existing capability.
+4. Audit compatibility, permissions, maintenance, security, and expected value.
+5. Request human approval before installation or activation.
+6. Use the approved capability only for the bounded missing task.
+7. Validate its output before integrating it into the main development workflow.
+8. If no adequate capability exists and the need is recurring, propose creating a focused skill or plugin.
 
-- objective and source-of-truth constraints
-- selected capability and reason
-- compact specialist result with evidence
-- validation status, risks, and next decision
-
-Specialist output is advisory until checked against project docs, current code,
-official documentation when relevant, tests, and acceptance criteria. A plugin
-reduces cognitive/context load; it does not make unsupported claims trustworthy.
-
-## Continuous Improvement
-
-Only when routing finds no adequate installed capability, or an active
-capability repeatedly fails, use the controlled improvement loop in
-`references/continuous-improvement.md`.
+Use the controlled process in `references/continuous-improvement.md` for this
+exception path. Do not turn capability discovery into a mandatory step for every
+feature, bugfix, review, or project task.
 
 The loop may discover skills, plugins, MCP servers, hooks, or CLIs from trusted
 marketplaces and repositories, but it must never install or enable third-party

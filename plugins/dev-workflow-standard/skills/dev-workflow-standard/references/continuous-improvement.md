@@ -4,12 +4,14 @@ Use this protocol when the workflow repeatedly fails, lacks a capability, wastes
 time on a recurring manual task, or could benefit from a specialized skill,
 plugin, MCP server, hook, agent, or CLI.
 
-The objective is filling a verified routing gap with evidence. It is not the
-normal task workflow, autonomous installation, or permission expansion.
+The objective is filling a verified capability gap with evidence. This is an
+exception path, not the normal development workflow, autonomous installation,
+or permission expansion.
 
-Before starting this protocol, run capability routing and confirm that no
-installed capability adequately covers the task, or that the selected
-capability has repeatedly failed objective validation.
+Before starting this protocol, confirm that the primary workflow cannot perform
+the required bounded task with its current instructions and available tools.
+Do not invoke this process merely to delegate normal planning, coding, review,
+testing, documentation, QA, security, or project administration responsibilities.
 
 ## Triggers
 
@@ -48,6 +50,8 @@ Check in this order:
 5. A small custom skill or script when no suitable capability exists.
 
 Prefer reuse or a focused update over adding another overlapping capability.
+Inspect metadata first and load only candidates relevant to the missing
+capability. Do not inject the entire marketplace or skill library into context.
 
 ### 3. Audit The Candidate
 
@@ -136,6 +140,15 @@ Update only the durable artifact that owns the lesson:
 
 Never rewrite a skill from a single anecdote. Require repeated evidence or a
 clear high-impact failure.
+
+If no acceptable existing capability is found and the gap is recurring:
+
+1. Define the smallest reusable responsibility.
+2. Propose a focused skill when instructions/workflow are sufficient.
+3. Propose a plugin only when packaging, scripts, hooks, MCP, assets, or
+   cross-platform distribution are actually needed.
+4. Obtain approval before creating and registering it.
+5. Validate it against the original capability gap before adoption.
 
 ## Capability Registry
 
