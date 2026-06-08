@@ -1,0 +1,10 @@
+{
+  "name": "ui-ux-standard",
+  "description": "Reusable UI/UX workflow for design systems, mockups, media prompts, accessibility, responsive QA, and visual validation.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow"
+}

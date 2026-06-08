@@ -41,6 +41,21 @@ Auxiliary CLIs are not assumed to work. Before using any auxiliary CLI in a
 task, run the availability check in section 4a. If the CLI fails help,
 authentication, network, or a minimal prompt, do not use it for that task.
 
+## Continuous Improvement
+
+When repeated failures, missing capabilities, slow manual work, or a new project
+need reveal a tooling gap, use the controlled improvement loop in
+`references/continuous-improvement.md`.
+
+The loop may discover skills, plugins, MCP servers, hooks, or CLIs from trusted
+marketplaces and repositories, but it must never install or enable third-party
+code automatically. Inspect, score, propose, obtain human approval, test in an
+isolated scope, measure results, and preserve a rollback path before promotion.
+
+Keep one canonical `SKILL.md` when behavior is portable. Use platform-specific
+manifests or adapters for Codex, Claude Code, and Antigravity instead of copying
+and independently editing the workflow instructions.
+
 ## Mandatory Project Rules
 
 - User PRDs, mockups, architecture notes, and repo docs are source of truth.
@@ -118,6 +133,16 @@ plan first and preserve existing canonical docs unless the user approves changes
 - `.project-ai/instructions/`: local AI instructions that should not be mixed with product docs.
 - `.project-ai/skills/`: project-specific skills only; global skills stay in Codex/Claude config.
 - `.project-ai/prompts/`: reusable prompts for this repo only.
+
+For projects that use the improvement loop, create only when needed:
+
+```text
+docs/ai-workflow/
+  capability-registry.md
+  improvement-log.md
+  evaluations/
+    YYYY-MM-DD-capability-name.md
+```
 
 Do not create all files blindly. Create or update only what the current task needs,
 unless the user explicitly asks to initialize the full structure.

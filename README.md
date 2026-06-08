@@ -12,11 +12,19 @@ regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 plugins/
   dev-workflow-standard/
     .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
     skills/dev-workflow-standard/SKILL.md
   ui-ux-standard/
     .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
     skills/ui-ux-standard/SKILL.md
 ```
+
+Cada plugin mantem uma unica skill canonica e manifestos adaptadores para
+Codex, Claude Code e Antigravity. Isso evita que as regras das tres plataformas
+evoluam de forma diferente.
 
 ## Dev Workflow Standard
 
@@ -30,7 +38,38 @@ Responsabilidades:
 - Uso opcional de CLIs auxiliares apos health check.
 - Pesquisa tecnica com codigo local, documentacao oficial, Context7 e `grep.app`.
 - Teste seguro de APIs e webhooks antes de producao.
+- Melhoria continua controlada por descoberta, auditoria, score, teste e rollback.
 - QA, seguranca, testes e relatorio por camada: Banco, API/Backend e Frontend/UI.
+
+### Melhoria continua controlada
+
+O workflow pode pesquisar skills, plugins, MCPs, hooks e ferramentas nas lojas
+e repositorios das plataformas quando identifica uma lacuna real. Exemplos:
+
+- Erro ou correcao que se repete.
+- Processo manual recriado em varios projetos.
+- Falta de capacidade para cumprir um criterio de aceite.
+- Skill instalada que ficou obsoleta, instavel ou cara em tokens.
+
+O ciclo e:
+
+1. Registrar a lacuna e uma meta mensuravel.
+2. Verificar primeiro as capacidades que ja estao instaladas.
+3. Pesquisar marketplaces oficiais e depois fontes comunitarias mantidas.
+4. Auditar codigo, manifestos, hooks, scripts, MCPs, permissoes e dependencias.
+5. Criar score de relevancia, qualidade, manutencao, seguranca, compatibilidade,
+   eficiencia, testabilidade e reversibilidade.
+6. Pedir aprovacao humana antes de instalar ou habilitar codigo de terceiros.
+7. Testar no menor escopo possivel e comparar com o baseline.
+8. Promover com versao fixada ou fazer rollback.
+9. Registrar o aprendizado e remover capacidades que nao compensam seu custo.
+
+Nao existe instalacao autonoma silenciosa. Plugins podem executar scripts,
+hooks, binarios ou servidores MCP e, por isso, toda nova capacidade passa por
+aprovacao e validacao antes de entrar no fluxo global.
+
+O protocolo completo esta em
+[`continuous-improvement.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/continuous-improvement.md).
 
 ### Pesquisa tecnica e grep.app
 
@@ -113,7 +152,64 @@ Responsabilidades:
 - PRDs de prompts para imagens e videos.
 - Validacao visual, responsividade, acessibilidade e estados da UI.
 
-## Instalacao local
+## Instalacao
+
+### Codex
+
+Adicionar este repositorio como marketplace:
+
+```bash
+codex plugin marketplace add guilhermedemorais-dev/Dev-workflow --ref main
+```
+
+Instalar os plugins:
+
+```bash
+codex plugin add dev-workflow-standard@guilherme-dev-workflow
+codex plugin add ui-ux-standard@guilherme-dev-workflow
+```
+
+### Claude Code
+
+Adicionar o marketplace:
+
+```text
+/plugin marketplace add guilhermedemorais-dev/Dev-workflow
+```
+
+Instalar os plugins:
+
+```text
+/plugin install dev-workflow-standard@guilherme-dev-workflow
+/plugin install ui-ux-standard@guilherme-dev-workflow
+```
+
+Para testar uma copia local antes de publicar:
+
+```bash
+claude --plugin-dir ./plugins/dev-workflow-standard \
+  --plugin-dir ./plugins/ui-ux-standard
+```
+
+### Antigravity
+
+O Antigravity reconhece skills e plugins no workspace. Depois de clonar este
+repositorio, copie ou vincule os plugins desejados para:
+
+```text
+<projeto>/.agents/plugins/
+```
+
+Para uso global em todos os workspaces:
+
+```text
+~/.gemini/config/plugins/
+```
+
+O `plugin.json` na raiz de cada bundle identifica o plugin, e a skill canonica
+continua dentro de `skills/<nome>/SKILL.md`.
+
+### Copia local manual
 
 Copiar para a pasta local de plugins:
 
@@ -123,8 +219,19 @@ cp -a plugins/dev-workflow-standard ~/plugins/
 cp -a plugins/ui-ux-standard ~/plugins/
 ```
 
-Depois, registre/atualize os plugins no marketplace local do Codex conforme o
-fluxo usado na maquina.
+O uso via marketplace e preferivel porque oferece descoberta e atualizacao
+versionada. A copia manual e util para desenvolvimento e testes locais.
+
+## Compatibilidade
+
+| Plataforma | Manifesto/catalogo | Skill compartilhada |
+| --- | --- | --- |
+| Codex | `.codex-plugin/plugin.json` e `.agents/plugins/marketplace.json` | `skills/<nome>/SKILL.md` |
+| Claude Code | `.claude-plugin/plugin.json` e `.claude-plugin/marketplace.json` | `skills/<nome>/SKILL.md` |
+| Antigravity | `plugin.json` na raiz do bundle | `skills/<nome>/SKILL.md` |
+
+Hooks, MCPs e permissoes nao devem ser compartilhados cegamente entre as
+plataformas, pois os esquemas e modelos de seguranca sao diferentes.
 
 ## Uso recomendado
 

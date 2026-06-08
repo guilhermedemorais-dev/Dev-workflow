@@ -1,0 +1,25 @@
+{
+  "name": "guilherme-dev-workflow",
+  "owner": {
+    "name": "Guilherme"
+  },
+  "description": "Development and UI/UX workflow plugins for Claude Code.",
+  "plugins": [
+    {
+      "name": "dev-workflow-standard",
+      "source": "./plugins/dev-workflow-standard",
+      "description": "Planning, research, implementation governance, controlled improvement, QA, and delivery workflow.",
+      "version": "0.2.0",
+      "category": "development",
+      "tags": ["workflow", "planning", "qa", "security", "skills"]
+    },
+    {
+      "name": "ui-ux-standard",
+      "source": "./plugins/ui-ux-standard",
+      "description": "Mockup-first UI/UX, design systems, media prompts, accessibility, and visual QA.",
+      "version": "0.2.0",
+      "category": "design",
+      "tags": ["ui", "ux", "design-system", "mockup", "accessibility"]
+    }
+  ]
+}
