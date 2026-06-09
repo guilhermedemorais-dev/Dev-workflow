@@ -1,6 +1,6 @@
 {
   "name": "security-standard",
-  "version": "0.1.0+codex.20260608215500",
+  "version": "0.1.0+codex.20260609154834",
   "description": "Risk-based application security workflow for code changes, repositories, threat modeling, validation, and remediation.",
   "author": {
     "name": "Guilherme"

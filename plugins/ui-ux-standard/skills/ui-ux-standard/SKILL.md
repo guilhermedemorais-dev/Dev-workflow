@@ -24,6 +24,25 @@ This skill owns:
 
 It does not own backend architecture, database design, deployment, or final delivery approval.
 
+## Available MCP Support
+
+In Guilherme's current Codex environment, this workflow may use these enabled
+MCPs when they match the active UI/UX task:
+
+- `figma` for approved design context, frames, tokens, and component references.
+- `playwright` for runtime flows, responsive checks, interaction states, and screenshots.
+- `chrome-devtools` for console, network, layout, rendering, and performance diagnosis.
+- `context7` for current frontend framework and component-library documentation.
+- `grep-mcp` for public implementation patterns after local code and official docs.
+- `firecrawl-mcp` for targeted public design or documentation research when direct sources are insufficient.
+- `hf-mcp-server` for relevant public models, datasets, Spaces, or asset-generation research.
+
+Verify live availability when an MCP is needed. Use the smallest relevant set,
+never send private designs, credentials, customer data, or proprietary assets to
+remote services, and report visual/runtime checks as `NOT VALIDATED` when no
+approved fallback can execute them. `node_repl` is an environment utility, not
+a substitute for browser-based visual validation.
+
 ## Standard Design Structure
 
 Prefer this structure for new projects. For existing projects, inspect current
@@ -355,9 +374,10 @@ Validate:
 - no incoherent overlap
 - images/assets render correctly
 
-Use the project's existing Playwright setup when available for repeatable
-browser flows, responsive viewport checks, and screenshots. Use another
-approved browser tool as fallback. Do not mark visual QA complete from static
+Use the project's existing Playwright setup or enabled `playwright` MCP when
+available for repeatable browser flows, responsive viewport checks, and
+screenshots. Use `chrome-devtools` or another approved browser tool as fallback.
+Do not mark visual QA complete from static
 code inspection or screenshots alone; interactions, states, accessibility, and
 runtime behavior must also be checked.
 

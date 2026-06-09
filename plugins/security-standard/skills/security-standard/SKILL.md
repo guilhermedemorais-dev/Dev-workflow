@@ -235,6 +235,22 @@ vendor or scanner mandatory. Inspect configuration and versions before use.
 Examples include dependency audits, secret scanners, SAST, linters, container
 scanners, IaC checks, Playwright, API clients, and repository-native tests.
 
+Guilherme's current Codex environment also enables MCPs that may support
+authorized defensive work:
+
+- `playwright` and `chrome-devtools` for safe browser/runtime validation.
+- `context7` for current security-relevant library and framework documentation.
+- `grep-mcp` for public implementation patterns and sibling-instance research.
+- `firecrawl-mcp` for targeted collection of public advisories or vendor documentation.
+- `figma` when an approved design is needed to verify privacy, permission, or security UX.
+- `hf-mcp-server` when the authorized scope includes Hugging Face models, datasets, Spaces, or supply-chain context.
+- `node_repl` for bounded local analysis when exposed by the runtime, never for unapproved exploitation.
+
+Verify live MCP availability before relying on it. Do not send private source,
+secrets, customer data, tokens, cookies, or vulnerability evidence to remote MCP
+services. MCP output is candidate evidence and never replaces repository or
+runtime validation.
+
 Scanner output is candidate input. Validate findings in code and runtime before
 reporting them as vulnerabilities. Record tool failures and blind spots.
 

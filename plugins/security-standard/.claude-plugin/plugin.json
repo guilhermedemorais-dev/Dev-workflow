@@ -1,7 +1,7 @@
 {
   "name": "security-standard",
   "description": "Risk-based application security workflow for review, threat modeling, validation, and remediation.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Guilherme"
   },

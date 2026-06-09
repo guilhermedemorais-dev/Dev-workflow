@@ -1,7 +1,7 @@
 {
   "name": "dev-workflow-standard",
   "description": "Reusable development workflow with planning, research, controlled capability improvement, Claude Code delegation, QA, security, and delivery gates.",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "author": {
     "name": "Guilherme"
   },

@@ -18,15 +18,17 @@ Codex is the technical lead:
 - Plan architecture and checkpoints before implementation.
 - Administer and develop the software end to end using this workflow as the primary capability.
 - Use its own instructions, available tools, project code, and documented process by default.
-- Delegate implementation-heavy work to Claude Code when useful.
+- Delegate non-trivial code-writing checkpoints to Claude Code so Codex remains focused on planning, review, QA, and delivery governance.
 - Use auxiliary AI CLIs only for bounded consultation, alternative analysis, or low-risk support work.
 - Review the diff, run tests, check security/QA, and report gaps.
 
 Claude Code is the implementation worker:
 
-- Use it for larger code edits, refactors, repetitive implementation, and bugfix execution.
+- Use it by default for features, refactors, integrations, repetitive implementation, and non-trivial bugfix execution.
+- Split work into bounded checkpoints; never send the whole project or conversation in one prompt.
 - Do not use it as the final reviewer.
 - Do not let Codex and Claude edit the same files concurrently.
+- Follow `references/claude-delegation.md` before every delegated implementation checkpoint.
 
 Auxiliary CLIs are optional consultants:
 
@@ -42,6 +44,33 @@ user instructions.
 Auxiliary CLIs are not assumed to work. Before using any auxiliary CLI in a
 task, run the availability check in section 4a. If the CLI fails help,
 authentication, network, or a minimal prompt, do not use it for that task.
+
+## Available MCP Environment
+
+Guilherme's current Codex environment has these MCP servers enabled:
+
+- `chrome-devtools`: inspect rendered pages, console output, network activity, and browser performance.
+- `context7`: consult current library and SDK documentation and examples.
+- `figma`: read approved Figma design context when the task provides or depends on a Figma source.
+- `firecrawl-mcp`: discover and extract targeted public web content when higher-priority sources are insufficient.
+- `grep-mcp`: search public GitHub code through `grep.app` for real-world implementation patterns.
+- `hf-mcp-server`: access relevant Hugging Face models, datasets, Spaces, or documentation when the task requires them.
+- `node_repl`: support bounded JavaScript execution and tool orchestration when exposed by the active Codex runtime.
+- `playwright`: validate rendered web pages, interactions, states, responsiveness, and end-to-end flows.
+
+Treat this as an environment capability inventory, not a requirement for other
+installations. At task start, select only the MCPs that materially help the
+current work. When availability matters, verify the live state with
+`codex mcp list`; an enabled configuration does not prove authentication,
+network access, or successful startup.
+
+MCP rules:
+
+- Do not invoke every enabled server by default.
+- Project files, PRDs, approved mockups, architecture, and official docs remain source of truth.
+- Do not send secrets, private code, customer data, cookies, or production credentials to remote MCP services.
+- If an MCP fails or is rate-limited, use the documented fallback and report any resulting validation gap.
+- Never copy local MCP credentials or `~/.codex/config.toml` into a repository.
 
 ## Capability Gap And Continuous Improvement
 
@@ -289,7 +318,7 @@ external service:
 
 1. Check project-local docs and existing implementation first.
 2. Use Context7 or official docs for current API syntax, configuration, and migration details.
-3. Use public code search such as `grep.app` only to find real-world patterns and examples.
+3. Use `grep-mcp`/`grep.app` only to find real-world patterns and examples in public code.
 4. Prefer official examples, maintained repos, and high-signal code over random snippets.
 5. Record what was accepted, rejected, and why when the decision affects architecture or shared code.
 
@@ -436,12 +465,30 @@ If the user or docs require a gate, stop at that gate.
 
 ### 4. Delegate To Claude Code
 
-Delegate only when implementation effort is meaningful. Prefer direct Codex edits for small patches.
+Delegation is mandatory for non-trivial implementation. Codex should preserve
+its context and token budget for discovery, architecture, checkpoint planning,
+diff review, QA, security, and final reporting. Direct Codex edits are reserved
+for genuinely small localized patches.
+
+Follow `references/claude-delegation.md`. Before implementation:
+
+1. Classify whether the mandatory delegation trigger applies.
+2. Verify `claude --version` and `claude auth status` once for the task.
+3. Set and report `CLAUDE_STATUS`.
+4. Split implementation by layer/module into bounded checkpoints.
+5. Delegate one checkpoint at a time and review its diff before continuing.
+
+If mandatory delegation applies and Claude is unavailable, stop before code
+writing and report the blocker. Do not silently consume the implementation
+budget in Codex.
 
 Use this command shape:
 
 ```bash
-claude -p "<brief>"
+claude -p "<bounded implementation brief>" \
+  --permission-mode acceptEdits \
+  --tools "Read,Edit,Write,Glob,Grep" \
+  --output-format text
 ```
 
 For safer implementation delegation, include:
@@ -453,6 +500,10 @@ For safer implementation delegation, include:
 - constraints from docs
 - instruction to avoid unrelated refactors
 - instruction to summarize changed files
+
+Pass paths and concise constraints instead of pasting the full conversation,
+repository, logs, or documentation tree. Prefer at most one coherent module,
+five directly changed files, and one to three acceptance criteria per call.
 
 Recommended prompt:
 
@@ -469,10 +520,12 @@ Acceptance criteria:
 - <criterion 1>
 - <criterion 2>
 Do not perform unrelated refactors.
-After changes, summarize files changed and tests to run.
+After changes, return only files changed, tests to run, and blockers in at most 12 lines.
 ```
 
-After Claude returns, Codex must inspect the diff before any claim of progress.
+Before running the command, tell the user which checkpoint and scope are being
+delegated. After Claude returns, Codex must inspect the scoped diff and run the
+relevant validation before any claim of progress or next delegation.
 
 ### 4a. Consult Auxiliary AI CLIs
 

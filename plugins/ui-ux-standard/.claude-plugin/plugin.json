@@ -1,7 +1,7 @@
 {
   "name": "ui-ux-standard",
   "description": "Reusable UI/UX workflow for design systems, mockups, media prompts, accessibility, responsive QA, and visual validation.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "Guilherme"
   },

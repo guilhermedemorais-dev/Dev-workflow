@@ -39,7 +39,7 @@ Responsabilidades:
 
 - Estrutura padrao de documentacao por projeto.
 - Fluxo de PRD, pesquisa, especificacao, implementacao e revisao.
-- Delegacao controlada para Claude Code.
+- Delegacao obrigatoria de implementacao nao trivial para Claude Code, dividida em checkpoints pequenos.
 - Uso opcional de CLIs auxiliares apos health check.
 - Pesquisa tecnica com codigo local, documentacao oficial, Context7, Firecrawl e `grep.app`.
 - Teste seguro de APIs e webhooks antes de producao.
@@ -53,11 +53,50 @@ Responsabilidades:
 O `dev-workflow-standard` e o responsavel principal por administrar e desenvolver
 o software de ponta a ponta. Ele conduz descoberta, PRD, pesquisa, arquitetura,
 planejamento, implementacao, revisao, testes, QA, seguranca, documentacao e
-entrega. Claude Code pode executar partes pesadas de implementacao, mas o plugin
-principal continua responsavel pelo processo e pela validacao.
+entrega. Claude Code executa os checkpoints de implementacao nao trivial, mas o
+plugin principal continua responsavel por dividir o trabalho, controlar escopo,
+revisar cada diff e executar a validacao.
+
+Para economizar o contexto e os tokens do Codex, o workflow nao envia o projeto
+inteiro nem a conversa completa ao Claude. Cada chamada recebe apenas objetivo,
+caminhos das fontes de verdade, modulo permitido, restricoes e de um a tres
+criterios de aceite. Banco, API/Backend, Frontend/UI, testes e documentacao sao
+separados quando puderem ser revisados de forma independente.
+
+Antes da primeira delegacao, o Codex verifica `claude --version` e
+`claude auth status`, registra `CLAUDE_STATUS` e avisa qual checkpoint sera
+delegado. Se Claude Code estiver indisponivel numa tarefa em que a delegacao e
+obrigatoria, o Codex deve parar antes de implementar em vez de consumir sozinho
+o orcamento de implementacao. O protocolo completo esta em
+[`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
 Ele nao deve procurar outro plugin para tarefas que ja consegue executar com
 suas regras, ferramentas e recursos atuais.
+
+### MCPs disponiveis no ambiente do Guilherme
+
+O ambiente Codex atual foi configurado com estes servidores MCP habilitados:
+
+| MCP | Uso principal no workflow |
+| --- | --- |
+| `chrome-devtools` | Console, rede, renderizacao e performance do navegador. |
+| `context7` | Documentacao atual de bibliotecas, SDKs e exemplos de API. |
+| `figma` | Contexto de designs, frames, tokens e componentes aprovados. |
+| `firecrawl-mcp` | Descoberta e extracao direcionada de conteudo web publico. |
+| `grep-mcp` | Pesquisa de padroes em codigo publico indexado pelo `grep.app`. |
+| `hf-mcp-server` | Modelos, datasets, Spaces e documentacao do Hugging Face. |
+| `node_repl` | Execucao JavaScript limitada e orquestracao oferecida pelo runtime Codex. |
+| `playwright` | QA de paginas, interacoes, estados, responsividade e fluxos e2e. |
+
+Os plugins tratam essa lista como inventario do ambiente, nao como dependencia
+obrigatoria para outros usuarios. Antes de depender de um MCP, devem confirmar o
+estado real com `codex mcp list`, selecionar apenas os servidores relevantes e
+aplicar fallback quando houver falha, falta de autenticacao ou rate limit.
+
+Nenhum segredo, configuracao de `~/.codex/config.toml`, codigo privado, cookie,
+dado de cliente ou credencial de producao deve ser enviado ou versionado por
+causa desses MCPs. PRD, codigo local, arquitetura, mockup aprovado e
+documentacao oficial continuam sendo as fontes de verdade.
 
 ### Melhoria continua controlada
 
