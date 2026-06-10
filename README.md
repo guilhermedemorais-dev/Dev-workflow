@@ -70,6 +70,13 @@ obrigatoria, o Codex deve parar antes de implementar em vez de consumir sozinho
 o orcamento de implementacao. O protocolo completo esta em
 [`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
+Em workspaces com rede restrita, `claude auth status` pode funcionar enquanto
+`claude -p` falha por DNS, conexao ou timeout. Nesse caso, o workflow registra
+`CLAUDE_STATUS=SANDBOX_NETWORK_BLOCKED` e repete exatamente o mesmo checkpoint
+pela execucao externa aprovada da plataforma. Se a segunda tentativa funcionar,
+continua como `AVAILABLE_EXTERNAL`; se falhar, para e informa o erro sem assumir
+a implementacao no Codex.
+
 Ele nao deve procurar outro plugin para tarefas que ja consegue executar com
 suas regras, ferramentas e recursos atuais.
 

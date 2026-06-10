@@ -478,6 +478,13 @@ Follow `references/claude-delegation.md`. Before implementation:
 4. Split implementation by layer/module into bounded checkpoints.
 5. Delegate one checkpoint at a time and review its diff before continuing.
 
+If a delegated call fails with DNS, connection, network, API transport, or
+timeout symptoms inside a restricted workspace, follow the Restricted Workspace
+Recovery in `references/claude-delegation.md`: retry the same bounded command
+through the approved external-network/escalated execution path. Do not classify
+this as invalid Claude authentication and do not silently implement the work in
+Codex.
+
 If mandatory delegation applies and Claude is unavailable, stop before code
 writing and report the blocker. Do not silently consume the implementation
 budget in Codex.

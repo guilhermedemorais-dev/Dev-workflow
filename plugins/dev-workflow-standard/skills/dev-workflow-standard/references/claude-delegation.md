@@ -35,6 +35,7 @@ claude auth status
 Set `CLAUDE_STATUS`:
 
 - `AVAILABLE`: binary exists and authentication is valid.
+- `SANDBOX_NETWORK_BLOCKED`: authentication is valid, but a delegated prompt fails with DNS, connection, API network, or timeout symptoms inside the restricted workspace.
 - `INSTALLED_ONLY`: binary exists but authentication or provider setup fails.
 - `UNAVAILABLE`: binary is missing or cannot start.
 
@@ -44,6 +45,23 @@ model request on every checkpoint merely as a health check.
 For mandatory-trigger work, do not silently fall back to Codex implementation
 when `CLAUDE_STATUS != AVAILABLE`. Stop before code writing and report the
 delegation blocker so Codex does not consume the implementation budget itself.
+
+### Restricted Workspace Recovery
+
+The Codex workspace may allow the `claude` binary and local authentication
+checks while blocking outbound API traffic. When `claude -p` fails or times out
+with connection, DNS, network, or API transport symptoms:
+
+1. Keep the same bounded prompt, working directory, tool allowlist, and checkpoint scope.
+2. Set `CLAUDE_STATUS=SANDBOX_NETWORK_BLOCKED`.
+3. Retry the same command with the platform's approved external-network or escalated execution path.
+4. Ask for user approval through the execution permission mechanism when required.
+5. If the escalated retry succeeds, set `CLAUDE_STATUS=AVAILABLE_EXTERNAL` and continue normal diff review.
+6. If it also fails, stop and report the exact error; do not implement the checkpoint in Codex as a silent fallback.
+
+Do not repeatedly run ordinary sandbox retries after the network-block pattern
+is established. One restricted attempt and one approved external retry are
+sufficient for the same checkpoint.
 
 ## Checkpoint Sizing
 
@@ -112,7 +130,7 @@ After every Claude checkpoint, Codex must:
 3. Validate the diff against the source-of-truth and acceptance criteria.
 4. Run canonical tests, lint, typecheck, runtime, QA, or security checks as applicable.
 5. Fix only small review findings directly; delegate substantial rework as a new bounded checkpoint.
-6. Record `CLAUDE_STATUS`, delegated checkpoint, validation evidence, and remaining gaps.
+6. Record `CLAUDE_STATUS`, whether external execution was required, delegated checkpoint, validation evidence, and remaining gaps.
 
 Do not start the next implementation checkpoint until the current diff is
 reviewed and reconciled.
