@@ -1,6 +1,6 @@
 {
   "name": "dev-workflow-standard",
-  "version": "0.1.0+codex.20260610132840",
+  "version": "0.1.0+codex.20260610133356",
   "description": "Reusable project development standard for documentation structure, local project instructions, Codex planning, Claude Code implementation delegation, QA, security review, and delivery checkpoints.",
   "author": {
     "name": "Guilherme"
@@ -14,7 +14,8 @@
     "category": "Productivity",
     "capabilities": [
       "Read",
-      "Write"
+      "Write",
+      "Interactive"
     ],
     "defaultPrompt": [
       "Use Dev Workflow Standard to plan and implement this project with checkpoints.",

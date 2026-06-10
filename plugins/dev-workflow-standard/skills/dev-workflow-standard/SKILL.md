@@ -476,7 +476,8 @@ Follow `references/claude-delegation.md`. Before implementation:
 2. Verify `claude --version` and `claude auth status` once for the task.
 3. Set and report `CLAUDE_STATUS`.
 4. Split implementation by layer/module into bounded checkpoints.
-5. Delegate one checkpoint at a time and review its diff before continuing.
+5. Open the real Claude Code CLI in a visible terminal for one checkpoint at a time.
+6. Wait for Claude to exit, then review its diff before continuing.
 
 If a delegated call fails with DNS, connection, network, API transport, or
 timeout symptoms inside a restricted workspace, follow the Restricted Workspace
@@ -489,7 +490,14 @@ If mandatory delegation applies and Claude is unavailable, stop before code
 writing and report the blocker. Do not silently consume the implementation
 budget in Codex.
 
-Use this command shape:
+Guilherme's default is visible interactive delegation. Use the bundled
+`scripts/claude-visible-delegate.sh` helper through the approved GUI/external
+execution path. It opens `gnome-terminal`, submits the checkpoint to the real
+Claude Code CLI, and writes a status file after the user ends Claude with
+`/exit`. Codex must not edit the delegated scope while that terminal is active.
+
+Use headless mode only when a graphical terminal is unavailable and the user
+approves the fallback:
 
 ```bash
 claude -p "<bounded implementation brief>" \

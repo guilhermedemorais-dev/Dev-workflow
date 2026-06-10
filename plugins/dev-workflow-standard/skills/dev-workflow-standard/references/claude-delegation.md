@@ -97,7 +97,37 @@ implementation explanation from Claude.
 
 ## Execution Command
 
-Run from the canonical project root:
+The default delegation mode for Guilherme is `VISIBLE_TERMINAL`. Create a
+temporary prompt file containing the bounded brief, then run the bundled helper
+with approved GUI/external execution:
+
+```bash
+plugins/dev-workflow-standard/scripts/claude-visible-delegate.sh \
+  "<canonical-project-root>" \
+  "<prompt-file>" \
+  "<status-file>"
+```
+
+Resolve the helper from the installed plugin root when operating in another
+repository. The helper opens `gnome-terminal`, starts the real interactive
+Claude Code CLI with the checkpoint already submitted, and writes the exit code
+to the status file after the user ends Claude with `/exit`.
+
+While the visible Claude terminal is active:
+
+- Codex must not edit the delegated files.
+- Codex may poll the status file without reading or duplicating Claude's conversation.
+- The user can watch Claude's native interface, tool calls, and edits directly.
+- Codex begins diff review only after the status file exists.
+
+Opening a GUI terminal requires the platform's approved external/escalated
+execution path. Request that approval through the execution permission
+mechanism. Do not replace visible mode with a hidden call merely to avoid the
+approval prompt.
+
+If no graphical session or supported terminal exists, report that visible mode
+is unavailable and ask before using the headless fallback. The fallback command
+is:
 
 ```bash
 claude -p "<bounded implementation brief>" \
@@ -116,7 +146,8 @@ Before invoking Claude, tell the user:
 
 - the checkpoint being delegated
 - the allowed scope
-- that Claude Code will implement and Codex will review
+- that a visible Claude Code terminal will open
+- that Claude Code will implement and Codex will review after `/exit`
 
 After Claude returns, report whether it executed successfully and summarize its
 claimed changes. Do not imply delegation occurred if no `claude` command ran.

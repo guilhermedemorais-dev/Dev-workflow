@@ -70,6 +70,13 @@ obrigatoria, o Codex deve parar antes de implementar em vez de consumir sozinho
 o orcamento de implementacao. O protocolo completo esta em
 [`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
+Por padrao, a delegacao usa o modo `VISIBLE_TERMINAL`: o Codex abre uma janela
+real do `gnome-terminal`, inicia a interface interativa do Claude Code com o
+checkpoint ja enviado e aguarda o usuario finalizar com `/exit`. Durante esse
+periodo, o Codex nao edita os arquivos delegados. Depois do encerramento, ele
+le o status, revisa o diff e executa os testes. O modo oculto com `claude -p`
+fica apenas como fallback aprovado quando nao existe sessao grafica disponivel.
+
 Em workspaces com rede restrita, `claude auth status` pode funcionar enquanto
 `claude -p` falha por DNS, conexao ou timeout. Nesse caso, o workflow registra
 `CLAUDE_STATUS=SANDBOX_NETWORK_BLOCKED` e repete exatamente o mesmo checkpoint
