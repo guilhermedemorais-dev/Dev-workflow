@@ -39,6 +39,30 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Security"
+    },
+    {
+      "name": "sdd-spec-factory",
+      "source": {
+        "source": "local",
+        "path": "./plugins/sdd-spec-factory"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "dev-implementation-standard",
+      "source": {
+        "source": "local",
+        "path": "./plugins/dev-implementation-standard"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

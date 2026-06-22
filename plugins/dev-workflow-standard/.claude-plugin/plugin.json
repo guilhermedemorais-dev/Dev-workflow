@@ -1,7 +1,7 @@
 {
   "name": "dev-workflow-standard",
-  "description": "Reusable development workflow with planning, research, controlled capability improvement, Claude Code delegation, QA, security, and delivery gates.",
-  "version": "0.4.0",
+  "description": "CTO/orchestrator workflow: diagnose, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard, and review PRs against specs, task and acceptance criteria. Never implements product code directly.",
+  "version": "0.5.0",
   "author": {
     "name": "Guilherme"
   },

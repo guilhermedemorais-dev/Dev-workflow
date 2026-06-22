@@ -1,0 +1,31 @@
+{
+  "name": "sdd-spec-factory",
+  "version": "0.1.0+codex.20260622",
+  "description": "Spec-driven development factory that converts a client request or feature idea into detailed specs (product, module, page, component, validation, database, API, UI) and an executable task with PR and QA/review checklists.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "keywords": ["sdd", "spec-driven", "specs", "tasks", "pr", "qa", "review"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SDD Spec Factory",
+    "shortDescription": "Turn requests into detailed specs and executable tasks.",
+    "longDescription": "SDD Spec Factory gives Codex a repeatable spec-driven workflow: diagnose a client request or feature, consolidate scope, generate layered specs (product, module, page, component, validation, database, API, UI) separating Banco, API/Backend, Frontend/UI, tests, security, observability, pending decisions, risks and acceptance criteria, then produce a small executable task linked to specs, issue, branch and PR, followed by code review and QA checklists.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use SDD Spec Factory to turn this client request into specs and an executable task.",
+      "Use SDD Spec Factory to write the page and component specs for this feature.",
+      "Use SDD Spec Factory to create the task, PR checklist and QA checklist for this work.",
+      "Use SDD Spec Factory to run Phase 0 diagnosis and list the critical questions before specs."
+    ]
+  }
+}

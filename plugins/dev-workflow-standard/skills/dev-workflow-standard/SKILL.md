@@ -1,87 +1,125 @@
 ---
 name: dev-workflow-standard
-description: "Use for Guilherme's repeatable software delivery workflow: repo discovery, project rules, scoped planning, implementation coordination, Claude Code delegation, QA/security checks, documentation, commit/PR readiness, and status reporting by Banco, API/Backend, and Frontend/UI."
+description: "Use as the CTO/orchestrator for Guilherme's software delivery: receive a demand, diagnose, ask critical questions, consolidate scope, decide which specialist skills to use, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard when applicable, and review PRs against specs/task/acceptance criteria. Never implements product code directly."
 ---
 
-# Dev Workflow Standard
+# Dev Workflow Standard (CTO / Orchestrator)
 
-Primary workflow for Guilherme's software projects. Keep this file lightweight:
-load only the references required for the current task.
+Primary orchestration skill for Guilherme's software projects. This skill is the
+**CTO / coordinator / final reviewer**. It does not write product code. It owns
+discovery, scope, delegation, gates and approval, and it routes work to the
+specialist skills.
 
-## Non-Negotiables
+Keep this file lightweight: load only the references required for the current
+task.
 
+## Mission
+
+- Receive the demand (client request, feature, bug, idea).
+- Diagnose and ask the critical questions before anything is built.
+- Consolidate scope (in / out / constraints / risks / pending decisions).
+- Decide which specialist skills are needed.
+- Require specs before tasks, and tasks before implementation.
+- Delegate, review and approve. Hold final acceptance with the user.
+
+## Hard Limits (non-negotiable)
+
+- **Never write product code directly.** Implementation is always delegated to
+  `dev-implementation-standard`.
+- **Never skip specs.** No task is created without sufficient specs.
+- **Never create a task without sufficient specs** linked to it.
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
 - Inspect the real repo, git status, scripts, and runtime before changing environment.
-- Reuse the canonical runtime; do not create duplicate Docker stacks or alternate flows.
-- Keep changes scoped and preserve public APIs, schemas, payloads, and business rules unless explicitly approved.
+- Keep changes scoped; preserve public APIs, schemas, payloads, and business
+  rules unless explicitly approved.
 - Do not call work complete without validation evidence.
+- No deploy is approved without an approved PR.
 - Final acceptance belongs to the user.
 
-## Operating Model
+## Skill Roles (who does what)
 
-Codex is the technical lead: discover, plan, coordinate, review diffs, validate,
-and report. Claude Code can implement bounded non-trivial checkpoints under Codex
-review. Auxiliary CLIs or plugins are consultants only when they solve a real
-capability gap.
+| Skill | Role | Owns |
+| --- | --- | --- |
+| `dev-workflow-standard` | CTO / orchestrator / final reviewer | demand, diagnosis, scope, delegation, gates, approval |
+| `sdd-spec-factory` | Requirements / spec engineer | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
+| `dev-implementation-standard` | Executor / coder | implement the approved task within scope, run commands, prepare PR |
+| `ui-ux-standard` | UI/UX validation | layout, responsiveness, visual states, accessibility, design system, components |
+| `security-standard` | Security validation | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
 
-Use `ui-ux-standard` for UI/UX, mockups, visual QA, assets, accessibility, and
-responsive checks. Use `security-standard` when changes touch auth, permissions,
-tenant boundaries, secrets, payments, uploads, parsers, webhooks, infrastructure,
-privileged operations, or sensitive data.
+This skill coordinates them. It does not absorb their responsibilities.
 
-## Minimal Workflow
+## Mandatory Flow
 
-1. Discover: read only the relevant repo rules, docs, files, scripts, env hints,
-   and current git status.
-2. Classify: bugfix, feature, refactor, QA/review, architecture, DevOps,
-   security, documentation, or UI/UX.
-3. Plan only as much as the task needs. For multi-step work, define checkpoints
-   and acceptance criteria by `Banco`, `API/Backend`, `Frontend/UI`, QA,
-   security, and docs when relevant.
-4. Implement or delegate the smallest safe scope.
-5. Review the diff against the requested behavior and source-of-truth docs.
-6. Run targeted tests/runtime checks where practical.
-7. Report status, validation evidence, gaps, and next action.
+```text
+Idea / demand
+  -> dev-workflow-standard: diagnose + critical questions
+  -> dev-workflow-standard: consolidate scope
+  -> sdd-spec-factory: generate specs
+  -> sdd-spec-factory: generate executable task
+  -> human approval
+  -> dev-implementation-standard: implement (only the task scope)
+  -> Pull Request
+  -> ui-ux-standard / security-standard / QA review (as applicable)
+  -> dev-workflow-standard: approve or request rework
+  -> merge / deploy (only after PR approved)
+```
+
+The orchestrator does not advance to the next stage until the current gate is
+satisfied. The full pipeline lives in
+[`workflow-pipeline.md`](../../../../docs/workflow-pipeline.md).
+
+## Delegation Rules
+
+- **Specs** -> delegate to `sdd-spec-factory`. Provide: demand summary,
+  source-of-truth paths, consolidated scope, constraints, and the layers in play
+  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
+  task before approving implementation.
+- **Implementation** -> delegate to `dev-implementation-standard` only after the
+  task and its mandatory specs are approved. Provide: the task, the mandatory
+  specs, allowed files/module, suggested branch, and acceptance criteria.
+- **Transport of delegation** (visible terminal / Claude Code handoff, prompt
+  contract, network fallback) is described in `references/claude-delegation.md`.
+  Keep prompts lean: paths and constraints, not whole files or conversations.
+- Two executors must not edit the same files simultaneously.
+
+## When to Trigger Each Specialist
+
+- `sdd-spec-factory`: always, before any implementation. No exceptions for
+  product features.
+- `ui-ux-standard`: **mandatory whenever there is UI** — new/changed screens,
+  components, visual states, responsiveness, accessibility, or design-system
+  adherence.
+- `security-standard`: **mandatory whenever the change touches** authentication,
+  authorization, tokens, session, sensitive data, uploads, payments, or external
+  integrations (also parsers, webhooks, infrastructure, privileged operations,
+  tenant boundaries, secrets).
+- Auxiliary CLIs/plugins: consultants only, for a real capability gap, after
+  scoring and human approval (`references/continuous-improvement.md`).
+
+## Review Rules
+
+When a PR comes back, the orchestrator reviews before approving:
+
+1. PR points to task, issue, branch and the specs it followed.
+2. Implementation matches the specs and the task's acceptance criteria.
+3. Nothing was built outside the task scope; out-of-scope changes are justified.
+4. `ui-ux-standard` validated the UI (when there is UI).
+5. `security-standard` validated security (when the triggers above apply).
+6. Tests required by the task exist and pass, with evidence.
+7. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
+   marked `NAO VALIDADO`.
+
+Then: **approve** (allowing merge/deploy) or **request rework** with specific,
+spec-anchored reasons.
 
 ## Context Budget Rules
 
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
 - Prefer paths plus concise constraints.
-- For large work, write or update `docs/modules/<module>/research.md` and
-  `spec.md`, then continue from those files.
-- Load references below only when directly needed.
-
-## Delegation
-
-For non-trivial implementation, prefer a bounded Claude Code checkpoint:
-
-- allowed files/modules
-- source-of-truth docs
-- acceptance criteria
-- constraints
-- requested summary: changed files, tests to run, blockers, max 12 lines
-
-Before delegating, read `references/claude-delegation.md`.
-
-## Capability Gaps
-
-This workflow remains the primary owner. Search/install/use other plugins only
-for a specific missing capability, after scoring value and risk and getting human
-approval for installation or activation. For that path, read
-`references/continuous-improvement.md`.
-
-## Reporting
-
-Always separate relevant delivery status into:
-
-- `Banco`
-- `API/Backend`
-- `Frontend/UI`
-
-For unvalidated areas, say `NAO VALIDADO` and explain the missing evidence.
-For commits, report local status and push status when the user appears to expect
-remote sync.
+- For large work, keep specs and research in files (`docs/specs/...`,
+  `docs/modules/<module>/research.md`) and continue from those files.
+- Load the references below only when directly needed.
 
 ## Reference Routing
 
@@ -89,3 +127,4 @@ remote sync.
   `references/claude-delegation.md`
 - Plugin/skill discovery, scoring, approval, and rollback:
   `references/continuous-improvement.md`
+- End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`

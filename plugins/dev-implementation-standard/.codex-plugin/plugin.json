@@ -1,0 +1,30 @@
+{
+  "name": "dev-implementation-standard",
+  "version": "0.1.0+codex.20260622",
+  "description": "Executor/coder workflow for spec-driven delivery: read an approved task and mandatory specs, implement only that scope on the suggested branch, run required commands, update the task result, and prepare the PR.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "keywords": ["implementation", "executor", "coding", "task", "pr", "tdd"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Dev Implementation Standard",
+    "shortDescription": "Implement an approved task strictly within its spec scope.",
+    "longDescription": "Dev Implementation Standard gives Codex the executor/coder discipline: it never starts without an approved task and its mandatory specs, implements only the task scope on the suggested branch, refuses to change architecture without approval, runs the required commands, records the execution result in the task, and prepares the PR linked to task, issue, branch and specs.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use Dev Implementation Standard to implement this approved task within its specs.",
+      "Use Dev Implementation Standard to execute the task on the suggested branch and prepare the PR.",
+      "Use Dev Implementation Standard to run the required commands and update the task result."
+    ]
+  }
+}
