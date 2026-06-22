@@ -25,37 +25,97 @@ plugins/
     .claude-plugin/plugin.json
     plugin.json
     skills/security-standard/SKILL.md
+  sdd-spec-factory/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/sdd-spec-factory/SKILL.md
+    templates/
+  dev-implementation-standard/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/dev-implementation-standard/SKILL.md
+    templates/
 ```
 
 Cada plugin mantem uma unica skill canonica e manifestos adaptadores para
 Codex, Claude Code e Antigravity. Isso evita que as regras das tres plataformas
 evoluam de forma diferente.
 
+## Arquitetura das skills
+
+As skills tem papeis separados. A principal orquestra; as demais sao
+especialistas acionados sob demanda.
+
+| Skill | Papel |
+| --- | --- |
+| `dev-workflow-standard` | CTO / orquestrador / revisor final |
+| `sdd-spec-factory` | Engenharia de requisitos: specs e task executavel |
+| `dev-implementation-standard` | Executor / coder |
+| `ui-ux-standard` | Validacao de UI/UX |
+| `security-standard` | Validacao de seguranca |
+
+Pipeline de ponta a ponta:
+
+```text
+Ideia / demanda
+  -> dev-workflow-standard diagnostica (perguntas criticas, riscos)
+  -> dev-workflow-standard consolida escopo
+  -> sdd-spec-factory gera specs
+  -> sdd-spec-factory gera task executavel
+  -> aprovacao humana
+  -> dev-implementation-standard implementa (somente o escopo da task)
+  -> Pull Request
+  -> ui-ux-standard / security-standard / QA conforme aplicavel
+  -> dev-workflow-standard aprova ou solicita rework
+  -> merge / deploy (somente apos PR aprovado)
+```
+
+Regras invariantes:
+
+- `dev-workflow-standard` nunca escreve codigo de produto, nunca pula specs e
+  nunca cria task sem specs suficientes.
+- `dev-implementation-standard` nunca implementa sem task aprovada e nunca altera
+  fora do escopo sem registrar justificativa.
+- `ui-ux-standard` e obrigatoria quando houver UI.
+- `security-standard` e obrigatoria quando houver auth, autorizacao, tokens,
+  sessao, dados sensiveis, uploads, pagamentos ou integracoes externas.
+- Toda task aponta para specs obrigatorias.
+- Todo PR aponta para task, issue, branch e specs seguidas.
+- Nenhum deploy e aprovado sem PR aprovado.
+
+O pipeline completo, com gates e gatilhos, esta em
+[`docs/workflow-pipeline.md`](docs/workflow-pipeline.md).
+
 ## Dev Workflow Standard
 
-Plugin principal de desenvolvimento.
+Skill CTO / orquestradora. E a unica skill que aprova a passagem de um gate para
+o proximo e nunca escreve codigo de produto diretamente.
 
 Responsabilidades:
 
-- Estrutura padrao de documentacao por projeto.
-- Fluxo de PRD, pesquisa, especificacao, implementacao e revisao.
-- Delegacao obrigatoria de implementacao nao trivial para Claude Code, dividida em checkpoints pequenos.
-- Uso opcional de CLIs auxiliares apos health check.
-- Pesquisa tecnica com codigo local, documentacao oficial, Context7, Firecrawl e `grep.app`.
-- Teste seguro de APIs e webhooks antes de producao.
-- Pesquisa e uso de plugins/skills apenas quando faltar uma capacidade real.
-- Criacao de skill/plugin quando a capacidade necessaria nao existir e for reutilizavel.
-- QA, seguranca, testes e relatorio por camada: Banco, API/Backend e Frontend/UI.
-- Validacao de fluxos web e UI com Playwright quando houver ambiente executavel.
+- Receber a demanda, diagnosticar e fazer as perguntas criticas.
+- Consolidar escopo (incluido, fora de escopo, restricoes, riscos, decisoes).
+- Decidir quais skills especialistas usar.
+- Exigir specs antes de tasks e tasks antes da implementacao.
+- Delegar a criacao de specs para `sdd-spec-factory`.
+- Delegar a implementacao para `dev-implementation-standard`.
+- Acionar `ui-ux-standard` quando houver UI.
+- Acionar `security-standard` quando houver auth, autorizacao, tokens, sessao,
+  dados sensiveis, uploads, pagamentos ou integracoes externas.
+- Revisar o PR contra specs, task e criterios de aceite.
+- Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
+- Nunca implementar codigo de produto diretamente.
 
-### Plugin principal
+### Papel de CTO / orquestrador
 
-O `dev-workflow-standard` e o responsavel principal por administrar e desenvolver
-o software de ponta a ponta. Ele conduz descoberta, PRD, pesquisa, arquitetura,
-planejamento, implementacao, revisao, testes, QA, seguranca, documentacao e
-entrega. Claude Code executa os checkpoints de implementacao nao trivial, mas o
-plugin principal continua responsavel por dividir o trabalho, controlar escopo,
-revisar cada diff e executar a validacao.
+O `dev-workflow-standard` administra o ciclo de ponta a ponta como coordenador.
+Ele conduz descoberta, escopo, delegacao, gates e aprovacao, mas nao absorve as
+responsabilidades das skills especialistas. A criacao de specs e da task fica com
+`sdd-spec-factory`; a implementacao fica com `dev-implementation-standard`, que
+pode rodar via delegacao para Claude Code. O orquestrador divide o trabalho,
+controla escopo, revisa cada diff/PR e executa a validacao final.
 
 Para economizar o contexto e os tokens do Codex, o workflow nao envia o projeto
 inteiro nem a conversa completa ao Claude. Cada chamada recebe apenas objetivo,
@@ -268,6 +328,87 @@ O plugin e uma implementacao original e independente. Ferramentas e plugins de
 terceiros podem ser usados como segunda opiniao, mas seus textos, scripts,
 templates e fluxos proprietarios nao sao copiados ou redistribuidos.
 
+## SDD Spec Factory
+
+Plugin especializado em Spec-Driven Development (SDD). Transforma um pedido de
+cliente, feature, ideia ou problema em specs detalhadas e em uma task pequena e
+executavel, sem implementar codigo de produto.
+
+Funcao:
+
+- Diagnosticar o pedido e levantar perguntas criticas antes de especificar.
+- Consolidar escopo (incluido, fora de escopo, restricoes, riscos, decisoes).
+- Gerar specs por camada: product, module, page/feature, component, regras de
+  validacao, banco e API/backend, alem de frontend/UI quando houver tela.
+- Separar sempre Banco, API/Backend, Frontend/UI, Testes, Seguranca,
+  Observabilidade/logs, Decisoes pendentes, Riscos e Criterios de aceite.
+- Produzir uma task executavel ligada a specs, issue, branch e PR.
+- Entregar checklists de PR, code review e QA.
+
+Quando usar:
+
+- Sempre que um pedido novo precisar virar contrato antes de implementar.
+- Quando faltar clareza de escopo e for preciso fechar specs e perguntas.
+- Para quebrar uma feature grande em tasks pequenas e revisaveis.
+
+Hierarquia imposta:
+
+```text
+Product Spec -> Module Spec -> Page/Feature Spec -> Component Specs ->
+Task -> Branch -> Pull Request -> Review/QA -> Merge/Deploy
+```
+
+Distincao mantida pelo plugin:
+
+- Spec nao e PR; spec e o contrato do que deve ser construido.
+- Task e a ordem de execucao.
+- PR e a entrega revisavel.
+- Issue e o rastreamento.
+- Review e aprovacao/reprovacao.
+- Deploy so acontece depois do PR aprovado.
+
+Integracao com os outros plugins:
+
+- `dev-workflow-standard` e o CTO/orquestrador. O SDD Spec Factory alimenta esse
+  fluxo com specs e a task executavel; a implementacao fica com
+  `dev-implementation-standard`, sob revisao do orquestrador.
+- `ui-ux-standard` valida as specs de tela e componente contra mockups
+  aprovados, design system, acessibilidade e responsividade.
+- `security-standard` valida a dimensao de seguranca de cada spec e o checklist
+  de seguranca de cada PR antes do gate de release.
+
+Os templates ficam em `plugins/sdd-spec-factory/templates/` (product, module,
+page, component, validation-rules, api, database, task, pr, qa-review e review).
+
+## Dev Implementation Standard
+
+Skill executora / coder. Transforma uma task aprovada em codigo, estritamente
+dentro do escopo. Nao planeja, nao escreve specs e nao detem a aprovacao final.
+
+Funcao:
+
+- Ler a task aprovada e todas as specs obrigatorias vinculadas.
+- Implementar somente o escopo da task, na branch sugerida.
+- Nao avancar para outra task.
+- Nao alterar arquitetura sem aprovacao.
+- Rodar os comandos obrigatorios e coletar evidencias.
+- Atualizar o resultado da execucao na task.
+- Preparar o PR vinculado a task, issue, branch e specs.
+
+Pre-condicoes (nao inicia sem elas):
+
+- Existe uma task aprovada.
+- A task vincula specs obrigatorias e criterios de aceite.
+- A branch sugerida esta definida.
+
+Se faltar qualquer pre-condicao, ou se as specs forem ambiguas/contraditorias, ou
+se a task exigir mudanca de arquitetura, a skill para e escala de volta para
+`dev-workflow-standard` / `sdd-spec-factory`. Qualquer alteracao fora do escopo
+precisa ser registrada com justificativa no resultado da task.
+
+O template de relatorio de execucao fica em
+`plugins/dev-implementation-standard/templates/execution-report-template.md`.
+
 ## Instalacao
 
 ### Codex
@@ -284,6 +425,8 @@ Instalar os plugins:
 codex plugin add dev-workflow-standard@guilherme-dev-workflow
 codex plugin add ui-ux-standard@guilherme-dev-workflow
 codex plugin add security-standard@guilherme-dev-workflow
+codex plugin add sdd-spec-factory@guilherme-dev-workflow
+codex plugin add dev-implementation-standard@guilherme-dev-workflow
 ```
 
 ### Claude Code
@@ -300,6 +443,8 @@ Instalar os plugins:
 /plugin install dev-workflow-standard@guilherme-dev-workflow
 /plugin install ui-ux-standard@guilherme-dev-workflow
 /plugin install security-standard@guilherme-dev-workflow
+/plugin install sdd-spec-factory@guilherme-dev-workflow
+/plugin install dev-implementation-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
@@ -307,7 +452,9 @@ Para testar uma copia local antes de publicar:
 ```bash
 claude --plugin-dir ./plugins/dev-workflow-standard \
   --plugin-dir ./plugins/ui-ux-standard \
-  --plugin-dir ./plugins/security-standard
+  --plugin-dir ./plugins/security-standard \
+  --plugin-dir ./plugins/sdd-spec-factory \
+  --plugin-dir ./plugins/dev-implementation-standard
 ```
 
 ### Antigravity
@@ -337,6 +484,8 @@ mkdir -p ~/plugins
 cp -a plugins/dev-workflow-standard ~/plugins/
 cp -a plugins/ui-ux-standard ~/plugins/
 cp -a plugins/security-standard ~/plugins/
+cp -a plugins/sdd-spec-factory ~/plugins/
+cp -a plugins/dev-implementation-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao
@@ -355,7 +504,15 @@ plataformas, pois os esquemas e modelos de seguranca sao diferentes.
 
 ## Uso recomendado
 
-Use `dev-workflow-standard` como cockpit principal de desenvolvimento.
+Use `dev-workflow-standard` como CTO/orquestrador: ele recebe a demanda,
+diagnostica, consolida escopo, exige specs, delega e revisa.
+
+Use `sdd-spec-factory` quando um pedido novo precisar virar specs detalhadas e
+uma task executavel antes da implementacao, garantindo o fluxo
+spec -> component spec -> task -> issue -> branch -> PR -> review/QA -> deploy.
+
+Use `dev-implementation-standard` para executar uma task ja aprovada, dentro do
+escopo, na branch sugerida, rodando os comandos obrigatorios e preparando o PR.
 
 Use `ui-ux-standard` sempre que a tarefa envolver telas, mockups, design system,
 assets visuais, prompts de imagem/video, responsividade, acessibilidade ou
@@ -367,5 +524,8 @@ de vulnerabilidades, remediacao e gates de release proporcionais ao risco.
 Para conhecer todas as regras, consulte diretamente:
 
 - [`dev-workflow-standard/SKILL.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md)
+- [`sdd-spec-factory/SKILL.md`](plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md)
+- [`dev-implementation-standard/SKILL.md`](plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md)
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)
 - [`security-standard/SKILL.md`](plugins/security-standard/skills/security-standard/SKILL.md)
+- [`workflow-pipeline.md`](docs/workflow-pipeline.md)

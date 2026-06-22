@@ -1,15 +1,15 @@
 {
   "name": "dev-workflow-standard",
-  "version": "0.1.0+codex.20260610133356",
-  "description": "Reusable project development standard for documentation structure, local project instructions, Codex planning, Claude Code implementation delegation, QA, security review, and delivery checkpoints.",
+  "version": "0.1.0+codex.20260622",
+  "description": "CTO/orchestrator development standard: diagnose demands, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger UI/UX and security validation, and review PRs against specs, task and acceptance criteria. Does not implement product code directly.",
   "author": {
     "name": "Guilherme"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Dev Workflow Standard",
-    "shortDescription": "Standardize docs, project instructions, planning, delegation, QA, and delivery.",
-    "longDescription": "Dev Workflow Standard gives Codex a reusable development methodology for any software project: establish project documentation structure, inspect the environment, define checkpoints, plan architecture, delegate non-trivial implementation to Claude Code in bounded checkpoints, review each diff, run validation, and report status by Banco, API/Backend, and Frontend/UI.",
+    "shortDescription": "Orchestrate diagnosis, scope, spec/implementation delegation, and PR review.",
+    "longDescription": "Dev Workflow Standard makes Codex the CTO/orchestrator for software delivery: receive a demand, diagnose, ask critical questions, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard when there is UI and security-standard when sensitive surfaces are touched, then review PRs against specs, task and acceptance criteria and approve or request rework. It never writes product code directly.",
     "developerName": "Guilherme",
     "category": "Productivity",
     "capabilities": [
@@ -18,10 +18,10 @@
       "Interactive"
     ],
     "defaultPrompt": [
-      "Use Dev Workflow Standard to plan and implement this project with checkpoints.",
-      "Use Dev Workflow Standard to initialize this project's docs and local instruction structure.",
-      "Use Dev Workflow Standard to review this repository and create the next development plan.",
-      "Use Dev Workflow Standard to delegate implementation to Claude Code and then review the diff."
+      "Use Dev Workflow Standard to diagnose this demand and consolidate scope.",
+      "Use Dev Workflow Standard to require specs and delegate them to sdd-spec-factory.",
+      "Use Dev Workflow Standard to delegate this approved task to dev-implementation-standard.",
+      "Use Dev Workflow Standard to review this PR against the specs, task and acceptance criteria."
     ]
   }
 }

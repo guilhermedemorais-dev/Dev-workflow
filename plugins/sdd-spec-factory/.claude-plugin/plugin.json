@@ -1,0 +1,10 @@
+{
+  "name": "sdd-spec-factory",
+  "description": "Spec-driven development factory: turns a client request or feature idea into product, module, page, component, validation, database, API and UI specs, plus an executable task and PR/QA checklists, enforcing spec -> task -> branch -> PR -> review/QA -> deploy.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Guilherme"
+  },
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow"
+}
