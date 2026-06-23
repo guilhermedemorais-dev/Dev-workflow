@@ -20,6 +20,7 @@ task.
 - Consolidate scope (in / out / constraints / risks / pending decisions).
 - Decide which specialist skills are needed.
 - Require specs before tasks, and tasks before implementation.
+- Enforce the mandatory task contract before delegation.
 - Delegate, review and approve. Hold final acceptance with the user.
 
 ## Hard Limits (non-negotiable)
@@ -28,6 +29,7 @@ task.
   `dev-implementation-standard`.
 - **Never skip specs.** No task is created without sufficient specs.
 - **Never create a task without sufficient specs** linked to it.
+- **Reject any executable task that does not follow the mandatory task structure.**
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
 - Inspect the real repo, git status, scripts, and runtime before changing environment.
@@ -68,6 +70,112 @@ Idea / demand
 The orchestrator does not advance to the next stage until the current gate is
 satisfied. The full pipeline lives in
 [`workflow-pipeline.md`](../../../../docs/workflow-pipeline.md).
+
+## Mandatory Task Governance
+
+Every feature must have both: mandatory specs and one executable task. The task is
+the operational contract for the executor; if it is incomplete, the orchestrator
+must reject it and send it back to `sdd-spec-factory` or the author for rework.
+
+A valid task must contain, at minimum:
+
+- Objetivo
+- Specs obrigatórias
+- Arquivos/módulos permitidos
+- Fora de escopo
+- Checklist de execução em ordem
+- Prompt para o executor
+- Condições de parada
+- Testes obrigatórios
+- Evidências esperadas
+- Critérios de aceite
+- Resultado da execução
+- Status visual da task
+
+The task filename remains stable for traceability. Do not put visual status,
+emojis or transient workflow state in the physical filename. Status belongs in
+the task content only.
+
+## GitHub-Ready Task Structure
+
+Do not assume GitHub Projects, Issues or boards are available. Prepare each task
+so it can be mapped later without restructuring:
+
+- one issue per task when the project uses GitHub Issues;
+- standardized labels such as `type:feature`, `type:bug`, `area:backend`,
+  `area:frontend`, `area:db`, `priority:p0`, `priority:p1`, `status:blocked`;
+- optional milestone when the task belongs to a phase, release or checkpoint;
+- status field compatible with a future board / GitHub Projects column;
+- explicit fields for responsável, bloqueios, specs obrigatórias, branch
+  sugerida and evidências.
+
+## Recommended Task Template
+
+```markdown
+# Título
+
+## Status visual
+- Status: [A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
+- Responsável:
+- Issue criada / vinculada:
+- Branch sugerida:
+- Milestone:
+- Labels sugeridas:
+- Pronto para entrar no GitHub Projects: sim/não
+
+## Tipo
+Feature | Bug | Refactor | QA | Security | Docs | Infra
+
+## Prioridade
+P0 | P1 | P2 | P3
+
+## Objetivo
+
+## Specs obrigatórias
+
+## Docs obrigatórios
+
+## Arquivos e módulos permitidos
+
+## Fora do escopo
+
+## Estado atual encontrado
+
+## Resultado esperado
+
+## Regras obrigatórias da implementação
+
+## Checklist de execução
+1.
+2.
+3.
+
+## Prompt para o executor
+Use esta task como contrato operacional. Leia a task inteira e todas as specs
+obrigatórias antes de codar. Siga o checklist na ordem, limite-se aos arquivos e
+módulos permitidos, pare se precisar sair do escopo ou alterar arquitetura, rode
+os testes obrigatórios e preencha o Resultado da execução com evidências.
+
+## Condições de parada
+
+## Testes obrigatórios
+
+## Evidências esperadas no PR
+
+## Critérios de aceite
+
+## Banco
+
+## API/Backend
+
+## Frontend/UI
+
+## Validação
+
+## Riscos/Lacunas
+
+## Resultado da execução
+```
 
 ## Delegation Rules
 
