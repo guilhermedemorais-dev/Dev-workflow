@@ -73,41 +73,94 @@ satisfied. The full pipeline lives in
 
 ## Mandatory Task Governance
 
-Every feature must have both: mandatory specs and one executable task. The task is
-the operational contract for the executor; if it is incomplete, the orchestrator
-must reject it and send it back to `sdd-spec-factory` or the author for rework.
+Every feature must follow the official order: spec first, executable task second,
+implementation third. The orchestrator rejects any task that skips specs, lacks
+mandatory fields, or cannot be executed and reviewed objectively.
 
 A valid task must contain, at minimum:
 
+- Título
+- Status visual
+- Tipo
+- Prioridade
 - Objetivo
 - Specs obrigatórias
-- Arquivos/módulos permitidos
-- Fora de escopo
-- Checklist de execução em ordem
+- Docs obrigatórios
+- Arquivos e módulos permitidos
+- Fora do escopo
+- Estado atual encontrado
+- Resultado esperado
+- Regras obrigatórias da implementação
+- Checklist de execução
 - Prompt para o executor
 - Condições de parada
 - Testes obrigatórios
-- Evidências esperadas
+- Evidências esperadas no PR
 - Critérios de aceite
+- Banco
+- API/Backend
+- Frontend/UI
+- Validação
+- Riscos/Lacunas
 - Resultado da execução
-- Status visual da task
 
 The task filename remains stable for traceability. Do not put visual status,
-emojis or transient workflow state in the physical filename. Status belongs in
-the task content only.
+emojis, Kanban status, or transient workflow state in the physical filename.
+Status belongs in the task content only.
+
+## Official Kanban Method
+
+Use these columns as the global workflow status:
+
+1. Backlog
+2. Discovery / SDD
+3. Ready for Dev
+4. In Progress
+5. In Review
+6. Done
+
+Column means process step. Label means condition or classification. Do not create
+a blocked column. A blocked card stays in its current column with the `blocked`
+label and a blocker recorded in the task. If review fails, move the card back to
+`In Progress` and add the `rework` label until the rework is resolved.
+
+Recommended labels:
+
+- `blocked`
+- `needs-info`
+- `rework`
+- `high-priority`
+- `bug`
+- `feature`
+- `tech-debt`
+
+## Definition of Entry / Exit
+
+Definition of Entry is what must be true before a card enters a column.
+Definition of Exit is what must be true before a card leaves a column. The
+orchestrator must use these definitions as gate checks.
+
+| Column | Definition of Entry | Definition of Exit |
+| --- | --- | --- |
+| Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
+| Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
+| Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
+| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
+| In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
+| Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
 ## GitHub-Ready Task Structure
 
-Do not assume GitHub Projects, Issues or boards are available. Prepare each task
+Do not assume GitHub Projects, Issues, or boards are available. Prepare each task
 so it can be mapped later without restructuring:
 
 - one issue per task when the project uses GitHub Issues;
-- standardized labels such as `type:feature`, `type:bug`, `area:backend`,
-  `area:frontend`, `area:db`, `priority:p0`, `priority:p1`, `status:blocked`;
-- optional milestone when the task belongs to a phase, release or checkpoint;
-- status field compatible with a future board / GitHub Projects column;
+- labels from the recommended label set above;
+- optional milestone when the task belongs to a phase, release, or checkpoint;
+- branch sugerida recorded in the task;
+- status field consistent with the official Kanban columns;
 - explicit fields for responsável, bloqueios, specs obrigatórias, branch
-  sugerida and evidências.
+  sugerida, evidências, issue criada/vinculada, and `Pronto para GitHub Projects`.
 
 ## Recommended Task Template
 
@@ -115,13 +168,14 @@ so it can be mapped later without restructuring:
 # Título
 
 ## Status visual
-- Status: [A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
+- Status visual: [A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
+- Status Kanban: [Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done]
 - Responsável:
 - Issue criada / vinculada:
 - Branch sugerida:
 - Milestone:
 - Labels sugeridas:
-- Pronto para entrar no GitHub Projects: sim/não
+- Pronto para GitHub Projects: sim/não
 
 ## Tipo
 Feature | Bug | Refactor | QA | Security | Docs | Infra
@@ -146,15 +200,20 @@ P0 | P1 | P2 | P3
 ## Regras obrigatórias da implementação
 
 ## Checklist de execução
-1.
-2.
-3.
+1. Leitura da task e specs
+2. Implementação
+3. Testes
+4. Validação
+5. Atualização do relatório
+6. Handoff para review
 
 ## Prompt para o executor
-Use esta task como contrato operacional. Leia a task inteira e todas as specs
-obrigatórias antes de codar. Siga o checklist na ordem, limite-se aos arquivos e
-módulos permitidos, pare se precisar sair do escopo ou alterar arquitetura, rode
-os testes obrigatórios e preencha o Resultado da execução com evidências.
+Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
+e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
+limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
+alterar arquitetura, execute TDD quando aplicável, registre validação manual com
+evidência quando TDD completo não for viável, preencha o Resultado da execução e
+devolva para review.
 
 ## Condições de parada
 
@@ -219,7 +278,8 @@ When a PR comes back, the orchestrator reviews before approving:
    marked `NAO VALIDADO`.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
-spec-anchored reasons.
+spec-anchored reasons. Rejected review moves the card back to `In Progress` with
+the `rework` label until corrected.
 
 ## Context Budget Rules
 

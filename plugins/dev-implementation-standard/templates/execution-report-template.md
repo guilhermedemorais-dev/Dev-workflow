@@ -5,13 +5,15 @@
 
 ## Status e rastreabilidade
 - Status visual atual: [🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
+- Status Kanban atual: [Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done]
 - Data/hora de início:
 - Data/hora de conclusão:
 - Executor:
 - Task:
 - Issue criada / vinculada:
 - Branch:
-- Pronto para entrar no GitHub Projects: sim/não
+- Responsável:
+- Pronto para GitHub Projects: sim/não
 
 ## Referências
 - Specs obrigatórias seguidas:
@@ -21,13 +23,16 @@
 ## Prompt utilizado
 Cole o prompt-base executado ou referencie o trecho `Prompt para o executor` da task.
 
+## Checklist executado
+- [ ] Leitura da task e specs
+- [ ] Implementação
+- [ ] Testes
+- [ ] Validação
+- [ ] Atualização do relatório
+- [ ] Handoff para review
+
 ## Resumo
 O que foi implementado, em uma a três frases.
-
-## Checklist executado
-- [ ] Item 1 da task executado.
-- [ ] Item 2 da task executado.
-- [ ] Item 3 da task executado.
 
 ## Escopo respeitado
 - [ ] Apenas o escopo da task foi implementado.
@@ -52,7 +57,7 @@ Endpoints, serviços, validações, contratos, jobs, integrações ou `N/A`.
 Telas, componentes, estados visuais, responsividade, acessibilidade ou `N/A`.
 
 ### Validação
-Testes, lint, build, checagens manuais e resultado de cada validação.
+Testes automatizados, TDD quando aplicável, validação manual com evidência quando TDD completo não for viável, lint, build, checagens manuais e resultado de cada validação.
 
 ### Riscos/Lacunas
 Riscos restantes, lacunas não resolvidas, limitações e follow-ups.
@@ -61,7 +66,7 @@ Riscos restantes, lacunas não resolvidas, limitações e follow-ups.
 Build, lint, testes, migrações e validações executadas.
 
 ## Resultado dos testes
-Saída/resumo (passou/falhou) com evidência.
+Saída/resumo (passou/falhou) com evidência. Se não houve teste automatizado, registrar validação manual e justificativa.
 
 ## Critérios de aceite
 - [ ] Todos os critérios de aceite da task atendidos (listar item a item).
@@ -75,5 +80,5 @@ Impedimentos encontrados, status visual aplicado e a quem foi escalado.
 ## Observações
 Decisões tomadas, follow-ups e pontos de atenção para o review.
 
-## PR
-Link do PR preparado (task, issue, branch e specs vinculados).
+## PR / Review
+Link do PR ou pacote de review preparado (task, issue, branch e specs vinculados).
