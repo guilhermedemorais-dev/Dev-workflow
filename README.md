@@ -117,34 +117,28 @@ responsabilidades das skills especialistas. A criacao de specs e da task fica co
 pode rodar via delegacao para Claude Code. O orquestrador divide o trabalho,
 controla escopo, revisa cada diff/PR e executa a validacao final.
 
-Para economizar o contexto e os tokens do Codex, o workflow nao envia o projeto
-inteiro nem a conversa completa ao Claude. Cada chamada recebe apenas objetivo,
-caminhos das fontes de verdade, modulo permitido, restricoes e de um a tres
-criterios de aceite. Banco, API/Backend, Frontend/UI, testes e documentacao sao
-separados quando puderem ser revisados de forma independente.
+O orquestrador nunca escreve codigo de produto. Depois que as specs e a task
+estao aprovadas, ele delega a implementacao para `dev-implementation-standard`,
+que pode ser executado via Claude Code como meio de execucao. Para economizar
+contexto e tokens, o orquestrador nao envia o projeto inteiro nem a conversa
+completa: cada delegacao recebe a task, as specs obrigatorias, o modulo
+permitido, restricoes e os criterios de aceite. Banco, API/Backend, Frontend/UI,
+testes e documentacao sao separados quando puderem ser revisados de forma
+independente.
 
-Antes da primeira delegacao, o Codex verifica `claude --version` e
-`claude auth status`, registra `CLAUDE_STATUS` e avisa qual checkpoint sera
-delegado. Se Claude Code estiver indisponivel numa tarefa em que a delegacao e
-obrigatoria, o Codex deve parar antes de implementar em vez de consumir sozinho
-o orcamento de implementacao. O protocolo completo esta em
+Quando a execucao roda via Claude Code, antes da primeira delegacao o Codex
+verifica `claude --version` e `claude auth status`, registra `CLAUDE_STATUS` e
+avisa qual escopo sera delegado. Se o Claude Code estiver indisponivel numa
+tarefa em que a delegacao e obrigatoria, o orquestrador para em vez de implementar
+sozinho. O protocolo de transporte (terminal visivel, modo `VISIBLE_TERMINAL`,
+fallback `claude -p`, e `SANDBOX_NETWORK_BLOCKED` em redes restritas) esta em
 [`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
-Por padrao, a delegacao usa o modo `VISIBLE_TERMINAL`: o Codex abre uma janela
-real do `gnome-terminal`, inicia a interface interativa do Claude Code com o
-checkpoint ja enviado e aguarda o usuario finalizar com `/exit`. Durante esse
-periodo, o Codex nao edita os arquivos delegados. Depois do encerramento, ele
-le o status, revisa o diff e executa os testes. O modo oculto com `claude -p`
-fica apenas como fallback aprovado quando nao existe sessao grafica disponivel.
+Esse transporte e apenas o meio de execucao do `dev-implementation-standard`; a
+divisao do trabalho, o controle de escopo e a revisao de cada diff/PR continuam
+com o orquestrador.
 
-Em workspaces com rede restrita, `claude auth status` pode funcionar enquanto
-`claude -p` falha por DNS, conexao ou timeout. Nesse caso, o workflow registra
-`CLAUDE_STATUS=SANDBOX_NETWORK_BLOCKED` e repete exatamente o mesmo checkpoint
-pela execucao externa aprovada da plataforma. Se a segunda tentativa funcionar,
-continua como `AVAILABLE_EXTERNAL`; se falhar, para e informa o erro sem assumir
-a implementacao no Codex.
-
-Ele nao deve procurar outro plugin para tarefas que ja consegue executar com
+Ele nao deve procurar outro plugin para tarefas que ja consegue coordenar com
 suas regras, ferramentas e recursos atuais.
 
 ### MCPs disponiveis no ambiente do Guilherme
@@ -290,13 +284,17 @@ configuracao versionada.
 
 O modelo operacional recomendado e:
 
-- Codex: planejamento tecnico, arquitetura, coordenacao, revisao e validacao.
-- Claude Code: implementacao pesada ou repetitiva, quando disponivel.
+- `dev-workflow-standard` (CTO/orquestrador): diagnostico, escopo, delegacao,
+  gates e revisao. Roda tipicamente no Codex.
+- `sdd-spec-factory`: gera as specs e a task executavel.
+- `dev-implementation-standard` (executor): implementa a task aprovada, podendo
+  rodar via Claude Code como meio de execucao.
 - Gemini, Blackbox, Qwen, Goose ou outras CLIs: consultas auxiliares e tarefas
   limitadas, somente depois de um health check.
 
-As ferramentas auxiliares nao substituem PRD, documentacao, testes nem revisao.
-Codex e Claude Code nao devem editar os mesmos arquivos simultaneamente.
+As ferramentas auxiliares nao substituem PRD, specs, documentacao, testes nem
+revisao. O orquestrador e o executor nao devem editar os mesmos arquivos
+simultaneamente.
 
 ## UI/UX Standard
 
