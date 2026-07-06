@@ -30,7 +30,8 @@ Transform a request into, when applicable:
 This plugin **does not implement product code**. It produces the contract and the
 order of execution. `dev-workflow-standard` orchestrates; implementation is
 carried out by `dev-implementation-standard`, reviewed with `security-standard`,
-and visually validated with `ui-ux-standard`.
+visually validated with `ui-ux-standard`, and checked for avoidable complexity
+with `minimal-implementation-gate`.
 
 ## Vocabulary (non-negotiable)
 
@@ -119,6 +120,10 @@ Consolidate the closed scope (becomes the basis of the product/module spec):
 
 ### Fase 2 - Geração de Specs
 
+Before generating specs, consume the approved `Minimal Planning Review` from
+`minimal-implementation-gate` when provided. Specs must incorporate its
+simplifications or explicitly record why a recommendation was rejected.
+
 Generate the specs the request needs, following the hierarchy:
 
 - Create specs per module, page/screen, component and rule.
@@ -161,6 +166,8 @@ Produce one small, reviewable, executable task using `templates/task-template.md
 - Include mandatory tests (TDD when applicable).
 - Include what is out of scope.
 - Include explicit instructions for the dev/AI executor.
+- Include the Minimal Planning Review result and state that implementation must
+  pass `Minimal Implementation Gate` before coding.
 
 Tasks live under `docs/tasks/TASK-XXX-<slug>.md` (or the repo's existing task
 location, if one exists — reuse it, do not duplicate).
@@ -183,6 +190,9 @@ Provide the delivery gates using `templates/pr-template.md`,
 - `dev-workflow-standard` is the CTO/orchestrator. It owns discovery, scope,
   delegation, gates and approval. SDD Spec Factory feeds it the specs and the
   executable task; it does not replace it.
+- `minimal-implementation-gate` reviews consolidated scope before specs/tasks.
+  Its approved simplifications constrain this skill unless the orchestrator
+  records a human-approved exception.
 - `dev-implementation-standard` is the executor. It implements the approved task
   strictly within the scope these specs define; it consumes the task and PR
   templates produced here.
@@ -199,5 +209,7 @@ Provide the delivery gates using `templates/pr-template.md`,
 - Banco, API/Backend, Frontend/UI, Testes, Segurança, Observabilidade,
   Decisões pendentes, Riscos and Critérios de aceite are separated.
 - There is one small executable task linking specs, issue, branch and PR.
+- Minimal Planning Review recommendations are incorporated or explicitly
+  justified.
 - PR and QA/review checklists are provided.
 - No product code was implemented and no existing architecture was invented.

@@ -1,0 +1,8 @@
+{
+  "name": "minimal-implementation-gate",
+  "version": "0.1.0",
+  "description": "Anti-overengineering gates for planning, implementation and PR review inside Guilherme Dev Workflow.",
+  "author": {
+    "name": "Guilherme"
+  }
+}

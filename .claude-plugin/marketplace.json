@@ -44,6 +44,14 @@
       "version": "0.1.0",
       "category": "development",
       "tags": ["implementation", "executor", "coding", "task", "pr"]
+    },
+    {
+      "name": "minimal-implementation-gate",
+      "source": "./plugins/minimal-implementation-gate",
+      "description": "Anti-overengineering gate: reviews planning, approved tasks, and PR diffs for unnecessary scope, files, dependencies, layers and token cost without weakening safety or quality.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["minimal", "yagni", "review", "tokens", "overengineering"]
     }
   ]
 }

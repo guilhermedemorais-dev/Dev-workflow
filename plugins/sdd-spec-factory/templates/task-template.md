@@ -45,6 +45,10 @@ O que NÃO deve ser feito aqui (evita PR inchado).
 ## Arquivos prováveis
 Caminhos prováveis a alterar (marcar `HIPÓTESE:` quando não confirmado).
 
+## Minimal Planning Review
+Resumo das recomendacoes aprovadas pelo `minimal-implementation-gate`, ou `N/A`
+com motivo. Registrar qualquer recomendacao rejeitada e a justificativa humana.
+
 ## Banco
 Mudanças de schema/migração. `N/A` + motivo se não houver.
 
@@ -70,7 +74,8 @@ Pontos de atenção de segurança (validar com security-standard).
 Eventos, métricas e logs que devem ser adicionados.
 
 ## Instrução para IA/dev
-Passos diretos para o executor, restrições e o que NÃO tocar.
+Passos diretos para o executor, restrições e o que NÃO tocar. Antes de codar,
+executar `Minimal Implementation Gate` e respeitar o caminho minimo aprovado.
 
 ## Resultado da execução
 

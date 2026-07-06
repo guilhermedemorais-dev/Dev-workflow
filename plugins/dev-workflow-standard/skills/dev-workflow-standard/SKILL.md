@@ -1,6 +1,6 @@
 ---
 name: dev-workflow-standard
-description: "Use as the CTO/orchestrator for Guilherme's software delivery: receive a demand, diagnose, ask critical questions, consolidate scope, decide which specialist skills to use, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard when applicable, and review PRs against specs/task/acceptance criteria. Never implements product code directly."
+description: "Use as the principal CTO/orchestrator plugin for Guilherme's software delivery: guide project setup, request approval before installing companion plugins or organizing project docs, diagnose, consolidate scope, run minimal planning/implementation/code gates, require specs before tasks, delegate specs to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard when applicable, and review PRs. Never implements product code directly."
 ---
 
 # Dev Workflow Standard (CTO / Orchestrator)
@@ -16,9 +16,12 @@ task.
 ## Mission
 
 - Receive the demand (client request, feature, bug, idea).
+- Guide new project setup without silent installation or reorganization.
 - Diagnose and ask the critical questions before anything is built.
 - Consolidate scope (in / out / constraints / risks / pending decisions).
 - Decide which specialist skills are needed.
+- Run minimal-complexity gates to reduce noise, avoidable files/dependencies,
+  and token cost.
 - Require specs before tasks, and tasks before implementation.
 - Enforce the mandatory task contract before delegation.
 - Delegate, review and approve. Hold final acceptance with the user.
@@ -38,6 +41,8 @@ task.
 - Do not call work complete without validation evidence.
 - No deploy is approved without an approved PR.
 - Final acceptance belongs to the user.
+- Do not install plugins, enable hooks, activate servers, add workflow files, or
+  reorganize a project without explicit human approval.
 
 ## Skill Roles (who does what)
 
@@ -45,6 +50,7 @@ task.
 | --- | --- | --- |
 | `dev-workflow-standard` | CTO / orchestrator / final reviewer | demand, diagnosis, scope, delegation, gates, approval |
 | `sdd-spec-factory` | Requirements / spec engineer | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
+| `minimal-implementation-gate` | Anti-overengineering specialist | planning review, implementation gate, PR complexity review, token-cost reduction |
 | `dev-implementation-standard` | Executor / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX validation | layout, responsiveness, visual states, accessibility, design system, components |
 | `security-standard` | Security validation | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
@@ -57,11 +63,14 @@ This skill coordinates them. It does not absorb their responsibilities.
 Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
   -> dev-workflow-standard: consolidate scope
+  -> minimal-implementation-gate: Minimal Planning Review
   -> sdd-spec-factory: generate specs
   -> sdd-spec-factory: generate executable task
   -> human approval
+  -> minimal-implementation-gate: Minimal Implementation Gate
   -> dev-implementation-standard: implement (only the task scope)
   -> Pull Request
+  -> minimal-implementation-gate: Minimal Code Review
   -> ui-ux-standard / security-standard / QA review (as applicable)
   -> dev-workflow-standard: approve or request rework
   -> merge / deploy (only after PR approved)
@@ -240,11 +249,19 @@ devolva para review.
 
 - **Specs** -> delegate to `sdd-spec-factory`. Provide: demand summary,
   source-of-truth paths, consolidated scope, constraints, and the layers in play
-  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
-  task before approving implementation.
+  (Banco, API/Backend, Frontend/UI). Run `minimal-implementation-gate` in
+  Minimal Planning Review mode first, and pass approved simplifications or
+  pending decisions into spec creation. Require the spec hierarchy and an
+  executable task before approving implementation.
+- **Minimal implementation gate** -> call `minimal-implementation-gate` after
+  human task approval and before implementation. Provide the approved task,
+  specs, allowed files/modules and repo context. Do not delegate coding until it
+  returns `LIBERAR IMPLEMENTACAO` or the orchestrator records a human-approved
+  exception.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
-  task and its mandatory specs are approved. Provide: the task, the mandatory
-  specs, allowed files/module, suggested branch, and acceptance criteria.
+  task, mandatory specs and Minimal Implementation Gate are approved. Provide:
+  the task, the mandatory specs, allowed files/module, suggested branch,
+  acceptance criteria, and the gate recommendations.
 - **Transport of delegation** (visible terminal / Claude Code handoff, prompt
   contract, network fallback) is described in `references/claude-delegation.md`.
   Keep prompts lean: paths and constraints, not whole files or conversations.
@@ -254,6 +271,9 @@ devolva para review.
 
 - `sdd-spec-factory`: always, before any implementation. No exceptions for
   product features.
+- `minimal-implementation-gate`: always after scope consolidation, before
+  implementation starts, and after PR creation. Its job is to reduce avoidable
+  scope, files, dependencies, layers and token cost without weakening quality.
 - `ui-ux-standard`: **mandatory whenever there is UI** — new/changed screens,
   components, visual states, responsiveness, accessibility, or design-system
   adherence.
@@ -264,6 +284,20 @@ devolva para review.
 - Auxiliary CLIs/plugins: consultants only, for a real capability gap, after
   scoring and human approval (`references/continuous-improvement.md`).
 
+## Main Plugin Setup
+
+When a user installs `dev-workflow-standard`, treat it as the principal plugin.
+Before running the full workflow on a project:
+
+1. Inspect installed/enabled companion plugins.
+2. Explain missing plugins and why each one is needed.
+3. Ask explicit permission before installing or enabling companions.
+4. Inspect project organization and source-of-truth docs.
+5. Propose the smallest structure needed for specs, tasks, design and evidence.
+6. Ask explicit permission before creating or reorganizing files.
+
+The complete setup protocol is in `references/setup-wizard.md`.
+
 ## Review Rules
 
 When a PR comes back, the orchestrator reviews before approving:
@@ -271,10 +305,12 @@ When a PR comes back, the orchestrator reviews before approving:
 1. PR points to task, issue, branch and the specs it followed.
 2. Implementation matches the specs and the task's acceptance criteria.
 3. Nothing was built outside the task scope; out-of-scope changes are justified.
-4. `ui-ux-standard` validated the UI (when there is UI).
-5. `security-standard` validated security (when the triggers above apply).
-6. Tests required by the task exist and pass, with evidence.
-7. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
+4. `minimal-implementation-gate` completed Minimal Code Review or a justified
+   exception was recorded.
+5. `ui-ux-standard` validated the UI (when there is UI).
+6. `security-standard` validated security (when the triggers above apply).
+7. Tests required by the task exist and pass, with evidence.
+8. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
    marked `NAO VALIDADO`.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
@@ -285,6 +321,7 @@ the `rework` label until corrected.
 
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
 - Prefer paths plus concise constraints.
+- Load specialist skills only when their gate is active.
 - For large work, keep specs and research in files (`docs/specs/...`,
   `docs/modules/<module>/research.md`) and continue from those files.
 - Load the references below only when directly needed.
@@ -295,4 +332,6 @@ the `rework` label until corrected.
   `references/claude-delegation.md`
 - Plugin/skill discovery, scoring, approval, and rollback:
   `references/continuous-improvement.md`
-- End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`
+- Main plugin setup, companion installation approval, and project organization:
+  `references/setup-wizard.md`
+- End-to-end pipeline across workflow skills: `docs/workflow-pipeline.md`

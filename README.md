@@ -25,6 +25,13 @@ plugins/
     .claude-plugin/plugin.json
     plugin.json
     skills/security-standard/SKILL.md
+  minimal-implementation-gate/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/minimal-implementation-gate/SKILL.md
+    checklists/
+    prompts/
   sdd-spec-factory/
     .codex-plugin/plugin.json
     .claude-plugin/plugin.json
@@ -52,6 +59,7 @@ especialistas acionados sob demanda.
 | --- | --- |
 | `dev-workflow-standard` | CTO / orquestrador / revisor final |
 | `sdd-spec-factory` | Engenharia de requisitos: specs e task executavel |
+| `minimal-implementation-gate` | Revisao anti-overengineering, reducao de ruido e custo por tokens |
 | `dev-implementation-standard` | Executor / coder |
 | `ui-ux-standard` | Validacao de UI/UX |
 | `security-standard` | Validacao de seguranca |
@@ -62,11 +70,14 @@ Pipeline de ponta a ponta:
 Ideia / demanda
   -> dev-workflow-standard diagnostica (perguntas criticas, riscos)
   -> dev-workflow-standard consolida escopo
+  -> minimal-implementation-gate faz Minimal Planning Review
   -> sdd-spec-factory gera specs
   -> sdd-spec-factory gera task executavel
   -> aprovacao humana
+  -> minimal-implementation-gate faz Minimal Implementation Gate
   -> dev-implementation-standard implementa (somente o escopo da task)
   -> Pull Request
+  -> minimal-implementation-gate faz Minimal Code Review
   -> ui-ux-standard / security-standard / QA conforme aplicavel
   -> dev-workflow-standard aprova ou solicita rework
   -> merge / deploy (somente apos PR aprovado)
@@ -76,6 +87,12 @@ Regras invariantes:
 
 - `dev-workflow-standard` nunca escreve codigo de produto, nunca pula specs e
   nunca cria task sem specs suficientes.
+- `dev-workflow-standard` e o plugin principal: em um novo projeto, guia a
+  configuracao, pede autorizacao para instalar plugins complementares e pede
+  permissao antes de organizar arquivos/pastas do workflow.
+- `minimal-implementation-gate` reduz escopo, dependencias, arquivos, camadas,
+  ruido e custo por tokens, sem cortar seguranca, validacao, testes, logs
+  essenciais, acessibilidade ou regra de negocio.
 - `dev-implementation-standard` nunca implementa sem task aprovada e nunca altera
   fora do escopo sem registrar justificativa.
 - `ui-ux-standard` e obrigatoria quando houver UI.
@@ -95,9 +112,13 @@ o proximo e nunca escreve codigo de produto diretamente.
 
 Responsabilidades:
 
+- Guiar o setup inicial do projeto, verificar plugins complementares e pedir
+  autorizacao antes de instalar, ativar ou organizar arquivos.
 - Receber a demanda, diagnosticar e fazer as perguntas criticas.
 - Consolidar escopo (incluido, fora de escopo, restricoes, riscos, decisoes).
 - Decidir quais skills especialistas usar.
+- Acionar `minimal-implementation-gate` para planejamento minimo, gate antes de
+  codar e code review anti-overengineering.
 - Exigir specs antes de tasks e tasks antes da implementacao.
 - Delegar a criacao de specs para `sdd-spec-factory`.
 - Delegar a implementacao para `dev-implementation-standard`.
@@ -140,6 +161,23 @@ com o orquestrador.
 
 Ele nao deve procurar outro plugin para tarefas que ja consegue coordenar com
 suas regras, ferramentas e recursos atuais.
+
+### Setup guiado do plugin principal
+
+Ao ser instalado em um projeto, o `dev-workflow-standard` deve conduzir um setup
+assistido:
+
+1. Verificar quais plugins complementares estao instalados/habilitados.
+2. Explicar a funcao de cada plugin ausente.
+3. Pedir autorizacao humana antes de instalar ou habilitar complementos.
+4. Verificar a organizacao do projeto: `AGENTS.md`, PRD, arquitetura, mockups,
+   `docs/specs/`, `docs/tasks/`, `docs/design/` quando houver UI, e local de
+   evidencias de PR/QA.
+5. Propor a menor organizacao compativel com o repo existente.
+6. Pedir permissao antes de criar ou reorganizar arquivos.
+
+O objetivo e manter o padrao de construcao sem depender da memoria do dev/agente,
+e reduzir custo por tokens carregando apenas a skill necessaria em cada gate.
 
 ### MCPs disponiveis no ambiente do Guilherme
 

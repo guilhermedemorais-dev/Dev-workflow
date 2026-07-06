@@ -44,6 +44,11 @@ Do not replace project rules, PRDs, architecture, or business invariants. If a
 security fix changes a product policy, public API, authorization rule, schema,
 or user flow, stop for a product decision before implementing it.
 
+When `minimal-implementation-gate` recommends simplification, security has
+precedence. Never remove or weaken authentication, authorization, input
+validation, tenant boundaries, secret handling, audit logs, privacy controls,
+security tests or defensive error handling to reduce code, files or token cost.
+
 ## Review Modes
 
 Choose the smallest mode that provides credible coverage.

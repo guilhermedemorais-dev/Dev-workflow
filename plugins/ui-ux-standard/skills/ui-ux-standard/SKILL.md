@@ -33,6 +33,10 @@ approval.
 - Do not use unlicensed external assets as final assets.
 - Frontend/UI is not complete until runtime behavior and visual fidelity are
   checked where practical.
+- When `minimal-implementation-gate` recommends simplification, accessibility,
+  usability, approved mockups and required visual states have precedence. Do not
+  remove keyboard access, contrast, responsive behavior, error/loading/empty
+  states or design-system requirements merely to reduce files or tokens.
 
 ## Minimal Workflow
 

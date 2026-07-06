@@ -27,6 +27,8 @@ Keep this file lightweight and act only on the current task.
 - **An approved task exists.** Never implement without an approved task.
 - SDD/spec work is already complete. The executor does not do SDD.
 - The task links its **mandatory specs** and acceptance criteria.
+- `minimal-implementation-gate` returned `LIBERAR IMPLEMENTACAO`, or the
+  orchestrator recorded a human-approved exception.
 - The suggested **branch** is defined (or derive it from the task convention).
 - The task has GitHub-ready fields: status, responsável, bloqueios, specs
   obrigatórias, branch sugerida, evidências, and issue criada/vinculada.
@@ -69,21 +71,24 @@ filename.
 2. **Set status** to `🟡 Em andamento` in the task content when starting.
 3. **Execute the prompt-base** from `Prompt para o executor` as the operational
    contract.
-4. **Implementação**: implement only the approved scope, by layer when relevant:
+4. **Minimal gate**: follow the approved `Minimal Implementation Gate`
+   recommendation. Prefer existing repo code, native framework/runtime features,
+   standard library and already-installed dependencies before creating files.
+5. **Implementação**: implement only the approved scope, by layer when relevant:
    Banco, API/Backend, Frontend/UI. Do not invent files, endpoints, tables,
    payloads, or architecture.
-5. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
+6. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
    and perform manual validation with objective evidence.
-6. **Validação**: run the task-required commands, build, lint, tests,
+7. **Validação**: run the task-required commands, build, lint, tests,
    migrations, UI checks, or manual checks defined by the repo/task. Capture
    evidence.
-7. **Atualização do relatório**: fill the mandatory final report in
+8. **Atualização do relatório**: fill the mandatory final report in
    `templates/execution-report-template.md`, including prompt used, checklist
    executed, evidence, layer results, risks, gaps, blockers, and GitHub-ready
    fields.
-8. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
+9. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
    implementation and validation evidence support completion.
-9. **Handoff para review**: prepare the PR or review package linked to task,
+10. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
@@ -184,6 +189,7 @@ devolva para review.
 Stop and return to the orchestrator when:
 
 - a precondition is missing (no approved task / specs);
+- Minimal Implementation Gate is missing, rejected, or contradicts the task;
 - the specs are ambiguous or contradict the code;
 - the task cannot be completed without an architecture change;
 - leaving the approved scope is required;
@@ -196,6 +202,8 @@ visual status to `🔴 Bloqueada`.
 ## Interfaces with other skills
 
 - Receives the task and approval from `dev-workflow-standard`.
+- Consumes the `Minimal Implementation Gate` recommendation from
+  `minimal-implementation-gate`.
 - Consumes specs and templates from `sdd-spec-factory` (task, PR templates).
 - Defers UI validation to `ui-ux-standard` and security validation to
   `security-standard`; it implements to satisfy their criteria but does not
