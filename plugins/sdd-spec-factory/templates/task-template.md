@@ -13,7 +13,8 @@ Feature | Bugfix | Refactor | Chore | Spike | DevOps | Docs
 Alta | Média | Baixa
 
 ## Issue GitHub
-Link da issue (ou "criar issue: <título sugerido>").
+Obrigatório: toda task tem issue registrada no GitHub. Cole o número/URL da issue.
+Sem issue registrada a task fica `blocked`/`needs-info` e não entra em Ready for Dev.
 
 ## Branch sugerida
 `feat/<modulo>-<resumo>` | `fix/<modulo>-<resumo>` | `chore/<resumo>`

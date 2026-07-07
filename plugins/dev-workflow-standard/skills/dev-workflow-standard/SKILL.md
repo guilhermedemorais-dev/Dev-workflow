@@ -43,6 +43,13 @@ task.
 - Final acceptance belongs to the user.
 - Do not install plugins, enable hooks, activate servers, add workflow files, or
   reorganize a project without explicit human approval.
+- **Every task MUST be registered as a GitHub issue.** This is how the user keeps
+  control of the pipeline. No task may leave `Discovery / SDD` or enter
+  `Ready for Dev`/implementation without a real GitHub issue created and its number
+  linked in the task's `Issue criada / vinculada` field. If GitHub access or the
+  `gh` CLI is missing, treat the task as `blocked` with `needs-info` and stop —
+  raise it to the user to create the issue or grant access. Never silently proceed
+  with an unregistered task, and never treat issue registration as optional.
 
 ## Skill Roles (who does what)
 
@@ -153,17 +160,25 @@ orchestrator must use these definitions as gate checks.
 | --- | --- | --- |
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
-| Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
+| Ready for Dev | Executable task exists, mandatory specs are linked, **a GitHub issue is created and its number/URL is linked in the task**, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
 | In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
 | In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
-## GitHub-Ready Task Structure
+## GitHub Issue Registration (mandatory)
 
-Do not assume GitHub Projects, Issues, or boards are available. Prepare each task
-so it can be mapped later without restructuring:
+**Every task must be registered as a GitHub issue — no exceptions.** The issue is
+the user's tracking record and the way the pipeline stays under control. Register
+the issue during `Discovery / SDD`, before the task can enter `Ready for Dev`.
+GitHub Projects and boards may not exist yet, but the **issue always must**. If
+issue creation is blocked (no `gh`, no token, no access), keep the task `blocked`
+with `needs-info` and escalate to the user; do not advance the task.
 
-- one issue per task when the project uses GitHub Issues;
+Prepare each task so it can also be mapped to a Project board later without
+restructuring:
+
+- **one GitHub issue per task, created and linked (mandatory)** — record the issue
+  number/URL in `Issue criada / vinculada`;
 - labels from the recommended label set above;
 - optional milestone when the task belongs to a phase, release, or checkpoint;
 - branch sugerida recorded in the task;

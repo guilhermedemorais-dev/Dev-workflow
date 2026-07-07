@@ -158,7 +158,9 @@ docs/specs/<modulo>/
 Produce one small, reviewable, executable task using `templates/task-template.md`:
 
 - Link the mandatory specs.
-- Link the GitHub issue (or state that one must be created).
+- Register and link the GitHub issue (mandatory — every task must have a real
+  GitHub issue; if it cannot be created, mark the task `blocked`/`needs-info` and
+  escalate to the orchestrator instead of proceeding).
 - Suggest the branch name (e.g. `feat/<modulo>-<resumo>`,
   `fix/<modulo>-<resumo>`).
 - State the expected PR.
