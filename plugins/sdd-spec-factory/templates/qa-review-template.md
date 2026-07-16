@@ -15,6 +15,8 @@ Branch, build, URL/ambiente e dados de teste usados.
 ## QA funcional
 - [ ] Fluxo principal funciona conforme a page-spec.
 - [ ] Fluxos alternativos e de erro tratados.
+- [ ] Todas as linhas da matriz de interações UI aplicável foram testadas.
+- [ ] Todas as linhas da matriz de rastreabilidade aplicável têm evidência.
 - [ ] Regras de negócio (RN) validadas (válido e inválido).
 - [ ] Validações de entrada funcionam no backend e no frontend.
 
@@ -30,6 +32,9 @@ Branch, build, URL/ambiente e dados de teste usados.
 - Resultado:
 
 ## Segurança (gate)
+- [ ] Security Spec Contract validado ou marcado `N/A` com motivo.
+- [ ] Testes negativos de permissão, tenant/usuário errado, input inválido e
+      abuso relevante executados quando aplicável.
 - [ ] Revisão de segurança feita/encaminhada (security-standard).
 - [ ] Sem dados sensíveis expostos.
 

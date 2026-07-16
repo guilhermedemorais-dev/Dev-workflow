@@ -49,6 +49,60 @@ precedence. Never remove or weaken authentication, authorization, input
 validation, tenant boundaries, secret handling, audit logs, privacy controls,
 security tests or defensive error handling to reduce code, files or token cost.
 
+## Security Spec Contract Mode
+
+Use this mode during Discovery / SDD before product code is implemented. The
+goal is not to run a pentest. The goal is to make the feature spec precise
+enough that implementation cannot accidentally omit a control.
+
+Trigger this mode when a spec/task touches:
+
+- authentication, authorization, sessions, recovery, MFA, impersonation
+- tenant boundaries, object ownership, admin/support or privileged operations
+- sensitive data, privacy, retention, export/import, backups, observability
+- uploads, downloads, archives, generated files, parsing or serialization
+- payments, billing, credits, irreversible actions or fraud-sensitive flows
+- webhooks, queues, external integrations, callbacks, redirects, SSRF surfaces
+- browser storage, DOM rendering, third-party scripts, CORS, CSP, CSRF
+- secrets, tokens, API keys, cryptography, signing, replay or key lifecycle
+- dependencies, package managers, install scripts, CI/CD, containers, IaC,
+  cloud/IAM, networks, databases, caches or release artifacts
+- AI/LLM tools, agent actions, prompt/data injection, RAG, model/provider keys
+- UI-visible security behavior: permission states, masked sensitive data,
+  forbidden/unauthorized screens, tenant/user boundary cues, safe error copy,
+  browser-visible storage and client-side exposure of secrets or tokens
+
+For each affected surface, return a `Security Spec Contract` table:
+
+| Surface | Asset | Attacker-controlled input | Actor/role rule | Trust boundary | Required control | Negative test/evidence | Release blocker |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+Block the task when any reachable security-sensitive effect lacks an explicit
+control or negative test. Mark non-applicable areas as `N/A` only with a
+verified reason.
+
+Security spec output must distinguish:
+
+- `BLOCKER`: missing required control or unverifiable security invariant.
+- `REQUIRED`: control/test must be implemented in the task.
+- `INFO`: defense-in-depth improvement, not required for current release.
+- `N/A`: not applicable with reason.
+
+Do not turn this mode into generic OWASP prose. Every row must point to a
+specific feature surface, actor, data asset, entry point or user interaction.
+
+When the security-sensitive behavior is visible in UI, also return the UI/UX
+handoff rows that `ui-ux-standard` must validate:
+
+| UI surface | Security/privacy expectation | Required visual state | Negative test/evidence | Release blocker |
+| --- | --- | --- | --- | --- |
+|  |  |  |  | sim/não |
+
+Examples: unauthorized user cannot see or trigger an action, sensitive data is
+masked, tenant/user data does not bleed across accounts, forbidden state uses
+safe copy, and secrets/tokens are not visible in DOM, logs, URL, localStorage or
+browser bundles.
+
 ## Review Modes
 
 Choose the smallest mode that provides credible coverage.
@@ -141,6 +195,10 @@ Document only what is useful for the current scope:
 - existing controls and assumptions
 - abuse cases with plausible impact
 
+During SDD, keep this compact and feature-scoped. If the threat model reveals a
+missing product/security decision, return `BLOCKED` with the exact question
+instead of inventing a policy.
+
 Threat models must reflect the actual repository and runtime. Generic OWASP
 lists are prompts for investigation, not evidence of vulnerabilities.
 
@@ -186,6 +244,10 @@ A reportable finding needs:
 
 Classify uncertain candidates as `NEEDS_VALIDATION`, not as confirmed.
 Ordinary correctness bugs are not security findings without security impact.
+
+During SDD, unvalidated candidate risks are not reported as confirmed
+vulnerabilities. They become required controls, tests, or blocking questions in
+the Security Spec Contract.
 
 Apply the complete evidence and deduplication rules in
 `references/finding-standard.md`. Independent vulnerable entry points remain
@@ -300,6 +362,13 @@ Always report status by layer:
 - `Infra/DevOps`
 - `Dependencias/Supply Chain`
 
+For `Frontend/UI`, include privacy and permission-state evidence when the task
+has UI: masked sensitive fields, unauthorized/forbidden states, disabled actions,
+tenant/user separation, safe errors, and no browser-visible secrets/tokens. If
+that evidence belongs to `ui-ux-standard`, mark the dependency explicitly and do
+not claim full `PASS` until the UI evidence is present or a scoped exception is
+approved.
+
 Final gate values:
 
 - `PASS`: relevant scope validated; no unresolved release-blocking finding
@@ -318,15 +387,20 @@ Do not claim a security review is complete when:
 - high-risk changed paths were not reviewed
 - candidates were reported without validation
 - auth, tenant, sensitive-data, or privileged flows lack negative tests
+- UI-facing auth, tenant, sensitive-data, or privileged flows lack permission,
+  masking, forbidden-state or browser-exposure evidence
 - runtime-dependent claims were not tested or explicitly marked unvalidated
 - tool failures or excluded areas were hidden
 - a fix was applied without regression validation
+- a security-triggering task lacks a Security Spec Contract or negative tests
+  before implementation
 
 ## Handoff To Dev Workflow
 
 Return:
 
 - selected review mode and risk level
+- Security Spec Contract result when operating during Discovery / SDD
 - scope reviewed and scope excluded
 - confirmed findings and unresolved candidates
 - fixes applied and tests executed

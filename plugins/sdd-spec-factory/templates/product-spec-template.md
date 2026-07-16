@@ -9,6 +9,14 @@ Rascunho | Em revisão | Aprovada
 ## Objetivo
 Por que este produto/iniciativa existe e qual problema resolve.
 
+## Resultado dos gates
+| Gate | Status | Evidência / motivo |
+| --- | --- | --- |
+| Ambiguity Gate | PASS/BLOCKED | Decisões de produto bloqueantes ou motivo de aprovação. |
+| Spec Completeness Gate | PASS/BLOCKED | Escopo, módulos, riscos e aceite cobertos. |
+| Security Spec Contract Gate | PASS/BLOCKED/N/A | Riscos de produto/dados cobertos ou motivo de N/A. |
+| Traceability Gate | PASS/BLOCKED | Objetivos ligados a módulos, tarefas e aceite. |
+
 ## Problema / oportunidade
 O problema do cliente/usuário em linguagem clara.
 
@@ -36,11 +44,21 @@ Como medir que o produto entregou valor.
 ## Riscos
 Riscos de produto, técnicos, de segurança e de dados.
 
+## Dados, permissões e segurança de produto
+Dados sensíveis previstos, papéis principais, limites de tenant/organização,
+integrações críticas, obrigações legais/compliance, retenção/exportação e riscos
+que devem acionar `security-standard`.
+
 ## Decisões pendentes
 Decisões abertas aguardando humano (numeradas).
 
 ## Critérios de aceite
 Critérios objetivos e testáveis para considerar a iniciativa entregue.
+
+## Matriz de rastreabilidade
+| Objetivo/requisito | Módulo previsto | Métrica/teste/evidência | Critério de aceite |
+| --- | --- | --- | --- |
+|  |  |  |  |
 
 ## Hipóteses
 Liste explicitamente cada suposição (`HIPÓTESE:`) ainda não confirmada.

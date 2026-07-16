@@ -14,6 +14,9 @@ O que o revisor entendeu que foi entregue.
 ## Aderência às specs
 - [ ] Implementa o que a spec define (o contrato).
 - [ ] Atende todos os critérios de aceite da task.
+- [ ] Cada item da matriz de rastreabilidade tem implementação e evidência.
+- [ ] Cada interação UI aplicável foi implementada e validada.
+- [ ] Cada contrato backend/API/job/webhook aplicável foi implementado e validado.
 - [ ] Não foge do escopo nem altera o que estava fora do escopo.
 
 ## Qualidade de código
@@ -29,11 +32,16 @@ O que o revisor entendeu que foi entregue.
 
 ## Testes
 - [ ] Testes existem e cobrem o comportamento esperado.
+- [ ] Testes negativos obrigatórios existem ou há justificativa aceita.
 - [ ] Suíte passa localmente/CI.
 - Evidência:
 
 ## Segurança
-- [ ] Sem nova superfície de risco; encaminhado a security-standard quando aplicável.
+- [ ] Security Spec Contract foi seguido quando aplicável.
+- [ ] Testes/evidências negativas de authz, tenant, input, dados sensíveis ou
+      abuso foram executados quando aplicável.
+- [ ] Sem nova superfície de risco não especificada; encaminhado a
+      security-standard quando aplicável.
 
 ## Observabilidade
 - [ ] Logs/métricas adequados.

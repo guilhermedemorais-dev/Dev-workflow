@@ -25,8 +25,42 @@ PR esperado (ou "abrir PR após primeiro checkpoint"). Aponta para esta task e a
 ## Responsável
 Quem executa (dev/IA) e quem revisa.
 
+## Atribuição de execução / Executor LLM
+Obrigatório antes de Ready for Dev. A task deve dizer quem executa, quem revisa
+e quais arquivos ficam bloqueados para outros executores.
+
+- Executor LLM primário: Codex | Claude Desktop | Claude Code | Humano | A definir
+- Executor secundário/revisor: Codex | Claude Desktop | Claude Code | Humano | N/A
+- Motivo da atribuição:
+- Pode rodar AFK: sim/não. Se sim, checkpoint máximo:
+- Modo de handoff: task manual | Codex local | Claude Desktop manual | Claude Code CLI | outro
+- Status da claim: unclaimed | claimed | in_progress | blocked | done
+- Claim por:
+- Claim em:
+- `locked_paths`:
+  -
+- Conflitos conhecidos com outras tasks:
+
+Regras:
+
+- `A definir`, `unclaimed` sem dono antes da execução ou `locked_paths` vazio
+  bloqueiam Ready for Dev, salvo task puramente docs sem arquivo-alvo.
+- Duas LLMs não podem executar a mesma task nem editar o mesmo `locked_path` ao
+  mesmo tempo.
+- Se a task estiver atribuída a `Claude Desktop`, Codex só pode preparar,
+  revisar ou reatribuir com autorização explícita; não pode implementar os
+  arquivos bloqueados.
+- Se o executor precisar alterar arquivo fora de `locked_paths`/permitidos, deve
+  parar e registrar bloqueio.
+
 ## Objetivo da task
 O que esta task entrega, em uma a três frases.
+
+## Tipo de slice
+Vertical behavior slice | Refactor mecânico | Infra/DevOps | Spike | Docs
+
+Se não for `Vertical behavior slice`, justificar por que UI/API/Banco/Testes não
+precisam ser entregues juntos nesta task.
 
 ## Contexto
 Por que esta task existe e o que o executor precisa saber.
@@ -37,6 +71,19 @@ Links das specs que são contrato desta task (product/module/page/component/vali
 ## Docs obrigatórios
 PRD, arquitetura, mockups aprovados e demais documentos a seguir.
 
+## Resultado dos gates
+| Gate | Status | Evidência / motivo | Bloqueio |
+| --- | --- | --- | --- |
+| Ambiguity Gate | PASS/BLOCKED |  |  |
+| Spec Completeness Gate | PASS/BLOCKED |  |  |
+| UI Interaction Contract Gate | PASS/BLOCKED/N/A |  |  |
+| Backend Contract Gate | PASS/BLOCKED/N/A |  |  |
+| Security Spec Contract Gate | PASS/BLOCKED/N/A |  |  |
+| Traceability Gate | PASS/BLOCKED |  |  |
+
+Qualquer `BLOCKED`, `N/A` sem motivo verificável ou gate ausente impede Ready for
+Dev.
+
 ## Escopo
 O que está incluído nesta task.
 
@@ -45,6 +92,13 @@ O que NÃO deve ser feito aqui (evita PR inchado).
 
 ## Arquivos prováveis
 Caminhos prováveis a alterar (marcar `HIPÓTESE:` quando não confirmado).
+
+## Arquivos e módulos permitidos
+Lista objetiva dos arquivos, diretórios ou módulos que o executor pode alterar.
+Se precisar sair da lista, parar e registrar bloqueio.
+
+## Arquivos e módulos proibidos
+Lista de áreas que não devem ser tocadas nesta task.
 
 ## Minimal Planning Review
 Resumo das recomendacoes aprovadas pelo `minimal-implementation-gate`, ou `N/A`
@@ -56,8 +110,23 @@ Mudanças de schema/migração. `N/A` + motivo se não houver.
 ## API/Backend
 Endpoints/serviços a criar ou alterar. `N/A` + motivo se não houver.
 
+## Contrato backend/API/job/webhook
+Obrigatório quando houver backend, integração, job, fila, webhook, upload,
+pagamento, import/export ou efeito persistente.
+
+| ID | Entry point | Request/evento | Authz | Validação | Banco/efeito | Response/erro | Idempotência/transação | Testes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| BE-01 |  |  |  |  |  |  |  |  |
+
 ## Frontend/UI
 Telas/componentes a criar ou alterar. `N/A` + motivo se não houver.
+
+## Matriz de interações UI
+Obrigatória quando houver UI. Cada linha deve ter implementação e evidência.
+
+| ID | Tela/componente | Elemento/ação | Condição/permissão | Chamada/efeito | Estados | Erro/feedback | Teste/evidência |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| UI-01 |  |  |  |  |  |  |  |
 
 ## Regras de negócio
 RN aplicáveis (referência ao validation-rules-spec).
@@ -65,18 +134,59 @@ RN aplicáveis (referência ao validation-rules-spec).
 ## Critérios de aceite
 Lista objetiva e testável do que define "pronto".
 
+## Matriz de rastreabilidade
+| Requisito/RN/mockup | Spec origem | Implementação esperada | Teste/evidência | Critério de aceite |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
 ## TDD / Testes obrigatórios
 Testes que devem existir/passar (unit, integração, e2e) e cobertura mínima.
 
+## Testes negativos obrigatórios
+Sem permissão, tenant/usuário errado, input inválido, estado inválido,
+duplicidade, concorrência, erro de integração, rate limit/retry ou outro abuso
+aplicável. `N/A` exige motivo.
+
 ## Segurança
 Pontos de atenção de segurança (validar com security-standard).
+
+## Security Spec Contract
+Obrigatório quando houver auth, autorização, tenant, admin/support, dados
+sensíveis, uploads/downloads, pagamentos, webhooks, integrações externas,
+parsers, arquivos gerados, browser storage, dependências, infraestrutura, CI/CD,
+secrets, logs, import/export, AI/LLM tools ou endpoint público.
+
+| Superfície | Ator/abuso | Controle obrigatório | Teste/evidência | Bloqueia release? |
+| --- | --- | --- | --- | --- |
+|  |  |  |  | sim/não |
 
 ## Observabilidade/logs
 Eventos, métricas e logs que devem ser adicionados.
 
 ## Instrução para IA/dev
-Passos diretos para o executor, restrições e o que NÃO tocar. Antes de codar,
-executar `Minimal Implementation Gate` e respeitar o caminho minimo aprovado.
+Passos diretos para o executor atribuído, restrições e o que NÃO tocar. Antes de
+codar, executar `Minimal Implementation Gate`, confirmar que o `Executor LLM
+primário` corresponde ao agente atual e respeitar o caminho minimo aprovado.
+
+Instrução obrigatória: se qualquer gate estiver ausente, `BLOCKED`, ou se a
+task/spec não definir comportamento de botão, endpoint, permissão, erro ou teste
+necessário, pare antes de codar e devolva para `dev-workflow-standard` /
+`sdd-spec-factory` como `blocked`/`needs-info`.
+
+Instrução obrigatória de anti-colisão: se a task estiver atribuída a outra LLM,
+ou se algum `locked_path` estiver reclamado por outra task/executor, não
+implemente. Registre o bloqueio ou peça reatribuição explícita.
+
+## Condições de parada
+- Gate obrigatório ausente, `BLOCKED` ou `N/A` sem justificativa verificável.
+- `Executor LLM primário` ausente, `A definir`, diferente do executor atual, ou
+  sem reatribuição explícita.
+- `locked_paths` ausente, vazio sem justificativa, ou em conflito com outra task
+  em andamento.
+- Necessidade de alterar arquivo/módulo fora da lista permitida.
+- Necessidade de criar endpoint, tabela, payload ou regra não especificada.
+- Divergência entre spec, mockup, PRD, AGENTS.md ou código real.
+- Falta de teste/evidência para comportamento crítico.
 
 ## Resultado da execução
 

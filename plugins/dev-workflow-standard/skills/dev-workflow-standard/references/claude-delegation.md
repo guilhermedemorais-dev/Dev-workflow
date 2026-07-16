@@ -1,16 +1,33 @@
-# Claude Code Delegation Protocol
+# Optional Claude Code Transport Protocol
 
-Use this protocol to keep Codex focused on technical leadership while Claude
-Code performs bounded implementation work.
+Use this protocol only as an optional transport helper. The source of truth for
+delegation is the task-level `Executor LLM`, handoff mode, claim status and
+`locked_paths`, not a terminal command.
 
 ## Objective
 
 Reduce Codex context and token consumption without weakening source-of-truth,
 review, QA, security, or user approval gates.
 
-## Mandatory Trigger
+## Primary Rule
 
-Delegate the code-writing checkpoint to Claude Code when any of these apply:
+Before using any Claude transport, the task must already say:
+
+- `Executor LLM primário`: `Claude Desktop` or `Claude Code`
+- handoff mode: `Claude Desktop manual` or `Claude Code CLI`
+- `locked_paths`
+- claim status and owner
+- acceptance criteria, tests and stop conditions
+
+If the task is assigned to `Claude Desktop`, this file is only a prompt-shaping
+reference. Codex should prepare the bounded handoff text and wait for the user
+to run Claude Desktop manually. Codex must not implement the assigned
+`locked_paths` unless the task is explicitly reallocated.
+
+## Optional Trigger
+
+Consider Claude Code transport when any of these apply and the task is assigned
+to `Claude Code`:
 
 - a feature, refactor, integration, migration, or non-trivial bugfix is requested
 - implementation spans more than two files or more than one technical concern
@@ -18,9 +35,8 @@ Delegate the code-writing checkpoint to Claude Code when any of these apply:
 - repetitive code, tests, component work, or mechanical changes are required
 - a PRD, spec, roadmap phase, or implementation checkpoint exists
 
-Codex may edit directly only for genuinely small changes such as a typo,
-single-line config correction, tiny documentation adjustment, or narrowly
-localized patch that does not justify delegation overhead.
+Codex may implement only when the task's `Executor LLM primário` is `Codex`, or
+when the user/orchestrator explicitly reallocates the task to Codex.
 
 ## Availability Gate
 
@@ -42,9 +58,10 @@ Set `CLAUDE_STATUS`:
 Use a minimal prompt test only when auth status is inconclusive. Do not spend a
 model request on every checkpoint merely as a health check.
 
-For mandatory-trigger work, do not silently fall back to Codex implementation
+For work assigned to Claude, do not silently fall back to Codex implementation
 when `CLAUDE_STATUS != AVAILABLE`. Stop before code writing and report the
-delegation blocker so Codex does not consume the implementation budget itself.
+transport blocker. The next action is manual Claude Desktop handoff,
+reallocation, or reslicing, not Codex taking over by default.
 
 ### Restricted Workspace Recovery
 
@@ -85,21 +102,35 @@ Include only:
 - exact objective
 - source-of-truth PRD, issue, research, spec, and mockup paths
 - allowed files or module boundary
+- `Executor LLM`, handoff mode, claim status and `locked_paths`
+- gate results: Ambiguity, Spec Completeness, UI Interaction Contract, Backend
+  Contract, Security Spec Contract and Traceability
+- UI Interaction Matrix rows applicable to the checkpoint
+- Backend Contract rows applicable to the checkpoint
+- Security Spec Contract rows applicable to the checkpoint
+- Traceability Matrix rows applicable to the checkpoint
 - relevant public contracts and constraints
 - acceptance criteria
 - expected tests or validation commands
+- negative tests, permission states, loading/empty/error states and required
+  evidence for the checkpoint
 - output instruction: return only changed files, tests, and blockers in at most 12 lines
 
 Do not paste whole repositories, long chat transcripts, unrelated logs, or
-complete documentation trees. Claude should read the named files itself.
-Codex should inspect the resulting files and diff instead of requesting a long
-implementation explanation from Claude.
+complete documentation trees. Prefer IDs and paths for the contract rows, but do
+not omit the contract rows themselves when they are short. Claude should read the
+named files itself. Codex should inspect the resulting files and diff instead of
+requesting a long implementation explanation from Claude.
+
+If any applicable contract is missing from the task, do not hand off to Claude.
+Return the task to SDD as `blocked`/`needs-info`.
 
 ## Execution Command
 
-The default delegation mode for Guilherme is `VISIBLE_TERMINAL`. Create a
-temporary prompt file containing the bounded brief, then run the bundled helper
-with approved GUI/external execution:
+The default reliable delegation mode for Guilherme is task-level manual handoff.
+`VISIBLE_TERMINAL` is optional for environments where the Claude Code CLI and
+GUI terminal are known to work. Create a temporary prompt file containing the
+bounded brief, then run the bundled helper with approved GUI/external execution:
 
 ```bash
 plugins/dev-workflow-standard/scripts/claude-visible-delegate.sh \
@@ -122,8 +153,9 @@ While the visible Claude terminal is active:
 
 Opening a GUI terminal requires the platform's approved external/escalated
 execution path. Request that approval through the execution permission
-mechanism. Do not replace visible mode with a hidden call merely to avoid the
-approval prompt.
+mechanism when available. If the transport is unreliable, keep the task assigned
+to Claude Desktop manual or reallocate explicitly; do not treat transport
+failure as permission for Codex to edit the delegated files.
 
 If no graphical session or supported terminal exists, report that visible mode
 is unavailable and ask before using the headless fallback. The fallback command

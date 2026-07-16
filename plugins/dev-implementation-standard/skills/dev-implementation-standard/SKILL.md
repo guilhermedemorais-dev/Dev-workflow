@@ -27,6 +27,15 @@ Keep this file lightweight and act only on the current task.
 - **An approved task exists.** Never implement without an approved task.
 - SDD/spec work is already complete. The executor does not do SDD.
 - The task links its **mandatory specs** and acceptance criteria.
+- The task declares `Executor LLM primário`, handoff mode, claim status and
+  `locked_paths`.
+- The current executor matches `Executor LLM primário`, or the task contains an
+  explicit reallocation approved by the orchestrator/user.
+- The task includes completed or explicitly `N/A` gate results for Ambiguity,
+  Spec Completeness, UI Interaction Contract, Backend Contract, Security Spec
+  Contract and Traceability.
+- UI work includes an interaction matrix; backend work includes entry point
+  contracts; security-triggering work includes the Security Spec Contract.
 - `minimal-implementation-gate` returned `LIBERAR IMPLEMENTACAO`, or the
   orchestrator recorded a human-approved exception.
 - The suggested **branch** is defined (or derive it from the task convention).
@@ -39,6 +48,15 @@ If any precondition is missing, stop and return to `dev-workflow-standard` /
 ## Hard Limits (non-negotiable)
 
 - Implement **only the task scope**. Do not advance to another task.
+- Do not implement a task assigned to another LLM/person. If `Executor LLM
+  primário` is `Claude Desktop`, `Claude Code`, `Codex`, `Humano`, or another
+  executor that is not the current executor, stop unless the task was explicitly
+  reallocated.
+- Do not edit paths claimed by another executor or outside the task's
+  `locked_paths`/allowed modules.
+- Do not implement from superficial tasks. If the task describes a screen,
+  endpoint or rule without the corresponding interaction/backend/security/test
+  contract, stop and return it to SDD as `blocked`/`needs-info`.
 - **Do not change architecture without approval** (schema shape, public APIs,
   contracts, payloads, cross-module patterns). If the task cannot be done without
   such a change, stop and escalate.
@@ -67,28 +85,40 @@ filename.
 
 1. **Leitura da task e specs**: read the whole approved task and every mandatory
    spec end to end before coding. Confirm scope, allowed files/modules,
-   acceptance criteria, out-of-scope items, required tests, and blockers.
-2. **Set status** to `🟡 Em andamento` in the task content when starting.
-3. **Execute the prompt-base** from `Prompt para o executor` as the operational
+   acceptance criteria, gate results, interaction/backend/security contracts,
+   traceability matrix, out-of-scope items, required tests, and blockers.
+2. **Confirm assignment and claim**: verify that `Executor LLM primário` matches
+   the current executor, `locked_paths` are present and non-conflicting, then set
+   claim/status to the current executor. If the task is assigned to another LLM,
+   stop and return it for manual handoff or reallocation.
+3. **Set status** to `🟡 Em andamento` in the task content when starting.
+4. **Execute the prompt-base** from `Prompt para o executor` as the operational
    contract.
-4. **Minimal gate**: follow the approved `Minimal Implementation Gate`
+5. **Minimal gate**: follow the approved `Minimal Implementation Gate`
    recommendation. Prefer existing repo code, native framework/runtime features,
    standard library and already-installed dependencies before creating files.
-5. **Implementação**: implement only the approved scope, by layer when relevant:
+6. **Implementação**: implement only the approved scope, by layer when relevant:
    Banco, API/Backend, Frontend/UI. Do not invent files, endpoints, tables,
    payloads, or architecture.
-6. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
+   - For UI: implement every row of the interaction matrix, including disabled,
+     loading, empty, success, error and forbidden states.
+   - For backend: implement only the specified entry point contracts, including
+     validation, status codes, idempotency/transaction behavior and errors.
+   - For security: implement the stated invariant and negative path. Do not
+     weaken auth, authorization, tenant isolation, secret handling, audit logs,
+     input validation or privacy controls for simplicity.
+7. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
    and perform manual validation with objective evidence.
-7. **Validação**: run the task-required commands, build, lint, tests,
+8. **Validação**: run the task-required commands, build, lint, tests,
    migrations, UI checks, or manual checks defined by the repo/task. Capture
    evidence.
-8. **Atualização do relatório**: fill the mandatory final report in
+9. **Atualização do relatório**: fill the mandatory final report in
    `templates/execution-report-template.md`, including prompt used, checklist
    executed, evidence, layer results, risks, gaps, blockers, and GitHub-ready
    fields.
-9. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
+10. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
    implementation and validation evidence support completion.
-10. **Handoff para review**: prepare the PR or review package linked to task,
+11. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
@@ -100,6 +130,11 @@ mapping by preserving these fields in the task content:
 - status visual
 - status Kanban
 - responsável
+- Executor LLM primário
+- Executor secundário/revisor
+- modo de handoff
+- status da claim
+- `locked_paths`
 - bloqueios
 - specs obrigatórias
 - branch sugerida
@@ -121,6 +156,15 @@ to normalize the task.
 - Responsável:
 - Issue criada / vinculada:
 - Branch sugerida:
+- Executor LLM primário:
+- Executor secundário/revisor:
+- Motivo da atribuição:
+- Modo de handoff:
+- Status da claim:
+- Claim por:
+- Claim em:
+- `locked_paths`:
+- Conflitos conhecidos:
 - Milestone:
 - Labels sugeridas:
 - Pronto para GitHub Projects: sim/não
@@ -189,10 +233,16 @@ devolva para review.
 Stop and return to the orchestrator when:
 
 - a precondition is missing (no approved task / specs);
+- the task is assigned to another executor, has no assignment, or has
+  conflicting/missing `locked_paths`;
+- any mandatory gate result is missing, `BLOCKED`, or unjustified `N/A`;
+- UI/backend/security work lacks the required contract matrix;
+- traceability does not map requirements to acceptance criteria and tests;
 - Minimal Implementation Gate is missing, rejected, or contradicts the task;
 - the specs are ambiguous or contradict the code;
 - the task cannot be completed without an architecture change;
 - leaving the approved scope is required;
+- editing outside `locked_paths` is required;
 - a blocker is outside the task scope.
 
 Record the reason in the task's `Bloqueios` section, keep the card in its current

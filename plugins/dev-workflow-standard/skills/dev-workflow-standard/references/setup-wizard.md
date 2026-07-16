@@ -44,9 +44,40 @@ accessibility, responsiveness or design.
    - `docs/tasks/`
    - `docs/design/` when UI exists
    - PR/review/QA evidence location
-5. Propose the smallest organization change that fits the existing repo.
-6. Ask human approval before creating or moving anything.
-7. Record the chosen project structure and active plugins.
+5. Inspect workflow contract compatibility:
+   - task template requires `Executor LLM`, handoff mode, claim status and
+     `locked_paths`
+   - task template requires Ambiguity, Spec Completeness, UI Interaction
+     Contract, Backend Contract, Security Spec Contract and Traceability gates
+   - UI tasks require a UI Interaction Matrix per changed screen/component
+   - backend tasks require backend/API/job/webhook contract rows
+   - security-triggering tasks require Security Spec Contract rows
+   - execution reports require evidence by Banco, API/Backend, Frontend/UI,
+     Validacao and Riscos/Lacunas
+   - `AGENTS.md` or project workflow docs require spec-first, task-first,
+     approval-before-code and executor/file ownership
+6. Classify the project:
+   - `CURRENT`: project already enforces the current workflow contracts
+   - `PARTIAL`: docs exist but templates/gates are missing or old
+   - `LEGACY`: no enforceable specs/tasks/gates structure
+7. For `PARTIAL` or `LEGACY`, propose the smallest migration patch. Do not
+   rewrite product requirements; update only workflow docs/templates after human
+   approval.
+8. Propose the smallest organization change that fits the existing repo.
+9. Ask human approval before creating or moving anything.
+10. Record the chosen project structure, active plugins, contract version and
+    remaining `NAO VALIDADO` setup gaps.
+
+## Compatibility Report
+
+Return this before normal delivery starts:
+
+- Plugin set: installed/missing
+- Project structure: `CURRENT` / `PARTIAL` / `LEGACY`
+- Missing workflow contracts
+- Required migration patch, if any
+- Human approvals needed
+- Setup gaps marked `NAO VALIDADO`
 
 ## Token Policy
 

@@ -33,6 +33,10 @@ Never simplify away:
 - performance-critical behavior with evidence
 - business rules, data integrity or compliance requirements
 - explicit human decisions
+- any row from the task's UI Interaction Matrix
+- any row from the task's Backend Contract
+- any row from the Security Spec Contract
+- any traceability item that maps requirement, mockup or rule to evidence
 
 Never add a dependency, layer, service, adapter, helper, interface, queue, cache,
 config system or future-proof abstraction without an explicit current need.
@@ -41,13 +45,30 @@ config system or future-proof abstraction without an explicit current need.
 
 Apply after understanding the task, source of truth and real code path:
 
-1. Does this need to exist now?
-2. Does the repo already solve it?
-3. Does the language or standard library solve it?
-4. Does the framework/runtime/browser/database solve it natively?
-5. Does an already-installed dependency solve it?
-6. Can the same result be delivered with fewer files or layers?
+0. Which task contract rows are mandatory? Read the UI Interaction Matrix,
+   Backend Contract, Security Spec Contract, Traceability Matrix, required tests,
+   `locked_paths`, and acceptance criteria before recommending any cut.
+1. Does this need to exist now, according to those contract rows?
+2. Does the repo already solve it? Name the file/component/service/pattern.
+3. Does the language or standard library solve it? Name the API.
+4. Does the framework/runtime/browser/database solve it natively? Name the
+   feature.
+5. Does an already-installed dependency solve it? Name the dependency and why it
+   is already acceptable.
+6. Can the same result be delivered with fewer files or layers without removing
+   any mandatory contract row?
 7. Only then approve new code, dependency or structure.
+
+Every simplification recommendation must include:
+
+- contract rows preserved;
+- files/components/patterns inspected;
+- alternative rejected and why;
+- risk if the simplification is wrong;
+- exact rows, tests or evidence that must still pass.
+
+If a task lacks the required matrices/contracts, this skill returns
+`REVISAR TASK`; it must not fill the missing requirements by guessing.
 
 ## Modes
 
@@ -73,6 +94,9 @@ Load `checklists/implementation-gate.md` and return:
 - Arquivos que podem ser reutilizados
 - Arquivos novos realmente necessarios
 - Dependencias proibidas ou desnecessarias
+- Contratos preservados: UI Interaction Matrix, Backend Contract, Security Spec
+  Contract, Traceability Matrix
+- Evidencias exigidas para liberar o corte
 - Criterios minimos para implementacao
 - Recomendacao: `LIBERAR IMPLEMENTACAO` or `REVISAR TASK`
 
@@ -86,6 +110,7 @@ Load `checklists/code-review.md` and return:
 - O que pode ser removido
 - O que deve permanecer por seguranca/qualidade
 - Riscos de simplificacao excessiva
+- Linhas de contrato preservadas ou violadas
 - Recomendacao: `APROVAR`, `REWORK` or `ESCALAR DECISAO`
 
 ## Conflict Policy

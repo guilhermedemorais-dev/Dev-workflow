@@ -24,6 +24,7 @@ task.
   and token cost.
 - Require specs before tasks, and tasks before implementation.
 - Enforce the mandatory task contract before delegation.
+- Assign the execution LLM and file locks before a task enters Ready for Dev.
 - Delegate, review and approve. Hold final acceptance with the user.
 
 ## Hard Limits (non-negotiable)
@@ -33,6 +34,15 @@ task.
 - **Never skip specs.** No task is created without sufficient specs.
 - **Never create a task without sufficient specs** linked to it.
 - **Reject any executable task that does not follow the mandatory task structure.**
+- **Reject any executable task without `Executor LLM`, handoff mode, claim
+  status, and `locked_paths`/file ownership.**
+- **Reject superficial specs.** A spec is insufficient when it lacks applicable
+  interaction contracts, backend contracts, security controls, tests, or
+  traceability from requirement to evidence.
+- **Never advance ambiguity.** If a missing decision affects product behavior,
+  main UX, data integrity, authorization, security, or acceptance tests, keep the
+  item in `Discovery / SDD` with `blocked`/`needs-info` instead of creating an
+  executable task.
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
 - Inspect the real repo, git status, scripts, and runtime before changing environment.
@@ -69,10 +79,12 @@ This skill coordinates them. It does not absorb their responsibilities.
 ```text
 Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
+  -> dev-workflow-standard: Ambiguity Gate
   -> dev-workflow-standard: consolidate scope
   -> minimal-implementation-gate: Minimal Planning Review
-  -> sdd-spec-factory: generate specs
-  -> sdd-spec-factory: generate executable task
+  -> sdd-spec-factory: generate specs with completeness/security/traceability gates
+  -> sdd-spec-factory: generate executable vertical-slice task
+  -> dev-workflow-standard: assign Executor LLM + locked_paths
   -> human approval
   -> minimal-implementation-gate: Minimal Implementation Gate
   -> dev-implementation-standard: implement (only the task scope)
@@ -86,6 +98,31 @@ Idea / demand
 The orchestrator does not advance to the next stage until the current gate is
 satisfied. The full pipeline lives in
 [`workflow-pipeline.md`](../../../../docs/workflow-pipeline.md).
+
+## Ambiguity And Completeness Gates
+
+Before delegating spec work or approving a task, classify gaps as:
+
+- `BLOCKING`: affects behavior, data, permission, security, main UX, acceptance
+  criteria, tests, or release safety.
+- `RESEARCHABLE`: can be resolved by inspecting repo/docs/runtime/tools.
+- `NON_BLOCKING`: can proceed as an explicit hypothesis without changing
+  behavior or security posture.
+
+Resolve `RESEARCHABLE` gaps by inspection. Ask the user for `BLOCKING` decisions
+instead of guessing. Only `NON_BLOCKING` gaps may continue as `HIPÓTESE:`.
+
+The orchestrator must reject any spec/task missing an applicable gate result:
+
+- Ambiguity Gate
+- Spec Completeness Gate
+- UI Interaction Contract Gate
+- Backend Contract Gate
+- Security Spec Contract Gate
+- Traceability Gate
+
+`PASS` means the gate is complete for the current scope. `N/A` must include a
+verified reason. `BLOCKED` prevents `Ready for Dev`.
 
 ## Mandatory Task Governance
 
@@ -103,9 +140,21 @@ A valid task must contain, at minimum:
 - Specs obrigatórias
 - Docs obrigatórios
 - Arquivos e módulos permitidos
+- Executor LLM primário
+- Executor secundário/revisor
+- Motivo da atribuição
+- Modo de handoff
+- Status da claim
+- `locked_paths`
+- Conflitos conhecidos com outras tasks
 - Fora do escopo
 - Estado atual encontrado
 - Resultado esperado
+- Gate de ambiguidade e completude
+- Matriz de interações UI, quando houver UI
+- Contrato backend/API/job/webhook, quando houver backend
+- Contrato de segurança, quando houver gatilho de segurança
+- Matriz de rastreabilidade
 - Regras obrigatórias da implementação
 - Checklist de execução
 - Prompt para o executor
@@ -159,9 +208,9 @@ orchestrator must use these definitions as gate checks.
 | Column | Definition of Entry | Definition of Exit |
 | --- | --- | --- |
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
-| Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
-| Ready for Dev | Executable task exists, mandatory specs are linked, **a GitHub issue is created and its number/URL is linked in the task**, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
+| Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, ambiguity/completeness/security/traceability gates passed or are `N/A` with verified reason, risks are known, and an executable task can be created. |
+| Ready for Dev | Executable vertical-slice task exists, mandatory specs are linked, **a GitHub issue is created and its number/URL is linked in the task**, allowed files/modules are defined, `Executor LLM`, handoff mode, claim status and `locked_paths` are defined, branch is suggested, acceptance criteria and tests are clear, and no blocking security/spec gap remains. | Assigned executor claims the task, updates claim/status, and sets task status to `🟡 Em andamento`. |
+| In Progress | Assigned executor accepted the task, read task/specs, owns the recorded `locked_paths`, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
 | In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
@@ -197,6 +246,15 @@ restructuring:
 - Responsável:
 - Issue criada / vinculada:
 - Branch sugerida:
+- Executor LLM primário:
+- Executor secundário/revisor:
+- Motivo da atribuição:
+- Modo de handoff:
+- Status da claim:
+- Claim por:
+- Claim em:
+- `locked_paths`:
+- Conflitos conhecidos:
 - Milestone:
 - Labels sugeridas:
 - Pronto para GitHub Projects: sim/não
@@ -266,8 +324,9 @@ devolva para review.
   source-of-truth paths, consolidated scope, constraints, and the layers in play
   (Banco, API/Backend, Frontend/UI). Run `minimal-implementation-gate` in
   Minimal Planning Review mode first, and pass approved simplifications or
-  pending decisions into spec creation. Require the spec hierarchy and an
-  executable task before approving implementation.
+  pending decisions into spec creation. Require the spec hierarchy,
+  completeness gates, security contract where applicable, traceability matrix and
+  an executable vertical-slice task before approving implementation.
 - **Minimal implementation gate** -> call `minimal-implementation-gate` after
   human task approval and before implementation. Provide the approved task,
   specs, allowed files/modules and repo context. Do not delegate coding until it
@@ -276,11 +335,48 @@ devolva para review.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
   task, mandatory specs and Minimal Implementation Gate are approved. Provide:
   the task, the mandatory specs, allowed files/module, suggested branch,
-  acceptance criteria, and the gate recommendations.
-- **Transport of delegation** (visible terminal / Claude Code handoff, prompt
-  contract, network fallback) is described in `references/claude-delegation.md`.
+  acceptance criteria, gate recommendations, `Executor LLM`, handoff mode,
+  claim status and `locked_paths`.
+- **LLM assignment is the primary delegation mechanism.** The task itself must
+  say whether Codex, Claude Desktop, Claude Code or a human owns execution. Do
+  not rely on terminal automation as the source of truth.
+- **Claude Desktop handoff is manual.** When a task is assigned to Claude
+  Desktop, prepare a bounded task prompt and leave implementation to that
+  executor. Codex may review after the diff exists, but must not edit the
+  assigned `locked_paths` unless the user explicitly reassigns the task.
+- **Transport helpers are optional.** Visible terminal / Claude Code handoff,
+  prompt contract, and network fallback are described in
+  `references/claude-delegation.md`, but failure of that transport does not
+  force Codex to implement. Reassign or use manual Claude Desktop handoff.
   Keep prompts lean: paths and constraints, not whole files or conversations.
 - Two executors must not edit the same files simultaneously.
+
+## LLM Assignment And Collision Control
+
+Before a task enters `Ready for Dev`, the orchestrator must assign:
+
+- `Executor LLM primário`: Codex, Claude Desktop, Claude Code, Humano, or
+  `A definir`.
+- `Executor secundário/revisor`: normally a different agent/person from the
+  executor.
+- `Modo de handoff`: task manual, Codex local, Claude Desktop manual, Claude
+  Code CLI, or another explicit channel.
+- `Status da claim`: `unclaimed`, `claimed`, `in_progress`, `blocked`, or
+  `done`.
+- `locked_paths`: exact files/directories the executor may touch.
+- `Conflitos conhecidos`: tasks, modules or files that cannot run in parallel.
+
+Rules:
+
+- `A definir`, missing handoff mode, or missing `locked_paths` keeps the task out
+  of `Ready for Dev`, except for pure docs tasks with a recorded reason.
+- Split work by file/module ownership when Codex and Claude will work in
+  parallel. Do not assign overlapping `locked_paths`.
+- If a task assigned to Claude Desktop is handed to the user, Codex's role is
+  orchestration and review until the task is explicitly reallocated.
+- If the implementation needs a file outside `locked_paths`, the executor must
+  stop, record a blocker, and return to the orchestrator for re-slicing or
+  reallocation.
 
 ## When to Trigger Each Specialist
 
@@ -295,7 +391,8 @@ devolva para review.
 - `security-standard`: **mandatory whenever the change touches** authentication,
   authorization, tokens, session, sensitive data, uploads, payments, or external
   integrations (also parsers, webhooks, infrastructure, privileged operations,
-  tenant boundaries, secrets).
+  tenant boundaries, secrets, browser storage, data export/import, AI/LLM tools,
+  dependencies, CI/CD, logs or admin/support workflows).
 - Auxiliary CLIs/plugins: consultants only, for a real capability gap, after
   scoring and human approval (`references/continuous-improvement.md`).
 
@@ -318,14 +415,20 @@ The complete setup protocol is in `references/setup-wizard.md`.
 When a PR comes back, the orchestrator reviews before approving:
 
 1. PR points to task, issue, branch and the specs it followed.
-2. Implementation matches the specs and the task's acceptance criteria.
-3. Nothing was built outside the task scope; out-of-scope changes are justified.
-4. `minimal-implementation-gate` completed Minimal Code Review or a justified
+2. Executor in the report matches the task's `Executor LLM`, or a reallocation
+   is recorded.
+3. Implementation matches the specs and the task's acceptance criteria.
+4. Every implemented behavior maps back to the task traceability matrix.
+5. UI interactions, backend contracts and security controls required by the
+   specs are present and evidenced.
+6. Nothing was built outside the task scope or outside `locked_paths`;
+   out-of-scope changes are justified.
+7. `minimal-implementation-gate` completed Minimal Code Review or a justified
    exception was recorded.
-5. `ui-ux-standard` validated the UI (when there is UI).
-6. `security-standard` validated security (when the triggers above apply).
-7. Tests required by the task exist and pass, with evidence.
-8. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
+8. `ui-ux-standard` validated the UI (when there is UI).
+9. `security-standard` validated security (when the triggers above apply).
+10. Tests required by the task exist and pass, with evidence.
+11. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
    marked `NAO VALIDADO`.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,

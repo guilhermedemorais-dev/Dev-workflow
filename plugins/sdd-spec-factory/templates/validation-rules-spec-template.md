@@ -9,6 +9,14 @@ Rascunho | Em revisão | Aprovada
 ## Contexto
 Módulo/tela/feature ao qual estas regras se aplicam.
 
+## Resultado dos gates
+| Gate | Status | Evidência / motivo |
+| --- | --- | --- |
+| Ambiguity Gate | PASS/BLOCKED | Perguntas bloqueantes ou motivo de aprovação. |
+| Spec Completeness Gate | PASS/BLOCKED | Regras, camadas, mensagens e testes cobertos. |
+| Security Spec Contract Gate | PASS/BLOCKED/N/A | Regras de autorização/privacidade cobertas ou motivo de N/A. |
+| Traceability Gate | PASS/BLOCKED | Regras ligadas a testes e aceite. |
+
 ## Regras de negócio
 Lista numerada. Para cada regra:
 
@@ -19,6 +27,11 @@ Lista numerada. Para cada regra:
 
 ## Regras de validação de entrada
 Por campo: formato, obrigatoriedade, limites, máscara e normalização.
+
+## Matriz de regras executáveis
+| ID | Regra | Gatilho | Entrada | Camada fonte da verdade | Resultado válido | Resultado inválido | Mensagem | Teste |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| RN-01 |  |  |  | Banco/API/Frontend |  |  |  |  |
 
 ## Mensagens
 Texto exato de erro/sucesso por regra, quando aplicável.
@@ -39,6 +52,11 @@ Casos obrigatórios para cobrir cada regra (válido e inválido).
 ## Segurança
 Regras com impacto em autorização, privacidade ou integridade de dados.
 
+## Regras negativas obrigatórias
+Casos que devem falhar: sem permissão, tenant errado, objeto de outro usuário,
+entrada malformada, duplicidade, replay, concorrência, tentativa de burlar limite
+ou manipular estado.
+
 ## Riscos
 Conflitos de regras, ambiguidades e regressões possíveis.
 
@@ -47,3 +65,8 @@ Decisões abertas aguardando humano (numeradas).
 
 ## Critérios de aceite
 Como verificar que as regras foram implementadas corretamente.
+
+## Matriz de rastreabilidade
+| RN | Tela/API/Banco afetado | Teste/evidência | Critério de aceite |
+| --- | --- | --- | --- |
+|  |  |  |  |

@@ -9,6 +9,12 @@
 - Data/hora de início:
 - Data/hora de conclusão:
 - Executor:
+- Executor LLM primário da task:
+- Executor secundário/revisor:
+- Modo de handoff:
+- Status da claim:
+- Claim por:
+- Claim em:
 - Task:
 - Issue criada / vinculada:
 - Branch:
@@ -19,6 +25,18 @@
 - Specs obrigatórias seguidas:
 - Docs obrigatórios seguidos:
 - Arquivos/módulos permitidos:
+- `locked_paths` recebidos:
+- Conflitos conhecidos verificados:
+
+## Gates recebidos
+| Gate | Status na task | Evidência executada | Observação |
+| --- | --- | --- | --- |
+| Ambiguity Gate |  |  |  |
+| Spec Completeness Gate |  |  |  |
+| UI Interaction Contract Gate |  |  |  |
+| Backend Contract Gate |  |  |  |
+| Security Spec Contract Gate |  |  |  |
+| Traceability Gate |  |  |  |
 
 ## Prompt utilizado
 Cole o prompt-base executado ou referencie o trecho `Prompt para o executor` da task.
@@ -35,9 +53,20 @@ Cole o prompt-base executado ou referencie o trecho `Prompt para o executor` da 
 O que foi implementado, em uma a três frases.
 
 ## Escopo respeitado
+- [ ] Executor atual corresponde ao `Executor LLM primário`, ou há reatribuição
+      explícita registrada.
+- [ ] `locked_paths` foram respeitados.
+- [ ] Nenhum arquivo reclamado por outro executor foi alterado.
 - [ ] Apenas o escopo da task foi implementado.
 - [ ] Nada fora do escopo foi alterado.
 - [ ] Nenhuma mudança de arquitetura sem aprovação.
+- [ ] Nenhum endpoint, tabela, payload, botão, regra ou permissão foi inventado
+      fora da spec/task.
+
+## Matriz de rastreabilidade executada
+| Requisito/RN/mockup | Implementação | Teste/evidência | Status |
+| --- | --- | --- | --- |
+|  |  |  |  |
 
 ## Arquivos alterados
 Lista de arquivos criados / alterados / removidos.
@@ -53,11 +82,25 @@ Migrações, schema, seeds, queries, dados afetados ou `N/A`.
 ### API/Backend
 Endpoints, serviços, validações, contratos, jobs, integrações ou `N/A`.
 
+### Contratos backend/API/job/webhook implementados
+| ID | Entry point | Status | Teste/evidência | Observação |
+| --- | --- | --- | --- |
+|  |  |  |  |
+
 ### Frontend/UI
 Telas, componentes, estados visuais, responsividade, acessibilidade ou `N/A`.
 
+### Interações UI implementadas
+| ID | Tela/componente | Ação/estado | Status | Teste/evidência |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+
 ### Validação
 Testes automatizados, TDD quando aplicável, validação manual com evidência quando TDD completo não for viável, lint, build, checagens manuais e resultado de cada validação.
+
+### Segurança
+Security Spec Contract implementado, testes negativos executados, dados
+sensíveis/tenant/authz/segredos/logs validados ou `N/A` com motivo.
 
 ### Riscos/Lacunas
 Riscos restantes, lacunas não resolvidas, limitações e follow-ups.

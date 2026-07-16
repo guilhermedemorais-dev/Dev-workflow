@@ -89,7 +89,125 @@ collapse them into one prose blob; if a dimension does not apply, write
 - Keep tasks small enough to be reviewed in one PR. Split large work into
   multiple tasks, each with its own specs and acceptance criteria.
 - Stop and ask when critical scope is missing. Do not guess core scope.
+- A generated spec must be execution-grade. If it only describes "what the
+  screen does" but not each interaction, backend effect, data rule, permission,
+  negative path and test, it is not ready.
+- A task must be a vertical behavior slice whenever product code is involved:
+  UI/API/Banco/Testes/Evidência together, or an explicit `N/A` with a verified
+  reason. Do not create horizontal tasks like "make frontend" or "make backend"
+  unless the orchestrator approved an infrastructure/refactor exception.
 - Final acceptance belongs to the user.
+
+## Blocking Gates Before Specs And Tasks
+
+Run these gates in order. A blocking failure sets the artifact/task to
+`blocked`/`needs-info` and returns numbered questions to the orchestrator. Do
+not generate downstream specs or executable tasks that depend on unanswered
+critical decisions.
+
+### Gate 1 - Ambiguity Gate
+
+Classify every missing item as:
+
+- `BLOCKING`: prevents correct product behavior, data integrity, authorization,
+  security, main UX, or acceptance testing.
+- `NON_BLOCKING`: can safely proceed as an explicit `HIPÓTESE:` without
+  changing external behavior or security posture.
+- `RESEARCHABLE`: should be resolved by reading repo/docs/tools instead of
+  asking the user.
+
+For `RESEARCHABLE`, inspect the source before asking. For `BLOCKING`, ask one
+to three concrete questions, ordered by dependency. Do not answer human product
+decisions yourself.
+
+### Gate 2 - Spec Completeness Gate
+
+Before marking a spec as approved or creating a task, verify that every
+applicable behavior has:
+
+- actor and permission
+- trigger/interaction or backend entry point
+- input/payload and validation rules
+- state transition or data effect
+- success result
+- loading/processing state when user-facing
+- error/empty/forbidden path
+- observability/audit event when relevant
+- security and privacy controls
+- test/evidence requirement
+
+If any required column is missing, the spec is incomplete. Record the gap in
+`Decisoes pendentes` and block the task.
+
+### Gate 3 - UI Interaction Contract Gate
+
+Required for any UI change. Every clickable, editable or state-changing element
+must be listed in an interaction matrix:
+
+- buttons, menus, tabs, filters, inputs, forms, modals, uploads, cards, table
+  actions, keyboard shortcuts, drag/drop, pagination, bulk actions, empty-state
+  CTAs, retry actions and destructive confirmations
+- for each interaction: who can see it, when it is enabled/disabled, what it
+  calls, what data it sends, what changes on success, what errors look like,
+  and how it is tested
+
+If a mockup shows an element but the spec lacks its behavior, the spec is
+blocked. If the spec describes behavior but the mockup lacks a place for it,
+block for UI decision.
+
+### Gate 4 - Backend Contract Gate
+
+Required for API/backend, jobs, webhooks, queues, imports, exports, payments,
+uploads or integrations. Each entry point must declare:
+
+- route/topic/job name and owner
+- authn/authz rule
+- request schema and response schema
+- idempotency, transaction and concurrency behavior when applicable
+- validation and canonicalization
+- database reads/writes
+- status codes and error contract
+- rate limits, retries and timeouts
+- observability/audit logging
+- negative tests and contract tests
+
+No frontend task may call an unspecified backend contract.
+
+### Gate 5 - Security Spec Contract Gate
+
+Required when a change touches auth, authorization, tenants, admin/support,
+sensitive data, uploads/downloads, payments, webhooks, external integrations,
+parsers, generated files, browser storage, dependencies, infrastructure,
+CI/CD, secrets, logs, data export/import, AI/LLM tools, or public endpoints.
+
+For each affected surface, specify:
+
+- protected asset and attacker-controlled input
+- actor/role matrix and object ownership rule
+- trust boundary and tenant/environment boundary
+- abuse case with realistic impact
+- required control: authn, authz, validation, encoding, CSRF, rate limit,
+  idempotency, secret handling, encryption, audit log, retention, or rollback
+- negative security test or review evidence
+- release blocker if the control cannot be verified
+
+Defense-in-depth notes may be `INFO`, but missing controls on reachable
+security-sensitive effects are blockers.
+
+### Gate 6 - Traceability Gate
+
+Every task must include a traceability matrix linking:
+
+```text
+Requirement / RN / Mockup element
+  -> UI interaction or backend entry point
+  -> Banco/API/Frontend files or modules allowed
+  -> Test/evidence
+  -> Acceptance criterion
+```
+
+If an acceptance criterion cannot be traced to implementation and validation,
+the task is not ready for development.
 
 ## Phases
 
@@ -104,6 +222,8 @@ Before writing any spec, produce a short diagnosis:
 - **Aguardar resposta humana** when critical scope is missing. Do not proceed to
   specs that depend on unanswered critical questions. Non-blocking gaps may
   continue as marked hypotheses.
+- **Resultado do Ambiguity Gate** — `PASS` or `BLOCKED`, with each gap classified
+  as `BLOCKING`, `NON_BLOCKING`, or `RESEARCHABLE`.
 
 ### Fase 1 - Consolidação
 
@@ -129,6 +249,13 @@ Generate the specs the request needs, following the hierarchy:
 - Create specs per module, page/screen, component and rule.
 - Always separate **Banco**, **API/Backend** and **Frontend/UI** (plus the other
   mandatory dimensions).
+- For UI, include the full interaction matrix before task creation.
+- For backend, include entry point contracts before frontend work can depend on
+  them.
+- For security-triggering work, include the Security Spec Contract before the
+  task can leave Discovery / SDD.
+- Include traceability from requirements/mockups/rules to tests and acceptance
+  criteria.
 - Mark hypotheses explicitly (`HIPÓTESE:`).
 - Do not invent existing architecture; reference real files/paths only when
   verified.
@@ -158,16 +285,25 @@ docs/specs/<modulo>/
 Produce one small, reviewable, executable task using `templates/task-template.md`:
 
 - Link the mandatory specs.
+- Include the results of Ambiguity, Completeness, Interaction, Backend,
+  Security and Traceability gates.
 - Register and link the GitHub issue (mandatory — every task must have a real
   GitHub issue; if it cannot be created, mark the task `blocked`/`needs-info` and
   escalate to the orchestrator instead of proceeding).
 - Suggest the branch name (e.g. `feat/<modulo>-<resumo>`,
   `fix/<modulo>-<resumo>`).
+- Define `Executor LLM primário`, executor/revisor, assignment rationale,
+  handoff mode, claim status and `locked_paths` before Ready for Dev.
+- Record known file/module conflicts with other tasks. If multiple LLMs will
+  work in parallel, split tasks so `locked_paths` do not overlap.
 - State the expected PR.
 - Include acceptance criteria.
 - Include mandatory tests (TDD when applicable).
 - Include what is out of scope.
 - Include explicit instructions for the dev/AI executor.
+- Include anti-collision instructions: the executor must stop if the task is
+  assigned to another LLM, if `locked_paths` conflict, or if implementation
+  requires files outside the allowed/locked paths.
 - Include the Minimal Planning Review result and state that implementation must
   pass `Minimal Implementation Gate` before coding.
 
@@ -208,8 +344,18 @@ Provide the delivery gates using `templates/pr-template.md`,
 ## Definition of done for this skill
 
 - The needed specs exist and follow the hierarchy.
+- All blocking gates passed, or the artifact is explicitly blocked with
+  `needs-info`.
 - Banco, API/Backend, Frontend/UI, Testes, Segurança, Observabilidade,
   Decisões pendentes, Riscos and Critérios de aceite are separated.
+- UI specs include interaction matrices when UI exists.
+- Backend/API specs include entry point contracts when backend exists.
+- Security-triggering specs include the Security Spec Contract.
+- Tasks include traceability from requirements/mockups/rules to implementation,
+  tests and acceptance criteria.
+- Tasks include executor LLM assignment, handoff mode, claim status,
+  `locked_paths` and conflict notes so Codex/Claude/Human executors do not work
+  on the same files.
 - There is one small executable task linking specs, issue, branch and PR.
 - Minimal Planning Review recommendations are incorporated or explicitly
   justified.
