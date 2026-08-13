@@ -27,7 +27,8 @@ Quem executa (dev/IA) e quem revisa.
 
 ## Atribuição de execução / Executor LLM
 Obrigatório antes de Ready for Dev. A task deve dizer quem executa, quem revisa
-e quais arquivos ficam bloqueados para outros executores.
+quais arquivos ficam bloqueados para outros executores, e qual contrato o modelo
+de IA deve seguir.
 
 - Executor LLM primário: Codex | Claude Desktop | Claude Code | Humano | A definir
 - Executor secundário/revisor: Codex | Claude Desktop | Claude Code | Humano | N/A
@@ -52,6 +53,48 @@ Regras:
   arquivos bloqueados.
 - Se o executor precisar alterar arquivo fora de `locked_paths`/permitidos, deve
   parar e registrar bloqueio.
+
+## Contrato do executor IA
+Obrigatório para qualquer task executada por Codex, Claude Desktop, Claude Code
+ou outro agente. Sem este bloco completo, a task não entra em Ready for Dev.
+
+- Modelo/ambiente autorizado: Codex Desktop local | Claude Desktop | Claude Code CLI | Humano | outro
+- Diretório/branch/worktree obrigatório:
+- Prompt obrigatório para colar/rodar:
+  ```text
+  Leia esta task inteira e as specs obrigatórias antes de codar.
+  Confirme o branch/worktree atual, `git status`, `locked_paths`, conflitos
+  conhecidos e arquivos permitidos.
+  Execute somente o escopo desta task.
+  Pare e devolva bloqueio se faltar spec, issue, permissão, arquivo permitido,
+  contrato de UI/API/segurança, teste obrigatório ou validação.
+  ```
+- Pode fazer:
+  -
+- Não pode fazer:
+  - Não salvar arquivos fora do repo/caminho canônico da task.
+  - Não usar worktree temporário como fonte final sem commit/PR.
+  - Não inventar arquivos, endpoints, tabelas, permissões, payloads ou regras.
+  - Não editar fora de `locked_paths`.
+  - Não sobrescrever trabalho de outro executor.
+  - Não avançar para outra issue/task.
+- Comandos obrigatórios antes de codar:
+  - `git status --short --branch`
+  - leitura completa da task e specs obrigatórias
+- Comandos obrigatórios de validação:
+  -
+- Formato obrigatório da resposta final:
+  - Banco:
+  - API/Backend:
+  - Frontend/UI:
+  - Validação:
+  - Riscos/Lacunas:
+  - Arquivos alterados:
+- Evidência obrigatória:
+  -
+- Checkpoint máximo para AFK:
+- Condição de parada específica desta task:
+  -
 
 ## Objetivo da task
 O que esta task entrega, em uma a três frases.
@@ -166,12 +209,18 @@ Eventos, métricas e logs que devem ser adicionados.
 ## Instrução para IA/dev
 Passos diretos para o executor atribuído, restrições e o que NÃO tocar. Antes de
 codar, executar `Minimal Implementation Gate`, confirmar que o `Executor LLM
-primário` corresponde ao agente atual e respeitar o caminho minimo aprovado.
+primário` corresponde ao agente atual, confirmar que o `Contrato do executor IA`
+está completo, e respeitar o caminho minimo aprovado.
 
 Instrução obrigatória: se qualquer gate estiver ausente, `BLOCKED`, ou se a
 task/spec não definir comportamento de botão, endpoint, permissão, erro ou teste
 necessário, pare antes de codar e devolva para `dev-workflow-standard` /
 `sdd-spec-factory` como `blocked`/`needs-info`.
+
+Instrução obrigatória de contrato IA: se o modelo/ambiente atual não for o
+`Modelo/ambiente autorizado`, se o prompt obrigatório não foi fornecido, se o
+branch/worktree estiver errado, ou se o executor não conseguir ler a task/specs,
+não implemente. Registre bloqueio ou peça reatribuição explícita.
 
 Instrução obrigatória de anti-colisão: se a task estiver atribuída a outra LLM,
 ou se algum `locked_path` estiver reclamado por outra task/executor, não
@@ -181,6 +230,8 @@ implemente. Registre o bloqueio ou peça reatribuição explícita.
 - Gate obrigatório ausente, `BLOCKED` ou `N/A` sem justificativa verificável.
 - `Executor LLM primário` ausente, `A definir`, diferente do executor atual, ou
   sem reatribuição explícita.
+- `Contrato do executor IA` ausente, incompleto, sem prompt obrigatório, sem
+  proibições explícitas ou incompatível com o executor atual.
 - `locked_paths` ausente, vazio sem justificativa, ou em conflito com outra task
   em andamento.
 - Necessidade de alterar arquivo/módulo fora da lista permitida.

@@ -294,6 +294,11 @@ Produce one small, reviewable, executable task using `templates/task-template.md
   `fix/<modulo>-<resumo>`).
 - Define `Executor LLM primário`, executor/revisor, assignment rationale,
   handoff mode, claim status and `locked_paths` before Ready for Dev.
+- Define a complete model-specific execution contract before Ready for Dev:
+  authorized model/environment, mandatory prompt to run/paste, allowed actions,
+  forbidden actions, required commands, stop conditions and evidence format.
+  A task assigned to Codex, Claude Desktop, Claude Code or another agent without
+  this contract remains `blocked`/`needs-info`.
 - Record known file/module conflicts with other tasks. If multiple LLMs will
   work in parallel, split tasks so `locked_paths` do not overlap.
 - State the expected PR.
@@ -304,6 +309,10 @@ Produce one small, reviewable, executable task using `templates/task-template.md
 - Include anti-collision instructions: the executor must stop if the task is
   assigned to another LLM, if `locked_paths` conflict, or if implementation
   requires files outside the allowed/locked paths.
+- Include anti-freestyle instructions: the executor must stop if the current
+  model/runtime does not match the authorized executor, if it did not receive the
+  mandatory prompt, if it is in the wrong branch/worktree, or if it cannot read
+  the task/specs from the canonical repo path.
 - Include the Minimal Planning Review result and state that implementation must
   pass `Minimal Implementation Gate` before coding.
 

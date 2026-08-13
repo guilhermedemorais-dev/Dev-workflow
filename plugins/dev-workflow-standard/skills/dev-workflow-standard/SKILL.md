@@ -35,7 +35,12 @@ task.
 - **Never create a task without sufficient specs** linked to it.
 - **Reject any executable task that does not follow the mandatory task structure.**
 - **Reject any executable task without `Executor LLM`, handoff mode, claim
-  status, and `locked_paths`/file ownership.**
+  status, `locked_paths`/file ownership, and a model-specific execution
+  contract.**
+- **Reject vague AI handoffs.** A task assigned to Codex, Claude Desktop,
+  Claude Code or another agent must include the exact allowed executor/model,
+  working context, bounded prompt to run, what it may do, what it must not do,
+  stop conditions, required commands, and evidence format.
 - **Reject superficial specs.** A spec is insufficient when it lacks applicable
   interaction contracts, backend contracts, security controls, tests, or
   traceability from requirement to evidence.
@@ -146,6 +151,9 @@ A valid task must contain, at minimum:
 - Modo de handoff
 - Status da claim
 - `locked_paths`
+- Contrato do executor IA
+- Prompt obrigatório por modelo/ambiente
+- Permissões e proibições do executor
 - Conflitos conhecidos com outras tasks
 - Fora do escopo
 - Estado atual encontrado
@@ -209,7 +217,7 @@ orchestrator must use these definitions as gate checks.
 | --- | --- | --- |
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, ambiguity/completeness/security/traceability gates passed or are `N/A` with verified reason, risks are known, and an executable task can be created. |
-| Ready for Dev | Executable vertical-slice task exists, mandatory specs are linked, **a GitHub issue is created and its number/URL is linked in the task**, allowed files/modules are defined, `Executor LLM`, handoff mode, claim status and `locked_paths` are defined, branch is suggested, acceptance criteria and tests are clear, and no blocking security/spec gap remains. | Assigned executor claims the task, updates claim/status, and sets task status to `🟡 Em andamento`. |
+| Ready for Dev | Executable vertical-slice task exists, mandatory specs are linked, **a GitHub issue is created and its number/URL is linked in the task**, allowed files/modules are defined, `Executor LLM`, handoff mode, claim status, `locked_paths`, and the model-specific execution contract are defined, branch is suggested, acceptance criteria and tests are clear, and no blocking security/spec gap remains. | Assigned executor claims the task, updates claim/status, and sets task status to `🟡 Em andamento`. |
 | In Progress | Assigned executor accepted the task, read task/specs, owns the recorded `locked_paths`, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
 | In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
@@ -233,7 +241,8 @@ restructuring:
 - branch sugerida recorded in the task;
 - status field consistent with the official Kanban columns;
 - explicit fields for responsável, bloqueios, specs obrigatórias, branch
-  sugerida, evidências, issue criada/vinculada, and `Pronto para GitHub Projects`.
+  sugerida, evidências, issue criada/vinculada, model-specific execution
+  contract, and `Pronto para GitHub Projects`.
 
 ## Recommended Task Template
 
@@ -255,6 +264,12 @@ restructuring:
 - Claim em:
 - `locked_paths`:
 - Conflitos conhecidos:
+- Modelo/ambiente autorizado:
+- Prompt obrigatório para o executor:
+- Pode fazer:
+- Não pode fazer:
+- Comandos obrigatórios:
+- Evidência obrigatória:
 - Milestone:
 - Labels sugeridas:
 - Pronto para GitHub Projects: sim/não
@@ -291,11 +306,12 @@ P0 | P1 | P2 | P3
 
 ## Prompt para o executor
 Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
-e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
-limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
-alterar arquitetura, execute TDD quando aplicável, registre validação manual com
-evidência quando TDD completo não for viável, preencha o Resultado da execução e
-devolva para review.
+e todas as specs obrigatórias antes de codar. Confirme que você é exatamente o
+modelo/ambiente autorizado nesta task, no branch/worktree correto, e que os
+`locked_paths` não conflitam. Siga o checklist na ordem, limite-se aos arquivos
+e módulos permitidos, pare se precisar sair do escopo ou alterar arquitetura,
+execute TDD quando aplicável, registre validação manual com evidência quando TDD
+completo não for viável, preencha o Resultado da execução e devolva para review.
 
 ## Condições de parada
 
@@ -336,7 +352,7 @@ devolva para review.
   task, mandatory specs and Minimal Implementation Gate are approved. Provide:
   the task, the mandatory specs, allowed files/module, suggested branch,
   acceptance criteria, gate recommendations, `Executor LLM`, handoff mode,
-  claim status and `locked_paths`.
+  claim status, `locked_paths`, and the model-specific execution contract.
 - **LLM assignment is the primary delegation mechanism.** The task itself must
   say whether Codex, Claude Desktop, Claude Code or a human owns execution. Do
   not rely on terminal automation as the source of truth.
@@ -365,11 +381,25 @@ Before a task enters `Ready for Dev`, the orchestrator must assign:
   `done`.
 - `locked_paths`: exact files/directories the executor may touch.
 - `Conflitos conhecidos`: tasks, modules or files that cannot run in parallel.
+- `Modelo/ambiente autorizado`: exact executor surface, for example Codex
+  Desktop local, Claude Desktop, Claude Code CLI, or human.
+- `Prompt obrigatório para o executor`: the bounded prompt to paste/run for that
+  executor, including source-of-truth paths, branch/worktree, required reads,
+  allowed files, stop conditions and output format.
+- `Pode fazer`: explicit allowed actions.
+- `Não pode fazer`: explicit forbidden actions, including saving files in
+  untracked worktrees, inventing paths, editing outside `locked_paths`, changing
+  unrelated files, or continuing after a missing precondition.
+- `Comandos obrigatórios`: required validation commands, or `N/A` with reason.
+- `Evidência obrigatória`: exact proof needed before handoff.
 
 Rules:
 
-- `A definir`, missing handoff mode, or missing `locked_paths` keeps the task out
-  of `Ready for Dev`, except for pure docs tasks with a recorded reason.
+- `A definir`, missing handoff mode, missing `locked_paths`, or missing
+  model-specific execution contract keeps the task out of `Ready for Dev`,
+  except for pure docs tasks with a recorded reason.
+- If the executor receives only a loose request ("faz X") instead of the
+  task's bounded prompt, it must stop and ask for the task contract.
 - Split work by file/module ownership when Codex and Claude will work in
   parallel. Do not assign overlapping `locked_paths`.
 - If a task assigned to Claude Desktop is handed to the user, Codex's role is
@@ -417,18 +447,20 @@ When a PR comes back, the orchestrator reviews before approving:
 1. PR points to task, issue, branch and the specs it followed.
 2. Executor in the report matches the task's `Executor LLM`, or a reallocation
    is recorded.
-3. Implementation matches the specs and the task's acceptance criteria.
-4. Every implemented behavior maps back to the task traceability matrix.
-5. UI interactions, backend contracts and security controls required by the
+3. The executor followed the task's model-specific execution contract, including
+   allowed/prohibited actions, stop conditions and evidence format.
+4. Implementation matches the specs and the task's acceptance criteria.
+5. Every implemented behavior maps back to the task traceability matrix.
+6. UI interactions, backend contracts and security controls required by the
    specs are present and evidenced.
-6. Nothing was built outside the task scope or outside `locked_paths`;
+7. Nothing was built outside the task scope or outside `locked_paths`;
    out-of-scope changes are justified.
-7. `minimal-implementation-gate` completed Minimal Code Review or a justified
+8. `minimal-implementation-gate` completed Minimal Code Review or a justified
    exception was recorded.
-8. `ui-ux-standard` validated the UI (when there is UI).
-9. `security-standard` validated security (when the triggers above apply).
-10. Tests required by the task exist and pass, with evidence.
-11. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
+9. `ui-ux-standard` validated the UI (when there is UI).
+10. `security-standard` validated security (when the triggers above apply).
+11. Tests required by the task exist and pass, with evidence.
+12. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
    marked `NAO VALIDADO`.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,

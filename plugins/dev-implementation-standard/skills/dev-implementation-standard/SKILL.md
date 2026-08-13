@@ -29,8 +29,14 @@ Keep this file lightweight and act only on the current task.
 - The task links its **mandatory specs** and acceptance criteria.
 - The task declares `Executor LLM primário`, handoff mode, claim status and
   `locked_paths`.
+- The task declares a complete `Contrato do executor IA`: authorized
+  model/environment, mandatory prompt, allowed actions, forbidden actions,
+  required commands, stop conditions and evidence format.
 - The current executor matches `Executor LLM primário`, or the task contains an
   explicit reallocation approved by the orchestrator/user.
+- The current runtime matches `Modelo/ambiente autorizado`. If the task says
+  Claude Code CLI, Claude Desktop cannot execute it; if it says Codex local,
+  Claude must stop unless explicitly reallocated.
 - The task includes completed or explicitly `N/A` gate results for Ambiguity,
   Spec Completeness, UI Interaction Contract, Backend Contract, Security Spec
   Contract and Traceability.
@@ -52,6 +58,11 @@ If any precondition is missing, stop and return to `dev-workflow-standard` /
   primário` is `Claude Desktop`, `Claude Code`, `Codex`, `Humano`, or another
   executor that is not the current executor, stop unless the task was explicitly
   reallocated.
+- Do not implement a task whose `Contrato do executor IA` is missing,
+  incomplete, or incompatible with the current executor/runtime.
+- Do not follow loose chat instructions over the task contract. If the user asks
+  for work that differs from the task, stop and return to the orchestrator for
+  task/spec update.
 - Do not edit paths claimed by another executor or outside the task's
   `locked_paths`/allowed modules.
 - Do not implement from superficial tasks. If the task describes a screen,
@@ -88,12 +99,15 @@ filename.
    acceptance criteria, gate results, interaction/backend/security contracts,
    traceability matrix, out-of-scope items, required tests, and blockers.
 2. **Confirm assignment and claim**: verify that `Executor LLM primário` matches
-   the current executor, `locked_paths` are present and non-conflicting, then set
-   claim/status to the current executor. If the task is assigned to another LLM,
-   stop and return it for manual handoff or reallocation.
+   the current executor, `Modelo/ambiente autorizado` matches the current
+   runtime, the mandatory prompt was provided, and `locked_paths` are present and
+   non-conflicting, then set claim/status to the current executor. If the task
+   is assigned to another LLM or runtime, stop and return it for manual handoff
+   or reallocation.
 3. **Set status** to `🟡 Em andamento` in the task content when starting.
-4. **Execute the prompt-base** from `Prompt para o executor` as the operational
-   contract.
+4. **Execute the prompt-base** from `Prompt para o executor` / `Contrato do
+   executor IA` as the operational contract. Follow its explicit `Pode fazer`,
+   `Não pode fazer`, required commands, stop conditions and evidence format.
 5. **Minimal gate**: follow the approved `Minimal Implementation Gate`
    recommendation. Prefer existing repo code, native framework/runtime features,
    standard library and already-installed dependencies before creating files.
@@ -135,6 +149,10 @@ mapping by preserving these fields in the task content:
 - modo de handoff
 - status da claim
 - `locked_paths`
+- Contrato do executor IA
+- Modelo/ambiente autorizado
+- Prompt obrigatório para o executor
+- Pode fazer / Não pode fazer
 - bloqueios
 - specs obrigatórias
 - branch sugerida
@@ -165,6 +183,12 @@ to normalize the task.
 - Claim em:
 - `locked_paths`:
 - Conflitos conhecidos:
+- Modelo/ambiente autorizado:
+- Prompt obrigatório para o executor:
+- Pode fazer:
+- Não pode fazer:
+- Comandos obrigatórios:
+- Evidência obrigatória:
 - Milestone:
 - Labels sugeridas:
 - Pronto para GitHub Projects: sim/não
@@ -201,11 +225,12 @@ P0 | P1 | P2 | P3
 
 ## Prompt para o executor
 Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
-e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
-limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
-alterar arquitetura, execute TDD quando aplicável, registre validação manual com
-evidência quando TDD completo não for viável, preencha o Resultado da execução e
-devolva para review.
+e todas as specs obrigatórias antes de codar. Confirme que você é exatamente o
+modelo/ambiente autorizado, no branch/worktree correto, e que o prompt
+obrigatório foi fornecido. Siga o checklist na ordem, limite-se aos arquivos e
+módulos permitidos, pare se precisar sair do escopo ou alterar arquitetura,
+execute TDD quando aplicável, registre validação manual com evidência quando TDD
+completo não for viável, preencha o Resultado da execução e devolva para review.
 
 ## Condições de parada
 
@@ -235,6 +260,9 @@ Stop and return to the orchestrator when:
 - a precondition is missing (no approved task / specs);
 - the task is assigned to another executor, has no assignment, or has
   conflicting/missing `locked_paths`;
+- the task lacks a complete `Contrato do executor IA`, the authorized
+  model/runtime does not match the current executor, or the mandatory prompt was
+  not provided;
 - any mandatory gate result is missing, `BLOCKED`, or unjustified `N/A`;
 - UI/backend/security work lacks the required contract matrix;
 - traceability does not map requirements to acceptance criteria and tests;
