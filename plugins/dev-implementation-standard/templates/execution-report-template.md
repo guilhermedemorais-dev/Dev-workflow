@@ -23,8 +23,28 @@
 ## Prompt utilizado
 Cole o prompt-base executado ou referencie o trecho `Prompt para o executor` da task.
 
+## Skills aplicadas
+Cole o `SKILL_RECEIPT` de cada skill e referência obrigatória.
+
+## Inventário de reutilização
+Cole o `REUSE_INVENTORY`, incluindo buscas, candidatos existentes, call sites e
+a decisão `REUSE | EXTEND | REPLACE | CREATE`.
+
+## Gate de código mínimo
+Cole o `MINIMAL_CODE_GATE` com justificativa para cada nova abstração e
+duplicações removidas ou explicitamente mantidas.
+
+## Continuidade entre LLMs
+- LLMs executores utilizados:
+- Troca de LLM ocorrida: sim/não
+- `EXECUTION_HANDOFF` utilizado: sim/não/N/A
+- Motivo e checkpoint de continuidade:
+
 ## Checklist executado
 - [ ] Leitura da task e specs
+- [ ] Skills obrigatórias carregadas
+- [ ] Inventário de reutilização
+- [ ] Gate de código mínimo
 - [ ] Implementação
 - [ ] Testes
 - [ ] Validação
