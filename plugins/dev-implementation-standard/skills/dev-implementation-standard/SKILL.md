@@ -3,9 +3,9 @@ name: dev-implementation-standard
 description: "Use as the executor/coder for an already-approved task: read the task and its mandatory specs, implement only that scope on the suggested branch, do not advance to another task, do not change architecture without approval, run the required commands, update the task result, and prepare the PR. Driven by dev-workflow-standard; specs come from sdd-spec-factory."
 ---
 
-# Dev Implementation Standard (Executor / Coder)
+# Dev Implementation Standard (Executor Agent)
 
-Executor skill for spec-driven delivery. It turns an **approved task** into code,
+The LLM using this skill becomes the executor agent for spec-driven delivery. It turns an **approved task** into code,
 strictly within scope. It does not do SDD, does not plan product scope, does not
 write specs, and does not own acceptance — `dev-workflow-standard` orchestrates and `sdd-spec-factory` produces
 the contract.
@@ -30,6 +30,9 @@ Keep this file lightweight and act only on the current task.
 - The suggested **branch** is defined (or derive it from the task convention).
 - The task has GitHub-ready fields: status, responsável, bloqueios, specs
   obrigatórias, branch sugerida, evidências, and issue criada/vinculada.
+- The delegation identifies every mandatory skill and reference path.
+- The executor agent has read each required `SKILL.md` completely and can emit a
+  `SKILL_RECEIPT` before implementation.
 
 If any precondition is missing, stop and return to `dev-workflow-standard` /
 `sdd-spec-factory` instead of guessing.
@@ -66,24 +69,35 @@ filename.
 1. **Leitura da task e specs**: read the whole approved task and every mandatory
    spec end to end before coding. Confirm scope, allowed files/modules,
    acceptance criteria, out-of-scope items, required tests, and blockers.
-2. **Set status** to `🟡 Em andamento` in the task content when starting.
-3. **Execute the prompt-base** from `Prompt para o executor` as the operational
+2. **Skill receipt**: read every mandatory skill and required reference. Record
+   `SKILL_RECEIPT` with skill name, exact path, references loaded, and the rules
+   each one contributes. A skill name in a prompt is not proof it was applied.
+3. **Reuse inventory**: before creating a function, class, hook, component,
+   service, route, query or abstraction, search the allowed scope and sibling
+   modules for equivalent behavior. Record symbols, paths, call sites and the
+   reuse/extend/create decision in `REUSE_INVENTORY`.
+4. **Minimal-code gate**: prefer reuse, extension or deletion over parallel
+   implementations. Every new abstraction needs at least two current concrete
+   consumers or an explicit approved architectural requirement. Record the
+   decision in `MINIMAL_CODE_GATE`.
+5. **Set status** to `🟡 Em andamento` in the task content when starting.
+6. **Execute the prompt-base** from `Prompt para o executor` as the operational
    contract.
-4. **Implementação**: implement only the approved scope, by layer when relevant:
+7. **Implementação**: implement only the approved scope, by layer when relevant:
    Banco, API/Backend, Frontend/UI. Do not invent files, endpoints, tables,
    payloads, or architecture.
-5. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
+8. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
    and perform manual validation with objective evidence.
-6. **Validação**: run the task-required commands, build, lint, tests,
+9. **Validação**: run the task-required commands, build, lint, tests,
    migrations, UI checks, or manual checks defined by the repo/task. Capture
    evidence.
-7. **Atualização do relatório**: fill the mandatory final report in
+10. **Atualização do relatório**: fill the mandatory final report in
    `templates/execution-report-template.md`, including prompt used, checklist
    executed, evidence, layer results, risks, gaps, blockers, and GitHub-ready
    fields.
-8. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
+11. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
    implementation and validation evidence support completion.
-9. **Handoff para review**: prepare the PR or review package linked to task,
+12. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
@@ -206,6 +220,7 @@ visual status to `🔴 Bloqueada`.
 - Task scope implemented on the correct branch, nothing out of scope.
 - TDD used when applicable; otherwise manual validation is evidenced.
 - Required commands run; tests/validation pass or blockers are recorded.
+- `SKILL_RECEIPT`, `REUSE_INVENTORY`, and `MINIMAL_CODE_GATE` are complete.
 - Task execution result fully filled with the mandatory final report.
 - PR/review package prepared and linked to task, issue, branch and specs.
 - Handed back for review; not merged, deployed, or self-approved.

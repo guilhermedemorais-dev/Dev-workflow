@@ -50,11 +50,11 @@ especialistas acionados sob demanda.
 
 | Skill | Papel |
 | --- | --- |
-| `dev-workflow-standard` | CTO / orquestrador / revisor final |
-| `sdd-spec-factory` | Engenharia de requisitos: specs e task executavel |
-| `dev-implementation-standard` | Executor / coder |
-| `ui-ux-standard` | Validacao de UI/UX |
-| `security-standard` | Validacao de seguranca |
+| `dev-workflow-standard` | Agente orquestrador / revisor final |
+| `sdd-spec-factory` | LLM de requisitos: specs e task executavel |
+| `dev-implementation-standard` | Agente executor / coder |
+| `ui-ux-standard` | LLM especialista em UI/UX |
+| `security-standard` | LLM especialista em seguranca |
 
 Pipeline de ponta a ponta:
 
@@ -65,6 +65,8 @@ Ideia / demanda
   -> sdd-spec-factory gera specs
   -> sdd-spec-factory gera task executavel
   -> aprovacao humana
+  -> skills obrigatorias carregadas + SKILL_RECEIPT
+  -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard implementa (somente o escopo da task)
   -> Pull Request
   -> ui-ux-standard / security-standard / QA conforme aplicavel
@@ -83,6 +85,9 @@ Regras invariantes:
   sessao, dados sensiveis, uploads, pagamentos ou integracoes externas.
 - Toda task aponta para specs obrigatorias.
 - Todo PR aponta para task, issue, branch e specs seguidas.
+- Skill mencionada nao e skill aplicada: toda skill obrigatoria gera `SKILL_RECEIPT`.
+- Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
+- Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
 - Nenhum deploy e aprovado sem PR aprovado.
 
 O pipeline completo, com gates e gatilhos, esta em
@@ -90,7 +95,7 @@ O pipeline completo, com gates e gatilhos, esta em
 
 ## Dev Workflow Standard
 
-Skill CTO / orquestradora. E a unica skill que aprova a passagem de um gate para
+Skill do agente orquestrador. E a unica skill que aprova a passagem de um gate para
 o proximo e nunca escreve codigo de produto diretamente.
 
 Responsabilidades:
@@ -108,30 +113,29 @@ Responsabilidades:
 - Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
 - Nunca implementar codigo de produto diretamente.
 
-### Papel de CTO / orquestrador
+### Papel do agente orquestrador
 
 O `dev-workflow-standard` administra o ciclo de ponta a ponta como coordenador.
 Ele conduz descoberta, escopo, delegacao, gates e aprovacao, mas nao absorve as
 responsabilidades das skills especialistas. A criacao de specs e da task fica com
-`sdd-spec-factory`; a implementacao fica com `dev-implementation-standard`, que
-pode rodar via delegacao para Claude Code. O orquestrador divide o trabalho,
+`sdd-spec-factory`; a implementacao fica com o agente executor usando
+`dev-implementation-standard`. O orquestrador divide o trabalho,
 controla escopo, revisa cada diff/PR e executa a validacao final.
 
 O orquestrador nunca escreve codigo de produto. Depois que as specs e a task
 estao aprovadas, ele delega a implementacao para `dev-implementation-standard`,
-que pode ser executado via Claude Code como meio de execucao. Para economizar
+que pode usar qualquer LLM autorizado como meio de execucao. Para economizar
 contexto e tokens, o orquestrador nao envia o projeto inteiro nem a conversa
 completa: cada delegacao recebe a task, as specs obrigatorias, o modulo
 permitido, restricoes e os criterios de aceite. Banco, API/Backend, Frontend/UI,
 testes e documentacao sao separados quando puderem ser revisados de forma
 independente.
 
-Quando a execucao roda via Claude Code, antes da primeira delegacao o Codex
-verifica `claude --version` e `claude auth status`, registra `CLAUDE_STATUS` e
-avisa qual escopo sera delegado. Se o Claude Code estiver indisponivel numa
-tarefa em que a delegacao e obrigatoria, o orquestrador para em vez de implementar
-sozinho. O protocolo de transporte (terminal visivel, modo `VISIBLE_TERMINAL`,
-fallback `claude -p`, e `SANDBOX_NETWORK_BLOCKED` em redes restritas) esta em
+Quando Claude Code for o transporte escolhido, o agente orquestrador verifica
+`claude --version` e `claude auth status` e registra `CLAUDE_STATUS`. Se esse LLM
+ficar sem tokens, contexto, autenticacao ou rede, o estado e persistido em
+`EXECUTION_HANDOFF` e outro LLM autorizado continua a mesma task sem reiniciar
+ou duplicar a implementacao. O adaptador de terminal visivel esta em
 [`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
 Esse transporte e apenas o meio de execucao do `dev-implementation-standard`; a
@@ -284,13 +288,12 @@ configuracao versionada.
 
 O modelo operacional recomendado e:
 
-- `dev-workflow-standard` (CTO/orquestrador): diagnostico, escopo, delegacao,
-  gates e revisao. Roda tipicamente no Codex.
-- `sdd-spec-factory`: gera as specs e a task executavel.
-- `dev-implementation-standard` (executor): implementa a task aprovada, podendo
-  rodar via Claude Code como meio de execucao.
-- Gemini, Blackbox, Qwen, Goose ou outras CLIs: consultas auxiliares e tarefas
-  limitadas, somente depois de um health check.
+- agente orquestrador usando `dev-workflow-standard`: diagnostico, escopo,
+  delegacao, gates e revisao.
+- LLM de requisitos usando `sdd-spec-factory`: specs e task executavel.
+- agente executor usando `dev-implementation-standard`: implementa a task
+  aprovada com qualquer LLM autorizado e disponivel.
+- LLMs auxiliares: consultas limitadas, somente depois de um health check.
 
 As ferramentas auxiliares nao substituem PRD, specs, documentacao, testes nem
 revisao. O orquestrador e o executor nao devem editar os mesmos arquivos

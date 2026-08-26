@@ -1,18 +1,18 @@
 # Workflow Pipeline
 
-End-to-end delivery pipeline across the five skills. `dev-workflow-standard` is
-the CTO/orchestrator and is the only skill that approves moving from one gate to
+End-to-end delivery pipeline across the five skills. The LLM using
+`dev-workflow-standard` is the orchestrator agent and is the only role that approves moving from one gate to
 the next. It never writes product code.
 
 ## Skills and roles
 
 | Skill | Role |
 | --- | --- |
-| `dev-workflow-standard` | CTO / orchestrator / final reviewer |
-| `sdd-spec-factory` | Requirements & specs / executable task |
-| `dev-implementation-standard` | Executor / coder |
-| `ui-ux-standard` | UI/UX validation |
-| `security-standard` | Security validation |
+| `dev-workflow-standard` | Orchestrator agent / final reviewer |
+| `sdd-spec-factory` | Requirements LLM / executable task |
+| `dev-implementation-standard` | Executor agent / coder |
+| `ui-ux-standard` | UI/UX specialist LLM |
+| `security-standard` | Security specialist LLM |
 
 ## Pipeline
 
@@ -23,6 +23,8 @@ Idea / demand
   -> sdd-spec-factory: generate specs (product/module/page/component/validation/API/DB)
   -> sdd-spec-factory: generate executable task (links specs, issue, branch, PR)
   -> HUMAN APPROVAL
+  -> required skills read + SKILL_RECEIPT
+  -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard: implement (only the task scope, on the branch)
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
@@ -41,7 +43,8 @@ Idea / demand
 3. **Task gate** — one small executable task links its mandatory specs, issue,
    suggested branch and expected PR. Human approval required before code.
 4. **Implementation gate** — task implemented within scope; required commands run;
-   tests pass; task result updated. Owned by `dev-implementation-standard`.
+   tests pass; task result updated; skill receipt and reuse evidence exist. Owned
+   by the executor agent using `dev-implementation-standard`.
 5. **Review gate** — PR links task, issue, branch and specs; UI validated by
    `ui-ux-standard` when there is UI; security validated by `security-standard`
    when triggers apply; QA passed. Approved or sent to rework by the orchestrator.
@@ -65,6 +68,9 @@ Idea / demand
   never changes anything out of scope without a recorded justification.
 - Every task points to its mandatory specs.
 - Every PR points to task, issue, branch and the specs it followed.
+- Naming a skill never counts as applying it; every mandatory skill has a receipt.
+- No new code unit is accepted without a reuse inventory and minimal-code gate.
+- An unavailable LLM is replaced through `EXECUTION_HANDOFF`; the task is not restarted.
 - No deploy is approved without an approved PR.
 
 ## Platforms

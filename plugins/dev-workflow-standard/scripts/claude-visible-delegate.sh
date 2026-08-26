@@ -45,7 +45,7 @@ prompt=$(cat "$prompt_file")
 
 cd "$project_root" || exit 66
 
-printf '\nClaude Code recebeu o checkpoint do Codex.\n'
+printf '\nO LLM executor recebeu o checkpoint do agente orquestrador.\n'
 printf 'Acompanhe o trabalho nesta janela. Ao terminar, use /exit.\n\n'
 
 claude "$prompt" \
@@ -56,7 +56,7 @@ exit_code=$?
 printf '%s\n' "$exit_code" >"$status_file"
 rm -f "$runner_file"
 
-printf '\nClaude Code encerrou com codigo %s. O Codex pode revisar o diff.\n' "$exit_code"
+printf '\nO LLM executor encerrou com codigo %s. O agente orquestrador pode revisar o diff.\n' "$exit_code"
 printf 'Pressione Enter para fechar esta janela.\n'
 read -r
 RUNNER
@@ -64,8 +64,8 @@ chmod 700 "$runner"
 
 gnome-terminal \
   --working-directory="$project_root" \
-  --title="Claude Code - checkpoint delegado" \
+  --title="LLM executor - checkpoint delegado" \
   -- "$runner" "$project_root" "$prompt_file" "$status_file" "$runner"
 
-echo "Claude Code opened in a visible terminal."
+echo "Executor LLM opened in a visible terminal."
 echo "Status file: $status_file"

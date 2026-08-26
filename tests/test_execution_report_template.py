@@ -137,8 +137,8 @@ class TestExecutionReportChecklistExecutado(unittest.TestCase):
         """NEW section: Checklist executado must exist."""
         self.assertIn('## Checklist executado', self.content)
 
-    def test_checklist_has_six_items(self):
-        """Checklist must have exactly 6 checkboxes."""
+    def test_checklist_has_nine_items(self):
+        """Checklist must include execution plus skill and reuse gates."""
         # Count checkboxes within the Checklist executado section
         checklist_section_match = re.search(
             r'## Checklist executado\n(.*?)(?=\n##|\Z)',
@@ -147,7 +147,7 @@ class TestExecutionReportChecklistExecutado(unittest.TestCase):
         self.assertIsNotNone(checklist_section_match)
         checklist_text = checklist_section_match.group(1)
         checkboxes = re.findall(r'- \[ \]', checklist_text)
-        self.assertEqual(len(checkboxes), 6, f"Expected 6 checkboxes, found {len(checkboxes)}")
+        self.assertEqual(len(checkboxes), 9, f"Expected 9 checkboxes, found {len(checkboxes)}")
 
     def test_checklist_item_leitura(self):
         """Checklist must include Leitura da task e specs."""

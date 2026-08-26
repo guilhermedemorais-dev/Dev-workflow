@@ -476,8 +476,8 @@ class TestDevWorkflowSkillFileIntegrity(unittest.TestCase):
         self.assertIn('name: dev-workflow-standard', self.content)
 
     def test_main_heading(self):
-        """SKILL.md must have the CTO/Orchestrator heading."""
-        self.assertIn('# Dev Workflow Standard (CTO / Orchestrator)', self.content)
+        """SKILL.md must have the provider-neutral orchestrator heading."""
+        self.assertIn('# Dev Workflow Standard (Orchestrator Agent)', self.content)
 
     def test_skill_roles_table(self):
         """Skill Roles table must exist."""

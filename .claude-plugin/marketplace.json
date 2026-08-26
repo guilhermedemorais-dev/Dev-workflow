@@ -9,7 +9,7 @@
       "name": "dev-workflow-standard",
       "source": "./plugins/dev-workflow-standard",
       "description": "CTO/orchestrator: diagnose, consolidate scope, require specs before tasks, delegate to sdd-spec-factory and dev-implementation-standard, trigger ui-ux/security, and review PRs. Never implements product code.",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "category": "development",
       "tags": ["workflow", "orchestrator", "cto", "planning", "review"]
     },
@@ -17,7 +17,7 @@
       "name": "ui-ux-standard",
       "source": "./plugins/ui-ux-standard",
       "description": "Mockup-first UI/UX, design systems, media prompts, accessibility, and visual QA.",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "category": "design",
       "tags": ["ui", "ux", "design-system", "mockup", "accessibility"]
     },
@@ -33,7 +33,7 @@
       "name": "sdd-spec-factory",
       "source": "./plugins/sdd-spec-factory",
       "description": "Spec-driven factory: turns requests into product/module/page/component/validation/database/API/UI specs and an executable task with PR and QA/review checklists.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "development",
       "tags": ["sdd", "specs", "tasks", "pr", "qa", "review"]
     },
@@ -41,7 +41,7 @@
       "name": "dev-implementation-standard",
       "source": "./plugins/dev-implementation-standard",
       "description": "Executor/coder: implements an approved task strictly within its spec scope on the suggested branch, runs required commands, updates the task result, and prepares the PR.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "development",
       "tags": ["implementation", "executor", "coding", "task", "pr"]
     }

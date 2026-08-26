@@ -72,6 +72,23 @@ Eventos, métricas e logs que devem ser adicionados.
 ## Instrução para IA/dev
 Passos diretos para o executor, restrições e o que NÃO tocar.
 
+## Skills obrigatórias
+- Skill:
+- Caminho canônico do `SKILL.md`:
+- Referências obrigatórias:
+- Evidência exigida: `SKILL_RECEIPT`
+
+## Reutilização obrigatória
+- Escopo da busca:
+- Símbolos, responsabilidades e call sites a verificar:
+- Evidência exigida: `REUSE_INVENTORY`
+- Gate exigido: `MINIMAL_CODE_GATE`
+
+## Continuidade entre LLMs
+- LLM executor atual:
+- Estado de disponibilidade:
+- `EXECUTION_HANDOFF`: obrigatório ao trocar de LLM
+
 ## Resultado da execução
 
 ### Resumo

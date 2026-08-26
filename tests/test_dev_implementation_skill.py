@@ -400,7 +400,7 @@ class TestDevImplementationSkillFileIntegrity(unittest.TestCase):
 
     def test_main_heading(self):
         """SKILL.md must have the main heading."""
-        self.assertIn('# Dev Implementation Standard (Executor / Coder)', self.content)
+        self.assertIn('# Dev Implementation Standard (Executor Agent)', self.content)
 
     def test_skill_does_not_do_sdd(self):
         """SKILL.md must state that the executor does not do SDD."""
