@@ -1,7 +1,7 @@
-# Claude Code Delegation Protocol
+# Executor LLM Delegation Protocol: Claude Code Adapter
 
-Use this protocol to keep Codex focused on technical leadership while Claude
-Code performs bounded implementation work.
+Use this adapter when the orchestrator agent selects Claude Code as the executor
+LLM for bounded implementation work. Agent roles remain provider-neutral.
 
 ## Objective
 
@@ -10,7 +10,7 @@ review, QA, security, or user approval gates.
 
 ## Mandatory Trigger
 
-Delegate the code-writing checkpoint to Claude Code when any of these apply:
+Delegate the code-writing checkpoint to an executor LLM when any of these apply:
 
 - a feature, refactor, integration, migration, or non-trivial bugfix is requested
 - implementation spans more than two files or more than one technical concern
@@ -18,13 +18,13 @@ Delegate the code-writing checkpoint to Claude Code when any of these apply:
 - repetitive code, tests, component work, or mechanical changes are required
 - a PRD, spec, roadmap phase, or implementation checkpoint exists
 
-Codex may edit directly only for genuinely small changes such as a typo,
+The orchestrator agent may edit directly only for genuinely small changes such as a typo,
 single-line config correction, tiny documentation adjustment, or narrowly
 localized patch that does not justify delegation overhead.
 
 ## Availability Gate
 
-Before the first delegated checkpoint in a task, run:
+When Claude Code is the selected executor LLM, run:
 
 ```bash
 command -v claude
@@ -42,13 +42,13 @@ Set `CLAUDE_STATUS`:
 Use a minimal prompt test only when auth status is inconclusive. Do not spend a
 model request on every checkpoint merely as a health check.
 
-For mandatory-trigger work, do not silently fall back to Codex implementation
-when `CLAUDE_STATUS != AVAILABLE`. Stop before code writing and report the
-delegation blocker so Codex does not consume the implementation budget itself.
+When `CLAUDE_STATUS != AVAILABLE`, record the matching LLM availability state
+and use `llm-handoff.md` to select another authorized executor LLM. Do not make
+the orchestrator agent silently absorb implementation work.
 
 ### Restricted Workspace Recovery
 
-The Codex workspace may allow the `claude` binary and local authentication
+The current workspace may allow the `claude` binary and local authentication
 checks while blocking outbound API traffic. When `claude -p` fails or times out
 with connection, DNS, network, or API transport symptoms:
 
@@ -57,7 +57,8 @@ with connection, DNS, network, or API transport symptoms:
 3. Retry the same command with the platform's approved external-network or escalated execution path.
 4. Ask for user approval through the execution permission mechanism when required.
 5. If the escalated retry succeeds, set `CLAUDE_STATUS=AVAILABLE_EXTERNAL` and continue normal diff review.
-6. If it also fails, stop and report the exact error; do not implement the checkpoint in Codex as a silent fallback.
+6. If it also fails, persist `EXECUTION_HANDOFF` and select another authorized
+   executor LLM; stop only when no capable LLM is available.
 
 Do not repeatedly run ordinary sandbox retries after the network-block pattern
 is established. One restricted attempt and one approved external retry are
@@ -65,7 +66,7 @@ sufficient for the same checkpoint.
 
 ## Checkpoint Sizing
 
-Split implementation before calling Claude:
+Split implementation before calling the executor LLM:
 
 - one layer, module, or coherent responsibility per checkpoint
 - one objective and one expected diff per invocation
@@ -74,11 +75,11 @@ Split implementation before calling Claude:
 - database, backend/API, frontend/UI, tests, and docs stay separate when they can be reviewed independently
 
 If a coherent change requires more files, explain the coupling in the brief.
-Never send an entire multi-phase project as one Claude prompt.
+Never send an entire multi-phase project as one executor prompt.
 
 ## Context Budget
 
-Send paths and a compressed contract, not the full Codex conversation.
+Send paths and a compressed contract, not the full orchestrator conversation.
 
 Include only:
 
@@ -91,9 +92,9 @@ Include only:
 - output instruction: return only changed files, tests, and blockers in at most 12 lines
 
 Do not paste whole repositories, long chat transcripts, unrelated logs, or
-complete documentation trees. Claude should read the named files itself.
-Codex should inspect the resulting files and diff instead of requesting a long
-implementation explanation from Claude.
+complete documentation trees. The executor LLM must read the named files and
+mandatory skills itself. The orchestrator agent inspects the resulting files,
+receipts and diff instead of requesting a long implementation explanation.
 
 ## Execution Command
 
@@ -113,12 +114,12 @@ repository. The helper opens `gnome-terminal`, starts the real interactive
 Claude Code CLI with the checkpoint already submitted, and writes the exit code
 to the status file after the user ends Claude with `/exit`.
 
-While the visible Claude terminal is active:
+While the selected executor LLM is active:
 
-- Codex must not edit the delegated files.
-- Codex may poll the status file without reading or duplicating Claude's conversation.
+- The orchestrator agent must not edit the delegated files.
+- The orchestrator agent may poll status without duplicating the executor conversation.
 - The user can watch Claude's native interface, tool calls, and edits directly.
-- Codex begins diff review only after the status file exists.
+- The orchestrator agent begins diff review only after the status file exists.
 
 Opening a GUI terminal requires the platform's approved external/escalated
 execution path. Request that approval through the execution permission
@@ -137,31 +138,33 @@ claude -p "<bounded implementation brief>" \
 ```
 
 This mode allows bounded file edits but keeps shell execution and final
-validation with Codex. Add tools only when the checkpoint specifically needs
+validation with the orchestrator agent. Add tools only when the checkpoint specifically needs
 them and the risk is understood. Never use `--dangerously-skip-permissions`.
 
 ## Required Visibility
 
-Before invoking Claude, tell the user:
+Before invoking the executor LLM, tell the user:
 
 - the checkpoint being delegated
 - the allowed scope
-- that a visible Claude Code terminal will open
-- that Claude Code will implement and Codex will review after `/exit`
+- which LLM transport will open
+- that the executor agent will implement and the orchestrator agent will review
 
-After Claude returns, report whether it executed successfully and summarize its
-claimed changes. Do not imply delegation occurred if no `claude` command ran.
+After the executor returns, report whether it executed successfully and summarize
+its claimed changes. Do not imply delegation occurred if no executor ran.
 
 ## Review Gate
 
-After every Claude checkpoint, Codex must:
+After every executor checkpoint, the orchestrator agent must:
 
 1. Inspect `git status` and the scoped diff.
 2. Reject unrelated edits or architecture drift.
 3. Validate the diff against the source-of-truth and acceptance criteria.
 4. Run canonical tests, lint, typecheck, runtime, QA, or security checks as applicable.
 5. Fix only small review findings directly; delegate substantial rework as a new bounded checkpoint.
-6. Record `CLAUDE_STATUS`, whether external execution was required, delegated checkpoint, validation evidence, and remaining gaps.
+6. Record provider availability, whether external execution was required,
+   delegated checkpoint, `SKILL_RECEIPT`, `REUSE_INVENTORY`, validation evidence,
+   and remaining gaps.
 
 Do not start the next implementation checkpoint until the current diff is
 reviewed and reconciled.
