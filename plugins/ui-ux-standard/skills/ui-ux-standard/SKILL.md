@@ -5,6 +5,10 @@ description: "Use for UI/UX, screens, mockups, visual design, design systems, co
 
 # UI/UX Standard
 
+The LLM using this skill acts as the UI/UX specialist. Read this `SKILL.md`
+completely before review and return a `SKILL_RECEIPT`; a mention of the skill is
+not proof that its methodology was applied.
+
 Specialist workflow for design and frontend visual quality. Keep this file
 compact and create only the docs/artifacts needed for the current task.
 
