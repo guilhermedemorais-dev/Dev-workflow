@@ -11,6 +11,10 @@ task, then hands execution back to `dev-workflow-standard` and the review
 specialists. Keep this file lightweight: create only the specs and the task the
 current request actually needs, and load the templates on demand.
 
+The LLM using this skill acts as the requirements LLM. Before producing specs,
+it must read this `SKILL.md` completely and return a `SKILL_RECEIPT`. Naming the
+skill in a prompt is not evidence of activation.
+
 ## Mission
 
 Transform a request into, when applicable:
@@ -87,6 +91,12 @@ collapse them into one prose blob; if a dimension does not apply, write
 - Mark every assumption explicitly. Unverified facts are hypotheses, not specs.
 - Keep tasks small enough to be reviewed in one PR. Split large work into
   multiple tasks, each with its own specs and acceptance criteria.
+- Before specifying a new service, helper, component, route, abstraction or
+  subsystem, search the source-of-truth repository for an existing equivalent.
+  Prefer reuse or extension and record the decision in `REUSE_INVENTORY`.
+- Reject speculative abstractions and duplicated responsibilities. New
+  abstractions require two current concrete consumers or an explicit approved
+  architectural requirement.
 - Stop and ask when critical scope is missing. Do not guess core scope.
 - Final acceptance belongs to the user.
 
