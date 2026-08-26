@@ -15,6 +15,8 @@ Load only the reference required by the active phase:
 - `references/review-pipeline.md`: phase gates and parallel review strategy
 - `references/coverage-model.md`: surfaces, layers, coverage ledger, and blind spots
 - `references/finding-standard.md`: evidence contract, severity, confidence, and deduplication
+- `references/false-positive-validation.md`: mandatory rejection checklist and publication gate
+- `references/stack-profiles.md`: multistack discovery and version-aware review rules
 - `references/report-template.md`: durable report and release-gate format
 
 ## Scope And Safety
@@ -182,6 +184,17 @@ A reportable finding needs:
 Classify uncertain candidates as `NEEDS_VALIDATION`, not as confirmed.
 Ordinary correctness bugs are not security findings without security impact.
 
+Before assigning `CONFIRMED`, load and apply
+`references/false-positive-validation.md`. Validation must trace imported guards,
+middleware, framework defaults, deployment controls, and other upstream or
+downstream mitigations instead of judging one suspicious line in isolation.
+
+Use `references/stack-profiles.md` to detect the repository's actual languages,
+frameworks, package managers, lockfiles, runtime versions, infrastructure, and
+deployment conventions. Load only the profiles that match detected evidence.
+Never assume a Next.js, Node.js, PHP, WordPress, Laravel, Vue, container, or
+cloud convention without proving that it applies to the target revision.
+
 Apply the complete evidence and deduplication rules in
 `references/finding-standard.md`. Independent vulnerable entry points remain
 separate findings even when they share a root cause; remediation may group them.
@@ -253,6 +266,26 @@ runtime validation.
 
 Scanner output is candidate input. Validate findings in code and runtime before
 reporting them as vulnerabilities. Record tool failures and blind spots.
+
+## External Publication Gate
+
+Do not create or update a GitHub issue, pull request, Jira ticket, Linear issue,
+security advisory, customer report, release blocker, or vulnerability count for
+a `CANDIDATE`, `NEEDS_VALIDATION`, or `FALSE_POSITIVE` item.
+
+External tracking is allowed only when all are true:
+
+- status is `CONFIRMED`, or `FIXED` with the original confirmation retained
+- confidence is `HIGH` or `MEDIUM`
+- the complete evidence contract is present
+- the mandatory false-positive checklist passed
+- affected revision and locations are stable and reproducible
+- duplicates and sibling instances were reconciled
+
+If any condition fails, keep the item in the internal validation backlog. A
+human may explicitly request publication of an unconfirmed item, but its title
+and body must clearly say `NEEDS_VALIDATION`; never present it as a vulnerability
+or include it in confirmed totals.
 
 The proprietary `Codex Security` plugin may be used as an optional independent
 second opinion when installed. Do not copy or redistribute its content, scripts,
