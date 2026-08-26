@@ -60,7 +60,22 @@ Challenge each candidate:
 
 The validator may confirm, narrow, defer, or reject. Record counterevidence.
 
+Apply every mandatory item in `false-positive-validation.md`. Validation must
+use the detected stack and installed versions from `stack-profiles.md`; a rule
+copied from another framework or major version is not evidence.
+
 Gate: every reported vulnerability satisfies the finding evidence contract.
+
+## Phase 4A: Publication Eligibility
+
+Separate internal classification from external tracking. Only `CONFIRMED`
+findings with `HIGH` or `MEDIUM` confidence may proceed to vulnerability totals,
+release blockers, GitHub/Jira/Linear issues, advisories, or customer-facing
+findings.
+
+Gate: evidence contract complete, false-positive checklist passed, revision and
+locations reproducible, and duplicates reconciled. All other candidates remain
+internal as `NEEDS_VALIDATION`, `FALSE_POSITIVE`, `DEFERRED`, or `BLOCKED`.
 
 ## Phase 5: Remediation Design
 
