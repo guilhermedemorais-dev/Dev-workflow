@@ -63,6 +63,18 @@ Include the coverage ledger from `coverage-model.md` and summarize:
 
 Record candidates rejected as false positives and the exact counterevidence.
 
+| Candidate | Trigger | Counterevidence | Disposition | Validation owner |
+| --- | --- | --- | --- | --- |
+
+## Validation Backlog
+
+List `NEEDS_VALIDATION`, `DEFERRED`, and `BLOCKED` candidates separately. These
+items are not confirmed vulnerabilities, do not enter confirmed severity totals,
+and are not eligible for automatic external issue creation.
+
+| Candidate | Missing evidence | Confidence | Next validation action | Owner |
+| --- | --- | --- | --- | --- |
+
 ## Fixes And Validation
 
 | Finding | Fix | Tests | Legitimate behavior | Security behavior | Result |

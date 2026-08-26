@@ -17,6 +17,16 @@ A confirmed finding must document:
 
 If a required element is unknown, use `NEEDS_VALIDATION` or `DEFERRED`.
 
+## Confirmation Gate
+
+Treat scanner matches, grep hits, model suspicions, missing headers, old package
+versions, and isolated dangerous-looking APIs as `CANDIDATE` evidence only.
+Promote a candidate to `CONFIRMED` only after the evidence contract is complete
+and the mandatory checklist in `false-positive-validation.md` passes.
+
+Do not publish or externally track unconfirmed candidates as vulnerabilities.
+Do not include them in confirmed severity totals or release-blocker counts.
+
 ## Finding Identity
 
 Use stable IDs shaped as `SEC-YYYY-NNN`. Keep independently reachable vulnerable
