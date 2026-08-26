@@ -5,6 +5,10 @@ description: "Use for authorized defensive application security work: security r
 
 # Security Standard
 
+The LLM using this skill acts as the security specialist. Read this `SKILL.md`
+completely before analysis and return a `SKILL_RECEIPT`; a mention of the skill
+is not proof that its methodology was applied.
+
 Use this skill as the security specialist companion to `dev-workflow-standard`.
 It provides an original, risk-based application security process focused on
 credible attack paths, measurable coverage, reproducible evidence, durable
