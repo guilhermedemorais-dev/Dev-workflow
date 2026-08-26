@@ -3,10 +3,10 @@ name: dev-workflow-standard
 description: "Use as the CTO/orchestrator for Guilherme's software delivery: receive a demand, diagnose, ask critical questions, consolidate scope, decide which specialist skills to use, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard when applicable, and review PRs against specs/task/acceptance criteria. Never implements product code directly."
 ---
 
-# Dev Workflow Standard (CTO / Orchestrator)
+# Dev Workflow Standard (Orchestrator Agent)
 
-Primary orchestration skill for Guilherme's software projects. This skill is the
-**CTO / coordinator / final reviewer**. It does not write product code. It owns
+Primary orchestration skill for Guilherme's software projects. The LLM using
+this skill becomes the **orchestrator agent / final reviewer**. It does not write product code. It owns
 discovery, scope, delegation, gates and approval, and it routes work to the
 specialist skills.
 
@@ -43,11 +43,11 @@ task.
 
 | Skill | Role | Owns |
 | --- | --- | --- |
-| `dev-workflow-standard` | CTO / orchestrator / final reviewer | demand, diagnosis, scope, delegation, gates, approval |
-| `sdd-spec-factory` | Requirements / spec engineer | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
-| `dev-implementation-standard` | Executor / coder | implement the approved task within scope, run commands, prepare PR |
-| `ui-ux-standard` | UI/UX validation | layout, responsiveness, visual states, accessibility, design system, components |
-| `security-standard` | Security validation | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
+| `dev-workflow-standard` | Orchestrator agent / final reviewer | demand, diagnosis, scope, delegation, gates, approval |
+| `sdd-spec-factory` | Requirements LLM | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
+| `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
+| `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
+| `security-standard` | Security specialist LLM | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
 
 This skill coordinates them. It does not absorb their responsibilities.
 
@@ -238,14 +238,21 @@ devolva para review.
 
 ## Delegation Rules
 
+Before every delegation, load `references/skill-execution-contract.md` and
+`references/minimal-code-gate.md`. Naming a skill is not activation. The
+orchestrator agent must resolve the canonical `SKILL.md`, require the receiving
+LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
+
 - **Specs** -> delegate to `sdd-spec-factory`. Provide: demand summary,
   source-of-truth paths, consolidated scope, constraints, and the layers in play
   (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
   task before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
   task and its mandatory specs are approved. Provide: the task, the mandatory
-  specs, allowed files/module, suggested branch, and acceptance criteria.
-- **Transport of delegation** (visible terminal / Claude Code handoff, prompt
+  specs, allowed files/module, suggested branch, acceptance criteria, applicable
+  skill paths, and required references. Require `REUSE_INVENTORY` and the
+  minimal-code gate before code is written.
+- **Transport of delegation** (visible terminal / executor LLM handoff, prompt
   contract, network fallback) is described in `references/claude-delegation.md`.
   Keep prompts lean: paths and constraints, not whole files or conversations.
 - Two executors must not edit the same files simultaneously.
@@ -276,6 +283,11 @@ When a PR comes back, the orchestrator reviews before approving:
 6. Tests required by the task exist and pass, with evidence.
 7. Status reported by `Banco`, `API/Backend`, `Frontend/UI`; unvalidated areas
    marked `NAO VALIDADO`.
+8. `SKILL_RECEIPT` proves every mandatory skill and reference was read.
+9. `REUSE_INVENTORY` proves existing symbols, helpers, components, routes and
+   sibling implementations were searched before new ones were created.
+10. `MINIMAL_CODE_GATE` explains every new abstraction and confirms that no
+    equivalent implementation was duplicated.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
 spec-anchored reasons. Rejected review moves the card back to `In Progress` with
@@ -291,8 +303,14 @@ the `rework` label until corrected.
 
 ## Reference Routing
 
-- Claude Code delegation, visible terminal, fallback, and prompt contract:
+- Executor LLM delegation, visible terminal, fallback, and prompt contract:
   `references/claude-delegation.md`
 - Plugin/skill discovery, scoring, approval, and rollback:
   `references/continuous-improvement.md`
+- Mandatory skill loading and execution evidence:
+  `references/skill-execution-contract.md`
+- Reuse and anti-overengineering review:
+  `references/minimal-code-gate.md`
+- Provider-neutral LLM replacement and checkpoint continuity:
+  `references/llm-handoff.md`
 - End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`
