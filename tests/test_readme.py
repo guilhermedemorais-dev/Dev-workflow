@@ -37,9 +37,9 @@ class TestReadmeOrchestratorRole(unittest.TestCase):
         # Check delegation relationship
         self.assertIn('delega a implementacao para `dev-implementation-standard`', self.content)
 
-    def test_dev_implementation_standard_can_run_via_claude_code(self):
-        """dev-implementation-standard can be executed via Claude Code as execution medium."""
-        self.assertIn('via Claude Code como meio de execucao', self.content)
+    def test_dev_implementation_standard_can_use_any_authorized_llm(self):
+        """The executor role is not bound to a provider."""
+        self.assertIn('qualquer LLM autorizado como meio de execucao', self.content)
 
     def test_lean_delegation_fields(self):
         """Each delegation receives only lean context: task, mandatory specs, module, constraints, acceptance criteria."""
@@ -77,21 +77,21 @@ class TestReadmeClaudeCodeTransport(unittest.TestCase):
         """CLAUDE_STATUS is registered after the health check."""
         self.assertIn('CLAUDE_STATUS', self.content)
 
-    def test_visible_terminal_mode(self):
-        """VISIBLE_TERMINAL mode is referenced as the transport mechanism."""
-        self.assertIn('VISIBLE_TERMINAL', self.content)
+    def test_execution_handoff_is_documented(self):
+        """Provider changes persist an execution checkpoint."""
+        self.assertIn('EXECUTION_HANDOFF', self.content)
 
-    def test_sandbox_network_blocked_status(self):
-        """SANDBOX_NETWORK_BLOCKED is referenced for restricted network environments."""
-        self.assertIn('SANDBOX_NETWORK_BLOCKED', self.content)
+    def test_provider_failure_does_not_restart_task(self):
+        """A replacement LLM continues instead of restarting."""
+        self.assertIn('sem reiniciar', self.content)
 
-    def test_claude_p_as_fallback(self):
-        """claude -p is referenced as a fallback transport."""
-        self.assertIn('claude -p', self.content)
+    def test_claude_is_only_an_adapter(self):
+        """Claude Code is described only as a selected transport."""
+        self.assertIn('Quando Claude Code for o transporte escolhido', self.content)
 
-    def test_orchestrator_stops_if_claude_code_unavailable(self):
-        """Orchestrator stops instead of implementing alone if Claude Code is unavailable."""
-        self.assertIn('o orquestrador para em vez de implementar\nsozinho', self.content)
+    def test_orchestrator_replaces_unavailable_llm(self):
+        """The orchestrator can replace an unavailable LLM."""
+        self.assertIn('outro LLM autorizado continua a mesma task', self.content)
 
     def test_claude_delegation_md_reference(self):
         """README references claude-delegation.md for the transport protocol."""
@@ -104,21 +104,21 @@ class TestReadmeAgentsCLIsSection(unittest.TestCase):
         self.content = read_readme()
 
     def test_dev_workflow_standard_role_defined(self):
-        """`dev-workflow-standard` is described as CTO/orchestrator with specific responsibilities."""
-        self.assertIn('`dev-workflow-standard` (CTO/orquestrador)', self.content)
+        """`dev-workflow-standard` is described as the orchestrator agent."""
+        self.assertIn('agente orquestrador usando `dev-workflow-standard`', self.content)
         # Must include specific responsibilities
-        self.assertIn('diagnostico, escopo, delegacao', self.content)
+        self.assertIn('diagnostico, escopo,\n  delegacao', self.content)
         self.assertIn('gates e revisao', self.content)
 
     def test_sdd_spec_factory_role_defined(self):
         """`sdd-spec-factory` generates specs and executable task."""
         self.assertIn('`sdd-spec-factory`', self.content)
-        self.assertIn('gera as specs e a task executavel', self.content)
+        self.assertIn('LLM de requisitos usando `sdd-spec-factory`', self.content)
 
     def test_dev_implementation_standard_role_defined(self):
         """`dev-implementation-standard` is described as executor."""
-        self.assertIn('`dev-implementation-standard` (executor)', self.content)
-        self.assertIn('implementa a task aprovada', self.content)
+        self.assertIn('agente executor usando `dev-implementation-standard`', self.content)
+        self.assertIn('implementa a task\n  aprovada', self.content)
 
     def test_auxiliary_tools_do_not_replace_specs(self):
         """Auxiliary tools do not replace PRD, specs, docs, tests, or review."""
@@ -192,15 +192,15 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
         """README.md must retain the skill roles table."""
         self.assertIn('| Skill | Papel |', self.content)
         self.assertIn('dev-workflow-standard', self.content)
-        self.assertIn('CTO / orquestrador / revisor final', self.content)
+        self.assertIn('Agente orquestrador / revisor final', self.content)
 
     def test_readme_has_invariant_rules(self):
         """README.md must retain the invariant rules section."""
         self.assertIn('Regras invariantes:', self.content)
 
-    def test_dev_workflow_standard_codex_runtime(self):
-        """`dev-workflow-standard` typically runs in Codex per the updated model."""
-        self.assertIn('Roda tipicamente no Codex', self.content)
+    def test_dev_workflow_standard_is_provider_neutral(self):
+        """`dev-workflow-standard` is assigned to an agent role, not a provider."""
+        self.assertIn('agente orquestrador usando `dev-workflow-standard`', self.content)
 
 
 if __name__ == '__main__':
