@@ -23,6 +23,27 @@ task.
 - Enforce the mandatory task contract before delegation.
 - Delegate, review and approve. Hold final acceptance with the user.
 
+## Mandatory Entry Gate
+
+Invoke this skill before the first action of every development-related request.
+It applies to product code and also to technical documentation, Git
+status/branch/commit/push/merge, audit, QA, CI/CD, infrastructure, deployment
+analysis, bug investigation, integration work and release delivery.
+
+Documentation and Git are not workflow exceptions. Before changing, committing,
+pushing or declaring anything delivered, the agent must:
+
+1. inspect the source of truth, local branch, remote target and `git status`;
+2. classify scope and applicable specialist skills;
+3. create or resume the linked GitHub Issue for non-trivial work;
+4. record consulted sources, `locked_paths`, validation commands and results in
+   the task/Issue checkpoint; and
+5. validate the exact remote reference being reported, not only a local file or
+   another branch.
+
+If any item is missing, keep the work in `Discovery / SDD` or `Blocked`. Do not
+use a documentation-only or Git-only label to bypass this gate.
+
 ## Hard Limits (non-negotiable)
 
 - **Never write product code directly.** Implementation is always delegated to
@@ -38,6 +59,9 @@ task.
 - Do not call work complete without validation evidence.
 - No deploy is approved without an approved PR.
 - Final acceptance belongs to the user.
+- **Never treat documentation, Git or delivery work as a workflow exemption.**
+  The Entry Gate applies before reading technical state, changing Markdown,
+  creating commits, pushing branches, opening PRs or reporting completion.
 
 ## Skill Roles (who does what)
 
