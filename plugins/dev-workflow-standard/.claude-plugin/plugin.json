@@ -1,7 +1,7 @@
 {
   "name": "dev-workflow-standard",
-  "description": "CTO/orchestrator workflow: diagnose, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard and security-standard, and review PRs against specs, task and acceptance criteria. Never implements product code directly.",
-  "version": "0.5.0",
+  "description": "Engineering harness: diagnose and scope work, require specs before tasks, resolve and invoke specialist skills/executor capabilities, track execution state, require execution receipts and validation evidence, recover or replan on failure, and review PRs against specs and acceptance criteria.",
+  "version": "0.6.0",
   "author": {
     "name": "Guilherme"
   },
