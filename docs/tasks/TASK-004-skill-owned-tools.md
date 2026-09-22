@@ -5,7 +5,7 @@
 - Kanban: In Review
 - Issue: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/19
 - Branch: `feat/skill-owned-tools`
-- PR: pending
+- PR: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/20
 
 ## Objective
 
