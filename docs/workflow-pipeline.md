@@ -27,6 +27,8 @@ Idea / demand
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> capability resolution + runtime availability check
+  -> owner skill resolves tool registry + compatible local runtime state
+  -> cached fast path or detect/install/verify/persist slow path
   -> selected capability invoked; state RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard: implement (only the task scope, on the branch)
@@ -35,6 +37,7 @@ Idea / demand
   -> Human Task updated
   -> EXECUTION_REPORT_COMMENT -> linked GitHub Issue when available
   -> dev-workflow-standard: VALIDATING
+  -> owner skill analyzes findings, corrects in scope, and revalidates on FAIL
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
   -> dev-workflow-standard: approve or request rework

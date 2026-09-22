@@ -48,6 +48,11 @@ service was extended instead of duplicated. Never publish private
 chain-of-thought, token-by-token deliberation, secrets, credentials, or
 unnecessary internal logs.
 
+For tool preparation, mention whether the tool was already available or was
+verified after installation. For validation, report initial findings,
+confirmed findings, false positives, correction, and revalidation when useful.
+Omit machine-specific executable paths and installation logs.
+
 ## State Requirements
 
 - `REWORK`: failed criterion, evidence, known cause, correction strategy, next step.

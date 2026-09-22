@@ -246,6 +246,16 @@ For runtime testing:
 
 ## Tool Policy
 
+Own security capabilities and tools through `references/tool-registry.json`.
+Use the shared `skill-owned-tools.md` state protocol and
+`plugins/dev-workflow-standard/scripts/tool-state.py` for cached resolution,
+detection, verification, and local persistence. Prefer the cached fast path;
+when absent or stale, detect first, select the official supported install
+method if needed, verify and record it immediately. A failed installation is
+recorded and not retried unchanged in the same cycle. Never assume a host tool
+is present in a container. On failure, validate the finding, correct within
+scope, and rerun the affected check before claiming PASS.
+
 Use installed security tools when they improve evidence, but do not make one
 vendor or scanner mandatory. Inspect configuration and versions before use.
 

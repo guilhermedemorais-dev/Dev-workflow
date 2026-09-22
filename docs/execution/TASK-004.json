@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-004",
+  "task_path": "docs/tasks/TASK-004-skill-owned-tools.md",
+  "goal": "Add specialist-owned registries and persistent local tool state",
+  "specs": ["docs/specs/skill-owned-tools/module-spec.md"],
+  "docs": ["docs/workflow-pipeline.md", "README.md"],
+  "allowed_paths": ["README.md", ".gitignore", "docs/**", "plugins/**", "tests/**"],
+  "out_of_scope": ["unrelated product code", "global tool installation", "automatic deployment"],
+  "requirements": ["preserve existing Harness contracts", "verify official sources", "persist state after detection or installation", "invalidate stale state"],
+  "acceptance_criteria": ["per-skill registries", "ignored local state", "fast and slow paths", "install verification", "task and receipt integration", "tests pass"],
+  "required_tests": ["PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -q", "git diff --check"],
+  "required_skills": ["plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md", "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md", "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md", "plugins/security-standard/skills/security-standard/SKILL.md", "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md"],
+  "required_validations": [{"owner": "dev-implementation-standard", "capability": "python-unit-testing", "preferred_tool": "python3-unittest"}],
+  "stop_conditions": ["scope_expansion_required", "source_of_truth_conflict", "mandatory_validation_failed"]
+}

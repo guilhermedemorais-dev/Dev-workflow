@@ -8,6 +8,10 @@ This exact registry is a local architectural extension. Capability-based
 routing is a broader agent pattern, but the names, rows, priorities, and
 fallback rules below are owned by this repository.
 
+This registry routes capability to owner skill. Each specialist owns its
+versioned `references/tool-registry.json` and ignored local runtime state;
+see `skill-owned-tools.md`. Do not centralize vendor installation here.
+
 ## Core Registry
 
 | Need | Preferred capability | Fallback | Completion evidence |

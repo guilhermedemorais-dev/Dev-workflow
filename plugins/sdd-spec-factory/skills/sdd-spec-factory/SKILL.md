@@ -188,6 +188,10 @@ one lean JSON contract using `templates/execution-contract-template.json`:
   contract path, Engineering Harness instruction, and evidence destination.
 - Put concise executor-only paths and constraints in the contract instead of
   repeating them in the prompt.
+- Record planned validations in the Human Task with owner skill, capability,
+  and preferred tool when known. Put only those compact identifiers in the
+  Execution Contract `required_validations`; never store installation state,
+  official URLs, executable paths, or logs there.
 
 The Execution Contract must be valid JSON and include `schema_version`,
 `task_id`, `task_path`, `goal`, `specs`, `docs`, `allowed_paths`,

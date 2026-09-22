@@ -49,6 +49,9 @@ operacional, instalacao ou uso publico deve atualizar este README no mesmo
 conjunto de mudancas. Alteracoes internas sem impacto documentavel devem ao
 menos confirmar explicitamente que o README continua correto.
 
+README desatualizado para mudancas de skills, capabilities, tools, estados ou
+gates significa `NOT READY TO COMMIT`.
+
 Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
 disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
 separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
@@ -379,6 +382,48 @@ Executor
 
 O contrato completo esta em
 [`execution-report-comments.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/execution-report-comments.md).
+
+## Skill-Owned Tool Registry
+
+O Harness roteia `capability -> skill responsavel`. As skills
+`security-standard`, `ui-ux-standard` e `dev-implementation-standard` mantem
+seus proprios `references/tool-registry.json`, com capabilities, ferramenta
+preferencial, repositorio oficial e forma de verificacao. O registry e
+conhecimento permanente e versionado. A lista inicial nao e fechada.
+
+O estado local fica em `runtime-state/tool-state.json` dentro de cada skill e e
+ignorado pelo Git. Ele registra ambiente, ferramenta instalada, versao,
+executavel, origem, metodo de instalacao e ultima verificacao ou falha. Esse
+estado pertence ao runtime, nao ao repositorio ou a outros hosts/containers.
+Para plugin instalado em local somente leitura, `TOOL_REGISTRY_PATH` e
+`TOOL_STATE_PATH` apontam respectivamente ao registry da skill e a um arquivo
+persistente gravavel no runtime.
+
+```text
+Skill -> tool registry -> repositorios oficiais
+      -> runtime state -> versao / executavel / origem neste ambiente
+```
+
+Fast path: a skill consulta o estado compativel e executa diretamente a tool
+conhecida, sem discovery ou instalacao repetidos. Slow path: estado ausente,
+stale, ambiente alterado ou versao incompatível leva a detectar, instalar por
+metodo oficial quando necessario, verificar e persistir. Ferramenta ja
+existente tambem e registrada apos verificacao. Falha de instalacao nao vira
+`installed` e a mesma tentativa nao se repete no mesmo ciclo.
+
+O utilitario [`tool-state.py`](plugins/dev-workflow-standard/scripts/tool-state.py)
+implementa consulta, deteccao, instalacao explicita, execucao e invalidacao.
+Exemplo: `python3 plugins/dev-workflow-standard/scripts/tool-state.py
+dev-implementation-standard python-unittest run --workspace . -- --version`.
+Cada skill escolhe a ferramenta e interpreta o resultado. Em FAIL, confirma o
+problema, corrige dentro do escopo, reexecuta e registra a revalidacao.
+Findings de scanners continuam candidatos ate confirmacao especializada.
+
+A task e o Execution Contract indicam skill, capability, tool preferencial e
+validacoes previstas. Nunca carregam caminhos ou estado local. O
+`EXECUTION_RECEIPT` registra tool usada, versao, origem, estado reutilizado ou
+instalacao nova e evidencias inicial/final. O `EXECUTION_REPORT_COMMENT`
+resume apenas o progresso util para humanos.
 
 ### Capability Registry
 
