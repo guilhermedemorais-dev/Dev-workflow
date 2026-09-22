@@ -197,6 +197,12 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
         """README.md must retain the invariant rules section."""
         self.assertIn('Regras invariantes:', self.content)
 
+    def test_readme_documents_human_execution_reporting(self):
+        self.assertIn('## Human Execution Reporting', self.content)
+        self.assertIn('EXECUTION_REPORT_COMMENT', self.content)
+        self.assertIn('GitHub Issue / Board history', self.content)
+        self.assertIn('nunca chain-of-thought privado', self.content)
+
     def test_dev_workflow_standard_is_provider_neutral(self):
         """`dev-workflow-standard` is assigned to an agent role, not a provider."""
         self.assertIn('Engineering Harness usando `dev-workflow-standard`', self.content)

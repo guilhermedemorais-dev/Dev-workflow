@@ -32,6 +32,8 @@ Idea / demand
   -> dev-implementation-standard: implement (only the task scope, on the branch)
   -> execution result: diff / files / commands / artifacts
   -> completed EXECUTION_RECEIPT
+  -> Human Task updated
+  -> EXECUTION_REPORT_COMMENT -> linked GitHub Issue when available
   -> dev-workflow-standard: VALIDATING
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
@@ -81,6 +83,9 @@ Idea / demand
 - Every PR points to task, issue, branch and the specs it followed.
 - Naming a skill never counts as applying it; every mandatory skill has a receipt.
 - Assigning a task never counts as executing it; every delegated checkpoint has an `EXECUTION_RECEIPT`.
+- A human Issue report communicates material progress but never replaces the
+  receipt or validation. Publication requires a returned comment URL/identifier.
+- Consolidate small operations and never post an identical checkpoint report twice.
 - `COMPLETED` requires inspectable result plus validation evidence.
 - No new code unit is accepted without a reuse inventory and minimal-code gate.
 - An unavailable LLM is replaced through `EXECUTION_HANDOFF`; the task is not restarted.

@@ -40,7 +40,9 @@ Execution Contract em `docs/execution/TASK-XXX.json` e o indice operacional
 enxuto: aponta para escopo, criterios, testes, skills e fontes obrigatorias. O
 executor valida esse JSON primeiro e carrega specs, docs e codigo sob demanda.
 O `EXECUTION_RECEIPT` so nasce depois da execucao, a partir de evidencia
-observada, e nao e entrada do proprio checkpoint.
+observada, e nao e entrada do proprio checkpoint. O
+`EXECUTION_REPORT_COMMENT` traduz checkpoints materiais em um diario humano
+curto na Issue vinculada, sem substituir task, receipt, Project ou PR.
 
 Regra de manutencao: toda alteracao de arquitetura, workflow, contrato
 operacional, instalacao ou uso publico deve atualizar este README no mesmo
@@ -50,9 +52,9 @@ menos confirmar explicitamente que o README continua correto.
 Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
 disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
 separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
-`SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE` e
-`EXECUTION_HANDOFF` sao decisoes ou extensoes locais deste projeto, nao padroes
-oficiais da OpenAI. A classificacao completa esta em
+`EXECUTION_REPORT_COMMENT`, `SKILL_RECEIPT`, `REUSE_INVENTORY`,
+`MINIMAL_CODE_GATE` e `EXECUTION_HANDOFF` sao decisoes ou extensoes locais
+deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
 [`docs/engineering-harness-audit.md`](docs/engineering-harness-audit.md).
 
 ## Plugins
@@ -178,7 +180,9 @@ Ideia / demanda
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard implementa (somente o escopo da task)
   -> resultado inspecionavel: diff / arquivos / comandos / artefatos
+  -> TASK.md atualizada
   -> EXECUTION_RECEIPT completo
+  -> EXECUTION_REPORT_COMMENT -> GitHub Issue / historico do Board
   -> dev-workflow-standard entra em VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA conforme aplicavel
@@ -199,6 +203,8 @@ Regras invariantes:
 - Todo PR aponta para task, issue, branch e specs seguidas.
 - Skill mencionada nao e skill aplicada: toda skill obrigatoria gera `SKILL_RECEIPT`.
 - Task atribuida nao e task executada: toda delegacao real gera `EXECUTION_RECEIPT`.
+- Comentario humano nao e evidencia de execucao: ele resume checkpoints
+  materiais e so conta como publicado quando a operacao retorna URL/identificador.
 - `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
 - Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
@@ -321,6 +327,58 @@ EXECUTION_RECEIPT
 ```
 
 Sem `invocation_evidence`, a task e considerada **NOT EXECUTED**. Sem `validation_evidence`, ela nao pode chegar a `COMPLETED`.
+
+## Human Execution Reporting
+
+O acompanhamento humano preserva responsabilidades separadas:
+
+```text
+TASK.md
+  -> registro tecnico persistente da execucao
+
+execution-contract.json
+  -> contrato operacional enxuto para a LLM
+
+EXECUTION_RECEIPT
+  -> evidencia machine-readable do que realmente executou
+
+EXECUTION_REPORT_COMMENT
+  -> relatorio humano cronologico na Issue vinculada ao card
+
+GitHub Project / Board
+  -> visao de estado e acompanhamento
+```
+
+O executor atualiza a task, produz o receipt e publica um comentario apenas em
+checkpoints materiais como `RUNNING`, `VALIDATING`, `REWORK`, `BLOCKED` e
+`COMPLETED`. Operacoes pequenas sao consolidadas para evitar spam e um corpo
+identico nao deve ser publicado duas vezes no mesmo checkpoint.
+
+O comentario registra, quando aplicavel: progresso, metodo utilizado, decisoes
+tecnicas e reutilizacao, validacao, areas nao validadas, problemas, bloqueios,
+evidencias e proximo passo. Ele inclui rationale tecnico curto e verificavel,
+mas nunca chain-of-thought privado, segredos ou deliberacao token a token.
+
+Publicacao so pode ser declarada quando a ferramenta GitHub retorna uma URL ou
+identificador do comentario. Sem Issue vinculada ou capacidade disponivel, o
+relatorio permanece na `TASK.md` como `NOT PUBLISHED`, com o motivo. Essa
+indisponibilidade nao transforma trabalho nao validado em valido e o comentario
+nunca substitui `EXECUTION_RECEIPT`.
+
+Fluxo:
+
+```text
+Executor
+  -> implementacao
+  -> TASK.md atualizada
+  -> EXECUTION_RECEIPT
+  -> EXECUTION_REPORT_COMMENT -> GitHub Issue / Board history
+  -> VALIDATING
+  -> Review
+```
+
+O contrato completo esta em
+[`execution-report-comments.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/execution-report-comments.md).
 
 ### Capability Registry
 

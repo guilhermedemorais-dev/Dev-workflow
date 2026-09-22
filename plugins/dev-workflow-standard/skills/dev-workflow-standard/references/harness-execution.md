@@ -28,11 +28,15 @@ For every executable checkpoint:
 5. Set `RUNNING` and execute the bounded checkpoint.
 6. Inspect the returned output, diff, files, commands, artifacts or specialist findings.
 7. Complete an `EXECUTION_RECEIPT` from that observed result.
-8. Set `VALIDATING` and check acceptance criteria and mandatory specialist rules.
-9. If validation passes, mark `COMPLETED`.
-10. If validation fails, mark `REWORK` and invoke the responsible capability again.
-11. If the capability fails or becomes unavailable, select an approved fallback or create an `EXECUTION_HANDOFF`.
-12. Mark `BLOCKED` only when no safe capable path remains.
+8. Update the Human Task and, for a material checkpoint, follow
+   `execution-report-comments.md` to publish an `EXECUTION_REPORT_COMMENT` when
+   a linked Issue and authorized capability exist.
+9. Set `VALIDATING` and check acceptance criteria and mandatory specialist rules.
+10. If validation passes, mark `COMPLETED` and publish the final factual report.
+11. If validation fails, mark `REWORK`, report the failure and correction plan,
+   and invoke the responsible capability again.
+12. If the capability fails or becomes unavailable, select an approved fallback or create an `EXECUTION_HANDOFF`.
+13. Mark `BLOCKED` only when no safe capable path remains, with an actionable report.
 
 ## EXECUTION_RECEIPT
 
@@ -60,6 +64,10 @@ EXECUTION_RECEIPT
 A task without `invocation_evidence` is `NOT EXECUTED`.
 
 A task without `validation_evidence` cannot be `COMPLETED`.
+
+An Issue comment without a completed receipt is communication, not execution
+evidence. A prepared comment without a returned remote URL/identifier is not a
+published `EXECUTION_REPORT_COMMENT`.
 
 `EXECUTION_RECEIPT` is a local Engineering Harness extension. It adapts the
 consolidated practice of retaining inspectable tool output and validation
@@ -118,3 +126,5 @@ The harness may mark a checkpoint `COMPLETED` only when all are true:
 - mandatory tests/reviews passed or are explicitly marked not applicable;
 - no unresolved blocker remains;
 - evidence is inspectable from repository/tool state.
+- the Human Task is current and any applicable final Issue report is consistent
+  with the receipt and validation result.

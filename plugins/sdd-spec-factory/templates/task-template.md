@@ -85,6 +85,12 @@ Siga o Engineering Harness e registre resultado e evidências nesta task.
 - Execution Contract: `docs/execution/TASK-XXX.json`
 - `EXECUTION_HANDOFF`: obrigatório ao trocar de LLM
 
+## Relatórios humanos na Issue
+- Checkpoints materiais: RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
+- Último status de publicação: PENDING | PUBLISHED | NOT PUBLISHED | N/A
+- Evidência remota (URL/identificador):
+- Motivo quando não publicado:
+
 ## Resultado da execução
 
 ### Resumo
