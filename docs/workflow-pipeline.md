@@ -1,14 +1,14 @@
 # Workflow Pipeline
 
 End-to-end delivery pipeline across the five skills. The LLM using
-`dev-workflow-standard` is the orchestrator agent and is the only role that approves moving from one gate to
-the next. It never writes product code.
+`dev-workflow-standard` is the engineering harness and is the only role that approves moving from one gate to
+the next. It never writes product code itself; it routes work to executable capabilities and requires invocation plus validation evidence before advancing.
 
 ## Skills and roles
 
 | Skill | Role |
 | --- | --- |
-| `dev-workflow-standard` | Orchestrator agent / final reviewer |
+| `dev-workflow-standard` | Engineering harness / final reviewer |
 | `sdd-spec-factory` | Requirements LLM / executable task |
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
@@ -24,8 +24,12 @@ Idea / demand
   -> sdd-spec-factory: generate executable task (links specs, issue, branch, PR)
   -> HUMAN APPROVAL
   -> required skills read + SKILL_RECEIPT
+  -> capability resolution + runtime availability check
+  -> selected capability actually invoked
+  -> EXECUTION_RECEIPT
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard: implement (only the task scope, on the branch)
+  -> dev-workflow-standard: VALIDATING
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
   -> dev-workflow-standard: approve or request rework
@@ -69,6 +73,8 @@ Idea / demand
 - Every task points to its mandatory specs.
 - Every PR points to task, issue, branch and the specs it followed.
 - Naming a skill never counts as applying it; every mandatory skill has a receipt.
+- Assigning a task never counts as executing it; every delegated checkpoint has an `EXECUTION_RECEIPT`.
+- `COMPLETED` requires inspectable result plus validation evidence.
 - No new code unit is accepted without a reuse inventory and minimal-code gate.
 - An unavailable LLM is replaced through `EXECUTION_HANDOFF`; the task is not restarted.
 - No deploy is approved without an approved PR.
