@@ -122,9 +122,10 @@ class TestExecutionReportPromptUtilizadoSection(unittest.TestCase):
         self.assertIn('## Prompt utilizado', self.content)
 
     def test_prompt_utilizado_instructions(self):
-        """Prompt utilizado must reference the executor prompt in the task."""
-        self.assertIn('Prompt para o executor', self.content)
-        self.assertIn('Cole o prompt-base executado ou referencie o trecho', self.content)
+        """Prompt utilizado records the lean bootstrap without copying sources."""
+        self.assertIn('task_id` + `execution_contract_path', self.content)
+        self.assertIn('Não copie o', self.content)
+        self.assertNotIn('Cole o prompt-base executado', self.content)
 
 
 class TestExecutionReportChecklistExecutado(unittest.TestCase):
@@ -151,7 +152,7 @@ class TestExecutionReportChecklistExecutado(unittest.TestCase):
 
     def test_checklist_item_leitura(self):
         """Checklist must include Leitura da task e specs."""
-        self.assertIn('- [ ] Leitura da task e specs', self.content)
+        self.assertIn('- [ ] Contrato validado e referências necessárias carregadas', self.content)
 
     def test_checklist_item_implementacao(self):
         """Checklist must include Implementação."""

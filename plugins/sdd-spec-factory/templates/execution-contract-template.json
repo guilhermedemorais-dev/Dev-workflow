@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-XXX",
+  "task_path": "docs/tasks/TASK-XXX-slug.md",
+  "goal": "Concise execution goal",
+  "specs": [
+    "docs/specs/module/spec.md"
+  ],
+  "docs": [],
+  "allowed_paths": [
+    "path/to/allowed/scope/**"
+  ],
+  "out_of_scope": [],
+  "requirements": [],
+  "acceptance_criteria": [],
+  "required_tests": [],
+  "required_skills": [],
+  "stop_conditions": [
+    "architecture_change_required",
+    "scope_expansion_required",
+    "mandatory_reference_missing",
+    "source_of_truth_conflict"
+  ]
+}

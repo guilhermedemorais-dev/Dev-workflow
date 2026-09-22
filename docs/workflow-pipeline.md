@@ -21,8 +21,10 @@ Idea / demand
   -> dev-workflow-standard: diagnose (critical questions, risks)
   -> dev-workflow-standard: consolidate scope (in / out / constraints / decisions)
   -> sdd-spec-factory: generate specs (product/module/page/component/validation/API/DB)
-  -> sdd-spec-factory: generate executable task (links specs, issue, branch, PR)
+  -> sdd-spec-factory: generate Human Task + lean Execution Contract
   -> HUMAN APPROVAL
+  -> short bootstrap: task_id + execution_contract_path
+  -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> capability resolution + runtime availability check
   -> selected capability invoked; state RUNNING
@@ -45,8 +47,10 @@ Idea / demand
    (Product → Module → Page → Component), with Banco / API/Backend / Frontend/UI
    / Testes / Segurança / Observabilidade / Decisões / Riscos / Critérios de
    aceite separated. Owned by `sdd-spec-factory`, approved by the orchestrator.
-3. **Task gate** — one small executable task links its mandatory specs, issue,
-   suggested branch and expected PR. Human approval required before code.
+3. **Task gate** — one Human Task links its issue, branch, expected PR, and a
+   valid lean Execution Contract with scope, acceptance criteria, tests, skills,
+   stop conditions, and mandatory reference paths. Human approval required
+   before code.
 4. **Implementation gate** — task implemented within scope; required commands run;
    tests pass; task result updated; skill receipt and reuse evidence exist. Owned
    by the executor agent using `dev-implementation-standard`.
@@ -72,7 +76,8 @@ Idea / demand
   contract required by the change-complexity tier.
 - `dev-implementation-standard` never implements without an approved task, and
   never changes anything out of scope without a recorded justification.
-- Every task points to its mandatory specs.
+- Every new executable task points to a valid Execution Contract, and that
+  contract points to its mandatory specs. Legacy tasks are normalized on demand.
 - Every PR points to task, issue, branch and the specs it followed.
 - Naming a skill never counts as applying it; every mandatory skill has a receipt.
 - Assigning a task never counts as executing it; every delegated checkpoint has an `EXECUTION_RECEIPT`.
@@ -88,8 +93,8 @@ The tiers control artifact depth, not validation quality:
 | Tier | Typical scope | Minimum contract |
 | --- | --- | --- |
 | `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, validation command/check, evidence |
-| `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/task plus existing docs; focused spec only for unspecified behavior |
-| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, executable task, traceability, specialists, review gates |
+| `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/Human Task plus lean Execution Contract; focused spec only for unspecified behavior |
+| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, Human Task, lean Execution Contract, traceability, specialists, review gates |
 
 Escalate when uncertain. Security and UI gates remain surface- and risk-based.
 

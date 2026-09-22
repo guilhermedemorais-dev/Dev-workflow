@@ -25,6 +25,8 @@ Fluxo essencial:
 ```text
 demanda
   -> Engineering Harness
+  -> Human Task + lean Execution Contract
+  -> bootstrap curto (task_id + execution_contract_path)
   -> capability routing
   -> skills / tools / executors
   -> execucao real
@@ -32,6 +34,18 @@ demanda
   -> validacao
   -> conclusao ou rework
 ```
+
+O Human Task permanece legivel para acompanhamento, decisao e status. O
+Execution Contract em `docs/execution/TASK-XXX.json` e o indice operacional
+enxuto: aponta para escopo, criterios, testes, skills e fontes obrigatorias. O
+executor valida esse JSON primeiro e carrega specs, docs e codigo sob demanda.
+O `EXECUTION_RECEIPT` so nasce depois da execucao, a partir de evidencia
+observada, e nao e entrada do proprio checkpoint.
+
+Regra de manutencao: toda alteracao de arquitetura, workflow, contrato
+operacional, instalacao ou uso publico deve atualizar este README no mesmo
+conjunto de mudancas. Alteracoes internas sem impacto documentavel devem ao
+menos confirmar explicitamente que o README continua correto.
 
 Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
 disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
@@ -141,7 +155,7 @@ hierarquica e uma decisao arquitetural local deste projeto.
 | --- | --- |
 | `parceiro-estrategico-global` | Camada global: descoberta, verificacao e roteamento dinamico de capacidades |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
-| `sdd-spec-factory` | LLM de requisitos: specs e task executavel |
+| `sdd-spec-factory` | LLM de requisitos: specs, Human Task e Execution Contract |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
 | `security-standard` | LLM especialista em seguranca |
@@ -153,8 +167,10 @@ Ideia / demanda
   -> dev-workflow-standard diagnostica (perguntas criticas, riscos)
   -> dev-workflow-standard consolida escopo
   -> sdd-spec-factory gera specs
-  -> sdd-spec-factory gera task executavel
+  -> sdd-spec-factory gera Human Task + lean Execution Contract
   -> aprovacao humana
+  -> executor recebe task_id + execution_contract_path
+  -> contrato validado; referencias obrigatorias carregadas sob demanda
   -> skills obrigatorias carregadas + SKILL_RECEIPT
   -> capability registry resolve executor/especialistas
   -> disponibilidade do runtime e verificada

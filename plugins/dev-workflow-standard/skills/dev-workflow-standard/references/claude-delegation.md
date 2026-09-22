@@ -79,22 +79,22 @@ Never send an entire multi-phase project as one executor prompt.
 
 ## Context Budget
 
-Send paths and a compressed contract, not the full orchestrator conversation.
+Send identifiers and paths, not the full orchestrator conversation or a second
+compressed copy of the contract.
 
 Include only:
 
-- exact objective
-- source-of-truth PRD, issue, research, spec, and mockup paths
-- allowed files or module boundary
-- relevant public contracts and constraints
-- acceptance criteria
-- expected tests or validation commands
+- `task_id`
+- `execution_contract_path`
+- current branch/revision
+- relevant prior receipt or handoff path when resuming
 - output instruction: return only changed files, tests, and blockers in at most 12 lines
 
 Do not paste whole repositories, long chat transcripts, unrelated logs, or
-complete documentation trees. The executor LLM must read the named files and
-mandatory skills itself. The orchestrator agent inspects the resulting files,
-receipts and diff instead of requesting a long implementation explanation.
+complete documentation trees. The executor validates the contract, then reads
+the Human Task, named files, and mandatory skills selectively. The orchestrator
+agent inspects the resulting files, receipt, and diff instead of requesting a
+long implementation explanation.
 
 ## Execution Command
 

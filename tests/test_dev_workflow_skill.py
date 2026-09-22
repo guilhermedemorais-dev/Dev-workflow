@@ -393,9 +393,10 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
         self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done', self.content)
 
     def test_template_has_prompt_para_executor(self):
-        """Template must include Prompt para o executor with operational contract text."""
+        """Template must include a short contract bootstrap."""
         self.assertIn('## Prompt para o executor', self.content)
-        self.assertIn('Use esta task como contrato operacional', self.content)
+        self.assertIn('Execute esta task usando o contrato:', self.content)
+        self.assertIn('docs/execution/TASK-XXX.json', self.content)
 
     def test_template_checklist_de_execucao(self):
         """Template must include Checklist de execução."""

@@ -145,6 +145,23 @@ standard without a primary source.
 Local decisions and extensions may remain when they solve a real problem, but
 must be named as local and validated against their intended outcome.
 
+## Task And Execution Context
+
+Keep four artifacts distinct:
+
+- **Human Task:** status, ownership, scope summary, links, progress, blockers,
+  result, and evidence for human tracking.
+- **Execution Contract:** lean machine-readable operational index at
+  `docs/execution/TASK-XXX.json` with repository paths and bounded constraints.
+- **Specs:** detailed functional and technical source of truth, loaded when the
+  active scope requires them.
+- **Execution Receipt:** evidence produced after the capability actually ran;
+  it is never an execution input.
+
+New executable tasks require a valid Execution Contract. A legacy task without
+one remains readable, but must be normalized before it re-enters execution. Do
+not mass-migrate inactive historical tasks.
+
 ## Change Complexity Gate
 
 Classify the work before choosing artifacts. Complexity changes documentation
@@ -172,7 +189,7 @@ Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
   -> dev-workflow-standard: consolidate scope
   -> sdd-spec-factory: generate specs
-  -> sdd-spec-factory: generate executable task
+  -> sdd-spec-factory: generate human task + Execution Contract
   -> human approval
   -> dev-workflow-standard: resolve executor capability + verify availability
   -> selected executor: invoked; state RUNNING
@@ -206,6 +223,7 @@ A valid task must contain, at minimum:
 - Objetivo
 - Specs obrigatórias
 - Docs obrigatórios
+- Execution Contract
 - Arquivos e módulos permitidos
 - Fora do escopo
 - Estado atual encontrado
@@ -328,12 +346,13 @@ P0 | P1 | P2 | P3
 6. Handoff para review
 
 ## Prompt para o executor
-Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
-e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
-limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
-alterar arquitetura, execute TDD quando aplicável, registre validação manual com
-evidência quando TDD completo não for viável, preencha o Resultado da execução e
-devolva para review.
+Execute esta task usando o contrato:
+`docs/execution/TASK-XXX.json`
+
+Siga o Engineering Harness e registre resultado e evidências na task.
+
+## Execution Contract
+`docs/execution/TASK-XXX.json`
 
 ## Condições de parada
 
@@ -365,16 +384,17 @@ assigning a task is not execution. The
 orchestrator agent must resolve the canonical `SKILL.md`, require the receiving
 LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
-- **Specs** -> delegate to `sdd-spec-factory` for NORMAL work that needs new
+- **Specs and execution artifacts** -> delegate to `sdd-spec-factory` for NORMAL work that needs new
   behavior specification and for all COMPLEX work. Provide: demand summary,
   source-of-truth paths, consolidated scope, constraints, and the layers in play
-  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
-  task before approving implementation.
+  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy, human task, and
+  valid Execution Contract before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
-  task and its mandatory specs are approved. Provide: the task, the mandatory
-  specs, allowed files/module, suggested branch, acceptance criteria, applicable
-  skill paths, and required references. Require `REUSE_INVENTORY` and the
-  minimal-code gate before code is written.
+  task, Execution Contract, and mandatory specs are approved. Prefer a lean
+  handoff containing `task_id`, `execution_contract_path`, current
+  branch/revision, and only the relevant prior receipt/handoff. The executor
+  reconstructs required context from repository paths. Require
+  `REUSE_INVENTORY` and the minimal-code gate before code is written.
 - **Transport of delegation** (visible terminal / executor LLM handoff, prompt
   contract, network fallback) is described in `references/claude-delegation.md`.
   Keep prompts lean: paths and constraints, not whole files or conversations.
@@ -427,7 +447,13 @@ the `rework` label until corrected.
 ## Context Budget Rules
 
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
-- Prefer paths plus concise constraints.
+- Prefer `task_id` plus `execution_contract_path` over task/spec bodies.
+- Load the contract first, validate required fields and paths, then open only
+  the required skills, specs, docs, and code for the active scope.
+- A mandatory reference must be read before changing the area it governs;
+  progressive disclosure reduces redundant context, not necessary context.
+- Use the Human Task for mutable status, blockers, results, and evidence without
+  injecting it wholesale into the executor prompt.
 - For large work, keep specs and research in files (`docs/specs/...`,
   `docs/modules/<module>/research.md`) and continue from those files.
 - Load the references below only when directly needed.

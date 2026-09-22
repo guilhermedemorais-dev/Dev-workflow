@@ -29,6 +29,7 @@ class TestAgentSkillContract(unittest.TestCase):
         handoff = (ORCHESTRATOR / "references/llm-handoff.md").read_text()
         self.assertIn("LLM_TOKEN_EXHAUSTED", handoff)
         self.assertIn("EXECUTION_HANDOFF", handoff)
+        self.assertIn("execution_contract_path", handoff)
         self.assertIn("do not restart the task", handoff)
 
     def test_harness_requires_execution_receipt(self):
@@ -38,6 +39,13 @@ class TestAgentSkillContract(unittest.TestCase):
         self.assertIn("ASSIGNED", harness)
         self.assertIn("A task without `invocation_evidence` is `NOT EXECUTED`", harness)
         self.assertIn("assigning a task is not execution", skill)
+
+    def test_harness_bootstrap_is_lean_and_receipt_is_output(self):
+        harness = (ORCHESTRATOR / "references/harness-execution.md").read_text()
+        self.assertIn("`task_id`", harness)
+        self.assertIn("`execution_contract_path`", harness)
+        self.assertIn("Do not paste those bodies into", harness)
+        self.assertIn("never treated as an implementation input", harness)
 
     def test_capability_registry_has_fallback_contract(self):
         registry = (ORCHESTRATOR / "references/capability-registry.md").read_text()

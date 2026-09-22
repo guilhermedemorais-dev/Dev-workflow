@@ -3,7 +3,7 @@ Tests for plugins/dev-implementation-standard/skills/dev-implementation-standard
 changes introduced in this PR.
 
 Validates new and updated content:
-- Mission section: "before coding", "prompt-base as operational contract", TDD added
+- Mission section: lean Execution Contract bootstrap and TDD
 - New Preconditions: SDD already complete, GitHub-ready fields required
 - Hard Limits: scope exit requires stopping (not justifying)
 - New Task Status Rules section: 3 statuses, filename stability
@@ -35,13 +35,13 @@ class TestDevImplementationMission(unittest.TestCase):
     def setUp(self):
         self.content = read_skill()
 
-    def test_read_specs_before_coding(self):
-        """Mission must state to read the task and specs BEFORE coding."""
-        self.assertIn('before coding', self.content)
+    def test_validate_contract_before_loading_references(self):
+        """Mission starts from and validates the lean contract."""
+        self.assertIn('Start from the task ID and Execution Contract path', self.content)
+        self.assertIn('Validate the contract, then load only the mandatory referenced', self.content)
 
-    def test_execute_prompt_base_as_contract(self):
-        """Mission must include executing the task's prompt-base as the operational contract."""
-        self.assertIn("Execute the task's prompt-base as the operational contract", self.content)
+    def test_prompt_base_is_not_the_operational_contract(self):
+        self.assertNotIn("Execute the task's prompt-base as the operational contract", self.content)
 
     def test_tdd_in_mission(self):
         """Mission must include using TDD when applicable."""
@@ -167,18 +167,18 @@ class TestDevImplementationWorkflow(unittest.TestCase):
         """Workflow section must exist."""
         self.assertIn('## Workflow', self.content)
 
-    def test_workflow_step_1_read_task_and_specs(self):
-        """Step 1: Read task and specs before coding."""
-        self.assertIn('**Leitura da task e specs**', self.content)
-        self.assertIn('read the whole approved task and every mandatory\n   spec end to end before coding', self.content)
+    def test_workflow_starts_from_contract(self):
+        self.assertIn('**Bootstrap**: receive `task_id` and `execution_contract_path`', self.content)
+        self.assertIn('**Contract validation**', self.content)
+        self.assertIn('**Progressive disclosure**', self.content)
+        self.assertNotIn('read the whole approved task and every mandatory', self.content)
 
     def test_workflow_step_2_set_status_em_andamento(self):
         """Step 2: Set status to Em andamento when starting."""
-        self.assertIn('**Set status** to `🟡 Em andamento` in the task content when starting', self.content)
+        self.assertIn('**Set status** to `🟡 Em andamento` in the Human Task when starting', self.content)
 
-    def test_workflow_step_3_execute_prompt_base(self):
-        """Step 3: Execute the prompt-base from Prompt para o executor."""
-        self.assertIn('**Execute the prompt-base** from `Prompt para o executor`', self.content)
+    def test_workflow_does_not_reexpand_prompt_base(self):
+        self.assertNotIn('**Execute the prompt-base**', self.content)
 
     def test_workflow_step_4_implementation_by_layer(self):
         """Step 4: Implement only approved scope, by layer."""

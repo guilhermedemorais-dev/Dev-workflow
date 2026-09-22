@@ -81,18 +81,19 @@ The orchestrator must not fabricate evidence from intended actions.
 
 Each capability receives only the minimum complete context:
 
-- objective
-- approved task
-- mandatory specs
-- source-of-truth paths
-- allowed scope
-- acceptance criteria
-- required validation
-- relevant prior receipts
+- `task_id`
+- `execution_contract_path`
 - current branch/revision when code is involved
+- relevant prior receipts
+- relevant prior handoff, when resuming another executor
 
-The output of one capability becomes explicit input to the next when there is a
-dependency. Conversation memory alone is not a source of truth.
+The executor validates the contract first and loads the Human Task, mandatory
+specs, source-of-truth files, and code on demand. Do not paste those bodies into
+the bootstrap prompt. An `EXECUTION_RECEIPT` is produced after execution from
+observed evidence; it is never treated as an implementation input for the same
+checkpoint. The output of one capability becomes explicit input to the next
+only when there is a dependency. Conversation memory alone is not a source of
+truth.
 
 ## Recovery
 
