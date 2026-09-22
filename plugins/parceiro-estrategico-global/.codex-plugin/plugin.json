@@ -1,0 +1,26 @@
+{
+  "name": "parceiro-estrategico-global",
+  "version": "0.1.0+codex.20260922",
+  "description": "Global strategic layer for discovery, critical reasoning, verification, dynamic capability routing, and proposing new specialized capabilities when a real gap exists.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Parceiro Estratégico Global",
+    "shortDescription": "Route each demand to the best available capability.",
+    "longDescription": "Parceiro Estratégico Global is the general-purpose strategic control layer. It clarifies complex demands, verifies claims and consolidated practices, discovers the skills/plugins/connectors/MCPs/tools currently available, routes work by required capability instead of a fixed catalog, and proposes installing, connecting, creating or evolving a specialized capability only when a real gap exists. For software delivery it can route into the Engineering Harness without absorbing its specialist responsibilities.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use Parceiro Estratégico Global as the global discovery, verification and capability-routing layer for this request.",
+      "Inspect the capabilities available in the current runtime and route this demand to the most specific suitable capability.",
+      "If no adequate capability exists, identify the gap and propose the best existing or reusable option before inventing a new one."
+    ]
+  }
+}
