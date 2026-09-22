@@ -7,6 +7,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 ORCHESTRATOR = ROOT / "plugins/dev-workflow-standard/skills/dev-workflow-standard"
 EXECUTOR = ROOT / "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md"
+PIPELINE = ROOT / "docs/workflow-pipeline.md"
+AGENTS = ROOT / "AGENTS.md"
 
 
 class TestAgentSkillContract(unittest.TestCase):
@@ -48,6 +50,44 @@ class TestAgentSkillContract(unittest.TestCase):
         self.assertIn("SKILL_RECEIPT", executor)
         self.assertIn("REUSE_INVENTORY", executor)
         self.assertIn("MINIMAL_CODE_GATE", executor)
+
+    def test_execution_receipt_follows_result_and_precedes_validation(self):
+        for path in (ORCHESTRATOR / "SKILL.md", PIPELINE):
+            content = path.read_text(encoding="utf-8")
+            result_pos = content.find("execution result")
+            if result_pos < 0:
+                result_pos = content.find("resultado inspecionavel")
+            receipt_pos = content.find("EXECUTION_RECEIPT", result_pos)
+            validating_pos = content.find("VALIDATING", receipt_pos)
+            self.assertGreaterEqual(result_pos, 0, path)
+            self.assertGreater(receipt_pos, result_pos, path)
+            self.assertGreater(validating_pos, receipt_pos, path)
+
+    def test_practice_provenance_labels_local_extensions(self):
+        skill = (ORCHESTRATOR / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("## Practice Provenance", skill)
+        self.assertIn("Local architectural decisions", skill)
+        self.assertIn("Local extensions", skill)
+        self.assertIn("not present", skill.lower())
+
+    def test_change_complexity_preserves_validation(self):
+        skill = (ORCHESTRATOR / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("## Change Complexity Gate", skill)
+        for tier in ("`TRIVIAL`", "`NORMAL`", "`COMPLEX`"):
+            self.assertIn(tier, skill)
+        self.assertIn("Complexity changes documentation", skill)
+
+    def test_agents_file_is_a_short_map_to_canonical_sources(self):
+        content = AGENTS.read_text(encoding="utf-8")
+        self.assertLessEqual(len(content.splitlines()), 100)
+        for target in (
+            "README.md",
+            "docs/workflow-pipeline.md",
+            "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+            "docs/engineering-harness-audit.md",
+        ):
+            self.assertIn(target, content)
+            self.assertTrue((ROOT / target).exists(), target)
 
 
 if __name__ == "__main__":

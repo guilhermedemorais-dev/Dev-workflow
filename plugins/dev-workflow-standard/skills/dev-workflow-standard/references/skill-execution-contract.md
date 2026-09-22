@@ -3,6 +3,9 @@
 Installing, listing or naming a skill does not apply its methodology. Every
 orchestrator agent, executor agent or specialist LLM must prove activation.
 
+`SKILL_RECEIPT` is a local evidence convention, not an official OpenAI, Codex,
+or market standard.
+
 ## Mandatory Sequence
 
 1. Detect applicable skills from the task, changed surfaces and repository rules.

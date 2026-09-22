@@ -3,6 +3,9 @@
 Apply before specs, before implementation, and during final review. The goal is
 the smallest complete change that satisfies current approved requirements.
 
+`REUSE_INVENTORY` and `MINIMAL_CODE_GATE` are local evidence conventions built
+on established reuse and minimal-change principles.
+
 ## Reuse Inventory
 
 Before creating code, search by responsibility, domain term, symbol, route,

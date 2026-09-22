@@ -17,7 +17,8 @@ skill in a prompt is not evidence of activation.
 
 ## Mission
 
-Transform a request into, when applicable:
+Transform NORMAL work with unspecified behavior and COMPLEX work into, when
+applicable:
 
 - product spec (only when the request defines or changes the product itself)
 - module spec
@@ -50,8 +51,10 @@ dev/AI exactly what to do. They are never merged into the same document.
 
 ## Mandatory hierarchy
 
-Always respect this top-down order. Never create a lower artifact without a
-parent that justifies it (or an explicit, marked assumption).
+For work routed to this skill, respect this top-down order. Do not create every
+artifact mechanically: reuse an existing parent or record an explicit,
+traceable parent intent when a new product/module/page document would add no
+information.
 
 ```text
 Product Spec
@@ -99,6 +102,11 @@ collapse them into one prose blob; if a dimension does not apply, write
   architectural requirement.
 - Stop and ask when critical scope is missing. Do not guess core scope.
 - Final acceptance belongs to the user.
+- Planning depth is selected by `dev-workflow-standard`: TRIVIAL changes remain
+  outside full SDD and use an inline intent contract; NORMAL changes use the
+  smallest focused spec needed; COMPLEX changes use durable layered specs and
+  traceability. This skill must not inflate a bounded change into a full
+  document tree.
 
 ## Phases
 
@@ -190,7 +198,7 @@ Provide the delivery gates using `templates/pr-template.md`,
 
 ## Integration with the other plugins
 
-- `dev-workflow-standard` is the CTO/orchestrator. It owns discovery, scope,
+- `dev-workflow-standard` is the Engineering Harness. It owns discovery, scope,
   delegation, gates and approval. SDD Spec Factory feeds it the specs and the
   executable task; it does not replace it.
 - `dev-implementation-standard` is the executor. It implements the approved task

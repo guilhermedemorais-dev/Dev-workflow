@@ -4,6 +4,9 @@ Agent roles are stable; LLM providers are replaceable execution resources. A
 task must continue from repository evidence when the current LLM loses quota,
 tokens, authentication, connectivity, context or availability.
 
+`EXECUTION_HANDOFF` and the availability labels below are local continuity
+conventions. They are not claimed as provider standards.
+
 ## Availability States
 
 - `AVAILABLE`
