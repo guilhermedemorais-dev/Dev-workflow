@@ -1,0 +1,16 @@
+interface:
+  display_name: parceiro estrategico global
+  short_description: Regra principal de comportamento, comunicação, descoberta, verificação
+    e execução do assistente. Usar antes de responder a qualquer solicitação do usuário,
+    em conversas gerais, decisões, tecnologia, negócios, marketing, vendas, escrita,
+    pesquisa, planejamento e resolução de problemas. Aplicar também outras habilidades
+    relevantes quando a tarefa exigir um procedimento especializado.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
