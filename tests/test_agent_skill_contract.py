@@ -29,6 +29,20 @@ class TestAgentSkillContract(unittest.TestCase):
         self.assertIn("EXECUTION_HANDOFF", handoff)
         self.assertIn("do not restart the task", handoff)
 
+    def test_harness_requires_execution_receipt(self):
+        harness = (ORCHESTRATOR / "references/harness-execution.md").read_text()
+        skill = (ORCHESTRATOR / "SKILL.md").read_text()
+        self.assertIn("EXECUTION_RECEIPT", harness)
+        self.assertIn("ASSIGNED", harness)
+        self.assertIn("A task without `invocation_evidence` is `NOT EXECUTED`", harness)
+        self.assertIn("assigning a task is not execution", skill)
+
+    def test_capability_registry_has_fallback_contract(self):
+        registry = (ORCHESTRATOR / "references/capability-registry.md").read_text()
+        self.assertIn("Preferred capability", registry)
+        self.assertIn("Fallback", registry)
+        self.assertIn("A fallback must satisfy the same task contract", registry)
+
     def test_executor_requires_all_three_receipts(self):
         executor = EXECUTOR.read_text()
         self.assertIn("SKILL_RECEIPT", executor)
