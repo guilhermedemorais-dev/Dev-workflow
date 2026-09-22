@@ -8,8 +8,8 @@
     {
       "name": "dev-workflow-standard",
       "source": "./plugins/dev-workflow-standard",
-      "description": "CTO/orchestrator: diagnose, consolidate scope, require specs before tasks, delegate to sdd-spec-factory and dev-implementation-standard, trigger ui-ux/security, and review PRs. Never implements product code.",
-      "version": "0.6.0",
+      "description": "Engineering Harness: scale intent contracts to complexity, invoke specialist/executor capabilities, capture execution evidence, validate results, recover or replan, and review delivery.",
+      "version": "0.7.0",
       "category": "development",
       "tags": ["workflow", "orchestrator", "cto", "planning", "review"]
     },

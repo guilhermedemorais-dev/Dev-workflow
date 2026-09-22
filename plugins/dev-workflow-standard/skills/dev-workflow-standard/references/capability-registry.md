@@ -4,6 +4,10 @@ The registry maps engineering needs to preferred capabilities and safe fallbacks
 It is a routing contract, not a list of mandatory calls. Invoke only capabilities
 that are relevant to the current checkpoint.
 
+This exact registry is a local architectural extension. Capability-based
+routing is a broader agent pattern, but the names, rows, priorities, and
+fallback rules below are owned by this repository.
+
 ## Core Registry
 
 | Need | Preferred capability | Fallback | Completion evidence |

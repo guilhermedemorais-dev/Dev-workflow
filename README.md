@@ -4,6 +4,27 @@ Conjunto de plugins e skills para orquestrar engenharia de software como um **En
 
 O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
+Fluxo essencial:
+
+```text
+demanda
+  -> Engineering Harness
+  -> capability routing
+  -> skills / tools / executors
+  -> execucao real
+  -> evidencia
+  -> validacao
+  -> conclusao ou rework
+```
+
+Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
+disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
+separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
+`SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE` e
+`EXECUTION_HANDOFF` sao decisoes ou extensoes locais deste projeto, nao padroes
+oficiais da OpenAI. A classificacao completa esta em
+[`docs/engineering-harness-audit.md`](docs/engineering-harness-audit.md).
+
 ## Plugins
 
 ```text
@@ -49,6 +70,10 @@ As skills continuam independentes. O `dev-workflow-standard` atua como control p
 Global / caller
       |
       v
+CTO Harness
+strategy / architecture / stack / cost / risk
+      |
+      v
 dev-workflow-standard
 Engineering Harness
       |
@@ -74,13 +99,19 @@ As skills especialistas nao foram absorvidas nem descartadas. O harness coordena
 
 ```mermaid
 flowchart TD
-    A[Global Harness] --> B[Engineering Harness]
-    B --> C[SDD / Specs]
-    B --> D[Implementation]
-    B --> E[UI / UX]
-    B --> F[Security]
-    B --> G[Tools / MCP / Plugins]
+    A[Global Harness] --> B[CTO Harness]
+    B --> C[Engineering Harness]
+    C --> D[SDD / Specs]
+    C --> E[Implementation]
+    C --> F[UI / UX]
+    C --> G[Security]
+    C --> H[Tools / MCP / Plugins]
 ```
+
+O `CTO Harness` decide estrategia tecnica, como build vs buy, arquitetura macro,
+stack, infraestrutura, custo e risco. O `Engineering Harness` recebe essa
+direcao e decide como o software sera especificado, executado e validado. Essa
+separacao hierarquica e uma decisao arquitetural local deste projeto.
 
 
 | Skill | Papel |
@@ -103,10 +134,11 @@ Ideia / demanda
   -> skills obrigatorias carregadas + SKILL_RECEIPT
   -> capability registry resolve executor/especialistas
   -> disponibilidade do runtime e verificada
-  -> capacidade selecionada e realmente invocada
-  -> EXECUTION_RECEIPT
+  -> capacidade selecionada e invocada; estado RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard implementa (somente o escopo da task)
+  -> resultado inspecionavel: diff / arquivos / comandos / artefatos
+  -> EXECUTION_RECEIPT completo
   -> dev-workflow-standard entra em VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA conforme aplicavel
@@ -116,8 +148,8 @@ Ideia / demanda
 
 Regras invariantes:
 
-- `dev-workflow-standard` nunca escreve codigo de produto, nunca pula specs e
-  nunca cria task sem specs suficientes.
+- `dev-workflow-standard` nunca escreve codigo de produto e nunca pula o
+  contrato de intencao proporcional a complexidade da mudanca.
 - `dev-implementation-standard` nunca implementa sem task aprovada e nunca altera
   fora do escopo sem registrar justificativa.
 - `ui-ux-standard` e obrigatoria quando houver UI.
@@ -159,6 +191,23 @@ Responsabilidades:
 - Revisar o PR contra specs, task e criterios de aceite.
 - Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
 - Nunca implementar codigo de produto diretamente.
+
+Essa separacao entre orquestracao e escrita de codigo de produto e uma decisao
+arquitetural local. Ela preserva isolamento de responsabilidade, handoff e
+revisao independente; nao e apresentada como regra universal de Harness
+Engineering.
+
+### Profundidade proporcional
+
+- `TRIVIAL`: mudanca localizada e de baixo risco; contrato inline com escopo,
+  criterio de aceite, validacao e evidencia.
+- `NORMAL`: Issue/task concisa e docs existentes; spec focada somente quando o
+  comportamento ainda nao estiver especificado.
+- `COMPLEX`: SDD duravel, task executavel, rastreabilidade e especialistas
+  aplicaveis.
+
+O nivel de documentacao muda; validacao, seguranca, UI e evidencias nao sao
+dispensadas quando a superficie afetada exigir esses gates.
 
 ### Papel do Engineering Harness
 

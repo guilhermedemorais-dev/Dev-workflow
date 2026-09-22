@@ -21,7 +21,8 @@ task.
 - Diagnose and ask the critical questions before anything is built.
 - Consolidate scope (in / out / constraints / risks / pending decisions).
 - Decide which specialist skills are needed.
-- Require specs before tasks, and tasks before implementation.
+- Require an intent contract before implementation, with artifact depth scaled
+  to change complexity.
 - Enforce the mandatory task contract before delegation.
 - Resolve and invoke the capability that will execute each task.
 - Track execution state and require evidence before advancing.
@@ -40,10 +41,11 @@ For every executable task, the harness must perform this loop:
 2. resolve the preferred skill, plugin, tool, MCP, script, or executor;
 3. verify that the capability is actually available in the current runtime;
 4. invoke it with the minimum complete task contract and required context paths;
-5. collect an `EXECUTION_RECEIPT` with concrete evidence of what ran;
-6. validate the result against the task acceptance criteria;
-7. mark the task `COMPLETED` only after validation passes;
-8. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
+5. observe the execution result: output, diff, files, commands, or findings;
+6. complete an `EXECUTION_RECEIPT` with concrete evidence of what ran;
+7. validate the result against the task acceptance criteria;
+8. mark the task `COMPLETED` only after validation passes;
+9. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
    the exact reason.
 
 Use these execution states for delegated work:
@@ -95,8 +97,11 @@ use a documentation-only or Git-only label to bypass this gate.
   selected capability actually runs and returns an `EXECUTION_RECEIPT`.
 - **Never mark work complete from a prompt, plan, task assignment, terminal open,
   or claimed intent alone.** Completion requires result plus validation evidence.
-- **Never skip specs.** No task is created without sufficient specs.
-- **Never create a task without sufficient specs** linked to it.
+- **Never skip the intent contract.** Every change needs explicit scope,
+  acceptance criteria, validation, and evidence. Durable spec files are required
+  only when the complexity tier below requires them.
+- **Never create a task without sufficient intent and acceptance criteria.**
+  Link durable specs when the tier requires them.
 - **Reject any executable task that does not follow the mandatory task structure.**
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
@@ -122,6 +127,44 @@ use a documentation-only or Git-only label to bypass this gate.
 
 This skill coordinates them. It does not absorb their responsibilities.
 
+## Practice Provenance
+
+Do not present this repository's vocabulary as an OpenAI, Codex, or industry
+standard without a primary source.
+
+- **Consolidated practices:** repository-local source of truth, progressive
+  disclosure, real tool execution, inspectable output, feedback loops,
+  mechanical validation, and recovery.
+- **Local architectural decisions:** the orchestrator agent does not write
+  product code; the five specialist skills remain independent; the six-column
+  Kanban model and declared human gates remain project policy.
+- **Local extensions:** `EXECUTION_RECEIPT`, `SKILL_RECEIPT`,
+  `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`, the exact
+  capability registry, and the execution-state vocabulary.
+
+Local decisions and extensions may remain when they solve a real problem, but
+must be named as local and validated against their intended outcome.
+
+## Change Complexity Gate
+
+Classify the work before choosing artifacts. Complexity changes documentation
+depth, not the obligation to validate.
+
+- `TRIVIAL`: a localized, low-risk change with no behavior, architecture,
+  security, data, dependency, or public-contract impact. Use an inline intent
+  contract: scope, acceptance criterion, command/check, and evidence. A durable
+  spec, task file, and Issue are optional unless repository policy requires one.
+- `NORMAL`: bounded behavior or multi-file work with understood architecture.
+  Use a concise Issue/task contract linked to the relevant existing docs; add a
+  focused spec only for behavior that is not already specified.
+- `COMPLEX`: architecture, cross-module behavior, migrations, sensitive data,
+  security boundaries, substantial UI, integrations, or unresolved product
+  decisions. Use durable SDD artifacts, executable tasks, traceability, and the
+  applicable specialist gates.
+
+When risk is uncertain, choose the higher tier. UI and security triggers are
+based on affected surface and risk, not on the tier label.
+
 ## Mandatory Flow
 
 ```text
@@ -132,9 +175,11 @@ Idea / demand
   -> sdd-spec-factory: generate executable task
   -> human approval
   -> dev-workflow-standard: resolve executor capability + verify availability
-  -> selected executor: RUNNING + EXECUTION_RECEIPT
-  -> dev-workflow-standard: VALIDATING
+  -> selected executor: invoked; state RUNNING
   -> dev-implementation-standard: implement (only the task scope)
+  -> execution result: diff / files / commands / artifacts
+  -> selected executor: complete EXECUTION_RECEIPT
+  -> dev-workflow-standard: VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA review (as applicable)
   -> dev-workflow-standard: approve or request rework
@@ -147,9 +192,10 @@ satisfied. The full pipeline lives in
 
 ## Mandatory Task Governance
 
-Every feature must follow the official order: spec first, executable task second,
-implementation third. The orchestrator rejects any task that skips specs, lacks
-mandatory fields, or cannot be executed and reviewed objectively.
+Every non-trivial feature must follow the official order: sufficient intent or
+spec first, executable task second, implementation third. The orchestrator
+rejects any task that lacks the artifacts required by its complexity tier,
+mandatory fields, or objective review criteria.
 
 A valid task must contain, at minimum:
 
@@ -319,7 +365,8 @@ assigning a task is not execution. The
 orchestrator agent must resolve the canonical `SKILL.md`, require the receiving
 LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
-- **Specs** -> delegate to `sdd-spec-factory`. Provide: demand summary,
+- **Specs** -> delegate to `sdd-spec-factory` for NORMAL work that needs new
+  behavior specification and for all COMPLEX work. Provide: demand summary,
   source-of-truth paths, consolidated scope, constraints, and the layers in play
   (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
   task before approving implementation.
@@ -340,8 +387,9 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
 ## When to Trigger Each Specialist
 
-- `sdd-spec-factory`: always, before any implementation. No exceptions for
-  product features.
+- `sdd-spec-factory`: required for COMPLEX work and for NORMAL work whose
+  behavior is not already specified. TRIVIAL work uses the inline intent
+  contract from the complexity gate.
 - `ui-ux-standard`: **mandatory whenever there is UI** — new/changed screens,
   components, visual states, responsiveness, accessibility, or design-system
   adherence.

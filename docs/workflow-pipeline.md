@@ -25,10 +25,11 @@ Idea / demand
   -> HUMAN APPROVAL
   -> required skills read + SKILL_RECEIPT
   -> capability resolution + runtime availability check
-  -> selected capability actually invoked
-  -> EXECUTION_RECEIPT
+  -> selected capability invoked; state RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard: implement (only the task scope, on the branch)
+  -> execution result: diff / files / commands / artifacts
+  -> completed EXECUTION_RECEIPT
   -> dev-workflow-standard: VALIDATING
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
@@ -56,7 +57,8 @@ Idea / demand
 
 ## Mandatory triggers
 
-- `sdd-spec-factory`: always, before any implementation.
+- `sdd-spec-factory`: for COMPLEX work and NORMAL work whose behavior is not
+  already specified. TRIVIAL work uses an inline intent contract.
 - `ui-ux-standard`: whenever there is UI (screens, components, visual states,
   responsiveness, accessibility, design-system adherence).
 - `security-standard`: whenever the change touches authentication, authorization,
@@ -66,8 +68,8 @@ Idea / demand
 
 ## Invariants
 
-- `dev-workflow-standard` never writes product code, never skips specs, never
-  creates a task without sufficient specs.
+- `dev-workflow-standard` never writes product code and never skips the intent
+  contract required by the change-complexity tier.
 - `dev-implementation-standard` never implements without an approved task, and
   never changes anything out of scope without a recorded justification.
 - Every task points to its mandatory specs.
@@ -78,6 +80,25 @@ Idea / demand
 - No new code unit is accepted without a reuse inventory and minimal-code gate.
 - An unavailable LLM is replaced through `EXECUTION_HANDOFF`; the task is not restarted.
 - No deploy is approved without an approved PR.
+
+## Change-complexity tiers
+
+The tiers control artifact depth, not validation quality:
+
+| Tier | Typical scope | Minimum contract |
+| --- | --- | --- |
+| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, validation command/check, evidence |
+| `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/task plus existing docs; focused spec only for unspecified behavior |
+| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, executable task, traceability, specialists, review gates |
+
+Escalate when uncertain. Security and UI gates remain surface- and risk-based.
+
+## Provenance
+
+Repository-first knowledge, progressive disclosure, real tool execution,
+feedback loops, validation, and mechanical enforcement are consolidated
+practices. The exact state names, receipts, five-skill topology, Kanban columns,
+and human gates are local Engineering Harness decisions or extensions.
 
 ## Platforms
 

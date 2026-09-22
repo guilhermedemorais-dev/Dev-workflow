@@ -104,10 +104,9 @@ class TestReadmeAgentsCLIsSection(unittest.TestCase):
         self.content = read_readme()
 
     def test_dev_workflow_standard_role_defined(self):
-        """`dev-workflow-standard` is described as the orchestrator agent."""
-        self.assertIn('agente orquestrador usando `dev-workflow-standard`', self.content)
-        # Must include specific responsibilities
-        self.assertIn('diagnostico, escopo,\n  delegacao', self.content)
+        """`dev-workflow-standard` is described as the Engineering Harness."""
+        self.assertIn('Engineering Harness usando `dev-workflow-standard`', self.content)
+        self.assertIn('capability routing, invocacao, estado de execucao', self.content)
         self.assertIn('gates e revisao', self.content)
 
     def test_sdd_spec_factory_role_defined(self):
@@ -192,7 +191,7 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
         """README.md must retain the skill roles table."""
         self.assertIn('| Skill | Papel |', self.content)
         self.assertIn('dev-workflow-standard', self.content)
-        self.assertIn('Agente orquestrador / revisor final', self.content)
+        self.assertIn('Engineering Harness / revisor final', self.content)
 
     def test_readme_has_invariant_rules(self):
         """README.md must retain the invariant rules section."""
@@ -200,7 +199,8 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
 
     def test_dev_workflow_standard_is_provider_neutral(self):
         """`dev-workflow-standard` is assigned to an agent role, not a provider."""
-        self.assertIn('agente orquestrador usando `dev-workflow-standard`', self.content)
+        self.assertIn('Engineering Harness usando `dev-workflow-standard`', self.content)
+        self.assertIn('agente executor usando `dev-implementation-standard`', self.content)
 
 
 if __name__ == '__main__':
