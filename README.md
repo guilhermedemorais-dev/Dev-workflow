@@ -20,6 +20,43 @@ Usuario
 
 Se nao houver capacidade adequada, a camada global primeiro procura uma opcao existente e consolidada; somente depois propoe instalar, conectar, criar ou evoluir uma capacidade reutilizavel. Ela nao absorve as responsabilidades do Engineering Harness nem das skills especialistas.
 
+Fluxo essencial:
+
+```text
+demanda
+  -> Engineering Harness
+  -> Human Task + lean Execution Contract
+  -> bootstrap curto (task_id + execution_contract_path)
+  -> capability routing
+  -> skills / tools / executors
+  -> execucao real
+  -> evidencia
+  -> validacao
+  -> conclusao ou rework
+```
+
+O Human Task permanece legivel para acompanhamento, decisao e status. O
+Execution Contract em `docs/execution/TASK-XXX.json` e o indice operacional
+enxuto: aponta para escopo, criterios, testes, skills e fontes obrigatorias. O
+executor valida esse JSON primeiro e carrega specs, docs e codigo sob demanda.
+O `EXECUTION_RECEIPT` so nasce depois da execucao, a partir de evidencia
+observada, e nao e entrada do proprio checkpoint. O
+`EXECUTION_REPORT_COMMENT` traduz checkpoints materiais em um diario humano
+curto na Issue vinculada, sem substituir task, receipt, Project ou PR.
+
+Regra de manutencao: toda alteracao de arquitetura, workflow, contrato
+operacional, instalacao ou uso publico deve atualizar este README no mesmo
+conjunto de mudancas. Alteracoes internas sem impacto documentavel devem ao
+menos confirmar explicitamente que o README continua correto.
+
+Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
+disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
+separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
+`EXECUTION_REPORT_COMMENT`, `SKILL_RECEIPT`, `REUSE_INVENTORY`,
+`MINIMAL_CODE_GATE` e `EXECUTION_HANDOFF` sao decisoes ou extensoes locais
+deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
+[`docs/engineering-harness-audit.md`](docs/engineering-harness-audit.md).
+
 ## Plugins
 
 ```text
@@ -73,6 +110,8 @@ Global / caller
 parceiro-estrategico-global
       |
       | software delivery
+strategy / architecture / stack / cost / risk
+      |
       v
 dev-workflow-standard
 Engineering Harness
@@ -99,7 +138,7 @@ As skills especialistas nao foram absorvidas nem descartadas. O harness coordena
 
 ```mermaid
 flowchart TD
-    A[Parceiro Estrategico Global] -->|software delivery| B[Engineering Harness]
+    A[Parceiro Estrategico Global / CTO Harness] -->|software delivery| B[Engineering Harness]
     B --> C[SDD / Specs]
     B --> D[Implementation]
     B --> E[UI / UX]
@@ -107,12 +146,18 @@ flowchart TD
     B --> G[Tools / MCP / Plugins]
 ```
 
+O `parceiro-estrategico-global` exerce a camada Global/CTO: decide dominio,
+estrategia tecnica, build vs buy, arquitetura macro, stack, infraestrutura,
+custo e risco. O `Engineering Harness` recebe essa direcao para software e
+decide como o trabalho sera especificado, executado e validado. Essa separacao
+hierarquica e uma decisao arquitetural local deste projeto.
+
 
 | Skill | Papel |
 | --- | --- |
 | `parceiro-estrategico-global` | Camada global: descoberta, verificacao e roteamento dinamico de capacidades |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
-| `sdd-spec-factory` | LLM de requisitos: specs e task executavel |
+| `sdd-spec-factory` | LLM de requisitos: specs, Human Task e Execution Contract |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
 | `security-standard` | LLM especialista em seguranca |
@@ -124,15 +169,20 @@ Ideia / demanda
   -> dev-workflow-standard diagnostica (perguntas criticas, riscos)
   -> dev-workflow-standard consolida escopo
   -> sdd-spec-factory gera specs
-  -> sdd-spec-factory gera task executavel
+  -> sdd-spec-factory gera Human Task + lean Execution Contract
   -> aprovacao humana
+  -> executor recebe task_id + execution_contract_path
+  -> contrato validado; referencias obrigatorias carregadas sob demanda
   -> skills obrigatorias carregadas + SKILL_RECEIPT
   -> capability registry resolve executor/especialistas
   -> disponibilidade do runtime e verificada
-  -> capacidade selecionada e realmente invocada
-  -> EXECUTION_RECEIPT
+  -> capacidade selecionada e invocada; estado RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard implementa (somente o escopo da task)
+  -> resultado inspecionavel: diff / arquivos / comandos / artefatos
+  -> TASK.md atualizada
+  -> EXECUTION_RECEIPT completo
+  -> EXECUTION_REPORT_COMMENT -> GitHub Issue / historico do Board
   -> dev-workflow-standard entra em VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA conforme aplicavel
@@ -142,8 +192,8 @@ Ideia / demanda
 
 Regras invariantes:
 
-- `dev-workflow-standard` nunca escreve codigo de produto, nunca pula specs e
-  nunca cria task sem specs suficientes.
+- `dev-workflow-standard` nunca escreve codigo de produto e nunca pula o
+  contrato de intencao proporcional a complexidade da mudanca.
 - `dev-implementation-standard` nunca implementa sem task aprovada e nunca altera
   fora do escopo sem registrar justificativa.
 - `ui-ux-standard` e obrigatoria quando houver UI.
@@ -153,6 +203,8 @@ Regras invariantes:
 - Todo PR aponta para task, issue, branch e specs seguidas.
 - Skill mencionada nao e skill aplicada: toda skill obrigatoria gera `SKILL_RECEIPT`.
 - Task atribuida nao e task executada: toda delegacao real gera `EXECUTION_RECEIPT`.
+- Comentario humano nao e evidencia de execucao: ele resume checkpoints
+  materiais e so conta como publicado quando a operacao retorna URL/identificador.
 - `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
 - Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
@@ -185,6 +237,23 @@ Responsabilidades:
 - Revisar o PR contra specs, task e criterios de aceite.
 - Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
 - Nunca implementar codigo de produto diretamente.
+
+Essa separacao entre orquestracao e escrita de codigo de produto e uma decisao
+arquitetural local. Ela preserva isolamento de responsabilidade, handoff e
+revisao independente; nao e apresentada como regra universal de Harness
+Engineering.
+
+### Profundidade proporcional
+
+- `TRIVIAL`: mudanca localizada e de baixo risco; contrato inline com escopo,
+  criterio de aceite, validacao e evidencia.
+- `NORMAL`: Issue/task concisa e docs existentes; spec focada somente quando o
+  comportamento ainda nao estiver especificado.
+- `COMPLEX`: SDD duravel, task executavel, rastreabilidade e especialistas
+  aplicaveis.
+
+O nivel de documentacao muda; validacao, seguranca, UI e evidencias nao sao
+dispensadas quando a superficie afetada exigir esses gates.
 
 ### Papel do Engineering Harness
 
@@ -258,6 +327,58 @@ EXECUTION_RECEIPT
 ```
 
 Sem `invocation_evidence`, a task e considerada **NOT EXECUTED**. Sem `validation_evidence`, ela nao pode chegar a `COMPLETED`.
+
+## Human Execution Reporting
+
+O acompanhamento humano preserva responsabilidades separadas:
+
+```text
+TASK.md
+  -> registro tecnico persistente da execucao
+
+execution-contract.json
+  -> contrato operacional enxuto para a LLM
+
+EXECUTION_RECEIPT
+  -> evidencia machine-readable do que realmente executou
+
+EXECUTION_REPORT_COMMENT
+  -> relatorio humano cronologico na Issue vinculada ao card
+
+GitHub Project / Board
+  -> visao de estado e acompanhamento
+```
+
+O executor atualiza a task, produz o receipt e publica um comentario apenas em
+checkpoints materiais como `RUNNING`, `VALIDATING`, `REWORK`, `BLOCKED` e
+`COMPLETED`. Operacoes pequenas sao consolidadas para evitar spam e um corpo
+identico nao deve ser publicado duas vezes no mesmo checkpoint.
+
+O comentario registra, quando aplicavel: progresso, metodo utilizado, decisoes
+tecnicas e reutilizacao, validacao, areas nao validadas, problemas, bloqueios,
+evidencias e proximo passo. Ele inclui rationale tecnico curto e verificavel,
+mas nunca chain-of-thought privado, segredos ou deliberacao token a token.
+
+Publicacao so pode ser declarada quando a ferramenta GitHub retorna uma URL ou
+identificador do comentario. Sem Issue vinculada ou capacidade disponivel, o
+relatorio permanece na `TASK.md` como `NOT PUBLISHED`, com o motivo. Essa
+indisponibilidade nao transforma trabalho nao validado em valido e o comentario
+nunca substitui `EXECUTION_RECEIPT`.
+
+Fluxo:
+
+```text
+Executor
+  -> implementacao
+  -> TASK.md atualizada
+  -> EXECUTION_RECEIPT
+  -> EXECUTION_REPORT_COMMENT -> GitHub Issue / Board history
+  -> VALIDATING
+  -> Review
+```
+
+O contrato completo esta em
+[`execution-report-comments.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/execution-report-comments.md).
 
 ### Capability Registry
 

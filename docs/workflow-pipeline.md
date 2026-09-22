@@ -21,14 +21,19 @@ Idea / demand
   -> dev-workflow-standard: diagnose (critical questions, risks)
   -> dev-workflow-standard: consolidate scope (in / out / constraints / decisions)
   -> sdd-spec-factory: generate specs (product/module/page/component/validation/API/DB)
-  -> sdd-spec-factory: generate executable task (links specs, issue, branch, PR)
+  -> sdd-spec-factory: generate Human Task + lean Execution Contract
   -> HUMAN APPROVAL
+  -> short bootstrap: task_id + execution_contract_path
+  -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> capability resolution + runtime availability check
-  -> selected capability actually invoked
-  -> EXECUTION_RECEIPT
+  -> selected capability invoked; state RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard: implement (only the task scope, on the branch)
+  -> execution result: diff / files / commands / artifacts
+  -> completed EXECUTION_RECEIPT
+  -> Human Task updated
+  -> EXECUTION_REPORT_COMMENT -> linked GitHub Issue when available
   -> dev-workflow-standard: VALIDATING
   -> Pull Request (links task, issue, branch, specs followed)
   -> ui-ux-standard / security-standard / QA review (as applicable)
@@ -44,8 +49,10 @@ Idea / demand
    (Product → Module → Page → Component), with Banco / API/Backend / Frontend/UI
    / Testes / Segurança / Observabilidade / Decisões / Riscos / Critérios de
    aceite separated. Owned by `sdd-spec-factory`, approved by the orchestrator.
-3. **Task gate** — one small executable task links its mandatory specs, issue,
-   suggested branch and expected PR. Human approval required before code.
+3. **Task gate** — one Human Task links its issue, branch, expected PR, and a
+   valid lean Execution Contract with scope, acceptance criteria, tests, skills,
+   stop conditions, and mandatory reference paths. Human approval required
+   before code.
 4. **Implementation gate** — task implemented within scope; required commands run;
    tests pass; task result updated; skill receipt and reuse evidence exist. Owned
    by the executor agent using `dev-implementation-standard`.
@@ -56,7 +63,8 @@ Idea / demand
 
 ## Mandatory triggers
 
-- `sdd-spec-factory`: always, before any implementation.
+- `sdd-spec-factory`: for COMPLEX work and NORMAL work whose behavior is not
+  already specified. TRIVIAL work uses an inline intent contract.
 - `ui-ux-standard`: whenever there is UI (screens, components, visual states,
   responsiveness, accessibility, design-system adherence).
 - `security-standard`: whenever the change touches authentication, authorization,
@@ -66,18 +74,41 @@ Idea / demand
 
 ## Invariants
 
-- `dev-workflow-standard` never writes product code, never skips specs, never
-  creates a task without sufficient specs.
+- `dev-workflow-standard` never writes product code and never skips the intent
+  contract required by the change-complexity tier.
 - `dev-implementation-standard` never implements without an approved task, and
   never changes anything out of scope without a recorded justification.
-- Every task points to its mandatory specs.
+- Every new executable task points to a valid Execution Contract, and that
+  contract points to its mandatory specs. Legacy tasks are normalized on demand.
 - Every PR points to task, issue, branch and the specs it followed.
 - Naming a skill never counts as applying it; every mandatory skill has a receipt.
 - Assigning a task never counts as executing it; every delegated checkpoint has an `EXECUTION_RECEIPT`.
+- A human Issue report communicates material progress but never replaces the
+  receipt or validation. Publication requires a returned comment URL/identifier.
+- Consolidate small operations and never post an identical checkpoint report twice.
 - `COMPLETED` requires inspectable result plus validation evidence.
 - No new code unit is accepted without a reuse inventory and minimal-code gate.
 - An unavailable LLM is replaced through `EXECUTION_HANDOFF`; the task is not restarted.
 - No deploy is approved without an approved PR.
+
+## Change-complexity tiers
+
+The tiers control artifact depth, not validation quality:
+
+| Tier | Typical scope | Minimum contract |
+| --- | --- | --- |
+| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, validation command/check, evidence |
+| `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/Human Task plus lean Execution Contract; focused spec only for unspecified behavior |
+| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, Human Task, lean Execution Contract, traceability, specialists, review gates |
+
+Escalate when uncertain. Security and UI gates remain surface- and risk-based.
+
+## Provenance
+
+Repository-first knowledge, progressive disclosure, real tool execution,
+feedback loops, validation, and mechanical enforcement are consolidated
+practices. The exact state names, receipts, five-skill topology, Kanban columns,
+and human gates are local Engineering Harness decisions or extensions.
 
 ## Platforms
 

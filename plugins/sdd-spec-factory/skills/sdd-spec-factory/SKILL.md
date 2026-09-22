@@ -17,7 +17,8 @@ skill in a prompt is not evidence of activation.
 
 ## Mission
 
-Transform a request into, when applicable:
+Transform NORMAL work with unspecified behavior and COMPLEX work into, when
+applicable:
 
 - product spec (only when the request defines or changes the product itself)
 - module spec
@@ -28,6 +29,7 @@ Transform a request into, when applicable:
 - api/backend spec (only when there is a backend)
 - frontend/ui spec (only when there is UI)
 - one executable task
+- one lean machine-readable execution contract for each new executable task
 - a PR checklist
 - a QA/review checklist
 
@@ -46,20 +48,25 @@ and visually validated with `ui-ux-standard`.
 - **Deploy only happens after the PR is approved.**
 
 A spec describes intent and acceptance. A task points to specs and tells a
-dev/AI exactly what to do. They are never merged into the same document.
+human what is being executed and tracked. The Execution Contract gives an
+executor a lean operational index of paths and constraints. They are never
+merged into the same document.
 
 ## Mandatory hierarchy
 
-Always respect this top-down order. Never create a lower artifact without a
-parent that justifies it (or an explicit, marked assumption).
+For work routed to this skill, respect this top-down order. Do not create every
+artifact mechanically: reuse an existing parent or record an explicit,
+traceable parent intent when a new product/module/page document would add no
+information.
 
 ```text
 Product Spec
   -> Module Spec
     -> Page/Feature Spec
       -> Component Specs
-        -> Task
-          -> Branch
+        -> Human Task
+          -> Execution Contract
+            -> Branch
             -> Pull Request
               -> Review / QA
                 -> Merge / Deploy
@@ -99,6 +106,11 @@ collapse them into one prose blob; if a dimension does not apply, write
   architectural requirement.
 - Stop and ask when critical scope is missing. Do not guess core scope.
 - Final acceptance belongs to the user.
+- Planning depth is selected by `dev-workflow-standard`: TRIVIAL changes remain
+  outside full SDD and use an inline intent contract; NORMAL changes use the
+  smallest focused spec needed; COMPLEX changes use durable layered specs and
+  traceability. This skill must not inflate a bounded change into a full
+  document tree.
 
 ## Phases
 
@@ -160,7 +172,8 @@ docs/specs/<modulo>/
 
 ### Fase 3 - Geração de Task Executável
 
-Produce one small, reviewable, executable task using `templates/task-template.md`:
+Produce one small, reviewable human task using `templates/task-template.md` and
+one lean JSON contract using `templates/execution-contract-template.json`:
 
 - Link the mandatory specs.
 - Link the GitHub issue (or state that one must be created).
@@ -170,10 +183,28 @@ Produce one small, reviewable, executable task using `templates/task-template.md
 - Include acceptance criteria.
 - Include mandatory tests (TDD when applicable).
 - Include what is out of scope.
-- Include explicit instructions for the dev/AI executor.
+- Link the contract as `docs/execution/TASK-XXX.json`.
+- Keep `Prompt para o executor` to a short bootstrap containing the task ID,
+  contract path, Engineering Harness instruction, and evidence destination.
+- Put concise executor-only paths and constraints in the contract instead of
+  repeating them in the prompt.
+
+The Execution Contract must be valid JSON and include `schema_version`,
+`task_id`, `task_path`, `goal`, `specs`, `docs`, `allowed_paths`,
+`out_of_scope`, `requirements`, `acceptance_criteria`, `required_tests`,
+`required_skills`, and `stop_conditions`. Values must be concise. Specs remain
+the detailed source of truth; do not copy their bodies, conversation history,
+secrets, or execution evidence into JSON.
 
 Tasks live under `docs/tasks/TASK-XXX-<slug>.md` (or the repo's existing task
 location, if one exists — reuse it, do not duplicate).
+
+Execution Contracts live under `docs/execution/TASK-XXX.json` unless the
+repository already has an equivalent canonical location.
+
+For a legacy task without a contract, keep it readable. When it re-enters
+execution, generate and validate its contract before implementation. Do not
+mass-migrate historical tasks.
 
 ### Fase 4 - Checklist de PR/QA
 
@@ -190,7 +221,7 @@ Provide the delivery gates using `templates/pr-template.md`,
 
 ## Integration with the other plugins
 
-- `dev-workflow-standard` is the CTO/orchestrator. It owns discovery, scope,
+- `dev-workflow-standard` is the Engineering Harness. It owns discovery, scope,
   delegation, gates and approval. SDD Spec Factory feeds it the specs and the
   executable task; it does not replace it.
 - `dev-implementation-standard` is the executor. It implements the approved task
@@ -209,5 +240,7 @@ Provide the delivery gates using `templates/pr-template.md`,
 - Banco, API/Backend, Frontend/UI, Testes, Segurança, Observabilidade,
   Decisões pendentes, Riscos and Critérios de aceite are separated.
 - There is one small executable task linking specs, issue, branch and PR.
+- Every new executable task has a valid lean Execution Contract and short
+  bootstrap prompt; legacy tasks have the normalization fallback above.
 - PR and QA/review checklists are provided.
 - No product code was implemented and no existing architecture was invented.

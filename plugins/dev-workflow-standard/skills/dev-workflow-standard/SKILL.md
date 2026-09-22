@@ -21,7 +21,8 @@ task.
 - Diagnose and ask the critical questions before anything is built.
 - Consolidate scope (in / out / constraints / risks / pending decisions).
 - Decide which specialist skills are needed.
-- Require specs before tasks, and tasks before implementation.
+- Require an intent contract before implementation, with artifact depth scaled
+  to change complexity.
 - Enforce the mandatory task contract before delegation.
 - Resolve and invoke the capability that will execute each task.
 - Track execution state and require evidence before advancing.
@@ -40,10 +41,13 @@ For every executable task, the harness must perform this loop:
 2. resolve the preferred skill, plugin, tool, MCP, script, or executor;
 3. verify that the capability is actually available in the current runtime;
 4. invoke it with the minimum complete task contract and required context paths;
-5. collect an `EXECUTION_RECEIPT` with concrete evidence of what ran;
-6. validate the result against the task acceptance criteria;
-7. mark the task `COMPLETED` only after validation passes;
-8. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
+5. observe the execution result: output, diff, files, commands, or findings;
+6. complete an `EXECUTION_RECEIPT` with concrete evidence of what ran;
+7. update the Human Task and publish an `EXECUTION_REPORT_COMMENT` for a
+   material checkpoint when a linked Issue and comment capability are available;
+8. validate the result against the task acceptance criteria;
+9. mark the task `COMPLETED` only after validation passes;
+10. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
    the exact reason.
 
 Use these execution states for delegated work:
@@ -95,8 +99,11 @@ use a documentation-only or Git-only label to bypass this gate.
   selected capability actually runs and returns an `EXECUTION_RECEIPT`.
 - **Never mark work complete from a prompt, plan, task assignment, terminal open,
   or claimed intent alone.** Completion requires result plus validation evidence.
-- **Never skip specs.** No task is created without sufficient specs.
-- **Never create a task without sufficient specs** linked to it.
+- **Never skip the intent contract.** Every change needs explicit scope,
+  acceptance criteria, validation, and evidence. Durable spec files are required
+  only when the complexity tier below requires them.
+- **Never create a task without sufficient intent and acceptance criteria.**
+  Link durable specs when the tier requires them.
 - **Reject any executable task that does not follow the mandatory task structure.**
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
@@ -122,6 +129,64 @@ use a documentation-only or Git-only label to bypass this gate.
 
 This skill coordinates them. It does not absorb their responsibilities.
 
+## Practice Provenance
+
+Do not present this repository's vocabulary as an OpenAI, Codex, or industry
+standard without a primary source.
+
+- **Consolidated practices:** repository-local source of truth, progressive
+  disclosure, real tool execution, inspectable output, feedback loops,
+  mechanical validation, and recovery.
+- **Local architectural decisions:** the orchestrator agent does not write
+  product code; the five specialist skills remain independent; the six-column
+  Kanban model and declared human gates remain project policy.
+- **Local extensions:** `EXECUTION_RECEIPT`, `EXECUTION_REPORT_COMMENT`,
+  `SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`,
+  the exact capability registry, and the execution-state vocabulary.
+
+Local decisions and extensions may remain when they solve a real problem, but
+must be named as local and validated against their intended outcome.
+
+## Task And Execution Context
+
+Keep five execution artifacts distinct:
+
+- **Human Task:** status, ownership, scope summary, links, progress, blockers,
+  result, and evidence for human tracking.
+- **Execution Contract:** lean machine-readable operational index at
+  `docs/execution/TASK-XXX.json` with repository paths and bounded constraints.
+- **Specs:** detailed functional and technical source of truth, loaded when the
+  active scope requires them.
+- **Execution Receipt:** evidence produced after the capability actually ran;
+  it is never an execution input.
+- **Execution Report Comment:** concise chronological human summary published
+  to the linked GitHub Issue at material checkpoints; it never replaces the
+  task, receipt, validation, Project state, or PR.
+
+New executable tasks require a valid Execution Contract. A legacy task without
+one remains readable, but must be normalized before it re-enters execution. Do
+not mass-migrate inactive historical tasks.
+
+## Change Complexity Gate
+
+Classify the work before choosing artifacts. Complexity changes documentation
+depth, not the obligation to validate.
+
+- `TRIVIAL`: a localized, low-risk change with no behavior, architecture,
+  security, data, dependency, or public-contract impact. Use an inline intent
+  contract: scope, acceptance criterion, command/check, and evidence. A durable
+  spec, task file, and Issue are optional unless repository policy requires one.
+- `NORMAL`: bounded behavior or multi-file work with understood architecture.
+  Use a concise Issue/task contract linked to the relevant existing docs; add a
+  focused spec only for behavior that is not already specified.
+- `COMPLEX`: architecture, cross-module behavior, migrations, sensitive data,
+  security boundaries, substantial UI, integrations, or unresolved product
+  decisions. Use durable SDD artifacts, executable tasks, traceability, and the
+  applicable specialist gates.
+
+When risk is uncertain, choose the higher tier. UI and security triggers are
+based on affected surface and risk, not on the tier label.
+
 ## Mandatory Flow
 
 ```text
@@ -129,12 +194,15 @@ Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
   -> dev-workflow-standard: consolidate scope
   -> sdd-spec-factory: generate specs
-  -> sdd-spec-factory: generate executable task
+  -> sdd-spec-factory: generate human task + Execution Contract
   -> human approval
   -> dev-workflow-standard: resolve executor capability + verify availability
-  -> selected executor: RUNNING + EXECUTION_RECEIPT
-  -> dev-workflow-standard: VALIDATING
+  -> selected executor: invoked; state RUNNING
   -> dev-implementation-standard: implement (only the task scope)
+  -> execution result: diff / files / commands / artifacts
+  -> selected executor: complete EXECUTION_RECEIPT
+  -> update Human Task + publish EXECUTION_REPORT_COMMENT when applicable
+  -> dev-workflow-standard: VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA review (as applicable)
   -> dev-workflow-standard: approve or request rework
@@ -147,9 +215,10 @@ satisfied. The full pipeline lives in
 
 ## Mandatory Task Governance
 
-Every feature must follow the official order: spec first, executable task second,
-implementation third. The orchestrator rejects any task that skips specs, lacks
-mandatory fields, or cannot be executed and reviewed objectively.
+Every non-trivial feature must follow the official order: sufficient intent or
+spec first, executable task second, implementation third. The orchestrator
+rejects any task that lacks the artifacts required by its complexity tier,
+mandatory fields, or objective review criteria.
 
 A valid task must contain, at minimum:
 
@@ -160,6 +229,7 @@ A valid task must contain, at minimum:
 - Objetivo
 - Specs obrigatórias
 - Docs obrigatórios
+- Execution Contract
 - Arquivos e módulos permitidos
 - Fora do escopo
 - Estado atual encontrado
@@ -219,8 +289,8 @@ orchestrator must use these definitions as gate checks.
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
 | Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
-| In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
+| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation, tests/validation, evidence, task update, and applicable Issue report are complete, then PR/review handoff is ready. |
+| In Review | PR or review package exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | Review approves and moves to Done with a `COMPLETED` report, or rejects and returns to In Progress with `rework` and an actionable report. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
 ## GitHub-Ready Task Structure
@@ -282,12 +352,13 @@ P0 | P1 | P2 | P3
 6. Handoff para review
 
 ## Prompt para o executor
-Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
-e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
-limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
-alterar arquitetura, execute TDD quando aplicável, registre validação manual com
-evidência quando TDD completo não for viável, preencha o Resultado da execução e
-devolva para review.
+Execute esta task usando o contrato:
+`docs/execution/TASK-XXX.json`
+
+Siga o Engineering Harness e registre resultado e evidências na task.
+
+## Execution Contract
+`docs/execution/TASK-XXX.json`
 
 ## Condições de parada
 
@@ -319,29 +390,35 @@ assigning a task is not execution. The
 orchestrator agent must resolve the canonical `SKILL.md`, require the receiving
 LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
-- **Specs** -> delegate to `sdd-spec-factory`. Provide: demand summary,
+- **Specs and execution artifacts** -> delegate to `sdd-spec-factory` for NORMAL work that needs new
+  behavior specification and for all COMPLEX work. Provide: demand summary,
   source-of-truth paths, consolidated scope, constraints, and the layers in play
-  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy and an executable
-  task before approving implementation.
+  (Banco, API/Backend, Frontend/UI). Require the spec hierarchy, human task, and
+  valid Execution Contract before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
-  task and its mandatory specs are approved. Provide: the task, the mandatory
-  specs, allowed files/module, suggested branch, acceptance criteria, applicable
-  skill paths, and required references. Require `REUSE_INVENTORY` and the
-  minimal-code gate before code is written.
+  task, Execution Contract, and mandatory specs are approved. Prefer a lean
+  handoff containing `task_id`, `execution_contract_path`, current
+  branch/revision, and only the relevant prior receipt/handoff. The executor
+  reconstructs required context from repository paths. Require
+  `REUSE_INVENTORY` and the minimal-code gate before code is written.
 - **Transport of delegation** (visible terminal / executor LLM handoff, prompt
   contract, network fallback) is described in `references/claude-delegation.md`.
   Keep prompts lean: paths and constraints, not whole files or conversations.
 - Two executors must not edit the same files simultaneously.
 - Every invoked capability must return `EXECUTION_RECEIPT`; otherwise keep the
   task out of `COMPLETED` and select retry, fallback, replan, or blocker state.
+- At material checkpoints, follow `references/execution-report-comments.md`.
+  Require a human Issue report when a linked Issue and authorized comment
+  capability exist. A prepared body or attempted call is not publication.
 - When the preferred capability is unavailable, use the registry fallback only
   when it satisfies the same task contract; never silently downgrade quality or
   skip a mandatory specialist.
 
 ## When to Trigger Each Specialist
 
-- `sdd-spec-factory`: always, before any implementation. No exceptions for
-  product features.
+- `sdd-spec-factory`: required for COMPLEX work and for NORMAL work whose
+  behavior is not already specified. TRIVIAL work uses the inline intent
+  contract from the complexity gate.
 - `ui-ux-standard`: **mandatory whenever there is UI** — new/changed screens,
   components, visual states, responsiveness, accessibility, or design-system
   adherence.
@@ -371,6 +448,9 @@ When a PR comes back, the orchestrator reviews before approving:
    sibling implementations were searched before new ones were created.
 11. `MINIMAL_CODE_GATE` explains every new abstraction and confirms that no
     equivalent implementation was duplicated.
+12. `EXECUTION_REPORT_COMMENT` matches the task, receipt, Project state, and PR
+    when applicable; its remote URL/identifier proves publication. The comment
+    never substitutes for receipt or validation evidence.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
 spec-anchored reasons. Rejected review moves the card back to `In Progress` with
@@ -379,7 +459,13 @@ the `rework` label until corrected.
 ## Context Budget Rules
 
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
-- Prefer paths plus concise constraints.
+- Prefer `task_id` plus `execution_contract_path` over task/spec bodies.
+- Load the contract first, validate required fields and paths, then open only
+  the required skills, specs, docs, and code for the active scope.
+- A mandatory reference must be read before changing the area it governs;
+  progressive disclosure reduces redundant context, not necessary context.
+- Use the Human Task for mutable status, blockers, results, and evidence without
+  injecting it wholesale into the executor prompt.
 - For large work, keep specs and research in files (`docs/specs/...`,
   `docs/modules/<module>/research.md`) and continue from those files.
 - Load the references below only when directly needed.
@@ -400,4 +486,6 @@ the `rework` label until corrected.
   `references/minimal-code-gate.md`
 - Provider-neutral LLM replacement and checkpoint continuity:
   `references/llm-handoff.md`
+- Human checkpoint reporting, anti-spam, publication evidence, and fallback:
+  `references/execution-report-comments.md`
 - End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`

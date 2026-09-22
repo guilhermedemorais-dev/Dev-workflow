@@ -1,7 +1,7 @@
 {
   "name": "dev-workflow-standard",
-  "description": "Engineering harness: diagnose and scope work, require specs before tasks, resolve and invoke specialist skills/executor capabilities, track execution state, require execution receipts and validation evidence, recover or replan on failure, and review PRs against specs and acceptance criteria.",
-  "version": "0.6.0",
+  "description": "Engineering harness: apply complexity-proportional intent contracts, resolve and invoke specialist skills/executor capabilities, track execution state, require execution receipts after observable results, validate evidence, recover or replan, and review delivery.",
+  "version": "0.7.0",
   "author": {
     "name": "Guilherme"
   },

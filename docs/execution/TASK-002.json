@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-002",
+  "task_path": "docs/tasks/TASK-002-add-lean-execution-contracts.md",
+  "goal": "Separate human task tracking from lean executor context",
+  "specs": [
+    "docs/specs/execution-contracts/module-spec.md"
+  ],
+  "docs": [
+    "docs/workflow-pipeline.md",
+    "README.md"
+  ],
+  "allowed_paths": [
+    "README.md",
+    "docs/**",
+    "plugins/dev-workflow-standard/**",
+    "plugins/sdd-spec-factory/**",
+    "plugins/dev-implementation-standard/**",
+    "tests/**"
+  ],
+  "out_of_scope": [
+    "runtime product code",
+    "historical task migration",
+    "new dependencies",
+    "specialist UI or security workflow redesign"
+  ],
+  "requirements": [
+    "keep task markdown human-readable",
+    "keep specs as detailed source of truth",
+    "use repository paths for progressive disclosure",
+    "keep execution receipt as post-execution evidence"
+  ],
+  "acceptance_criteria": [
+    "new task template links a valid execution contract",
+    "executor can start from task id and contract path",
+    "handoff preserves execution contract path",
+    "legacy tasks have a documented normalization path",
+    "all repository tests pass"
+  ],
+  "required_tests": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+    "git diff --check"
+  ],
+  "required_skills": [
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md",
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md"
+  ],
+  "stop_conditions": [
+    "architecture_change_outside_spec",
+    "scope_expansion_required",
+    "mandatory_reference_missing",
+    "source_of_truth_conflict"
+  ]
+}

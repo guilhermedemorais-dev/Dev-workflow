@@ -1,7 +1,8 @@
 # TASK-XXX: Nome da task
 
-> Task é ordem de execução. Aponta para specs (o contrato), issue, branch e PR.
-> Deve ser pequena, revisável e executável em um único PR.
+> Task é a interface humana para ordem de execução e acompanhamento. Aponta
+> para specs, Execution Contract, issue, branch e PR. Deve ser pequena,
+> revisável e executável em um único PR.
 
 ## Status
 A fazer | Em andamento | Em revisão | Concluída | Bloqueada
@@ -27,14 +28,17 @@ Quem executa (dev/IA) e quem revisa.
 ## Objetivo da task
 O que esta task entrega, em uma a três frases.
 
-## Contexto
-Por que esta task existe e o que o executor precisa saber.
+## Resumo do escopo
+O que está incluído, em linguagem adequada para acompanhamento humano.
 
 ## Specs obrigatórias
 Links das specs que são contrato desta task (product/module/page/component/validation/database/api).
 
 ## Docs obrigatórios
 PRD, arquitetura, mockups aprovados e demais documentos a seguir.
+
+## Execution Contract
+`docs/execution/TASK-XXX.json`
 
 ## Escopo
 O que está incluído nesta task.
@@ -69,25 +73,23 @@ Pontos de atenção de segurança (validar com security-standard).
 ## Observabilidade/logs
 Eventos, métricas e logs que devem ser adicionados.
 
-## Instrução para IA/dev
-Passos diretos para o executor, restrições e o que NÃO tocar.
+## Prompt para o executor
+Execute a TASK-XXX usando o contrato:
+`docs/execution/TASK-XXX.json`
 
-## Skills obrigatórias
-- Skill:
-- Caminho canônico do `SKILL.md`:
-- Referências obrigatórias:
-- Evidência exigida: `SKILL_RECEIPT`
-
-## Reutilização obrigatória
-- Escopo da busca:
-- Símbolos, responsabilidades e call sites a verificar:
-- Evidência exigida: `REUSE_INVENTORY`
-- Gate exigido: `MINIMAL_CODE_GATE`
+Siga o Engineering Harness e registre resultado e evidências nesta task.
 
 ## Continuidade entre LLMs
 - LLM executor atual:
 - Estado de disponibilidade:
+- Execution Contract: `docs/execution/TASK-XXX.json`
 - `EXECUTION_HANDOFF`: obrigatório ao trocar de LLM
+
+## Relatórios humanos na Issue
+- Checkpoints materiais: RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
+- Último status de publicação: PENDING | PUBLISHED | NOT PUBLISHED | N/A
+- Evidência remota (URL/identificador):
+- Motivo quando não publicado:
 
 ## Resultado da execução
 

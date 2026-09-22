@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-003",
+  "task_path": "docs/tasks/TASK-003-add-human-execution-reports.md",
+  "goal": "Publish concise human execution reports to the linked task Issue at material checkpoints",
+  "specs": [
+    "docs/specs/human-execution-reporting/module-spec.md"
+  ],
+  "docs": [
+    "docs/workflow-pipeline.md",
+    "README.md"
+  ],
+  "allowed_paths": [
+    "README.md",
+    "docs/**",
+    "plugins/dev-workflow-standard/**",
+    "plugins/dev-implementation-standard/**",
+    "plugins/sdd-spec-factory/templates/task-template.md",
+    "tests/**"
+  ],
+  "out_of_scope": [
+    "runtime GitHub automation",
+    "new dependencies",
+    "private chain-of-thought publication",
+    "unrelated Project configuration"
+  ],
+  "requirements": [
+    "preserve lean execution contracts",
+    "keep task and receipt authoritative",
+    "publish only material checkpoint summaries",
+    "require remote success evidence before claiming publication"
+  ],
+  "acceptance_criteria": [
+    "Harness recognizes EXECUTION_REPORT_COMMENT",
+    "executor prepares and publishes reports when a linked Issue and capability exist",
+    "comment never replaces EXECUTION_RECEIPT or validation",
+    "REWORK and BLOCKED reports contain actionable evidence",
+    "duplicate identical checkpoint comments are prohibited",
+    "README documents the final architecture",
+    "all repository tests pass"
+  ],
+  "required_tests": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+    "git diff --check"
+  ],
+  "required_skills": [
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md",
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md"
+  ],
+  "stop_conditions": [
+    "execution_contract_regression",
+    "receipt_replaced_by_comment",
+    "scope_expansion_required",
+    "source_of_truth_conflict"
+  ]
+}

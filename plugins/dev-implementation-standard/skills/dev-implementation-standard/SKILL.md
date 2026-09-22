@@ -14,19 +14,26 @@ Keep this file lightweight and act only on the current task.
 
 ## Mission
 
-- Read the approved task and every mandatory spec it links before coding.
-- Execute the task's prompt-base as the operational contract.
+- Start from the task ID and Execution Contract path supplied by the short
+  bootstrap prompt.
+- Validate the contract, then load only the mandatory referenced skills, specs,
+  docs, and code needed for the active scope.
 - Implement only the task scope.
 - Use TDD when applicable.
 - Run required tests and validation, with evidence.
 - Update the task's execution result and final report.
+- Prepare concise `EXECUTION_REPORT_COMMENT` updates for material checkpoints
+  and publish them to the linked Issue when an authorized GitHub capability is available.
 - Return the work for review with task, issue, branch and specs linked.
 
 ## Preconditions (do not start without these)
 
 - **An approved task exists.** Never implement without an approved task.
+- A valid Execution Contract exists for every new executable task and links back
+  to the Human Task. For a legacy task, normalize the contract before coding.
 - SDD/spec work is already complete. The executor does not do SDD.
-- The task links its **mandatory specs** and acceptance criteria.
+- The Execution Contract links mandatory specs, acceptance criteria, allowed
+  paths, required tests, skills, and stop conditions.
 - The suggested **branch** is defined (or derive it from the task convention).
 - The task has GitHub-ready fields: status, responsável, bloqueios, specs
   obrigatórias, branch sugerida, evidências, and issue criada/vinculada.
@@ -66,38 +73,52 @@ filename.
 
 ## Workflow
 
-1. **Leitura da task e specs**: read the whole approved task and every mandatory
-   spec end to end before coding. Confirm scope, allowed files/modules,
-   acceptance criteria, out-of-scope items, required tests, and blockers.
-2. **Skill receipt**: read every mandatory skill and required reference. Record
+1. **Bootstrap**: receive `task_id` and `execution_contract_path`. Do not depend
+   on conversation memory or a pasted task body.
+2. **Contract validation**: parse the JSON and require `schema_version`,
+   `task_id`, `task_path`, `goal`, `specs`, `docs`, `allowed_paths`,
+   `out_of_scope`, `requirements`, `acceptance_criteria`, `required_tests`,
+   `required_skills`, and `stop_conditions`. Confirm referenced paths exist and
+   the task ID matches the Human Task.
+3. **Progressive disclosure**: consult the Human Task for current status,
+   blockers, ownership, handoff, and results. Load each mandatory skill before
+   acting. Open only the referenced specs/docs and code needed for the active
+   scope; a mandatory reference must be read before changing the area it governs.
+4. **Skill receipt**: record
    `SKILL_RECEIPT` with skill name, exact path, references loaded, and the rules
    each one contributes. A skill name in a prompt is not proof it was applied.
-3. **Reuse inventory**: before creating a function, class, hook, component,
+5. **Reuse inventory**: before creating a function, class, hook, component,
    service, route, query or abstraction, search the allowed scope and sibling
    modules for equivalent behavior. Record symbols, paths, call sites and the
    reuse/extend/create decision in `REUSE_INVENTORY`.
-4. **Minimal-code gate**: prefer reuse, extension or deletion over parallel
+6. **Minimal-code gate**: prefer reuse, extension or deletion over parallel
    implementations. Every new abstraction needs at least two current concrete
    consumers or an explicit approved architectural requirement. Record the
    decision in `MINIMAL_CODE_GATE`.
-5. **Set status** to `🟡 Em andamento` in the task content when starting.
-6. **Execute the prompt-base** from `Prompt para o executor` as the operational
-   contract.
-7. **Implementação**: implement only the approved scope, by layer when relevant:
+7. **Set status** to `🟡 Em andamento` in the Human Task when starting.
+8. **Implementação**: implement only the approved scope, by layer when relevant:
    Banco, API/Backend, Frontend/UI. Do not invent files, endpoints, tables,
    payloads, or architecture.
-8. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
+9. **TDD/Testes**: use TDD when applicable. If full TDD is not viable, record why
    and perform manual validation with objective evidence.
-9. **Validação**: run the task-required commands, build, lint, tests,
+10. **Validação**: run the contract-required commands, build, lint, tests,
    migrations, UI checks, or manual checks defined by the repo/task. Capture
    evidence.
-10. **Atualização do relatório**: fill the mandatory final report in
+11. **Atualização do relatório**: fill the mandatory final report in
    `templates/execution-report-template.md`, including prompt used, checklist
    executed, evidence, layer results, risks, gaps, blockers, and GitHub-ready
    fields.
-11. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
+12. **Human checkpoint report**: for material `RUNNING`, `VALIDATING`, `REWORK`,
+   `BLOCKED`, or `COMPLETED` changes, load
+   `templates/execution-report-comment-template.md` and the Harness reference
+   `references/execution-report-comments.md`. Consolidate small operations,
+   include only factual technical rationale, and do not publish an identical
+   checkpoint report twice. Publish to the real linked Issue when possible and
+   record the returned comment URL/identifier. A prepared body or failed call
+   is `NOT PUBLISHED`; persist it in the Human Task with the reason instead.
+13. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
    implementation and validation evidence support completion.
-12. **Handoff para review**: prepare the PR or review package linked to task,
+14. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
@@ -146,6 +167,9 @@ P0 | P1 | P2 | P3
 
 ## Docs obrigatórios
 
+## Execution Contract
+`docs/execution/TASK-XXX.json`
+
 ## Arquivos e módulos permitidos
 
 ## Fora do escopo
@@ -165,12 +189,10 @@ P0 | P1 | P2 | P3
 6. Handoff para review
 
 ## Prompt para o executor
-Use esta task como contrato operacional. O SDD já foi feito. Leia a task inteira
-e todas as specs obrigatórias antes de codar. Siga o checklist na ordem,
-limite-se aos arquivos e módulos permitidos, pare se precisar sair do escopo ou
-alterar arquitetura, execute TDD quando aplicável, registre validação manual com
-evidência quando TDD completo não for viável, preencha o Resultado da execução e
-devolva para review.
+Execute esta task usando o contrato:
+`docs/execution/TASK-XXX.json`
+
+Siga o Engineering Harness e registre resultado e evidências na task.
 
 ## Condições de parada
 
@@ -198,6 +220,8 @@ devolva para review.
 Stop and return to the orchestrator when:
 
 - a precondition is missing (no approved task / specs);
+- the Execution Contract is missing, invalid, mismatched, or references a
+  mandatory path that cannot be resolved;
 - the specs are ambiguous or contradict the code;
 - the task cannot be completed without an architecture change;
 - leaving the approved scope is required;
@@ -218,9 +242,14 @@ visual status to `🔴 Bloqueada`.
 ## Definition of done
 
 - Task scope implemented on the correct branch, nothing out of scope.
+- Execution started from a validated contract; all necessary mandatory
+  references were loaded without injecting unrelated repository context.
 - TDD used when applicable; otherwise manual validation is evidenced.
 - Required commands run; tests/validation pass or blockers are recorded.
 - `SKILL_RECEIPT`, `REUSE_INVENTORY`, and `MINIMAL_CODE_GATE` are complete.
 - Task execution result fully filled with the mandatory final report.
+- Applicable Issue reports are factual and non-duplicative; publication is
+  claimed only with returned remote evidence. Missing capability is recorded as
+  `NOT PUBLISHED` and does not replace validation.
 - PR/review package prepared and linked to task, issue, branch and specs.
 - Handed back for review; not merged, deployed, or self-approved.

@@ -16,12 +16,14 @@
 - Pronto para GitHub Projects: sim/não
 
 ## Referências
+- Execution Contract utilizado:
 - Specs obrigatórias seguidas:
 - Docs obrigatórios seguidos:
 - Arquivos/módulos permitidos:
 
 ## Prompt utilizado
-Cole o prompt-base executado ou referencie o trecho `Prompt para o executor` da task.
+Registre o bootstrap curto (`task_id` + `execution_contract_path`). Não copie o
+conteúdo integral da task ou das specs.
 
 ## Skills aplicadas
 Cole o `SKILL_RECEIPT` de cada skill e referência obrigatória.
@@ -38,10 +40,19 @@ duplicações removidas ou explicitamente mantidas.
 - LLMs executores utilizados:
 - Troca de LLM ocorrida: sim/não
 - `EXECUTION_HANDOFF` utilizado: sim/não/N/A
+- Execution Contract retomado:
 - Motivo e checkpoint de continuidade:
 
+## Relatório humano na Issue
+- Checkpoints materiais reportados:
+- Issue vinculada:
+- Status de publicação: PUBLISHED | NOT PUBLISHED | N/A
+- Evidência remota (URL/identificador retornado):
+- Motivo quando não publicado:
+- Último corpo idêntico verificado para evitar duplicação: sim/não/N/A
+
 ## Checklist executado
-- [ ] Leitura da task e specs
+- [ ] Contrato validado e referências necessárias carregadas
 - [ ] Skills obrigatórias carregadas
 - [ ] Inventário de reutilização
 - [ ] Gate de código mínimo
@@ -49,6 +60,7 @@ duplicações removidas ou explicitamente mantidas.
 - [ ] Testes
 - [ ] Validação
 - [ ] Atualização do relatório
+- [ ] Relatório humano preparado/publicado ou fallback registrado
 - [ ] Handoff para review
 
 ## Resumo

@@ -38,9 +38,10 @@ class TestDevWorkflowMission(unittest.TestCase):
         """NEW Mission item: Enforce the mandatory task contract before delegation."""
         self.assertIn('Enforce the mandatory task contract before delegation', self.content)
 
-    def test_require_specs_before_tasks_in_mission(self):
-        """Mission must require specs before tasks and tasks before implementation."""
-        self.assertIn('Require specs before tasks, and tasks before implementation', self.content)
+    def test_require_complexity_scaled_intent_before_implementation(self):
+        """Mission must require a tier-appropriate intent contract."""
+        self.assertIn('Require an intent contract before implementation', self.content)
+        self.assertIn('artifact depth scaled', self.content)
 
     def test_delegate_review_approve_in_mission(self):
         """Mission must include delegate, review and approve."""
@@ -56,13 +57,15 @@ class TestDevWorkflowHardLimits(unittest.TestCase):
         """Hard limit: Never write product code directly."""
         self.assertIn('Never write product code directly', self.content)
 
-    def test_never_skip_specs(self):
-        """Hard limit: Never skip specs."""
-        self.assertIn('Never skip specs', self.content)
+    def test_never_skip_intent_contract(self):
+        """Every change retains scope, acceptance, validation, and evidence."""
+        self.assertIn('Never skip the intent contract', self.content)
+        self.assertIn('acceptance criteria, validation, and evidence', self.content)
 
-    def test_never_create_task_without_specs(self):
-        """Hard limit: Never create a task without sufficient specs."""
-        self.assertIn('Never create a task without sufficient specs', self.content)
+    def test_task_requires_sufficient_intent(self):
+        """Tasks require sufficient intent and tier-appropriate specs."""
+        self.assertIn('Never create a task without sufficient intent', self.content)
+        self.assertIn('Link durable specs when the tier requires them', self.content)
 
     def test_reject_task_without_mandatory_structure(self):
         """NEW Hard limit: Reject any executable task that does not follow the mandatory task structure."""
@@ -87,17 +90,17 @@ class TestDevWorkflowMandatoryTaskGovernance(unittest.TestCase):
         """NEW section: Mandatory Task Governance must exist."""
         self.assertIn('## Mandatory Task Governance', self.content)
 
-    def test_spec_first_task_second_implementation_third(self):
-        """Official order: spec first, executable task second, implementation third."""
-        self.assertIn('spec first, executable task second,\nimplementation third', self.content)
+    def test_intent_first_task_second_implementation_third(self):
+        """Official order preserves intent/spec before task and implementation."""
+        self.assertIn('sufficient intent or\nspec first, executable task second, implementation third', self.content)
 
-    def test_rejects_task_without_specs(self):
-        """Orchestrator rejects task that skips specs."""
-        self.assertIn('rejects any task that skips specs', self.content)
+    def test_rejects_task_without_tier_artifacts(self):
+        """Orchestrator rejects a task missing artifacts required by its tier."""
+        self.assertIn('rejects any task that lacks the artifacts required by its complexity tier', self.content)
 
     def test_rejects_task_lacking_mandatory_fields(self):
         """Orchestrator rejects task that lacks mandatory fields."""
-        self.assertIn('lacks\nmandatory fields', self.content)
+        self.assertIn('mandatory fields, or objective review criteria', self.content)
 
     def test_mandatory_field_titulo(self):
         """Mandatory field: Título."""
@@ -390,9 +393,10 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
         self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done', self.content)
 
     def test_template_has_prompt_para_executor(self):
-        """Template must include Prompt para o executor with operational contract text."""
+        """Template must include a short contract bootstrap."""
         self.assertIn('## Prompt para o executor', self.content)
-        self.assertIn('Use esta task como contrato operacional', self.content)
+        self.assertIn('Execute esta task usando o contrato:', self.content)
+        self.assertIn('docs/execution/TASK-XXX.json', self.content)
 
     def test_template_checklist_de_execucao(self):
         """Template must include Checklist de execução."""
@@ -476,8 +480,8 @@ class TestDevWorkflowSkillFileIntegrity(unittest.TestCase):
         self.assertIn('name: dev-workflow-standard', self.content)
 
     def test_main_heading(self):
-        """SKILL.md must have the provider-neutral orchestrator heading."""
-        self.assertIn('# Dev Workflow Standard (Orchestrator Agent)', self.content)
+        """SKILL.md must identify the Engineering Harness role."""
+        self.assertIn('# Dev Workflow Standard (Engineering Harness)', self.content)
 
     def test_skill_roles_table(self):
         """Skill Roles table must exist."""
@@ -525,9 +529,10 @@ class TestDevWorkflowNegativeCases(unittest.TestCase):
     def setUp(self):
         self.content = read_skill()
 
-    def test_spec_factory_always_triggered_before_implementation(self):
-        """sdd-spec-factory is always used before any implementation, no exceptions."""
-        self.assertIn('always, before any implementation. No exceptions', self.content)
+    def test_spec_factory_trigger_is_complexity_aware(self):
+        """Full SDD is mandatory for complex or unspecified behavior, not trivial work."""
+        self.assertIn('required for COMPLEX work', self.content)
+        self.assertIn('TRIVIAL work uses the inline intent', self.content)
 
     def test_ui_ux_mandatory_when_ui_present(self):
         """ui-ux-standard is mandatory whenever there is UI."""
