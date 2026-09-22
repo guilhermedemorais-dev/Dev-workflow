@@ -4,10 +4,31 @@ Conjunto de plugins e skills para orquestrar engenharia de software como um **En
 
 O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
+## Camada Global
+
+O repositorio tambem inclui o `parceiro-estrategico-global`, uma camada geral e opcional acima dos fluxos especializados. Ela nao mantem um catalogo fixo de plugins. Em cada demanda, identifica a capacidade necessaria, verifica o que realmente esta disponivel no runtime e roteia para a skill, plugin, conector, MCP, ferramenta ou agente mais adequado.
+
+Quando a demanda for desenvolvimento de software, o fluxo pode seguir:
+
+```text
+Usuario
+  -> parceiro-estrategico-global
+  -> identifica dominio/capacidade
+  -> dev-workflow-standard (Engineering Harness)
+  -> specialists / tools / executors
+```
+
+Se nao houver capacidade adequada, a camada global primeiro procura uma opcao existente e consolidada; somente depois propoe instalar, conectar, criar ou evoluir uma capacidade reutilizavel. Ela nao absorve as responsabilidades do Engineering Harness nem das skills especialistas.
+
 ## Plugins
 
 ```text
 plugins/
+  parceiro-estrategico-global/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/parceiro-estrategico-global/SKILL.md
   dev-workflow-standard/
     .codex-plugin/plugin.json
     .claude-plugin/plugin.json
@@ -49,6 +70,10 @@ As skills continuam independentes. O `dev-workflow-standard` atua como control p
 Global / caller
       |
       v
+parceiro-estrategico-global
+      |
+      | software delivery
+      v
 dev-workflow-standard
 Engineering Harness
       |
@@ -74,7 +99,7 @@ As skills especialistas nao foram absorvidas nem descartadas. O harness coordena
 
 ```mermaid
 flowchart TD
-    A[Global Harness] --> B[Engineering Harness]
+    A[Parceiro Estrategico Global] -->|software delivery| B[Engineering Harness]
     B --> C[SDD / Specs]
     B --> D[Implementation]
     B --> E[UI / UX]
@@ -85,6 +110,7 @@ flowchart TD
 
 | Skill | Papel |
 | --- | --- |
+| `parceiro-estrategico-global` | Camada global: descoberta, verificacao e roteamento dinamico de capacidades |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
 | `sdd-spec-factory` | LLM de requisitos: specs e task executavel |
 | `dev-implementation-standard` | Agente executor / coder |
@@ -532,6 +558,7 @@ codex plugin marketplace add guilhermedemorais-dev/Dev-workflow --ref main
 Instalar os plugins:
 
 ```bash
+codex plugin add parceiro-estrategico-global@guilherme-dev-workflow
 codex plugin add dev-workflow-standard@guilherme-dev-workflow
 codex plugin add ui-ux-standard@guilherme-dev-workflow
 codex plugin add security-standard@guilherme-dev-workflow
@@ -550,6 +577,7 @@ Adicionar o marketplace:
 Instalar os plugins:
 
 ```text
+/plugin install parceiro-estrategico-global@guilherme-dev-workflow
 /plugin install dev-workflow-standard@guilherme-dev-workflow
 /plugin install ui-ux-standard@guilherme-dev-workflow
 /plugin install security-standard@guilherme-dev-workflow
@@ -560,7 +588,8 @@ Instalar os plugins:
 Para testar uma copia local antes de publicar:
 
 ```bash
-claude --plugin-dir ./plugins/dev-workflow-standard \
+claude --plugin-dir ./plugins/parceiro-estrategico-global \
+  --plugin-dir ./plugins/dev-workflow-standard \
   --plugin-dir ./plugins/ui-ux-standard \
   --plugin-dir ./plugins/security-standard \
   --plugin-dir ./plugins/sdd-spec-factory \
@@ -591,6 +620,7 @@ Copiar para a pasta local de plugins:
 
 ```bash
 mkdir -p ~/plugins
+cp -a plugins/parceiro-estrategico-global ~/plugins/
 cp -a plugins/dev-workflow-standard ~/plugins/
 cp -a plugins/ui-ux-standard ~/plugins/
 cp -a plugins/security-standard ~/plugins/
@@ -614,6 +644,8 @@ plataformas, pois os esquemas e modelos de seguranca sao diferentes.
 
 ## Uso recomendado
 
+Use `parceiro-estrategico-global` como camada geral de descoberta, verificacao e roteamento. Ele identifica a capacidade necessaria, verifica o que esta disponivel no ambiente atual e encaminha a demanda para a opcao mais especifica. Quando houver uma lacuna real, primeiro procura uma capacidade existente; se nenhuma for adequada, propoe instalar, conectar, criar ou evoluir uma capacidade especializada.
+
 Use `dev-workflow-standard` como **Engineering Harness**: ele recebe a demanda,
 diagnostica, consolida escopo, exige specs, resolve e invoca capacidades, acompanha estado de execucao, exige `EXECUTION_RECEIPT`, valida resultados, replaneja quando necessario e revisa a entrega.
 
@@ -633,6 +665,7 @@ de vulnerabilidades, remediacao e gates de release proporcionais ao risco.
 
 Para conhecer todas as regras, consulte diretamente:
 
+- [`parceiro-estrategico-global/SKILL.md`](plugins/parceiro-estrategico-global/skills/parceiro-estrategico-global/SKILL.md)
 - [`dev-workflow-standard/SKILL.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md)
 - [`sdd-spec-factory/SKILL.md`](plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md)
 - [`dev-implementation-standard/SKILL.md`](plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md)
