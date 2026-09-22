@@ -57,6 +57,9 @@ EXECUTION_RECEIPT
 - changed_files_or_artifacts:
 - commands_and_results:
 - validation_evidence:
+- tool_evidence: skill, capability, planned/used tool, official repository,
+  version, cached/detected/installed state source, installation performed,
+  initial result, findings, corrections, final result, and revalidation
 - blockers:
 - next_safe_action:
 ```

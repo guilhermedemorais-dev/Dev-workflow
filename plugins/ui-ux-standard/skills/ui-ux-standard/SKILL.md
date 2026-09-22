@@ -99,6 +99,14 @@ with the best verified local option.
 
 ## Registry and MCP Policy
 
+Own browser, visual, and accessibility tooling through
+`references/tool-registry.json`. Follow the shared `skill-owned-tools.md`
+protocol: consult ignored per-skill runtime state, use its compatible fast
+path, or detect, install from an official supported source when required,
+verify, and persist. Revalidate after a failed visual check or fix. A cached
+Playwright CLI does not prove browser binaries or the project's runtime are
+ready; validate those in the active workspace before claiming coverage.
+
 When a shadcn-compatible project is detected, prefer registry-aware discovery
 instead of generating JSX from memory.
 

@@ -67,6 +67,13 @@ Lista objetiva e testável do que define "pronto".
 ## TDD / Testes obrigatórios
 Testes que devem existir/passar (unit, integração, e2e) e cobertura mínima.
 
+## Validação e tools previstas
+- Skill responsável:
+- Capability:
+- Tool preferencial (se aplicável):
+
+O estado de instalação é local ao runtime e não pertence à task.
+
 ## Segurança
 Pontos de atenção de segurança (validar com security-standard).
 
