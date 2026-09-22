@@ -47,6 +47,12 @@ class TestAgentSkillContract(unittest.TestCase):
         self.assertIn("Do not paste those bodies into", harness)
         self.assertIn("never treated as an implementation input", harness)
 
+    def test_human_report_does_not_replace_receipt(self):
+        harness = (ORCHESTRATOR / "references/harness-execution.md").read_text()
+        self.assertIn("Issue comment without a completed receipt", harness)
+        self.assertIn("communication, not execution", harness)
+        self.assertIn("returned remote URL/identifier", harness)
+
     def test_capability_registry_has_fallback_contract(self):
         registry = (ORCHESTRATOR / "references/capability-registry.md").read_text()
         self.assertIn("Preferred capability", registry)

@@ -43,9 +43,11 @@ For every executable task, the harness must perform this loop:
 4. invoke it with the minimum complete task contract and required context paths;
 5. observe the execution result: output, diff, files, commands, or findings;
 6. complete an `EXECUTION_RECEIPT` with concrete evidence of what ran;
-7. validate the result against the task acceptance criteria;
-8. mark the task `COMPLETED` only after validation passes;
-9. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
+7. update the Human Task and publish an `EXECUTION_REPORT_COMMENT` for a
+   material checkpoint when a linked Issue and comment capability are available;
+8. validate the result against the task acceptance criteria;
+9. mark the task `COMPLETED` only after validation passes;
+10. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
    the exact reason.
 
 Use these execution states for delegated work:
@@ -138,16 +140,16 @@ standard without a primary source.
 - **Local architectural decisions:** the orchestrator agent does not write
   product code; the five specialist skills remain independent; the six-column
   Kanban model and declared human gates remain project policy.
-- **Local extensions:** `EXECUTION_RECEIPT`, `SKILL_RECEIPT`,
-  `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`, the exact
-  capability registry, and the execution-state vocabulary.
+- **Local extensions:** `EXECUTION_RECEIPT`, `EXECUTION_REPORT_COMMENT`,
+  `SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`,
+  the exact capability registry, and the execution-state vocabulary.
 
 Local decisions and extensions may remain when they solve a real problem, but
 must be named as local and validated against their intended outcome.
 
 ## Task And Execution Context
 
-Keep four artifacts distinct:
+Keep five execution artifacts distinct:
 
 - **Human Task:** status, ownership, scope summary, links, progress, blockers,
   result, and evidence for human tracking.
@@ -157,6 +159,9 @@ Keep four artifacts distinct:
   active scope requires them.
 - **Execution Receipt:** evidence produced after the capability actually ran;
   it is never an execution input.
+- **Execution Report Comment:** concise chronological human summary published
+  to the linked GitHub Issue at material checkpoints; it never replaces the
+  task, receipt, validation, Project state, or PR.
 
 New executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
@@ -196,6 +201,7 @@ Idea / demand
   -> dev-implementation-standard: implement (only the task scope)
   -> execution result: diff / files / commands / artifacts
   -> selected executor: complete EXECUTION_RECEIPT
+  -> update Human Task + publish EXECUTION_REPORT_COMMENT when applicable
   -> dev-workflow-standard: VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA review (as applicable)
@@ -283,8 +289,8 @@ orchestrator must use these definitions as gate checks.
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
 | Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. | Implementation, tests/validation, evidence, and execution report are complete, then PR/review handoff is ready. |
-| In Review | PR or review package exists with task, specs, evidence, and execution report linked. | Review approves and moves to Done, or rejects and returns to In Progress with `rework`. |
+| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation, tests/validation, evidence, task update, and applicable Issue report are complete, then PR/review handoff is ready. |
+| In Review | PR or review package exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | Review approves and moves to Done with a `COMPLETED` report, or rejects and returns to In Progress with `rework` and an actionable report. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
 ## GitHub-Ready Task Structure
@@ -401,6 +407,9 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 - Two executors must not edit the same files simultaneously.
 - Every invoked capability must return `EXECUTION_RECEIPT`; otherwise keep the
   task out of `COMPLETED` and select retry, fallback, replan, or blocker state.
+- At material checkpoints, follow `references/execution-report-comments.md`.
+  Require a human Issue report when a linked Issue and authorized comment
+  capability exist. A prepared body or attempted call is not publication.
 - When the preferred capability is unavailable, use the registry fallback only
   when it satisfies the same task contract; never silently downgrade quality or
   skip a mandatory specialist.
@@ -439,6 +448,9 @@ When a PR comes back, the orchestrator reviews before approving:
    sibling implementations were searched before new ones were created.
 11. `MINIMAL_CODE_GATE` explains every new abstraction and confirms that no
     equivalent implementation was duplicated.
+12. `EXECUTION_REPORT_COMMENT` matches the task, receipt, Project state, and PR
+    when applicable; its remote URL/identifier proves publication. The comment
+    never substitutes for receipt or validation evidence.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
 spec-anchored reasons. Rejected review moves the card back to `In Progress` with
@@ -474,4 +486,6 @@ the `rework` label until corrected.
   `references/minimal-code-gate.md`
 - Provider-neutral LLM replacement and checkpoint continuity:
   `references/llm-handoff.md`
+- Human checkpoint reporting, anti-spam, publication evidence, and fallback:
+  `references/execution-report-comments.md`
 - End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`

@@ -22,6 +22,8 @@ Keep this file lightweight and act only on the current task.
 - Use TDD when applicable.
 - Run required tests and validation, with evidence.
 - Update the task's execution result and final report.
+- Prepare concise `EXECUTION_REPORT_COMMENT` updates for material checkpoints
+  and publish them to the linked Issue when an authorized GitHub capability is available.
 - Return the work for review with task, issue, branch and specs linked.
 
 ## Preconditions (do not start without these)
@@ -106,9 +108,17 @@ filename.
    `templates/execution-report-template.md`, including prompt used, checklist
    executed, evidence, layer results, risks, gaps, blockers, and GitHub-ready
    fields.
-12. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
+12. **Human checkpoint report**: for material `RUNNING`, `VALIDATING`, `REWORK`,
+   `BLOCKED`, or `COMPLETED` changes, load
+   `templates/execution-report-comment-template.md` and the Harness reference
+   `references/execution-report-comments.md`. Consolidate small operations,
+   include only factual technical rationale, and do not publish an identical
+   checkpoint report twice. Publish to the real linked Issue when possible and
+   record the returned comment URL/identifier. A prepared body or failed call
+   is `NOT PUBLISHED`; persist it in the Human Task with the reason instead.
+13. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
    implementation and validation evidence support completion.
-13. **Handoff para review**: prepare the PR or review package linked to task,
+14. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
@@ -238,5 +248,8 @@ visual status to `🔴 Bloqueada`.
 - Required commands run; tests/validation pass or blockers are recorded.
 - `SKILL_RECEIPT`, `REUSE_INVENTORY`, and `MINIMAL_CODE_GATE` are complete.
 - Task execution result fully filled with the mandatory final report.
+- Applicable Issue reports are factual and non-duplicative; publication is
+  claimed only with returned remote evidence. Missing capability is recorded as
+  `NOT PUBLISHED` and does not replace validation.
 - PR/review package prepared and linked to task, issue, branch and specs.
 - Handed back for review; not merged, deployed, or self-approved.

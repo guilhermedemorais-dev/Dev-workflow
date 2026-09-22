@@ -43,6 +43,14 @@ duplicações removidas ou explicitamente mantidas.
 - Execution Contract retomado:
 - Motivo e checkpoint de continuidade:
 
+## Relatório humano na Issue
+- Checkpoints materiais reportados:
+- Issue vinculada:
+- Status de publicação: PUBLISHED | NOT PUBLISHED | N/A
+- Evidência remota (URL/identificador retornado):
+- Motivo quando não publicado:
+- Último corpo idêntico verificado para evitar duplicação: sim/não/N/A
+
 ## Checklist executado
 - [ ] Contrato validado e referências necessárias carregadas
 - [ ] Skills obrigatórias carregadas
@@ -52,6 +60,7 @@ duplicações removidas ou explicitamente mantidas.
 - [ ] Testes
 - [ ] Validação
 - [ ] Atualização do relatório
+- [ ] Relatório humano preparado/publicado ou fallback registrado
 - [ ] Handoff para review
 
 ## Resumo
