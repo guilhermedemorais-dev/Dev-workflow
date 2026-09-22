@@ -70,6 +70,19 @@ Engineering Harness
 
 As skills especialistas nao foram absorvidas nem descartadas. O harness coordena e valida; cada skill continua dona de sua especialidade.
 
+### Visao rapida da hierarquia
+
+```mermaid
+flowchart TD
+    A[Global Harness] --> B[Engineering Harness]
+    B --> C[SDD / Specs]
+    B --> D[Implementation]
+    B --> E[UI / UX]
+    B --> F[Security]
+    B --> G[Tools / MCP / Plugins]
+```
+
+
 | Skill | Papel |
 | --- | --- |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
