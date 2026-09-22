@@ -1,10 +1,8 @@
-# Dev Workflow
+# Engineering Harness
 
-Plugins publicos para padronizar planejamento, pesquisa tecnica,
-desenvolvimento, UI/UX, seguranca, documentacao, QA e validacao em projetos de software.
+Conjunto de plugins e skills para orquestrar engenharia de software como um **Engineering Harness**: diagnosticar demandas, fechar escopo, gerar specs, resolver capacidades, executar trabalho especializado, preservar handoffs, validar resultados e controlar gates de entrega.
 
-O objetivo e manter uma rotina reutilizavel entre projetos sem substituir as
-regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
+O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
 ## Plugins
 
@@ -43,14 +41,51 @@ Cada plugin mantem uma unica skill canonica e manifestos adaptadores para
 Codex, Claude Code e Antigravity. Isso evita que as regras das tres plataformas
 evoluam de forma diferente.
 
-## Arquitetura das skills
+## Arquitetura do Engineering Harness
 
-As skills tem papeis separados. A principal orquestra; as demais sao
-especialistas acionados sob demanda.
+As skills continuam independentes. O `dev-workflow-standard` atua como control plane de engenharia: resolve a capacidade necessaria, verifica disponibilidade, invoca o executor ou especialista, acompanha o estado da execucao e valida o resultado antes de liberar o proximo gate.
+
+```text
+Global / caller
+      |
+      v
+dev-workflow-standard
+Engineering Harness
+      |
+      +--> sdd-spec-factory
+      +--> dev-implementation-standard
+      +--> ui-ux-standard
+      +--> security-standard
+      +--> plugins / MCPs / CLIs / scripts / executor LLM
+                     |
+                     v
+              EXECUTION_RECEIPT
+                     |
+                     v
+                 VALIDATION
+                     |
+                     v
+                 COMPLETED
+```
+
+As skills especialistas nao foram absorvidas nem descartadas. O harness coordena e valida; cada skill continua dona de sua especialidade.
+
+### Visao rapida da hierarquia
+
+```mermaid
+flowchart TD
+    A[Global Harness] --> B[Engineering Harness]
+    B --> C[SDD / Specs]
+    B --> D[Implementation]
+    B --> E[UI / UX]
+    B --> F[Security]
+    B --> G[Tools / MCP / Plugins]
+```
+
 
 | Skill | Papel |
 | --- | --- |
-| `dev-workflow-standard` | Agente orquestrador / revisor final |
+| `dev-workflow-standard` | Engineering Harness / revisor final |
 | `sdd-spec-factory` | LLM de requisitos: specs e task executavel |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
@@ -66,8 +101,13 @@ Ideia / demanda
   -> sdd-spec-factory gera task executavel
   -> aprovacao humana
   -> skills obrigatorias carregadas + SKILL_RECEIPT
+  -> capability registry resolve executor/especialistas
+  -> disponibilidade do runtime e verificada
+  -> capacidade selecionada e realmente invocada
+  -> EXECUTION_RECEIPT
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
   -> dev-implementation-standard implementa (somente o escopo da task)
+  -> dev-workflow-standard entra em VALIDATING
   -> Pull Request
   -> ui-ux-standard / security-standard / QA conforme aplicavel
   -> dev-workflow-standard aprova ou solicita rework
@@ -86,6 +126,8 @@ Regras invariantes:
 - Toda task aponta para specs obrigatorias.
 - Todo PR aponta para task, issue, branch e specs seguidas.
 - Skill mencionada nao e skill aplicada: toda skill obrigatoria gera `SKILL_RECEIPT`.
+- Task atribuida nao e task executada: toda delegacao real gera `EXECUTION_RECEIPT`.
+- `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
 - Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
 - Nenhum deploy e aprovado sem PR aprovado.
@@ -93,19 +135,24 @@ Regras invariantes:
 O pipeline completo, com gates e gatilhos, esta em
 [`docs/workflow-pipeline.md`](docs/workflow-pipeline.md).
 
-## Dev Workflow Standard
+## Dev Workflow Standard: Engineering Harness
 
-Skill do agente orquestrador. E a unica skill que aprova a passagem de um gate para
-o proximo e nunca escreve codigo de produto diretamente.
+Skill central do harness de engenharia. E a unica responsavel por aprovar a passagem de um gate para o proximo e nunca escreve codigo de produto diretamente.
+
+O ponto principal da refatoracao e simples: **delegar nao significa apenas atribuir uma task ou citar o nome de uma skill**. O harness so considera uma delegacao executada quando a capacidade selecionada realmente roda, produz resultado inspecionavel e retorna evidencia suficiente para validacao.
 
 Responsabilidades:
 
 - Receber a demanda, diagnosticar e fazer as perguntas criticas.
 - Consolidar escopo (incluido, fora de escopo, restricoes, riscos, decisoes).
-- Decidir quais skills especialistas usar.
+- Decidir quais skills, plugins, tools, MCPs, scripts ou executores usar.
+- Resolver a capacidade preferencial e um fallback seguro quando aplicavel.
+- Verificar se a capacidade existe e esta disponivel no runtime atual.
 - Exigir specs antes de tasks e tasks antes da implementacao.
-- Delegar a criacao de specs para `sdd-spec-factory`.
-- Delegar a implementacao para `dev-implementation-standard`.
+- Invocar a criacao de specs via `sdd-spec-factory`.
+- Invocar a implementacao via `dev-implementation-standard` ou executor explicitamente aprovado.
+- Exigir `EXECUTION_RECEIPT` antes de tratar uma delegacao como executada.
+- Repetir, trocar executor, fazer handoff, replanejar ou bloquear quando a execucao falhar.
 - Acionar `ui-ux-standard` quando houver UI.
 - Acionar `security-standard` quando houver auth, autorizacao, tokens, sessao,
   dados sensiveis, uploads, pagamentos ou integracoes externas.
@@ -113,11 +160,9 @@ Responsabilidades:
 - Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
 - Nunca implementar codigo de produto diretamente.
 
-### Papel do agente orquestrador
+### Papel do Engineering Harness
 
-O `dev-workflow-standard` administra o ciclo de ponta a ponta como coordenador.
-Ele conduz descoberta, escopo, delegacao, gates e aprovacao, mas nao absorve as
-responsabilidades das skills especialistas. A criacao de specs e da task fica com
+O `dev-workflow-standard` administra o ciclo de ponta a ponta como **Engineering Harness**. Ele conduz descoberta, escopo, planejamento, roteamento de capacidades, execucao, handoff, validacao, recovery/replan, gates e aprovacao, mas nao absorve as responsabilidades das skills especialistas. A criacao de specs e da task fica com
 `sdd-spec-factory`; a implementacao fica com o agente executor usando
 `dev-implementation-standard`. O orquestrador divide o trabalho,
 controla escopo, revisa cada diff/PR e executa a validacao final.
@@ -141,6 +186,70 @@ ou duplicar a implementacao. O adaptador de terminal visivel esta em
 Esse transporte e apenas o meio de execucao do `dev-implementation-standard`; a
 divisao do trabalho, o controle de escopo e a revisao de cada diff/PR continuam
 com o orquestrador.
+
+### Estado de execucao do Harness
+
+Cada checkpoint executavel usa estados explicitos:
+
+```text
+PENDING -> READY -> RUNNING -> VALIDATING -> COMPLETED
+                         |          |
+                         |          +-> REWORK -> READY
+                         +-> BLOCKED / REPLAN
+```
+
+Regras:
+
+- `PENDING`: pre-condicoes ainda incompletas.
+- `READY`: task, specs, escopo e capacidade resolvidos.
+- `RUNNING`: a capacidade foi realmente invocada.
+- `VALIDATING`: o resultado retornou e esta sendo validado.
+- `REWORK`: a execucao aconteceu, mas falhou nos criterios de aceite.
+- `BLOCKED`: nenhuma rota segura consegue continuar.
+- `COMPLETED`: existe resultado + evidencia de validacao.
+
+`ASSIGNED` nao e estado de conclusao.
+
+### EXECUTION_RECEIPT
+
+Toda capacidade executada deve deixar evidencia equivalente a:
+
+```text
+EXECUTION_RECEIPT
+- task_id
+- capability
+- provider_or_runtime
+- executor
+- state
+- invocation_evidence
+- inputs_used
+- outputs_produced
+- changed_files_or_artifacts
+- commands_and_results
+- validation_evidence
+- blockers
+- next_safe_action
+```
+
+Sem `invocation_evidence`, a task e considerada **NOT EXECUTED**. Sem `validation_evidence`, ela nao pode chegar a `COMPLETED`.
+
+### Capability Registry
+
+O harness usa um registro de capacidades para escolher o executor correto e, quando permitido, um fallback:
+
+- requisitos/specs -> `sdd-spec-factory`
+- implementacao -> `dev-implementation-standard` + executor autorizado
+- UI/UX -> `ui-ux-standard`
+- seguranca -> `security-standard`
+- operacoes de repositorio -> GitHub connector/tooling ou git local aprovado
+- operacoes deterministicas -> scripts/tools do repositorio
+- falha de provider -> `EXECUTION_HANDOFF` para outro runtime autorizado
+
+O registro completo esta em
+[`capability-registry.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md).
+
+O contrato de execucao esta em
+[`harness-execution.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md).
 
 Ele nao deve procurar outro plugin para tarefas que ja consegue coordenar com
 suas regras, ferramentas e recursos atuais.
@@ -288,8 +397,8 @@ configuracao versionada.
 
 O modelo operacional recomendado e:
 
-- agente orquestrador usando `dev-workflow-standard`: diagnostico, escopo,
-  delegacao, gates e revisao.
+- Engineering Harness usando `dev-workflow-standard`: diagnostico, escopo,
+  capability routing, invocacao, estado de execucao, handoff, validacao, recovery/replan, gates e revisao.
 - LLM de requisitos usando `sdd-spec-factory`: specs e task executavel.
 - agente executor usando `dev-implementation-standard`: implementa a task
   aprovada com qualquer LLM autorizado e disponivel.
@@ -505,8 +614,8 @@ plataformas, pois os esquemas e modelos de seguranca sao diferentes.
 
 ## Uso recomendado
 
-Use `dev-workflow-standard` como CTO/orquestrador: ele recebe a demanda,
-diagnostica, consolida escopo, exige specs, delega e revisa.
+Use `dev-workflow-standard` como **Engineering Harness**: ele recebe a demanda,
+diagnostica, consolida escopo, exige specs, resolve e invoca capacidades, acompanha estado de execucao, exige `EXECUTION_RECEIPT`, valida resultados, replaneja quando necessario e revisa a entrega.
 
 Use `sdd-spec-factory` quando um pedido novo precisar virar specs detalhadas e
 uma task executavel antes da implementacao, garantindo o fluxo
@@ -530,3 +639,5 @@ Para conhecer todas as regras, consulte diretamente:
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)
 - [`security-standard/SKILL.md`](plugins/security-standard/skills/security-standard/SKILL.md)
 - [`workflow-pipeline.md`](docs/workflow-pipeline.md)
+- [`harness-execution.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md)
+- [`capability-registry.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md)
