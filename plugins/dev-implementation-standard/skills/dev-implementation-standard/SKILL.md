@@ -73,6 +73,14 @@ filename.
 
 ## Workflow
 
+The executor owns build, lint, type-check, and test tooling. For listed tools,
+consult `references/tool-registry.json` and the shared `skill-owned-tools.md`
+protocol. Prefer repository-native commands and a compatible cached tool state.
+If state is absent or stale, detect the project environment; install only by a
+project-approved official method when needed, verify, and record immediately.
+On validation failure, analyze, fix within scope, execute again, and retain
+initial and final results. Escalate persistent or out-of-scope failures.
+
 1. **Bootstrap**: receive `task_id` and `execution_contract_path`. Do not depend
    on conversation memory or a pasted task body.
 2. **Contract validation**: parse the JSON and require `schema_version`,

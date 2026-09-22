@@ -25,7 +25,7 @@ class TestExecutionContract(unittest.TestCase):
         for path in (TEMPLATE, CONTRACT):
             with self.subTest(path=path):
                 payload = json.loads(path.read_text(encoding="utf-8"))
-                self.assertEqual(set(payload), REQUIRED_FIELDS)
+                self.assertTrue(REQUIRED_FIELDS.issubset(payload))
                 self.assertEqual(payload["schema_version"], 1)
                 self.assertTrue(payload["task_id"].startswith("TASK-"))
                 self.assertTrue(payload["task_path"].endswith(".md"))

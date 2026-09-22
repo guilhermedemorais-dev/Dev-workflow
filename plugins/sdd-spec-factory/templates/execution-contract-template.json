@@ -15,6 +15,7 @@
   "acceptance_criteria": [],
   "required_tests": [],
   "required_skills": [],
+  "required_validations": [],
   "stop_conditions": [
     "architecture_change_required",
     "scope_expansion_required",

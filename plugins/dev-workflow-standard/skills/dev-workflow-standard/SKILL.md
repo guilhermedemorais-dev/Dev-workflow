@@ -488,4 +488,6 @@ the `rework` label until corrected.
   `references/llm-handoff.md`
 - Human checkpoint reporting, anti-spam, publication evidence, and fallback:
   `references/execution-report-comments.md`
+- Specialist-owned tool registries, local state, and fast/slow path:
+  `references/skill-owned-tools.md`
 - End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`
