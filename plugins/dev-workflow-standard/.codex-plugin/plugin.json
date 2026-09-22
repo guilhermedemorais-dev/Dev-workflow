@@ -1,15 +1,15 @@
 {
   "name": "dev-workflow-standard",
-  "version": "0.1.0+codex.20260622",
-  "description": "CTO/orchestrator development standard: diagnose demands, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger UI/UX and security validation, and review PRs against specs, task and acceptance criteria. Does not implement product code directly.",
+  "version": "0.2.0+codex.20260922",
+  "description": "Engineering harness: diagnose demands, consolidate scope, require specs before tasks, resolve and invoke specialist skills/executors, track execution state, require execution receipts and validation evidence, recover or replan on failure, and review PRs.",
   "author": {
     "name": "Guilherme"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Dev Workflow Standard",
-    "shortDescription": "Orchestrate diagnosis, scope, spec/implementation delegation, and PR review.",
-    "longDescription": "Dev Workflow Standard makes Codex the CTO/orchestrator for software delivery: receive a demand, diagnose, ask critical questions, consolidate scope, require specs before tasks, delegate spec creation to sdd-spec-factory and implementation to dev-implementation-standard, trigger ui-ux-standard when there is UI and security-standard when sensitive surfaces are touched, then review PRs against specs, task and acceptance criteria and approve or request rework. It never writes product code directly.",
+    "shortDescription": "Orchestrate engineering execution, not just task planning.",
+    "longDescription": "Dev Workflow Standard acts as an engineering harness for software delivery: diagnose and scope the demand, require specs before tasks, resolve the required specialist skill/plugin/tool or executor, verify runtime availability, actively invoke the selected capability, preserve handoff context, require an EXECUTION_RECEIPT and validation evidence before advancing, recover or replan on failure, and review PRs against specs, task and acceptance criteria. Product code remains the responsibility of dev-implementation-standard or another explicitly approved executor capability.",
     "developerName": "Guilherme",
     "category": "Productivity",
     "capabilities": [
@@ -18,10 +18,10 @@
       "Interactive"
     ],
     "defaultPrompt": [
-      "Use Dev Workflow Standard to diagnose this demand and consolidate scope.",
-      "Use Dev Workflow Standard to require specs and delegate them to sdd-spec-factory.",
-      "Use Dev Workflow Standard to delegate this approved task to dev-implementation-standard.",
-      "Use Dev Workflow Standard to review this PR against the specs, task and acceptance criteria."
+      "Use Dev Workflow Standard as the engineering harness for this demand.",
+      "Resolve and invoke the capabilities required to execute this approved task.",
+      "Continue this engineering workflow from the current execution state and evidence.",
+      "Review this result against the task, specs, execution receipt and acceptance criteria."
     ]
   }
 }
