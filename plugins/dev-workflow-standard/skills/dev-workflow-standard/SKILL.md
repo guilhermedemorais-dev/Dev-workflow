@@ -417,6 +417,19 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
 ## When to Trigger Each Specialist
 
+- API discovery during planning/spec: route relevant API, integration or
+  validation-endpoint needs to `sdd-spec-factory` and its
+  [API Research Library](../../../sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md).
+  That link is the monorepo source path. In an installed host, resolve the active
+  `sdd-spec-factory` skill and its `references/api-research-library.md`; do not
+  assume sibling plugin paths across versioned caches. If unavailable, report
+  the missing reference and use an explicitly available canonical checkout,
+  rather than pretending the installed skill contains it or auto-installing.
+  Research directories provide candidates, not runtime availability or automatic
+  approval. Require official-source checks, a recorded decision and validation
+  plan; skip this research for unrelated tasks. Keep sources outside MCP/tool
+  installation registries and preserve consent before external execution.
+
 - `dev-environment-standard`: use cached environment `status` for required
   capabilities before execution. Route missing/broken prerequisites to targeted
   `prepare`/`repair`, then retry the original owner skill. Do not run full doctor

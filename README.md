@@ -624,6 +624,24 @@ aprovacao e validacao antes de entrar no fluxo global.
 O protocolo completo esta em
 [`continuous-improvement.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/continuous-improvement.md).
 
+### Biblioteca de pesquisa de APIs no planejamento/spec
+
+Quando uma demanda precisar de API, integracao ou endpoint para validacao,
+o Harness aciona a SDD com a
+[`API Research Library`](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md).
+As fontes auxiliares sao o
+[Inventario de APIs Gratuitas](https://github.com/philipecomputacao/inventario-apis-gratuitas)
+e [PublicAPIs.io Development](https://publicapis.io/category/development).
+
+Pesquisar candidatos quando pertinente, verificar documentacao oficial,
+autenticacao, custos/limites, licenca e tratamento de dados, e registrar a
+decisao com plano/evidencia de validacao na spec ou pesquisa existente.
+Uma API de validacao nao e um mock nem um MCP. Listagem nao comprova gratuidade,
+seguranca ou funcionamento; sem teste, registrar NOT VALIDATED.
+Nao importar catalogos inteiros, instalar automaticamente ou enviar dados reais
+de clientes para experimentar. Esta biblioteca e de pesquisa, separada da MCP
+Library aprovada; nao exige consultar diretorios em tasks sem necessidade de API.
+
 ### Pesquisa tecnica e grep.app
 
 O plugin usa [grep.app](https://grep.app/) para pesquisar implementacoes reais

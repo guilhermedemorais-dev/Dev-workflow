@@ -1,5 +1,31 @@
 # TASK-005: Environment Bootstrap / Plugin Health
 
+## Adendo autorizado: biblioteca de pesquisa de APIs
+
+Pedido do usuário: usar inventario-apis-gratuitas e PublicAPIs.io como biblioteca
+de pesquisa durante planejamento/spec, inclusive para APIs de validação.
+Contrato NORMAL documental, mesma Issue 22/PR 23. Owner da referência canônica:
+sdd-spec-factory; Harness roteia planejamento para ela. Não copiar catálogos,
+criar crawler/plugin novo, instalar MCPs ou consumir serviços externos.
+Locked paths: referência api-research-library.md da SDD, SKILL.md SDD/Harness,
+README, esta task, spec environment e tests/test_api_research_library.py.
+Aceite: URLs das duas fontes; gatilho condicional em planejamento/spec;
+distinção API/MCP/mock; verificação primária de auth/custo/limites/licença/dados;
+registro de candidato/decisão/plano de validação e NOT VALIDATED quando não testado;
+sem pesquisa obrigatória irrelevante, segredos ou aprovação automática.
+Validação: testes estruturais da referência/roteamento, suíte completa e
+git diff --check. Banco/UI/runtime: N/A, apenas contrato de pesquisa.
+REUSE_INVENTORY: seção de pesquisa do README, referências on-demand e fluxos SDD
+existentes; MINIMAL_CODE_GATE: uma referência Markdown, sem novo serviço.
+Status: validado, In Review no PR #23.
+EXECUTION_RECEIPT: referência canônica criada e ligada às skills SDD/Harness;
+README atualizado antes do commit. Testes novos: 5 PASS. Suíte completa:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -q`, 399 PASS,
+exit 0; quick_validate nas duas skills e git diff --check, exit 0.
+SECURITY_STATUS=PASS para o diff documental; observação de portabilidade tratada
+com resolução da skill SDD ativa, sem presumir pastas vizinhas no cache.
+APIs externas e ativação nos caches globais NOT VALIDATED/não executadas.
+
 ## Adendo autorizado: Hostinger, AWS e WordPress
 
 Pedido posterior do usuário: incluir os três MCPs na mesma entrega/PR #23.

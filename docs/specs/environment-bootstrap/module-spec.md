@@ -1,5 +1,16 @@
 # MODULE SPEC: Environment Bootstrap / Plugin Health
 
+## Adendo aprovado: fontes para pesquisa no planejamento/spec
+
+Manter biblioteca leve de fontes auxiliares na skill SDD, consumida também pelo
+Harness no planejamento quando houver necessidade de API, integração ou endpoint
+de validação. Fontes: inventario-apis-gratuitas e PublicAPIs.io/development.
+Não promover diretórios a MCPs aprovados nem copiar listas inteiras. Registrar
+problema, candidato, fonte primária, custos/limites/auth, dados/permissões,
+plano/evidência de validação, data e decisão. API de validação, mock e MCP são
+categorias distintas. Só pesquisar quando pertinente; sem rede, declarar lacuna.
+Sem chamar APIs com dados reais, instalar ou gerar contas como efeito da pesquisa.
+
 ## Adendo de catálogo aprovado pelo usuário
 
 Acrescentar Hostinger API MCP, AWS API MCP Server e WordPress MCP Adapter como
