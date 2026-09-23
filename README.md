@@ -633,6 +633,12 @@ As fontes auxiliares sao o
 [Inventario de APIs Gratuitas](https://github.com/philipecomputacao/inventario-apis-gratuitas)
 e [PublicAPIs.io Development](https://publicapis.io/category/development).
 
+Durante o planejamento e a elaboracao de specs, consultar essas bibliotecas e
+priorizar APIs gratuitas ou com faixa gratuita adequada para validar
+funcionalidades e testar a aplicacao, quando pertinente. Confirmar os limites e
+usar dados sinteticos, sem enviar dados reais de clientes. Testes locais e mocks
+continuam preferiveis quando atendem aos criterios de aceite sem API externa.
+
 Pesquisar candidatos quando pertinente, verificar documentacao oficial,
 autenticacao, custos/limites, licenca e tratamento de dados, e registrar a
 decisao com plano/evidencia de validacao na spec ou pesquisa existente.

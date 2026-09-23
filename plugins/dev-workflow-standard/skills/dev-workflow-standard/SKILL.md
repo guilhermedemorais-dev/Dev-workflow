@@ -420,6 +420,8 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 - API discovery during planning/spec: route relevant API, integration or
   validation-endpoint needs to `sdd-spec-factory` and its
   [API Research Library](../../../sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md).
+  Prioritize free APIs or a suitable free tier to validate application features
+  and test the application when relevant; confirm limits and use synthetic data.
   That link is the monorepo source path. In an installed host, resolve the active
   `sdd-spec-factory` skill and its `references/api-research-library.md`; do not
   assume sibling plugin paths across versioned caches. If unavailable, report

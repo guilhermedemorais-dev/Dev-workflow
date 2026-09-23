@@ -2,6 +2,14 @@
 
 ## Adendo autorizado: biblioteca de pesquisa de APIs
 
+Correção textual autorizada pelo usuário: tornar explícita na biblioteca,
+SDD, Harness e README a prioridade por APIs gratuitas ou faixa gratuita adequada
+para validar funcionalidades e testar a aplicação, quando pertinente. Confirmar
+limites, usar dados sintéticos e manter testes locais/mocks quando suficientes.
+Escopo TRIVIAL, sem alterar runtime, instalar ou chamar APIs externas.
+Validação da correção: regra textual confirmada nos quatro documentos;
+suíte unittest 399 PASS, exit 0; git diff --check exit 0.
+
 Pedido do usuário: usar inventario-apis-gratuitas e PublicAPIs.io como biblioteca
 de pesquisa durante planejamento/spec, inclusive para APIs de validação.
 Contrato NORMAL documental, mesma Issue 22/PR 23. Owner da referência canônica:

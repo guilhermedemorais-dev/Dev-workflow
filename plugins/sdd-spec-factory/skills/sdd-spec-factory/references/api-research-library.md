@@ -5,6 +5,12 @@ external API, integration, data source, validation service or test endpoint.
 It is a library of discovery sources, not an approved dependency list or an
 installed MCP inventory. Do not research APIs for unrelated tasks.
 
+During planning and spec creation, consult these sources and prioritize free APIs
+or APIs with a suitable free tier to validate application features and test the
+application, when relevant. Confirm current limits and use synthetic data, never
+real customer data. Prefer local tests or mocks when they adequately satisfy the
+acceptance criteria; a free external API is an option, not a mandatory dependency.
+
 ## Discovery sources
 
 | Source | URL | Use |

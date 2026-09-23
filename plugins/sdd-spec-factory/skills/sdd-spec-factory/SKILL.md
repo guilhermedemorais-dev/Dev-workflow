@@ -130,6 +130,8 @@ Before writing any spec, produce a short diagnosis:
 
 When planning/spec discovery requires an API, external integration or validation
 endpoint, read [API Research Library](references/api-research-library.md).
+Prioritize free APIs or a suitable free tier to validate application features
+and test the application when relevant, with verified limits and synthetic data.
 Use its two discovery sources only when relevant, verify candidates against
 official documentation and record the decision plus validation plan/evidence.
 An API listing is neither an approved dependency nor an available MCP. Do not
