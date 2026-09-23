@@ -89,7 +89,8 @@ de entrega, com distinção entre teste automático e avaliação comportamental
 
 - Issue: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/24
 - Branch: `feat/devops-standard`, base `83e1c7296497c34267d85105f352b460136a09a7`.
-- PR: abrir após validação; vincular TASK-006/Issue24, sem merge automático.
+- PR: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/25, aberto para
+  revisão, sem merge automático. Commit de implementação `c1808360c70a7c56e931156fc0da7bcb81c3f434`.
 - Responsáveis: Harness orquestra; SDD especifica; executor implementa;
   security-standard revisa segurança e Harness revisa entrega.
 - Spec: [module-spec.md](../specs/devops-standard/module-spec.md).
@@ -195,9 +196,8 @@ Engineering Harness. Registre resultado e evidências nesta task.
 ## Relatórios humanos na Issue
 
 - Checkpoints: RUNNING, VALIDATING, REWORK, BLOCKED ou COMPLETED conforme prova.
-- Publicação deste checkpoint de especificação: NOT PUBLISHED pelo agente SDD;
-  orquestrador consolida/publica para evitar duplicação.
-- Evidência remota: pendente de publicação pelo Harness.
+- Publicação: PUBLISHED pelo Harness, consolidada para evitar duplicação.
+- Evidência remota: links da seção EXECUTION_REPORT_COMMENT abaixo.
 
 ## Resultado da execução
 
@@ -283,6 +283,15 @@ Publicados pelo Harness, retornos confirmados:
 
 - RUNNING: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/24#issuecomment-5802224591
 - VALIDATING: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/24#issuecomment-5802342726
+- COMPLETED local / In Review humano: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/24#issuecomment-5802435485
+
+## PR / Review
+
+[PR #25](https://github.com/guilhermedemorais-dev/Dev-workflow/pull/25), base main.
+Implementação enviada e referência remota conferida com HEAD local c180836.
+GitHub retornou MERGEABLE/CLEAN em 2026-09-23; isso indica ausência de conflito,
+não aprovação técnica ou humana. Este follow-up atualiza somente rastreabilidade.
+Issue #24 segue aberta. Sem merge, deploy ou instalação global.
 
 ## Riscos/Lacunas
 

@@ -1,7 +1,8 @@
 # TASK-006: PR, QA e review gates
 
 Referências: [spec](module-spec.md), [task](../../tasks/TASK-006-devops-standard.md),
-Issue #24, branch feat/devops-standard → main. PR: pendente de criação.
+Issue #24, branch feat/devops-standard → main.
+PR: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/25.
 Resultado técnico: APROVADO para revisão do pacote local, 356 testes PASS e
 review independente de segurança PASS. Não é aprovação humana de merge/deploy.
 Evidência: [relatório](../../devops-standard-delivery.md) e
@@ -9,7 +10,7 @@ Evidência: [relatório](../../devops-standard-delivery.md) e
 
 ## PR e code review
 
-- [ ] PR vincula task/spec/Issue e enumera arquivos/resultado fora de escopo.
+- [x] PR vincula task/spec/Issue e enumera arquivos/resultado fora de escopo.
 - [x] Upstream pinado, notices preservados, review restricted não copiado.
 - [x] Skill compacta, referências progressivas e templates não autoexecutáveis.
 - [x] Registry oficial, schema consistente, 20 tools, nenhum scanner duplicado.
