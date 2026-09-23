@@ -1,6 +1,6 @@
 # Workflow Pipeline
 
-End-to-end delivery pipeline across the five skills. The LLM using
+End-to-end delivery pipeline across the independent specialist skills. The LLM using
 `dev-workflow-standard` is the engineering harness and is the only role that approves moving from one gate to
 the next. It never writes product code itself; it routes work to executable capabilities and requires invocation plus validation evidence before advancing.
 
@@ -13,6 +13,7 @@ the next. It never writes product code itself; it routes work to executable capa
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
 | `security-standard` | Security specialist LLM |
+| `devops-standard` | Operational infrastructure, CI/CD, releases and recovery |
 
 ## Pipeline
 
@@ -66,6 +67,16 @@ Idea / demand
 
 ## Mandatory triggers
 
+- `devops-standard`: CI/CD, containers, IaC, Kubernetes/GitOps, deployments,
+  servers/cloud, observability, backup/restore, incidents and advanced Git/release
+  work. Ordinary Git operations remain Harness/executor. Use conditional SDD
+  validations with owner/capability/preferred_tool, not installation state.
+  Operational approval requires target, impact, rollback and explicit human
+  gates for production/destructive changes. Security retains IAM/secrets/TLS/
+  firewall/public-port/privilege review and its scanners. If Environment is
+  present, it prepares prerequisites only; on the TASK-006 main baseline that
+  integration is pending NOT VALIDATED and must not be duplicated.
+
 - `sdd-spec-factory`: for COMPLEX work and NORMAL work whose behavior is not
   already specified. TRIVIAL work uses an inline intent contract.
 - `ui-ux-standard`: whenever there is UI (screens, components, visual states,
@@ -110,7 +121,7 @@ Escalate when uncertain. Security and UI gates remain surface- and risk-based.
 
 Repository-first knowledge, progressive disclosure, real tool execution,
 feedback loops, validation, and mechanical enforcement are consolidated
-practices. The exact state names, receipts, five-skill topology, Kanban columns,
+practices. The exact state names, receipts, specialist topology, Kanban columns,
 and human gates are local Engineering Harness decisions or extensions.
 
 ## Platforms

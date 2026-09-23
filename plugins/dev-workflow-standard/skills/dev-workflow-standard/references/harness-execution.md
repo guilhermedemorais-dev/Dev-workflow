@@ -78,6 +78,14 @@ evidence; this name and schema are not claimed as an OpenAI or industry standard
 
 ## Invocation Evidence
 
+For DevOps, use this same `EXECUTION_RECEIPT`, not a second receipt type.
+Record target_environment, affected revision/artifact, authorized operation,
+rollback_strategy (including limits), initial/final validation and health
+evidence in its existing inputs/output/validation fields. Tool evidence follows
+skill-owned-tools. Config syntax, plan, deploy health and restore are different
+claims. Record NOT VALIDATED rather than infer an unexecuted stage. A task or
+PR approval alone does not authorize a destructive or production operation.
+
 Valid evidence depends on the capability:
 
 - skill/specialist: canonical `SKILL.md` loaded plus specialist output

@@ -44,6 +44,10 @@ PRD, arquitetura, mockups aprovados e demais documentos a seguir.
 O que está incluído nesta task.
 
 ## Fora do escopo
+
+<!-- Conditional: for operational infrastructure include devops-standard and
+target_environment, impact, rollback_strategy, validation plan and human gates.
+Omit this DevOps addition for unrelated work; keep installation state out. -->
 O que NÃO deve ser feito aqui (evita PR inchado).
 
 ## Arquivos prováveis

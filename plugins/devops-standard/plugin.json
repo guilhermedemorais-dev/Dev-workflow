@@ -1,0 +1,6 @@
+{
+  "name": "devops-standard",
+  "version": "0.1.0",
+  "description": "Governed DevOps specialist for the Engineering Harness.",
+  "skills": "./skills/"
+}

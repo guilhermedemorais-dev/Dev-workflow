@@ -15,6 +15,11 @@ manual.
    - implementation: `plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md`
    - UI/UX: `plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md`
    - security: `plugins/security-standard/skills/security-standard/SKILL.md`
+   - DevOps: `plugins/devops-standard/skills/devops-standard/SKILL.md`
+
+DevOps owns operational infrastructure, not Harness orchestration or AppSec.
+Environment Bootstrap is not present on the TASK-006 main baseline; resolve it
+only when actually available. Never recreate its MCP/tool installation layer.
 
 ## Repository rules
 

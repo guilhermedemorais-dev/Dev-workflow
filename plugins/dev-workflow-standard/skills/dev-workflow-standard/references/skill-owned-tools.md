@@ -4,6 +4,20 @@ The Harness maps a required capability to its specialist owner. Each owner
 selects, prepares, runs, interprets, fixes, and revalidates its domain tools.
 The Harness checks receipts and scope; it does not own installation commands.
 
+`devops-standard` owns operational tooling through its own registry. Git and gh
+remain usable for basic Harness/executor repository work; registry ownership
+does not force a DevOps handoff for a normal commit. Terraform and OpenTofu are
+alternatives, not a requirement to install both. `act` is optional and runs real
+workflow steps: never treat it as an inert YAML parser. No security scanners
+are duplicated in the DevOps registry.
+
+The helper is an execution/cache utility, not a production authorization
+firewall. The owner must enforce task and human gates before calling `run` or
+`install`. For composite tools supply the subcommand explicitly, e.g. registry
+`docker-compose` verifies `docker compose version`, while a run receives
+`-- compose config --quiet`. The workspace selects execution cwd; the CLI must
+preserve a failing tool exit status so validation cannot silently pass.
+
 Each specialist keeps versioned knowledge in `references/tool-registry.json`.
 The registry lists capability, official repository, executable, verification,
 and installation policy. It is an initial catalog, not a closed whitelist.

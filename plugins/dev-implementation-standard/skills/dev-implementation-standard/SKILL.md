@@ -241,6 +241,11 @@ visual status to `🔴 Bloqueada`.
 
 ## Interfaces with other skills
 
+- Keep application implementation here. Route CI/CD, infrastructure, deployment,
+  server changes and advanced release operations to `devops-standard` through
+  the Harness. Ordinary commits/PRs stay here; no deploy/merge permission is
+  implied. Share the existing contract/receipt, not duplicated tool registries.
+
 - Receives the task and approval from `dev-workflow-standard`.
 - Consumes specs and templates from `sdd-spec-factory` (task, PR templates).
 - Defers UI validation to `ui-ux-standard` and security validation to

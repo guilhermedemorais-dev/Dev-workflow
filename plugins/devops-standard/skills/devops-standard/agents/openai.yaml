@@ -1,0 +1,4 @@
+interface:
+  display_name: "DevOps Standard"
+  short_description: "Governed infrastructure, releases and operations"
+  default_prompt: "Use $devops-standard to validate this operational change and its rollback plan."
