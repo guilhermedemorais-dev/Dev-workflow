@@ -54,7 +54,7 @@ gates significa `NOT READY TO COMMIT`.
 
 Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
 disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
-separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
+separacao em skills independentes, os gates humanos e os nomes `EXECUTION_RECEIPT`,
 `EXECUTION_REPORT_COMMENT`, `SKILL_RECEIPT`, `REUSE_INVENTORY`,
 `MINIMAL_CODE_GATE` e `EXECUTION_HANDOFF` sao decisoes ou extensoes locais
 deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
@@ -64,6 +64,12 @@ deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
 
 ```text
 plugins/
+  dev-environment-standard/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/dev-environment-standard/SKILL.md
+    skills/dev-environment-standard/scripts/environment.py
   parceiro-estrategico-global/
     .codex-plugin/plugin.json
     .claude-plugin/plugin.json
@@ -119,6 +125,7 @@ strategy / architecture / stack / cost / risk
 dev-workflow-standard
 Engineering Harness
       |
+      +--> dev-environment-standard (bootstrap / health)
       +--> sdd-spec-factory
       +--> dev-implementation-standard
       +--> ui-ux-standard
@@ -147,6 +154,7 @@ flowchart TD
     B --> E[UI / UX]
     B --> F[Security]
     B --> G[Tools / MCP / Plugins]
+    B --> H[Environment Bootstrap / Plugin Health]
 ```
 
 O `parceiro-estrategico-global` exerce a camada Global/CTO: decide dominio,
@@ -160,6 +168,7 @@ hierarquica e uma decisao arquitetural local deste projeto.
 | --- | --- |
 | `parceiro-estrategico-global` | Camada global: descoberta, verificacao e roteamento dinamico de capacidades |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
+| `dev-environment-standard` | Bootstrap portatil, preparacao seletiva e Plugin Health |
 | `sdd-spec-factory` | LLM de requisitos: specs, Human Task e Execution Contract |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
@@ -446,30 +455,129 @@ O contrato de execucao esta em
 Ele nao deve procurar outro plugin para tarefas que ja consegue coordenar com
 suas regras, ferramentas e recursos atuais.
 
-### MCPs disponiveis no ambiente do Guilherme
+## Environment & Capability Bootstrap
 
-O ambiente Codex atual foi configurado com estes servidores MCP habilitados:
+`dev-environment-standard` prepara instalacoes do Engineering Harness para
+qualquer desenvolvedor. Python 3.11+ executa o CLI stdlib; o repositorio fornece
+conhecimento versionado e `--workspace` identifica o projeto a preparar.
+Instalar o plugin nao instala automaticamente MCPs, runtimes ou scanners.
 
-| MCP | Uso principal no workflow |
+```text
+Engineering Harness
+  -> environment status
+  -> dev-environment-standard quando faltar requisito
+     -> Plugin Health / MCP Library / Tool Registries
+     -> Runtime Discovery / Environment State
+     -> prepare ou repair seletivo -> verificar
+  -> READY para as capabilities requeridas
+  -> Capability Router -> Specialist Skills
+```
+
+| Artefato | Responsabilidade |
 | --- | --- |
-| `chrome-devtools` | Console, rede, renderizacao e performance do navegador. |
-| `context7` | Documentacao atual de bibliotecas, SDKs e exemplos de API. |
-| `figma` | Contexto de designs, frames, tokens e componentes aprovados. |
-| `firecrawl-mcp` | Descoberta e extracao direcionada de conteudo web publico. |
-| `grep-mcp` | Pesquisa de padroes em codigo publico indexado pelo `grep.app`. |
-| `hf-mcp-server` | Modelos, datasets, Spaces e documentacao do Hugging Face. |
-| `node_repl` | Execucao JavaScript limitada e orquestracao oferecida pelo runtime Codex. |
-| `playwright` | QA de paginas, interacoes, estados, responsividade e fluxos e2e. |
+| MCP Library | Catalogo publico versionado de providers, capabilities, fontes e politicas |
+| Custom MCP | Extensao local auditada do desenvolvedor; nao publicada automaticamente |
+| Tool Registry | Tools das specialist skills, descobertas dinamicamente e sem copia |
+| Environment State | Estado local da maquina, preferencias e evidencias; nunca versionado |
 
-Os plugins tratam essa lista como inventario do ambiente, nao como dependencia
-obrigatoria para outros usuarios. Antes de depender de um MCP, devem confirmar o
-estado real com `codex mcp list`, selecionar apenas os servidores relevantes e
-aplicar fallback quando houver falha, falta de autenticacao ou rate limit.
+### Doctor, Prepare, Repair e Status
 
-Nenhum segredo, configuracao de `~/.codex/config.toml`, codigo privado, cookie,
-dado de cliente ou credencial de producao deve ser enviado ou versionado por
-causa desses MCPs. PRD, codigo local, arquitetura, mockup aprovado e
-documentacao oficial continuam sendo as fontes de verdade.
+Na raiz do checkout:
+
+```bash
+python3 plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py doctor --repo-root . --workspace . --json
+python3 plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py prepare --repo-root . --workspace . --dry-run --json
+python3 plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py status --repo-root . --workspace . --json
+```
+
+- `doctor` diagnostica estrutura, manifests/marketplaces, skills, referencias,
+  scripts, registries, runtimes, package managers, browsers e evidencias MCP.
+  Nao escreve estado, nao instala e nao dispara a suite do projeto.
+- `prepare` planeja CORE, requisitos da task e selecoes explicitas. So aplica
+  acoes cujo comando/configuracao e escopo foram aprovados; verifica e persiste
+  estado privado. `--dry-run` nao escreve nem instala.
+- `repair --component ID` limita a recuperacao ao componente quebrado;
+  nao reinstala o restante do ambiente.
+- `status` consulta estado persistido e checks baratos. Fingerprint incompativel,
+  executavel ausente ou evidencia MCP vencida impedem reuso como READY.
+  Nao executar discovery completo antes de cada task.
+
+Estado padrao em `runtime-state/environment-state.json` dentro da skill;
+`--state-dir` permite armazenamento local gravavel para bundles somente leitura.
+Os estados das tools continuam sob responsabilidade do helper compartilhado.
+Comandos completos, formatos de aprovacao/evidencia e limites de host estao em
+[`operations.md`](plugins/dev-environment-standard/skills/dev-environment-standard/references/operations.md).
+
+### MCP Library e classificacoes
+
+O catalogo nao declara o que esta conectado nesta maquina:
+
+| Tier | Componentes iniciais |
+| --- | --- |
+| CORE | GitHub, Context7, Playwright |
+| RECOMMENDED | Chrome DevTools, Docker MCP Gateway, Docker MCP Registry |
+| OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry |
+| PROJECT_SPECIFIC | Supabase, somente quando o projeto precisar |
+| COMMUNITY | grep-mcp, origem atual UNKNOWN e instalacao automatica bloqueada |
+| RUNTIME_PROVIDED | node_repl, somente deteccao quando fornecido pelo host |
+
+Docker MCP Registry e fonte de catalogo, nao servidor conectavel. Gateway pode
+simplificar lifecycle/isolamento, mas nao torna Docker obrigatorio. A auditoria
+de fontes esta em [`mcp-source-audit.md`](docs/specs/environment-bootstrap/mcp-source-audit.md).
+
+Origem (`OFFICIAL`, `VERIFIED_THIRD_PARTY`, `COMMUNITY`, `UNKNOWN`), tier e
+estado runtime sao dimensoes distintas. Estados MCP: AVAILABLE, INSTALLED,
+CONNECTED, AUTH_REQUIRED, MISSING, BROKEN, UNSUPPORTED. Preservar:
+
+```text
+installed != connected
+connected != authenticated
+registered != available
+planned tool != executed tool
+```
+
+Configuracao registrada nao prova funcionamento. Conexao/auth requerem evidencia
+recente do host; sem inspecao suportada, informar a limitacao. OAuth, passwords,
+tokens, API keys e cookies permanecem no fluxo seguro do host e nunca entram
+em estado, catalogo ou logs publicados.
+
+### Optional MCP selection e Custom MCPs
+
+No primeiro preparo, apresentar RECOMMENDED/OPTIONAL e perguntar quais configurar,
+alem de perguntar por MCP customizado. Persistir enabled, disabled e not_requested
+como preferencias; auth_required e connected ficam como observacoes separadas.
+Nao perguntar de novo toda sessao: somente por pedido, reset, nova necessidade,
+quebra, mudanca relevante ou incompatibilidade.
+
+Custom MCP passa por auditoria de provider/repositorio, documentacao, maintainer,
+transporte, permissoes, autenticacao e risco; fica local. UNKNOWN nunca instala
+automaticamente; COMMUNITY exige consentimento especifico. Promocao ao catalogo
+publico e outra mudanca revisada.
+
+### Preparacao e Plugin Health
+
+AUTO_SAFE, PROJECT_SCOPED e USER_SCOPED exigem aprovacao da acao e escopo.
+AUTH_REQUIRED prepara ate o limite seguro e entrega autenticacao ao usuario;
+PRIVILEGED exige USER_ACTION_REQUIRED; MANUAL_ONLY fornece instrucoes;
+RUNTIME_PROVIDED somente detecta. Sem sudo silencioso ou instalacao em massa.
+
+Respeitar lockfiles: npm ci, pnpm frozen, yarn locked conforme versao e uv sync
+--locked. Python usa ambiente isolado aprovado. Preparar apenas browser/engine
+necessario. Reutilizar registries e `tool-state.py` para tools especialistas,
+sem transformar environment em dono de Semgrep, pytest ou Playwright.
+
+HEALTH_REPORT tem resumo humano e JSON com `plugin_health`, runtimes, MCPs,
+skills/tools, blockers e evidencias. HEALTHY exige validadores/testes e estrutura
+comprovados; desconhecido e NOT VALIDATED. DEGRADED explicita lacunas; BLOCKED
+identifica requisito ou estrutura impeditiva. Health da instalacao e prontidao
+para uma task sao avaliadas separadamente: `capabilities_ready` informa os
+requisitos da task; `ready` tambem exige CORE/auth, testes validos e nenhuma
+preparacao pendente de verificacao. Snapshots/testes expiram em 24 horas,
+evidencia MCP em 300 segundos; mudancas de codigo/configuracao invalidam o cache.
+
+DevOps, Git avancado, CI/CD, deployment, servidores, SSH, VPS, cloud, Kubernetes,
+Terraform, Ansible, reverse proxy/Nginx e Docker em producao ficam para futura
+`devops-standard`. Git basico e colaboracao GitHub continuam neste escopo.
 
 ### Melhoria continua controlada
 
@@ -726,6 +834,7 @@ Instalar os plugins:
 ```bash
 codex plugin add parceiro-estrategico-global@guilherme-dev-workflow
 codex plugin add dev-workflow-standard@guilherme-dev-workflow
+codex plugin add dev-environment-standard@guilherme-dev-workflow
 codex plugin add ui-ux-standard@guilherme-dev-workflow
 codex plugin add security-standard@guilherme-dev-workflow
 codex plugin add sdd-spec-factory@guilherme-dev-workflow
@@ -745,6 +854,7 @@ Instalar os plugins:
 ```text
 /plugin install parceiro-estrategico-global@guilherme-dev-workflow
 /plugin install dev-workflow-standard@guilherme-dev-workflow
+/plugin install dev-environment-standard@guilherme-dev-workflow
 /plugin install ui-ux-standard@guilherme-dev-workflow
 /plugin install security-standard@guilherme-dev-workflow
 /plugin install sdd-spec-factory@guilherme-dev-workflow
@@ -756,6 +866,7 @@ Para testar uma copia local antes de publicar:
 ```bash
 claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/dev-workflow-standard \
+  --plugin-dir ./plugins/dev-environment-standard \
   --plugin-dir ./plugins/ui-ux-standard \
   --plugin-dir ./plugins/security-standard \
   --plugin-dir ./plugins/sdd-spec-factory \
@@ -788,6 +899,7 @@ Copiar para a pasta local de plugins:
 mkdir -p ~/plugins
 cp -a plugins/parceiro-estrategico-global ~/plugins/
 cp -a plugins/dev-workflow-standard ~/plugins/
+cp -a plugins/dev-environment-standard ~/plugins/
 cp -a plugins/ui-ux-standard ~/plugins/
 cp -a plugins/security-standard ~/plugins/
 cp -a plugins/sdd-spec-factory ~/plugins/
@@ -833,6 +945,7 @@ Para conhecer todas as regras, consulte diretamente:
 
 - [`parceiro-estrategico-global/SKILL.md`](plugins/parceiro-estrategico-global/skills/parceiro-estrategico-global/SKILL.md)
 - [`dev-workflow-standard/SKILL.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md)
+- [`dev-environment-standard/SKILL.md`](plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md)
 - [`sdd-spec-factory/SKILL.md`](plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md)
 - [`dev-implementation-standard/SKILL.md`](plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md)
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)

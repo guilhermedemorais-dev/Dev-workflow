@@ -1,0 +1,8 @@
+{
+  "name": "dev-environment-standard",
+  "description": "Portable environment bootstrap and plugin health: diagnose, selectively prepare, repair and reuse verified local state.",
+  "version": "0.1.0",
+  "author": {"name": "Guilherme"},
+  "homepage": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow"
+}

@@ -122,6 +122,7 @@ use a documentation-only or Git-only label to bypass this gate.
 | Skill | Role | Owns |
 | --- | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer | demand, diagnosis, planning, capability routing, execution state, handoff, validation, recovery, approval |
+| `dev-environment-standard` | Environment specialist | portable bootstrap, plugin health, MCP preparation, local environment state |
 | `sdd-spec-factory` | Requirements LLM | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
 | `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
@@ -416,6 +417,12 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
 ## When to Trigger Each Specialist
 
+- `dev-environment-standard`: use cached environment `status` for required
+  capabilities before execution. Route missing/broken prerequisites to targeted
+  `prepare`/`repair`, then retry the original owner skill. Do not run full doctor
+  for every task, infer connection from configuration, or install all tools.
+  This capability does not own product implementation or DevOps.
+
 - `sdd-spec-factory`: required for COMPLEX work and for NORMAL work whose
   behavior is not already specified. TRIVIAL work uses the inline intent
   contract from the complexity gate.
@@ -490,4 +497,6 @@ the `rework` label until corrected.
   `references/execution-report-comments.md`
 - Specialist-owned tool registries, local state, and fast/slow path:
   `references/skill-owned-tools.md`
-- End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`
+- Portable environment bootstrap and MCP Library:
+  `plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md`
+- End-to-end pipeline across the specialist skills: `docs/workflow-pipeline.md`

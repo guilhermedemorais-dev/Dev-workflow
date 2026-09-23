@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Environment Standard"
+  short_description: "Diagnose and prepare development capabilities"
+  default_prompt: "Use $dev-environment-standard to diagnose this environment and prepare only approved capabilities."

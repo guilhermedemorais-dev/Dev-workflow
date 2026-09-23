@@ -4,6 +4,15 @@ The Harness maps a required capability to its specialist owner. Each owner
 selects, prepares, runs, interprets, fixes, and revalidates its domain tools.
 The Harness checks receipts and scope; it does not own installation commands.
 
+`dev-environment-standard` may discover every owner registry and prepare only
+the capabilities a task needs through this same helper. It never copies registry
+entries or takes over tool interpretation. Owners are discovered dynamically.
+For read-only diagnostics use `probe` or `resolve --read-only`; neither writes
+or invalidates state. Project-local virtualenv/node_modules executables precede
+PATH resolution, and verify/install/run operate in the requested workspace.
+CLI run preserves the tool's failing exit code; `--quiet` suppresses tool output
+when a consumer needs only the compact receipt. Do not publish raw tool logs.
+
 Each specialist keeps versioned knowledge in `references/tool-registry.json`.
 The registry lists capability, official repository, executable, verification,
 and installation policy. It is an initial catalog, not a closed whitelist.

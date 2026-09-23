@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI/UX Standard"
+  short_description: "Design and validate project-consistent interfaces"
+  default_prompt: "Use $ui-ux-standard to review this interface against its approved design and runtime behavior."

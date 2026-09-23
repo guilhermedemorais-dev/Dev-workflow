@@ -77,6 +77,14 @@
       ]
     },
     {
+      "name": "dev-environment-standard",
+      "source": "./plugins/dev-environment-standard",
+      "description": "Portable environment bootstrap, MCP discovery and evidence-based plugin health.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["environment", "bootstrap", "mcp", "health"]
+    },
+    {
       "name": "dev-implementation-standard",
       "source": "./plugins/dev-implementation-standard",
       "description": "Executor/coder: implements an approved task strictly within its spec scope on the suggested branch, runs required commands, updates the task result, and prepares the PR.",

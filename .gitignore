@@ -1,2 +1,4 @@
 # Runtime-specific skill tool observations; never commit machine paths or versions.
 plugins/*/skills/*/runtime-state/
+# Local environment preferences, approvals and sanitized host evidence.
+runtime-state/

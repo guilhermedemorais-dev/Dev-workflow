@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Implementation Standard"
+  short_description: "Implement an approved task within its scope"
+  default_prompt: "Use $dev-implementation-standard to execute this approved task and record validation evidence."

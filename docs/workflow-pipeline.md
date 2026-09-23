@@ -1,6 +1,6 @@
 # Workflow Pipeline
 
-End-to-end delivery pipeline across the five skills. The LLM using
+End-to-end delivery pipeline across independent skills. The LLM using
 `dev-workflow-standard` is the engineering harness and is the only role that approves moving from one gate to
 the next. It never writes product code itself; it routes work to executable capabilities and requires invocation plus validation evidence before advancing.
 
@@ -9,6 +9,7 @@ the next. It never writes product code itself; it routes work to executable capa
 | Skill | Role |
 | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer |
+| `dev-environment-standard` | Environment bootstrap / plugin health |
 | `sdd-spec-factory` | Requirements LLM / executable task |
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
@@ -26,6 +27,8 @@ Idea / demand
   -> short bootstrap: task_id + execution_contract_path
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
+  -> environment status: compatible fast path for required capabilities
+  -> dev-environment-standard prepare/repair only if a prerequisite is missing
   -> capability resolution + runtime availability check
   -> owner skill resolves tool registry + compatible local runtime state
   -> cached fast path or detect/install/verify/persist slow path
