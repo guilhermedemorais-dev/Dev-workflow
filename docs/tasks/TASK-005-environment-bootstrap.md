@@ -1,5 +1,35 @@
 # TASK-005: Environment Bootstrap / Plugin Health
 
+## Adendo autorizado: Hostinger, AWS e WordPress
+
+Pedido posterior do usuário: incluir os três MCPs na mesma entrega/PR #23.
+Escopo NORMAL, extensão do catálogo existente sem mudar engine, auth ou schema.
+IDs `hostinger`, `aws`, `wordpress`; PROJECT_SPECIFIC / OFFICIAL;
+AUTH_REQUIRED com host_handoff, sem configuração executável ou credenciais.
+AWS corresponde ao AWS API MCP Server; WordPress ao MCP Adapter para site próprio,
+não ao conector WordPress.com. Fontes primárias em mcp-source-audit.md.
+
+Locked paths do adendo: mcp-library.json, tests/test_environment_bootstrap.py,
+README, operations.md, esta task e docs/specs/environment-bootstrap/**.
+Aceite: três entradas válidas, nenhuma seleção padrão, seleção/requisito exige
+handoff mesmo com approvals; não instalar/conectar/provisionar nem operar conta/site.
+Validar suíte completa, catálogo real e git diff --check; atualizar README antes
+de commit/push na branch existente. Status do adendo: validado, In Review no PR #23.
+
+SKILL_RECEIPT: Harness/environment e referências lidos; executor canônico
+dev-implementation-standard invocado em environment_runtime. REUSE_INVENTORY:
+reutilizar entradas AUTH_REQUIRED/host_handoff e fixtures existentes.
+MINIMAL_CODE_GATE: sem engine, wrapper ou novo instalador.
+
+Evidências do adendo: 65 testes environment PASS, suíte completa 394 PASS,
+git diff --check exit 0. Smoke CLI com os três --select e --dry-run: exit 0,
+USER_ACTION_REQUIRED para cada entrada, executed=false. Revisão independente
+security-standard PASS no diff; registrou que AWS API MCP foi substituído pelo
+AWS MCP oficial. Catálogo/docs mostram esse ciclo de vida e orientam avaliar o
+sucessor antes de novo setup. Nenhuma instalação/auth/operação externa validada.
+O relatório original abaixo é histórico da entrega de 13 entradas; este adendo
+eleva o catálogo para 16, sem modificar os resultados observados anteriormente.
+
 ## Status e rastreabilidade
 
 - Status: Implementado e validado localmente; aguardando revisão humana do PR.

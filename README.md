@@ -517,13 +517,25 @@ O catalogo nao declara o que esta conectado nesta maquina:
 | CORE | GitHub, Context7, Playwright |
 | RECOMMENDED | Chrome DevTools, Docker MCP Gateway, Docker MCP Registry |
 | OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry |
-| PROJECT_SPECIFIC | Supabase, somente quando o projeto precisar |
+| PROJECT_SPECIFIC | Supabase, Hostinger, AWS API e WordPress MCP Adapter, somente quando o projeto precisar |
 | COMMUNITY | grep-mcp, origem atual UNKNOWN e instalacao automatica bloqueada |
 | RUNTIME_PROVIDED | node_repl, somente deteccao quando fornecido pelo host |
 
 Docker MCP Registry e fonte de catalogo, nao servidor conectavel. Gateway pode
 simplificar lifecycle/isolamento, mas nao torna Docker obrigatorio. A auditoria
 de fontes esta em [`mcp-source-audit.md`](docs/specs/environment-bootstrap/mcp-source-audit.md).
+
+Hostinger (`hostinger`), AWS API (`aws`) e WordPress MCP Adapter (`wordpress`)
+usam fontes oficiais e `AUTH_REQUIRED` com `host_handoff`: a biblioteca os
+conhece, mas nao instala nem configura automaticamente. Antes de conectar,
+definir conta/site, permissoes minimas e credenciais no armazenamento seguro do
+host. AWS requer perfil/IAM restrito e escopo de servicos; nao instala toda a
+familia AWS Labs. WordPress usa o adapter do site proprio, nao o conector
+WordPress.com. Registrar esses MCPs nao autoriza deploy, DNS, cobrancas,
+provisionamento cloud, publicacao ou exclusao de conteudo.
+O AWS API MCP esta marcado pelo fornecedor como substituido pelo AWS MCP oficial;
+a entrada registra esse ciclo de vida e exige avaliar o sucessor antes de novo
+setup. Ela nao e uma recomendacao silenciosa de instalar o servidor legado.
 
 Origem (`OFFICIAL`, `VERIFIED_THIRD_PARTY`, `COMMUNITY`, `UNKNOWN`), tier e
 estado runtime sao dimensoes distintas. Estados MCP: AVAILABLE, INSTALLED,

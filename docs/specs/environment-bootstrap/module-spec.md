@@ -1,5 +1,20 @@
 # MODULE SPEC: Environment Bootstrap / Plugin Health
 
+## Adendo de catálogo aprovado pelo usuário
+
+Acrescentar Hostinger API MCP, AWS API MCP Server e WordPress MCP Adapter como
+PROJECT_SPECIFIC / OFFICIAL. Reutilizar AUTH_REQUIRED + host_handoff; nenhuma
+configuração automática, segredo ou autorização de operação em produção.
+Os IDs são `hostinger`, `aws`, `wordpress`. Não incluir por padrão; resolver
+seleção/capability explicitamente e retornar USER_ACTION_REQUIRED para setup.
+AWS não significa instalar todos os servidores AWS Labs; WordPress representa
+o adapter do site próprio, não um endpoint genérico nem WordPress.com.
+Registrar lifecycle superseded do AWS API MCP e direcionar avaliação do sucessor
+oficial antes de novo setup; não declarar o legado como recomendação atual.
+Aceite adicional: schema público válido; fontes oficiais auditadas; testes
+contra catálogo real comprovam ausência de execução mesmo com aprovação genérica.
+Catálogo passa de 13 para 16 componentes, sem alterar a arquitetura/30 casos-base.
+
 ## Status e intenção pai
 
 Implementação autorizada pelo pedido do usuário; revisão técnica do contrato pelo

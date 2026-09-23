@@ -121,6 +121,42 @@
       "provenance": {"verified_at": "2026-09-23", "source": "https://github.com/supabase/mcp"}
     },
     {
+      "id": "hostinger", "name": "Hostinger MCP", "provider": "Hostinger",
+      "repository": "https://github.com/hostinger/api-mcp-server",
+      "documentation": "https://github.com/hostinger/api-mcp-server/blob/main/README.md",
+      "tier": "PROJECT_SPECIFIC", "origin": "OFFICIAL",
+      "capabilities": ["hostinger-account-context", "hostinger-api"],
+      "preparation": {"policy": "AUTH_REQUIRED", "method": "host_handoff", "scope": "host"},
+      "auth": {"required": true},
+      "handoff": "Select the intended Hostinger account and permitted capabilities, then use the official host-mediated authentication flow. No account, hosting or production changes are authorized by catalog selection.",
+      "risks": ["Provider tools may write or delete hosting resources and affect production. Review permissions and authorize each operational task separately."],
+      "provenance": {"verified_at": "2026-09-23", "source": "https://github.com/hostinger/api-mcp-server"}
+    },
+    {
+      "id": "aws", "name": "AWS API MCP Server (legacy, superseded)", "provider": "AWS Labs",
+      "repository": "https://github.com/awslabs/mcp/tree/main/src/aws-api-mcp-server",
+      "documentation": "https://awslabs.github.io/mcp/servers/aws-api-mcp-server",
+      "tier": "PROJECT_SPECIFIC", "origin": "OFFICIAL",
+      "capabilities": ["aws-service-context", "aws-api"],
+      "preparation": {"policy": "AUTH_REQUIRED", "method": "host_handoff", "scope": "host"},
+      "auth": {"required": true},
+      "handoff": "This AWS API MCP Server is superseded. Evaluate the official successor documentation before any new setup. If an existing project still requires this legacy server, select its account, region, profile and least-privilege permissions manually. Other AWS MCP servers are separate choices; this entry does not define a universal endpoint or install the whole family.",
+      "risks": ["AWS API calls may alter cloud resources, expose account data or incur costs. Cloud operations and infrastructure provisioning require a separately authorized task."],
+      "provenance": {"verified_at": "2026-09-23", "source": "https://awslabs.github.io/mcp/servers/aws-api-mcp-server", "lifecycle": "superseded", "successor_documentation": "https://docs.aws.amazon.com/aws-mcp/latest/userguide/what-is-mcp-server.html"}
+    },
+    {
+      "id": "wordpress", "name": "WordPress MCP Adapter", "provider": "WordPress",
+      "repository": "https://github.com/WordPress/mcp-adapter",
+      "documentation": "https://make.wordpress.org/ai/handbook/projects/mcp-adapter/",
+      "tier": "PROJECT_SPECIFIC", "origin": "OFFICIAL",
+      "capabilities": ["wordpress-site-context", "wordpress-abilities"],
+      "preparation": {"policy": "AUTH_REQUIRED", "method": "host_handoff", "scope": "host"},
+      "auth": {"required": true},
+      "handoff": "Select the self-hosted WordPress site, exposed abilities, transport and site-specific authentication with the site administrator. This adapter is not the WordPress.com MCP service; no shared endpoint is assumed.",
+      "risks": ["Exposed abilities may modify site content, settings or privileged data. Review site permissions and authorize any site changes separately."],
+      "provenance": {"verified_at": "2026-09-23", "source": "https://make.wordpress.org/ai/handbook/projects/mcp-adapter/"}
+    },
+    {
       "id": "grep-mcp", "name": "grep-mcp", "provider": "galperetz (declared by PyPI, repository unavailable)",
       "repository": "https://github.com/galperetz/grep-mcp",
       "documentation": "https://pypi.org/project/grep-mcp/",

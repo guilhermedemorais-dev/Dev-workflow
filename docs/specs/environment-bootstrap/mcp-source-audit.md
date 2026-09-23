@@ -59,6 +59,27 @@ discovery metadata. There is no DevOps provisioning in this implementation.
 
 ## Data and authority boundary
 
+### Requested catalog extension: Hostinger, AWS, WordPress
+
+Sources checked on 2026-09-23; all three entries are PROJECT_SPECIFIC / OFFICIAL
+and AUTH_REQUIRED with host_handoff, no executable configuration or secrets.
+
+| Entry | Primary sources | Decision and limits |
+| --- | --- | --- |
+| Hostinger API MCP | https://github.com/hostinger/api-mcp-server and https://www.hostinger.com/support/11079316-hostinger-api-mcp-server/ | Vendor repository documents a hosted OAuth endpoint and local server. Handoff preserves account/tool scoping; catalog inclusion never authorizes hosting, DNS, billing or destructive site operations. |
+| AWS API MCP Server | https://awslabs.github.io/mcp/servers/aws-api-mcp-server and https://github.com/awslabs/mcp/tree/main/src/aws-api-mcp-server | Use this specific official server, not an invented generic endpoint or install-all for AWS Labs. Select account/profile and least-privilege IAM. Read-only mode is supplementary; sensitive outputs and local filesystem risks remain. No cloud provisioning in bootstrap. |
+| WordPress MCP Adapter | https://github.com/WordPress/mcp-adapter and https://make.wordpress.org/ai/handbook/projects/mcp-adapter/ | Official adapter exposes a site's registered abilities. Setup depends on that site's compatible adapter, authentication and permission checks. Not WordPress.com, not a universal endpoint. No automatic live-site plugin installation or content mutation. |
+
+The catalog now contains 16 components. No account/site was contacted, no
+credential was read, and no installation or connection/auth test was performed
+for this extension. Connection state remains unverified until host evidence.
+Lifecycle correction from independent review: the AWS API MCP documentation
+marks it superseded by the official AWS MCP server and links a migration guide.
+The catalog records this status and directs new setup to evaluate the successor:
+https://docs.aws.amazon.com/aws-mcp/latest/userguide/what-is-mcp-server.html
+(currently redirects to Agent Toolkit documentation). Do not silently recommend
+the legacy API server or fabricate compatibility with its successor.
+
 Versioned library metadata is public knowledge. Host config, authenticated
 sessions, local executable paths, developer preferences and custom MCPs stay
 local. Diagnostics must not echo host config or credentials. Configuration

@@ -540,6 +540,60 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.assertEqual(receipt['result'], 'VERIFIED_EXTERNALLY')
         self.assertTrue(self.env.status()['ready'])
 
+    def test_hostinger_aws_wordpress_have_official_project_specific_provenance(self):
+        entries = envmod.library(ROOT / 'plugins/dev-environment-standard/skills/dev-environment-standard/references/mcp-library.json')
+        expected = {
+            'hostinger': ('https://github.com/hostinger/api-mcp-server', ['hostinger-account-context', 'hostinger-api']),
+            'aws': ('https://github.com/awslabs/mcp/tree/main/src/aws-api-mcp-server', ['aws-service-context', 'aws-api']),
+            'wordpress': ('https://github.com/WordPress/mcp-adapter', ['wordpress-site-context', 'wordpress-abilities']),
+        }
+        for identifier, (repository, capabilities) in expected.items():
+            with self.subTest(provider=identifier):
+                entry = entries[identifier]
+                self.assertEqual(entry['repository'], repository)
+                self.assertEqual(entry['capabilities'], capabilities)
+                self.assertEqual(entry['tier'], 'PROJECT_SPECIFIC')
+                self.assertEqual(entry['origin'], 'OFFICIAL')
+                self.assertEqual(entry['preparation']['policy'], 'AUTH_REQUIRED')
+                self.assertEqual(entry['preparation']['method'], 'host_handoff')
+                self.assertTrue(entry['auth']['required'])
+                self.assertNotIn('configuration', entry)
+                self.assertIn('verified_at', entry['provenance'])
+                self.assertTrue(entry['risks'])
+                self.assertTrue(entry['handoff'])
+        self.assertEqual(entries['aws']['provenance']['lifecycle'], 'superseded')
+        self.assertIn('legacy', entries['aws']['name'])
+        self.assertEqual(entries['aws']['provenance']['successor_documentation'], 'https://docs.aws.amazon.com/aws-mcp/latest/userguide/what-is-mcp-server.html')
+
+    def test_hostinger_aws_wordpress_not_offered_or_prepared_by_default(self):
+        self.entries = list(envmod.library(ROOT / 'plugins/dev-environment-standard/skills/dev-environment-standard/references/mcp-library.json').values())
+        self.save_library()
+        report = self.env.prepare(dry_run=True)
+        for identifier in ('hostinger', 'aws', 'wordpress'):
+            with self.subTest(provider=identifier):
+                self.assertIn(identifier, report['mcps'])
+                self.assertNotIn(identifier, report['optional_choices'])
+                self.assertNotIn(identifier, [item['component'] for item in report['plan']])
+                self.assertFalse(report['mcps'][identifier]['connected'])
+        self.assertFalse(self.config.exists())
+
+    def test_hostinger_aws_wordpress_selection_and_requirement_remain_manual(self):
+        self.entries = list(envmod.library(ROOT / 'plugins/dev-environment-standard/skills/dev-environment-standard/references/mcp-library.json').values())
+        self.save_library()
+        for identifier in ('hostinger', 'aws', 'wordpress'):
+            with self.subTest(provider=identifier):
+                entry = next(item for item in self.entries if item['id'] == identifier)
+                approval = self.approval(identifier)
+                selected = self.env.prepare(selected=[identifier], approvals=[approval])
+                required = self.env.prepare(required=entry['capabilities'], approvals=[approval])
+                for report in (selected, required):
+                    receipt = next(item for item in report['receipts'] if item['component'] == identifier)
+                    self.assertEqual(receipt['result'], 'USER_ACTION_REQUIRED')
+                    self.assertFalse(receipt['executed'])
+                    self.assertFalse(report['mcps'][identifier]['authenticated'])
+                self.assertFalse(self.config.exists())
+        self.env.helper.install.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

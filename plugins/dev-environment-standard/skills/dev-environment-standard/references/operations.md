@@ -178,6 +178,28 @@ execution evidence. The report preserves these limits.
 
 ## Current adapter boundaries
 
+Hostinger (`hostinger`), AWS API MCP (`aws`) and WordPress MCP Adapter (`wordpress`)
+are PROJECT_SPECIFIC and use host handoff, not automatic setup. Inspect their
+plans without changing account/site configuration:
+
+```bash
+python3 plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py prepare --repo-root . --workspace . --select hostinger --select aws --select wordpress --dry-run --json
+```
+
+These selections return USER_ACTION_REQUIRED. Approvals cannot turn this handoff
+into a supported installer. Identify the exact account/site and minimum permissions
+first; credentials remain in the host. Hostinger can expose hosting/DNS/billing
+mutations. AWS API needs a deliberately scoped IAM profile; read-only mode is an
+additional safeguard, not a replacement for IAM or protection from sensitive
+outputs/local file access. WordPress requires the site's compatible official
+adapter and reviewed exposed abilities; do not substitute WordPress.com or invent
+a universal site URL. Do not install the adapter on a live site during bootstrap.
+No provider action, cloud provisioning or content mutation is authorized by a
+catalog entry. Verify connection/auth separately only after approved setup.
+The AWS API MCP documentation marks that server superseded by the official AWS
+MCP server. Review the linked successor/migration documentation before new setup;
+the legacy entry is explicit knowledge, not a recommendation to install it.
+
 - Safe additions to explicit Codex TOML/Claude JSON config files are implemented.
 - Actual MCP connection/auth verification is performed by host capabilities and
   imported as fresh observations, not simulated by network reachability.
