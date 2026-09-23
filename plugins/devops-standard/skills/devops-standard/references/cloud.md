@@ -14,5 +14,6 @@ data to an API/MCP for testing. Use synthetic fixtures and approved sandboxes.
 Record ownership, budget/quotas, backups, egress exposure, lifecycle and cost
 impact. Do not buy capacity, migrate providers or delete resources merely to
 optimize an estimate. Cloud/MCP availability must be verified in the actual
-runtime. Environment Bootstrap integration is pending NOT VALIDATED on this
-base; do not recreate its Hostinger/AWS/WordPress catalog here.
+runtime. Environment Bootstrap owns the Hostinger/AWS/WordPress catalog;
+resolve that skill when available, without recreating its catalog here.
+Repository integration is not evidence of a connected/authenticated provider.

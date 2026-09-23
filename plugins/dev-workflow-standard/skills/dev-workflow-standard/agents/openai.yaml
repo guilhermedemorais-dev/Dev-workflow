@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Workflow Standard"
+  short_description: "Orchestrate verified engineering delivery"
+  default_prompt: "Use $dev-workflow-standard to orchestrate this engineering task and validate its execution evidence."

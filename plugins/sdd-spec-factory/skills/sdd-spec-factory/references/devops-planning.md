@@ -54,8 +54,9 @@ tests and approved mutations. A saved plan or CLI exit 0 is not deploy health.
 
 Resolve `dev-environment-standard` only when actually present. If present,
 delegate missing/broken prerequisites to selective prepare/repair; DevOps
-retains operational responsibility. On the TASK-006 main baseline it is absent:
-integration pending NOT VALIDATED, existing tool-state helper is the fallback.
+retains operational responsibility. Both plugins are included in this repository,
+but runtime availability must be checked; the existing tool-state helper is the
+fallback when Environment is unavailable.
 Do not duplicate Environment, a MCP Library or installation state. Installation
 is not proof of connection/authentication or a successful target operation.
 

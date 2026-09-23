@@ -11,6 +11,7 @@ manual.
    gates and change-complexity tiers.
 3. Load the applicable canonical skill before acting:
    - orchestration: `plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md`
+   - environment/bootstrap: `plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md`
    - requirements: `plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md`
    - implementation: `plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md`
    - UI/UX: `plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md`
@@ -18,8 +19,8 @@ manual.
    - DevOps: `plugins/devops-standard/skills/devops-standard/SKILL.md`
 
 DevOps owns operational infrastructure, not Harness orchestration or AppSec.
-Environment Bootstrap is not present on the TASK-006 main baseline; resolve it
-only when actually available. Never recreate its MCP/tool installation layer.
+Environment Bootstrap is included in this repository; verify availability in
+the active runtime before use. Never recreate its MCP/tool installation layer.
 
 ## Repository rules
 

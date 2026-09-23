@@ -17,6 +17,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | Need | Preferred capability | Fallback | Completion evidence |
 | --- | --- | --- | --- |
 | discovery / orchestration | `dev-workflow-standard` | none | consolidated scope and gate decision |
+| environment bootstrap / plugin health | `dev-environment-standard` | explicit manual host handoff when unsupported | HEALTH_REPORT + required capability evidence |
 | requirements / specs | `sdd-spec-factory` | orchestrator only for clarification, not silent replacement | specs + executable task |
 | implementation | `dev-implementation-standard` with an authorized executor runtime | another authorized executor using the same task/spec contract | diff/files + commands + execution report |
 | UI/UX design and review | `ui-ux-standard` | none when UI validation is mandatory | design/review findings + validation evidence |
@@ -43,6 +44,13 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 
 ## Runtime Availability
 
+Use the environment skill's `status` fast path before depending on prepared
+capabilities. Missing/broken prerequisites route to selective `prepare`/`repair`,
+then return here to invoke the specialist. Never replace its receipt with an
+environment health report. Provider knowledge lives in the portable MCP Library,
+not a hardcoded developer inventory. Preserve registration/installation/
+connection/authentication distinctions; host evidence has bounded freshness.
+
 Before invoking a capability, determine whether it is available through the
 current environment:
 
@@ -66,8 +74,8 @@ firewall, public ports and elevated privilege mandate its review.
 
 When `dev-environment-standard` exists and is available, it detects/prepares
 missing tools/MCPs and returns to DevOps for operations. It never operates
-production. TASK-006 baseline does not contain that plugin: integration is
-pending NOT VALIDATED. The fallback is existing `tool-state.py` with an
+production. Both plugins are included in this repository; runtime availability
+and authentication require separate evidence. If unavailable, use `tool-state.py` with an
 explicit owner-selected, approved official install only if necessary, not a
 replacement bootstrapper/MCP catalog. Do not confuse registered/configured,
 installed, connected, authenticated and successfully executed capabilities.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SDD Spec Factory"
+  short_description: "Create focused specs and executable task contracts"
+  default_prompt: "Use $sdd-spec-factory to turn this request into a focused specification and execution contract."

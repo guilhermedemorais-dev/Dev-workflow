@@ -1,0 +1,4 @@
+interface:
+  display_name: "Security Standard"
+  short_description: "Review security with validated evidence"
+  default_prompt: "Use $security-standard to review this authorized scope and validate findings before reporting them."

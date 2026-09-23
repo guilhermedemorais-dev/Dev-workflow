@@ -9,6 +9,7 @@ the next. It never writes product code itself; it routes work to executable capa
 | Skill | Role |
 | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer |
+| `dev-environment-standard` | Environment bootstrap / plugin health |
 | `sdd-spec-factory` | Requirements LLM / executable task |
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
@@ -27,6 +28,8 @@ Idea / demand
   -> short bootstrap: task_id + execution_contract_path
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
+  -> environment status: compatible fast path for required capabilities
+  -> dev-environment-standard prepare/repair only if a prerequisite is missing
   -> capability resolution + runtime availability check
   -> owner skill resolves tool registry + compatible local runtime state
   -> cached fast path or detect/install/verify/persist slow path
@@ -74,8 +77,10 @@ Idea / demand
   Operational approval requires target, impact, rollback and explicit human
   gates for production/destructive changes. Security retains IAM/secrets/TLS/
   firewall/public-port/privilege review and its scanners. If Environment is
-  present, it prepares prerequisites only; on the TASK-006 main baseline that
-  integration is pending NOT VALIDATED and must not be duplicated.
+  available in the runtime, it prepares prerequisites only. Both plugins are
+  included in this repository; runtime availability/authentication must be
+  checked separately, remaining NOT VALIDATED until evidenced. The bootstrap
+  layer must not be duplicated.
 
 - `sdd-spec-factory`: for COMPLEX work and NORMAL work whose behavior is not
   already specified. TRIVIAL work uses an inline intent contract.

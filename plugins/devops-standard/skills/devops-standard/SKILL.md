@@ -23,8 +23,9 @@ Source adaptation and local extensions are documented in [ORIGIN](references/ORI
   sensitive storage and cloud permissions; do not self-certify security findings.
 - `ui-ux-standard` owns visual work, never infrastructure operations.
 - `dev-environment-standard` (Environment Bootstrap), when actually available in the selected base/runtime,
-  detects/prepares tools and MCPs, never operates production. It is absent from
-  this implementation base: integration pending, **NOT VALIDATED**. Do not
+  detects/prepares tools and MCPs, never operates production. Both plugins are
+  included in this repository; host preparation and authentication remain
+  **NOT VALIDATED** until evidenced in the target runtime. Do not
   recreate it, its MCP Library, or claim preparation proves authentication.
   When available, route missing/broken prerequisites to selective prepare/repair,
   then resume the original DevOps checkpoint; do not run full doctor per task.

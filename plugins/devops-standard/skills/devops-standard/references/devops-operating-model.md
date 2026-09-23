@@ -24,8 +24,9 @@ Use the shared helper's compatible cached state; detect/verify when missing or
 stale. Install only the selected necessary tool via approved official method,
 with reviewed scope/privileges. Never install the whole registry or silently
 use sudo. Record failed installation without identical retry loops. Missing
-Environment Bootstrap means preparation through current supported helper only;
-its future integration remains pending NOT VALIDATED.
+Environment Bootstrap in the active runtime means preparation through the
+current supported helper only. When available, delegate selective prepare/repair
+to Environment, then resume DevOps; do not duplicate its bootstrap layer.
 
 Review infrastructure trust boundaries with security-standard. Keep scanners
 and their findings with that owner. MCP discovery/configuration is not connected

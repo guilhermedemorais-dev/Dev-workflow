@@ -1,0 +1,22 @@
+{
+  "name": "dev-environment-standard",
+  "version": "0.1.0",
+  "description": "Portable environment bootstrap and plugin health: diagnose, selectively prepare, repair and reuse verified local state.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Dev Environment Standard",
+    "shortDescription": "Diagnose and prepare the development environment.",
+    "longDescription": "Discover skills and their tool registries, diagnose plugin health, prepare only approved capabilities, preserve private MCP preferences and custom providers, and reuse compatible environment state. Does not provision infrastructure or implement product code.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": [
+      "Diagnose this Engineering Harness installation without changing the environment.",
+      "Prepare the approved capabilities required by this task.",
+      "Check cached environment status and repair only the failed component."
+    ]
+  }
+}

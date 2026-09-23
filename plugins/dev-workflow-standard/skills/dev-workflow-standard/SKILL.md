@@ -122,6 +122,7 @@ use a documentation-only or Git-only label to bypass this gate.
 | Skill | Role | Owns |
 | --- | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer | demand, diagnosis, planning, capability routing, execution state, handoff, validation, recovery, approval |
+| `dev-environment-standard` | Environment specialist | portable bootstrap, plugin health, MCP preparation, local environment state |
 | `sdd-spec-factory` | Requirements LLM | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
 | `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
@@ -417,6 +418,27 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 
 ## When to Trigger Each Specialist
 
+- API discovery during planning/spec: route relevant API, integration or
+  validation-endpoint needs to `sdd-spec-factory` and its
+  [API Research Library](../../../sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md).
+  Prioritize free APIs or a suitable free tier to validate application features
+  and test the application when relevant; confirm limits and use synthetic data.
+  That link is the monorepo source path. In an installed host, resolve the active
+  `sdd-spec-factory` skill and its `references/api-research-library.md`; do not
+  assume sibling plugin paths across versioned caches. If unavailable, report
+  the missing reference and use an explicitly available canonical checkout,
+  rather than pretending the installed skill contains it or auto-installing.
+  Research directories provide candidates, not runtime availability or automatic
+  approval. Require official-source checks, a recorded decision and validation
+  plan; skip this research for unrelated tasks. Keep sources outside MCP/tool
+  installation registries and preserve consent before external execution.
+
+- `dev-environment-standard`: use cached environment `status` for required
+  capabilities before execution. Route missing/broken prerequisites to targeted
+  `prepare`/`repair`, then retry the original owner skill. Do not run full doctor
+  for every task, infer connection from configuration, or install all tools.
+  This capability does not own product implementation or DevOps.
+
 - `devops-standard`: CI/CD, Docker/Compose, IaC, Kubernetes, GitOps, deploy,
   servers, cloud, observability, backup/restore, incidents and advanced
   Git/release strategy. Resolve its canonical skill, require a task and invoke
@@ -503,4 +525,6 @@ the `rework` label until corrected.
   `references/execution-report-comments.md`
 - Specialist-owned tool registries, local state, and fast/slow path:
   `references/skill-owned-tools.md`
-- End-to-end pipeline across all five skills: `docs/workflow-pipeline.md`
+- Portable environment bootstrap and MCP Library:
+  `plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md`
+- End-to-end pipeline across the specialist skills: `docs/workflow-pipeline.md`

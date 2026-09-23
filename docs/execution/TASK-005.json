@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-005",
+  "task_path": "docs/tasks/TASK-005-environment-bootstrap.md",
+  "goal": "Add portable capability-driven environment bootstrap and evidence-based plugin health",
+  "specs": ["docs/specs/environment-bootstrap/module-spec.md"],
+  "docs": ["AGENTS.md", "README.md", "docs/workflow-pipeline.md", "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/skill-owned-tools.md"],
+  "allowed_paths": [
+    "plugins/dev-environment-standard/**",
+    "plugins/dev-workflow-standard/scripts/tool-state.py",
+    "plugins/*/skills/*/SKILL.md",
+    "plugins/*/skills/*/agents/openai.yaml",
+    "plugins/*/skills/*/references/**",
+    "plugins/*/plugin.json",
+    "plugins/*/.codex-plugin/plugin.json",
+    "plugins/*/.claude-plugin/plugin.json",
+    ".codex-plugin/**", ".claude-plugin/**", ".agents/**",
+    "marketplace.json", "marketplaces/**",
+    "README.md", "AGENTS.md", ".gitignore",
+    "docs/workflow-pipeline.md", "docs/specs/environment-bootstrap/**",
+    "docs/tasks/TASK-005-environment-bootstrap.md", "docs/execution/TASK-005.json",
+    "tests/**"
+  ],
+  "out_of_scope": ["New DevOps features or infrastructure operations beyond preserving the approved PR25 integration", "product implementation", "automatic merge to main or deployment", "bulk installation", "unapproved optional installations"],
+  "requirements": [
+    "Implementation authorized; follow spec including all 30 test cases",
+    "Approved PR23 integration: merge origin/main aa389d9 into feature branch; preserve Environment and DevOps behavior; no merge to main or force push",
+    "One canonical environment plugin and stdlib CLI; extend existing tool-state helper",
+    "Dynamic skill and registry discovery; preserve specialist ownership",
+    "Doctor and dry-run write nothing; status checks conservatively without full discovery",
+    "Prepare and repair only approved selected components with policy/provenance verification",
+    "Separate public MCP library from private preferences/custom state and auth evidence",
+    "Use host-mediated MCP transport/auth; never infer connected or authenticated",
+    "No secrets or personal machine paths in versioned files",
+    "Preserve lockfiles, workspace cwd, local executable resolution and failing exit codes",
+    "README updated before commit; provide every required final report section"
+  ],
+  "acceptance_criteria": [
+    "Spec cases 1-30 pass with evidence", "All four operations implemented",
+    "Public catalog covers requested tiers/providers; unknown/community installation guarded",
+    "Preferences/custom MCPs persist privately without repeated unsolicited prompts",
+    "Plugin health detects invalid structure/references/registries and missing evidence",
+    "Existing tests pass and README gate remains effective"
+  ],
+  "required_tests": [
+    "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+    "git diff --check",
+    "JSON and manifest validation",
+    "environment CLI doctor/status smoke and prepare dry-run",
+    "security review of state, subprocesses, consent and authentication"
+  ],
+  "required_skills": [
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md",
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md",
+    "plugins/security-standard/skills/security-standard/SKILL.md"
+  ],
+  "required_validations": [
+    {"owner": "dev-implementation-standard", "capability": "python-unit-testing", "preferred_tool": "python-unittest"},
+    {"owner": "dev-implementation-standard", "capability": "environment-health", "preferred_tool": "environment-cli"},
+    {"owner": "dev-workflow-standard", "capability": "repository-integrity", "preferred_tool": "git-diff-check"},
+    {"owner": "security-standard", "capability": "local-bootstrap-security", "preferred_tool": "code-review"}
+  ],
+  "stop_conditions": ["scope_expansion_required", "source_of_truth_conflict", "mandatory_validation_failed", "unsafe_or_unapproved_installation"]
+}
