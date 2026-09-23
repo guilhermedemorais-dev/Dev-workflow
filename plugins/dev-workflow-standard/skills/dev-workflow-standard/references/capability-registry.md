@@ -22,6 +22,10 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | implementation | `dev-implementation-standard` with an authorized executor runtime | another authorized executor using the same task/spec contract | diff/files + commands + execution report |
 | UI/UX design and review | `ui-ux-standard` | none when UI validation is mandatory | design/review findings + validation evidence |
 | security review | `security-standard` | none when security trigger is mandatory | findings/coverage + disposition |
+| CI/CD, containers and operational config | `devops-standard` | approved project-native tool under the same owner | validated config/build + relevant runtime evidence |
+| IaC, Kubernetes, GitOps and cloud operations | `devops-standard` | approved project-native platform, no forced migration | scoped plan/render/dry-run + explicit human gate for mutation |
+| deploy, server administration and advanced Git/releases | `devops-standard` | manual authorized handoff if target cannot be verified | target, approval, rollback and post-change health |
+| observability, backup/DR and incidents | `devops-standard` | project-native runbook with same evidence requirements | checks, restore evidence or NOT VALIDATED, incident disposition |
 | repository operations | GitHub connector/tooling when available | local git tooling in the active workspace | remote/local state evidence |
 | deterministic repetitive operation | repository script/tool | approved equivalent tool | exit status + output |
 | provider failure recovery | replacement authorized LLM/runtime | none if no compatible provider exists | `EXECUTION_HANDOFF` + resumed result |
@@ -59,6 +63,22 @@ If the desired capability is not actually available, do not pretend it ran. Use
 the fallback policy or block explicitly.
 
 ## Specialist Trigger Summary
+
+### DevOps and environment boundary
+
+Invoke `devops-standard` for operational infrastructure, not ordinary source
+edits or a basic git status/diff/fetch/commit/PR. Advanced Git history rewriting,
+release policy/tags and GitOps require DevOps. Application code stays with
+implementation. AppSec/scanners remain with security; IAM, secrets, TLS,
+firewall, public ports and elevated privilege mandate its review.
+
+When `dev-environment-standard` exists and is available, it detects/prepares
+missing tools/MCPs and returns to DevOps for operations. It never operates
+production. Both plugins are included in this repository; runtime availability
+and authentication require separate evidence. If unavailable, use `tool-state.py` with an
+explicit owner-selected, approved official install only if necessary, not a
+replacement bootstrapper/MCP catalog. Do not confuse registered/configured,
+installed, connected, authenticated and successfully executed capabilities.
 
 ### UI/UX
 

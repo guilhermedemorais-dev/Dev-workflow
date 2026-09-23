@@ -127,6 +127,7 @@ use a documentation-only or Git-only label to bypass this gate.
 | `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
 | `security-standard` | Security specialist LLM | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
+| `devops-standard` | DevOps specialist | CI/CD, infrastructure, advanced releases, deployment operations, recovery and operational validation |
 
 This skill coordinates them. It does not absorb their responsibilities.
 
@@ -139,7 +140,7 @@ standard without a primary source.
   disclosure, real tool execution, inspectable output, feedback loops,
   mechanical validation, and recovery.
 - **Local architectural decisions:** the orchestrator agent does not write
-  product code; the five specialist skills remain independent; the six-column
+  product code; the specialist skills remain independent; the six-column
   Kanban model and declared human gates remain project policy.
 - **Local extensions:** `EXECUTION_RECEIPT`, `EXECUTION_REPORT_COMMENT`,
   `SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`,
@@ -437,6 +438,18 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
   `prepare`/`repair`, then retry the original owner skill. Do not run full doctor
   for every task, infer connection from configuration, or install all tools.
   This capability does not own product implementation or DevOps.
+
+- `devops-standard`: CI/CD, Docker/Compose, IaC, Kubernetes, GitOps, deploy,
+  servers, cloud, observability, backup/restore, incidents and advanced
+  Git/release strategy. Resolve its canonical skill, require a task and invoke
+  it using the same execution contract and receipt. Basic status/diff/fetch,
+  ordinary commit/push and PR work remain Harness/executor responsibilities.
+  Security still owns scanners and security findings. Production/destructive
+  actions require explicit target-specific human approval and rollback review.
+  If Environment is available, route missing prerequisites to its selective
+  prepare/repair, then return to DevOps. On bases without Environment, use
+  the existing tool-state helper only; mark integration pending NOT VALIDATED.
+  Do not synthesize another Environment plugin or MCP Library.
 
 - `sdd-spec-factory`: required for COMPLEX work and for NORMAL work whose
   behavior is not already specified. TRIVIAL work uses the inline intent

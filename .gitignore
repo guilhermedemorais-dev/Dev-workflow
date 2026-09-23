@@ -2,3 +2,6 @@
 plugins/*/skills/*/runtime-state/
 # Local environment preferences, approvals and sanitized host evidence.
 runtime-state/
+# Python verification generates bytecode, not delivery artifacts.
+__pycache__/
+*.pyc

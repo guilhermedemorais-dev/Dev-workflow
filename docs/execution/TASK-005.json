@@ -21,9 +21,10 @@
     "docs/tasks/TASK-005-environment-bootstrap.md", "docs/execution/TASK-005.json",
     "tests/**"
   ],
-  "out_of_scope": ["DevOps and infrastructure", "product implementation", "automatic merge or deployment", "bulk installation", "unapproved optional installations"],
+  "out_of_scope": ["New DevOps features or infrastructure operations beyond preserving the approved PR25 integration", "product implementation", "automatic merge to main or deployment", "bulk installation", "unapproved optional installations"],
   "requirements": [
     "Implementation authorized; follow spec including all 30 test cases",
+    "Approved PR23 integration: merge origin/main aa389d9 into feature branch; preserve Environment and DevOps behavior; no merge to main or force push",
     "One canonical environment plugin and stdlib CLI; extend existing tool-state helper",
     "Dynamic skill and registry discovery; preserve specialist ownership",
     "Doctor and dry-run write nothing; status checks conservatively without full discovery",

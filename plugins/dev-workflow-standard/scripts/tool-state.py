@@ -197,6 +197,8 @@ def record_failure(owner, tool_id, workspace, reason):
 
 
 def run(owner, tool_id, workspace, args, required_version=None, *, quiet=False):
+    if not Path(workspace).is_dir():
+        return {"status": "invalid_workspace", "reason": "workspace must be an existing directory"}
     entry = cached(owner, tool_id, workspace, required_version)
     source = "cached-installed"
     if entry is None:
@@ -283,7 +285,7 @@ def main():
     if result and result.get("status") == "executed":
         code = result["exit_code"]
         return code if code >= 0 else 128 - code
-    return 0 if result and result.get("status") not in ("missing", "stale", "incompatible", "install_failed", "retry_deferred") else 2
+    return 0 if result and result.get("status") not in ("missing", "stale", "incompatible", "install_failed", "retry_deferred", "invalid_workspace") else 2
 
 
 if __name__ == "__main__":

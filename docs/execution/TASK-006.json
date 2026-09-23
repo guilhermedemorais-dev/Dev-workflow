@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-006",
+  "task_path": "docs/tasks/TASK-006-devops-standard.md",
+  "goal": "Integrate a native DevOps specialist into the existing Engineering Harness",
+  "specs": ["docs/specs/devops-standard/module-spec.md"],
+  "docs": ["AGENTS.md", "README.md", "docs/workflow-pipeline.md", "docs/specs/devops-standard/review-checklist.md"],
+  "allowed_paths": ["plugins/devops-standard/**", "plugins/dev-workflow-standard/**", "plugins/sdd-spec-factory/**", "plugins/dev-implementation-standard/**", "plugins/security-standard/**", ".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json", "tests/**", "README.md", "AGENTS.md", ".gitignore", "docs/**"],
+  "out_of_scope": ["production operations", "automatic merge or deploy", "global installation", "duplicate Environment or MCP library", "copying restricted devops-review"],
+  "requirements": ["pinned honest provenance and applicable notices", "reuse existing helper and receipts", "20 specialist-owned tools without duplicate security tools", "conditional SDD and capability routing", "human approval for destructive operations", "Environment absent means pending NOT VALIDATED"],
+  "acceptance_criteria": ["module spec criteria satisfied", "valid manifests and marketplace paths", "at least 30 relevant checks including harmless fixtures", "README reflects actual integration", "all required local checks pass"],
+  "required_tests": ["python3 -m unittest discover -s tests -v", "git diff --check", "plugin and skill validators", "JSON parsing"],
+  "required_skills": ["plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md", "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md", "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md", "plugins/security-standard/skills/security-standard/SKILL.md"],
+  "required_validations": [{"owner": "dev-implementation-standard", "capability": "python-unit-testing", "preferred_tool": "python-unittest"}, {"owner": "security-standard", "capability": "operational-safety-review"}],
+  "stop_conditions": ["scope_expansion_required", "source_of_truth_conflict", "mandatory_validation_failed", "production_authority_required", "required_skill_unavailable"]
+}

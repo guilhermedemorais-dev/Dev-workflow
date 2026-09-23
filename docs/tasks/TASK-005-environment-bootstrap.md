@@ -1,5 +1,37 @@
 # TASK-005: Environment Bootstrap / Plugin Health
 
+## Adendo autorizado: resolver conflitos PR #23
+
+Usuário autorizou integrar a main `aa389d9` na branch `feat/environment-bootstrap`
+após PR #25, preservando ambas as entregas. Complexidade NORMAL, continuidade
+da mesma task/Issue #22, sem nova feature. Sete conflitos identificados antes
+da execução; não usar ours/theirs indiscriminadamente, force push ou merge na main.
+Preservar descoberta dinâmica/read-only/quiet/cache do Environment, o owner
+DevOps, workspace inválido e exit codes; preservar MCPs e biblioteca de APIs.
+Escopo: resolução nos arquivos compartilhados, correção de documentação que
+ficaria contraditória e testes de regressão/integridade combinada. Locked paths:
+configurações globais, infraestrutura, dados e novas funcionalidades fora dessas
+duas entregas. Aceite: suíte combinada passa, plugins/marketplaces válidos,
+nenhum marcador, HEAD remoto confirmado e PR #23 sem conflito.
+Estado: validação local concluída; publicação da branch e estado remoto são
+confirmados separadamente no checkpoint da Issue #22.
+
+Evidências da integração PR #23 / PR #25, 2026-09-23:
+- Executor aplicou o contrato TASK-005 e a skill de implementação canônica;
+  Harness e DevOps conduziram revisão e preservação dos gates.
+- Sete conflitos resolvidos sem descartar nenhuma entrega. Helper preserva
+  descoberta dinâmica, cache sanitizado, read-only/quiet, workspace e exit codes.
+- Suíte combinada: 441 testes passaram, incluindo quatro novos testes reais
+  de integração Environment/registro DevOps, sem infraestrutura externa.
+- Validadores dos dois plugins e das duas skills: exit 0.
+- Doctor/status/prepare dry-run: exit 0, sem instalações; health DEGRADED,
+  status ready=false/refresh_required=true pela ausência de evidência de runtime.
+- Hostinger/AWS/WordPress preservados em USER_ACTION_REQUIRED; biblioteca de
+  APIs gratuitas para validação/testes preservada. Nenhuma autenticação inferida.
+- Revisão encontrou IDs Mermaid duplicados no README; separados Environment
+  e DevOps. Documentação operacional atualizada sem reescrever auditorias históricas.
+- Sem merge na main, force push, instalação global ou operação de infraestrutura.
+
 ## Adendo autorizado: biblioteca de pesquisa de APIs
 
 Correção textual autorizada pelo usuário: tornar explícita na biblioteca,

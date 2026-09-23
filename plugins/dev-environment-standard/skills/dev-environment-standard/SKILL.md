@@ -124,6 +124,6 @@ review and stay local even after approval.
 
 Advanced Git workflows, protections, CI/CD, Actions/GitLab/Jenkins, deploy,
 SSH/VPS/cloud, Kubernetes/Terraform/Ansible, reverse proxies/Nginx, production
-Docker and infrastructure observability belong to future `devops-standard`.
+Docker and infrastructure observability belong to `devops-standard`.
 Git detection and GitHub collaboration remain in scope. Application debugging
 with Sentry is distinct from provisioning infrastructure.

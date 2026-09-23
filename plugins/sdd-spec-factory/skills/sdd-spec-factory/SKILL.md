@@ -151,6 +151,14 @@ Consolidate the closed scope (becomes the basis of the product/module spec):
 
 ### Fase 2 - Geração de Specs
 
+When the requested surface includes CI/CD, containers, IaC, servers, deployment,
+cloud, GitOps, observability, backup/DR, incidents or advanced release strategy,
+load [DevOps planning](references/devops-planning.md) and add
+`devops-standard` to the required skills. Identify target_environment,
+validation, rollback_strategy and human gates in the spec/task. Do not add
+DevOps to unrelated application changes, UI-only work or routine Git commits.
+Keep tool availability, logs and installation state out of the lean contract.
+
 Generate the specs the request needs, following the hierarchy:
 
 - Create specs per module, page/screen, component and rule.

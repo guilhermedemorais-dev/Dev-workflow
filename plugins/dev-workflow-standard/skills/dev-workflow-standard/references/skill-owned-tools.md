@@ -13,6 +13,20 @@ PATH resolution, and verify/install/run operate in the requested workspace.
 CLI run preserves the tool's failing exit code; `--quiet` suppresses tool output
 when a consumer needs only the compact receipt. Do not publish raw tool logs.
 
+`devops-standard` owns operational tooling through its own registry. Git and gh
+remain usable for basic Harness/executor repository work; registry ownership
+does not force a DevOps handoff for a normal commit. Terraform and OpenTofu are
+alternatives, not a requirement to install both. `act` is optional and runs real
+workflow steps: never treat it as an inert YAML parser. No security scanners
+are duplicated in the DevOps registry.
+
+The helper is an execution/cache utility, not a production authorization
+firewall. The owner must enforce task and human gates before calling `run` or
+`install`. For composite tools supply the subcommand explicitly, e.g. registry
+`docker-compose` verifies `docker compose version`, while a run receives
+`-- compose config --quiet`. The workspace selects execution cwd; the CLI must
+preserve a failing tool exit status so validation cannot silently pass.
+
 Each specialist keeps versioned knowledge in `references/tool-registry.json`.
 The registry lists capability, official repository, executable, verification,
 and installation policy. It is an initial catalog, not a closed whitelist.
