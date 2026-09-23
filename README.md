@@ -4,6 +4,15 @@ Conjunto de plugins e skills para orquestrar engenharia de software como um **En
 
 O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
+## Indice
+
+- [Plugins](#plugins) e [arquitetura](#arquitetura-do-engineering-harness)
+- [Engineering Harness](#dev-workflow-standard-engineering-harness)
+- [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
+- [UI/UX](#uiux-standard), [Security](#security-standard) e [SDD](#sdd-spec-factory)
+- [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
+- [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
+
 ## Camada Global
 
 O repositorio tambem inclui o `parceiro-estrategico-global`, uma camada geral e opcional acima dos fluxos especializados. Ela nao mantem um catalogo fixo de plugins. Em cada demanda, identifica a capacidade necessaria, verifica o que realmente esta disponivel no runtime e roteia para a skill, plugin, conector, MCP, ferramenta ou agente mais adequado.
@@ -54,7 +63,7 @@ gates significa `NOT READY TO COMMIT`.
 
 Praticas consolidadas sustentam o repositorio como fonte de verdade, progressive
 disclosure, uso de ferramentas reais, feedback loops e validacao mecanica. A
-separacao em cinco skills, os gates humanos e os nomes `EXECUTION_RECEIPT`,
+separacao em skills independentes, os gates humanos e os nomes `EXECUTION_RECEIPT`,
 `EXECUTION_REPORT_COMMENT`, `SKILL_RECEIPT`, `REUSE_INVENTORY`,
 `MINIMAL_CODE_GATE` e `EXECUTION_HANDOFF` sao decisoes ou extensoes locais
 deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
@@ -64,6 +73,14 @@ deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
 
 ```text
 plugins/
+  devops-standard/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    THIRD_PARTY_NOTICES.md
+    skills/devops-standard/SKILL.md
+    skills/devops-standard/references/
+    skills/devops-standard/templates/
   parceiro-estrategico-global/
     .codex-plugin/plugin.json
     .claude-plugin/plugin.json
@@ -123,6 +140,7 @@ Engineering Harness
       +--> dev-implementation-standard
       +--> ui-ux-standard
       +--> security-standard
+      +--> devops-standard
       +--> plugins / MCPs / CLIs / scripts / executor LLM
                      |
                      v
@@ -146,6 +164,7 @@ flowchart TD
     B --> D[Implementation]
     B --> E[UI / UX]
     B --> F[Security]
+    B --> H[DevOps]
     B --> G[Tools / MCP / Plugins]
 ```
 
@@ -164,6 +183,7 @@ hierarquica e uma decisao arquitetural local deste projeto.
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
 | `security-standard` | LLM especialista em seguranca |
+| `devops-standard` | Especialista em CI/CD, infraestrutura, operacoes, releases e recuperacao |
 
 Pipeline de ponta a ponta:
 
@@ -386,7 +406,7 @@ O contrato completo esta em
 ## Skill-Owned Tool Registry
 
 O Harness roteia `capability -> skill responsavel`. As skills
-`security-standard`, `ui-ux-standard` e `dev-implementation-standard` mantem
+`security-standard`, `ui-ux-standard`, `dev-implementation-standard` e `devops-standard` mantem
 seus proprios `references/tool-registry.json`, com capabilities, ferramenta
 preferencial, repositorio oficial e forma de verificacao. O registry e
 conhecimento permanente e versionado. A lista inicial nao e fechada.
@@ -433,6 +453,7 @@ O harness usa um registro de capacidades para escolher o executor correto e, qua
 - implementacao -> `dev-implementation-standard` + executor autorizado
 - UI/UX -> `ui-ux-standard`
 - seguranca -> `security-standard`
+- CI/CD, infra, operacoes, releases avancados e recuperacao -> `devops-standard`
 - operacoes de repositorio -> GitHub connector/tooling ou git local aprovado
 - operacoes deterministicas -> scripts/tools do repositorio
 - falha de provider -> `EXECUTION_HANDOFF` para outro runtime autorizado
@@ -711,7 +732,100 @@ precisa ser registrada com justificativa no resultado da task.
 O template de relatorio de execucao fica em
 `plugins/dev-implementation-standard/templates/execution-report-template.md`.
 
+## DevOps Standard
+
+Especialista operacional integrado ao mesmo Engineering Harness, nao um segundo
+orquestrador. O Harness coordena; SDD define o contrato; implementation cuida do
+codigo de aplicacao; DevOps cuida de CI/CD, containers, deploy, servidores, IaC,
+Kubernetes, GitOps, cloud, observabilidade, backup/DR e incidentes. Git basico
+(status, diff, fetch, commit e PR) continua no Harness/executor. Estrategia de
+release, tags e reescrita de historico exigem o especialista DevOps.
+
+### Uso, ferramentas e validacao
+
+Acione `$devops-standard` em uma task operacional aprovada. A skill carrega
+somente as referencias do dominio necessario e prefere a stack existente,
+inclusive Compose, Coolify e Portainer. Nao exige Kubernetes nem uma cloud.
+Seu [registry](plugins/devops-standard/skills/devops-standard/references/tool-registry.json)
+avalia 20 tools: git, gh, docker, docker compose, terraform, tofu, ansible,
+ansible-lint, kubectl, helm, kustomize, argocd, flux, actionlint, act, hadolint,
+tflint, kubeconform, shellcheck e promtool. Terraform/Tofu sao alternativas;
+act e opcional. Scanners permanecem no registry de security-standard.
+
+O helper existente detecta/verifica/cacheia tools, nunca instala implicitamente:
+
+```bash
+python3 plugins/dev-workflow-standard/scripts/tool-state.py devops-standard git detect --workspace .
+python3 plugins/dev-workflow-standard/scripts/tool-state.py devops-standard git run --workspace . -- --version
+python3 plugins/dev-workflow-standard/scripts/tool-state.py devops-standard docker-compose run --workspace . -- compose version
+```
+
+Esses comandos verificam CLI, nao provam acesso, autenticacao nem prontidao de
+producao. Estado fica em `runtime-state/tool-state.json`, ignorado pelo Git;
+plugins instalados separadamente usam os overrides pareados documentados em
+[skill-owned-tools](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/skill-owned-tools.md).
+O helper respeita o cwd de `--workspace` e propaga falhas da ferramenta.
+
+| Dominio | Caminho de validacao, quando aplicavel |
+| --- | --- |
+| CI/CD | YAML/config e actionlint; act opcional em workflow isolado |
+| Docker/Compose | Hadolint, build, smoke/health isolado; compose config |
+| IaC | fmt/check, init seguro, validate, plan revisado; nunca apply como teste |
+| Kubernetes/GitOps | render, schema, dry-run contextual, review; sync e mutacao separados |
+| Ansible/servidores | lint, syntax/check com limites; backup config, validador, reload aprovado, health |
+| Observabilidade | promtool config/rules e validadores nativos Grafana/OTel |
+| Backup/DR | BACKUP_CREATED, RESTORE_NOT_VALIDATED e RESTORE_VALIDATED separados |
+
+Falha exige analisar, corrigir em escopo e revalidar, preservando evidencias
+iniciais/finais. Finding candidato precisa ser confirmado, rejeitado ou N/A,
+com evidencia, impacto, acao e validacao. Usam-se os mesmos SKILL_RECEIPT,
+EXECUTION_RECEIPT e EXECUTION_REPORT_COMMENT, sem recibo paralelo. A SDD inclui
+owner/capability/preferred_tool apenas em tasks operacionais, sem logs ou estado
+de instalacao no contrato.
+
+### Seguranca e aprovacao humana
+
+DevOps nao substitui security-standard: IAM, secrets, TLS, firewall, portas
+publicas, privilegios, storage sensivel e permissoes cloud exigem essa revisao.
+Antes de operacao arriscada, identificar alvo, impacto e rollback_strategy.
+Deploy em producao, migracao destrutiva, firewall/DNS destrutivo, apply/destroy,
+force push/reset destrutivo, restore de banco producao, exclusao de cluster,
+reboot e rotacao de segredos exigem aprovacao humana explicita. Declarar quando
+rollback nao e possivel. Um plano ou healthcheck isolado nao autoriza producao.
+
+### Environment e proveniencia
+
+Na base da TASK-006 (`83e1c72`), Environment Bootstrap ainda esta no PR #23,
+fora da main. Integracao pendente **NOT VALIDATED**: se estiver disponivel,
+Environment prepara ferramentas/MCPs e devolve para DevOps operar. Se ausente,
+usar o helper existente, sem recriar Environment nem MCP Library. Este plugin
+nao foi instalado globalmente nem substitui automaticamente caches antigos.
+
+Foram auditadas as fontes indicadas e selecionadas adaptacoes MIT de CI/CD e
+HA/DR na origem `vasilyu1983/AI-Agents-public`, com revisoes exatas e avisos em
+[ORIGIN](plugins/devops-standard/skills/devops-standard/references/ORIGIN.md)
+e [THIRD_PARTY_NOTICES](plugins/devops-standard/THIRD_PARTY_NOTICES.md).
+O material `devops-review` marcado restricted/NOASSERTION nao foi copiado:
+a revisao foi escrita a partir dos requisitos, das regras locais e de fontes
+oficiais. Templates sao pontos de partida revisaveis, nao scripts automaticos.
+
+Verificacao local do pacote, sem infraestrutura de producao:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+git diff --check
+```
+
+Consulte [TASK-006](docs/tasks/TASK-006-devops-standard.md) para comandos,
+resultados, limites de validacao e entrega. Testes de fixtures/estrutura nao
+comprovam deploy real, restore, autenticacao cloud ou instalacao em outro host.
+
 ## Instalacao
+
+Plugins ainda em PR so ficam disponiveis no marketplace remoto `main` depois
+do merge. Antes disso, teste a copia local ou selecione explicitamente a branch
+de revisao. DevOps precisa do Harness atualizado com suporte ao novo owner no
+helper; instalar somente o bundle novo nao atualiza um cache antigo do Harness.
 
 ### Codex
 
@@ -730,6 +844,7 @@ codex plugin add ui-ux-standard@guilherme-dev-workflow
 codex plugin add security-standard@guilherme-dev-workflow
 codex plugin add sdd-spec-factory@guilherme-dev-workflow
 codex plugin add dev-implementation-standard@guilherme-dev-workflow
+codex plugin add devops-standard@guilherme-dev-workflow
 ```
 
 ### Claude Code
@@ -749,6 +864,7 @@ Instalar os plugins:
 /plugin install security-standard@guilherme-dev-workflow
 /plugin install sdd-spec-factory@guilherme-dev-workflow
 /plugin install dev-implementation-standard@guilherme-dev-workflow
+/plugin install devops-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
@@ -759,7 +875,8 @@ claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/ui-ux-standard \
   --plugin-dir ./plugins/security-standard \
   --plugin-dir ./plugins/sdd-spec-factory \
-  --plugin-dir ./plugins/dev-implementation-standard
+  --plugin-dir ./plugins/dev-implementation-standard \
+  --plugin-dir ./plugins/devops-standard
 ```
 
 ### Antigravity
@@ -792,6 +909,7 @@ cp -a plugins/ui-ux-standard ~/plugins/
 cp -a plugins/security-standard ~/plugins/
 cp -a plugins/sdd-spec-factory ~/plugins/
 cp -a plugins/dev-implementation-standard ~/plugins/
+cp -a plugins/devops-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao
@@ -837,6 +955,7 @@ Para conhecer todas as regras, consulte diretamente:
 - [`dev-implementation-standard/SKILL.md`](plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md)
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)
 - [`security-standard/SKILL.md`](plugins/security-standard/skills/security-standard/SKILL.md)
+- [`devops-standard/SKILL.md`](plugins/devops-standard/skills/devops-standard/SKILL.md)
 - [`workflow-pipeline.md`](docs/workflow-pipeline.md)
 - [`harness-execution.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md)
 - [`capability-registry.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md)

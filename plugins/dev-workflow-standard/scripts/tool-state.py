@@ -13,7 +13,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[3]
-OWNERS = {"security-standard", "ui-ux-standard", "dev-implementation-standard"}
+OWNERS = {"security-standard", "ui-ux-standard", "dev-implementation-standard", "devops-standard"}
 
 
 def paths(owner):
@@ -128,6 +128,8 @@ def record_failure(owner, tool_id, workspace, reason):
 
 
 def run(owner, tool_id, workspace, args, required_version=None):
+    if not Path(workspace).is_dir():
+        return {"status": "invalid_workspace", "reason": "workspace must be an existing directory"}
     entry = cached(owner, tool_id, workspace, required_version)
     source = "cached-installed"
     if entry is None:
@@ -139,7 +141,7 @@ def run(owner, tool_id, workspace, args, required_version=None):
         invalidate(owner, tool_id, workspace, "incompatible required version")
         return {"status": "incompatible", "tool_state_source": source}
     try:
-        result = subprocess.run([entry["executable"], *args], check=False)
+        result = subprocess.run([entry["executable"], *args], check=False, cwd=workspace)
     except FileNotFoundError:
         invalidate(owner, tool_id, workspace, "executable disappeared during execution")
         return {"status": "stale", "tool_state_source": source}
@@ -201,7 +203,10 @@ def main():
                      tool_args[1:] if tool_args[:1] == ["--"] else tool_args,
                      opts.required_version)
     print(json.dumps(result or {"status": "unknown"}, sort_keys=True))
-    return 0 if result and result.get("status") not in ("missing", "stale", "incompatible", "install_failed", "retry_deferred") else 2
+    if result and result.get("status") == "executed":
+        code = result["exit_code"]
+        return code if code >= 0 else 128 - code
+    return 0 if result and result.get("status") not in ("missing", "stale", "incompatible", "install_failed", "retry_deferred", "invalid_workspace") else 2
 
 
 if __name__ == "__main__":

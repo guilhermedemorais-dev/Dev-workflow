@@ -89,6 +89,14 @@
         "task",
         "pr"
       ]
+    },
+    {
+      "name": "devops-standard",
+      "source": "./plugins/devops-standard",
+      "description": "Governed DevOps specialist: CI/CD, infrastructure, releases, validation and rollback.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["devops", "infrastructure", "ci-cd", "operations"]
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "name": "devops-standard",
+  "version": "0.1.0",
+  "description": "Governed DevOps specialist for CI/CD, infrastructure, releases and operational validation.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "interface": {
+    "displayName": "DevOps Standard",
+    "shortDescription": "Validate infrastructure and releases with human gates.",
+    "longDescription": "DevOps specialist integrated with Engineering Harness: project-native operations, specialist-owned tools, safe validation, rollback and evidence. Does not authorize production changes or replace security review.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": ["Use DevOps Standard to review this infrastructure change and its rollback plan."]
+  }
+}

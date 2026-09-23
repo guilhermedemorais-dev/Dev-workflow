@@ -1,0 +1,11 @@
+# Original static-validation fixture. No ports, mounts, secrets or build steps.
+# Use only `docker compose -f ... config --quiet`; do not start/pull this service.
+name: devops-contract-fixture
+services:
+  example:
+    image: example.invalid/never-pull/static-fixture:validation-only
+    network_mode: none
+    read_only: true
+    user: "65534:65534"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]

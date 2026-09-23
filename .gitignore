@@ -1,2 +1,5 @@
 # Runtime-specific skill tool observations; never commit machine paths or versions.
 plugins/*/skills/*/runtime-state/
+# Python verification generates bytecode, not delivery artifacts.
+__pycache__/
+*.pyc

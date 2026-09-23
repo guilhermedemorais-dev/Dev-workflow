@@ -1,0 +1,9 @@
+{
+  "name": "devops-standard",
+  "version": "0.1.0",
+  "description": "Project-native DevOps operations, validation, rollback and human safety gates.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "skills": "./skills/"
+}

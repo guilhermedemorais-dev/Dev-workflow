@@ -42,6 +42,13 @@ tests, mocks, local fixtures, or an isolated environment.
 
 ## Relationship To The Main Workflow
 
+`devops-standard` owns operational infrastructure and reliability validation,
+not AppSec, SAST/DAST or security scanner interpretation. Review its IAM,
+secrets, TLS, firewall, public ports, elevated privileges, sensitive storage and
+cloud permissions whenever those surfaces change. Keep scanner tools in this
+skill's registry; DevOps hands security candidates here for confirmation and
+the existing publication gate. Its healthcheck is not a security approval.
+
 `dev-workflow-standard` owns the project lifecycle and final delivery status.
 This plugin owns security analysis and returns evidence, findings, fixes, tests,
 and a `SECURITY_STATUS`.
