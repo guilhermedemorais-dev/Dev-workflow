@@ -189,3 +189,21 @@ respeite o setor atribuído e registre evidências nesta Task.
 ## Aceite Humano
 Pedido autoriza implementação especificada e commit após PASS local. Aceite da
 entrega, push, PR, merge, deploy e instalação global não presumidos.
+
+### Autorização posterior: documentação e publicação da branch
+
+Após a entrega local, o usuário solicitou o guia de arquitetura/contribuição,
+o prompt de instalação assistida no README e, explicitamente, commit e push
+das atualizações. Esta autorização substitui a restrição anterior de push
+somente para publicar `feat/sector-context-qa`; não autoriza merge, deploy,
+instalação global nem integração das branches Security/UI anteriores.
+
+Checkpoint de publicação, owner dev-workflow-standard, executor root:
+- Fontes: pedido atual, README/diff, esta Task, skill canônica, Git local/remoto.
+- Escopo novo: README.md e este registro; demais arquivos e branches protegidos.
+- Resultado: documentação de arquitetura, contribuição e prompt conferida.
+- Validação: `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -q`,
+  490 PASS, 11.594s, exit 0; `git diff --check`, exit 0.
+- Fetch confirmou main em 59e6275; a branch de entrega ainda não existia no remoto.
+- Gate: PASS para commit e push normal, sem force; confirmação do SHA remoto
+  será registrada na Issue após o envio. Publicação não equivale a merge.

@@ -4,8 +4,68 @@ Conjunto de plugins e skills para orquestrar engenharia de software como um **En
 
 O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
+## Instale com sua LLM
+
+**Copie o prompt abaixo e cole no agente que voce usa para desenvolver.**
+Ele orienta o agente a executar a instalacao, nao apenas listar comandos.
+O agente precisa ter acesso ao terminal e aos arquivos do seu ambiente;
+um chat sem essas ferramentas so consegue orientar. Autenticacoes e aprovacoes
+do host continuam com voce.
+
+```text
+Instale e configure o Engineering Harness deste repositorio no meu ambiente:
+https://github.com/guilhermedemorais-dev/Dev-workflow
+
+Quero que voce execute a instalacao assistida, nao apenas me entregue um tutorial.
+
+1. Identifique meu sistema operacional, o host de agentes que estou usando e
+   as instalacoes existentes. Se nao conseguir identificar o host ou o destino,
+   pergunte. Nao presuma caminhos, comandos ou suporte a plugins.
+2. Consulte a branch main atual do repositorio. Leia README.md, AGENTS.md e as
+   skills canonicas dev-workflow-standard e dev-environment-standard, incluindo
+   as referencias exigidas para instalacao. Confira manifests e marketplaces.
+   Nao use branches nao publicadas sem minha escolha explicita.
+3. Reutilize um checkout existente se for adequado, preservando alteracoes
+   locais. Se precisar baixar o repositorio, use uma pasta nova e informe o
+   destino. Nao sobrescreva configuracoes, plugins ou arquivos meus.
+4. Resolva o procedimento de instalacao suportado pela versao real do meu host,
+   usando sua ajuda local e documentacao oficial quando necessario. Prefira o
+   marketplace quando suportado. Nao invente um instalador ou outro bootstrap.
+5. Apresente um plano curto com plugins disponiveis nessa revisao, dependencias,
+   destinos e alteracoes de configuracao. Proponha o conjunto de software
+   delivery disponivel, mantendo a camada global como opcional. Peca minha
+   confirmacao do conjunto e do escopo local ou global antes de instalar.
+6. Depois da confirmacao, execute as acoes aprovadas e verifique cada resultado.
+   Use o Environment Bootstrap existente para requisitos ausentes, com preparo
+   seletivo. Nao instale todos os MCPs, scanners, runtimes ou ferramentas do
+   catalogo. Mudancas privilegiadas ou fora do plano exigem nova aprovacao.
+7. Pergunte quais integracoes opcionais preciso. Hostinger, AWS e WordPress
+   somente quando solicitados e com conta/site e permissoes definidos. Nunca
+   peca tokens, senhas ou cookies no chat; conduza login pelo fluxo seguro do
+   host. Nao autorize cobrancas, deploy, DNS ou publicacao por instalar um MCP.
+8. Confirme quais plugins o host realmente reconhece e qual revisao esta ativa.
+   Rode as verificacoes locais aplicaveis e um teste minimo, sem efeitos
+   externos, de descoberta/carregamento da skill. Se exigir reiniciar ou abrir
+   uma nova sessao, explique e deixe essa verificacao pendente ate ser feita.
+9. Entregue um resumo: instalado e verificado, pendencias, comandos executados,
+   caminhos alterados e como comecar a usar. Diferencie estrutura valida,
+   plugin carregado e MCP autenticado. Nao declare sucesso sem evidencia.
+
+Se faltar permissao ou ferramenta para executar, diga exatamente o bloqueio
+e a menor acao que preciso fazer. Nao altere codigo do meu projeto, nao faca
+commit/push e nao remova instalacoes existentes durante esse processo.
+```
+
+Quer apenas usar os plugins? Comece pelo prompt acima. Quer alterar o projeto
+ou contribuir? Continue no [guia do desenvolvedor](#comece-aqui-desenvolvedores).
+A [instalacao manual](#instalacao) permanece disponivel como referencia.
+
 ## Indice
 
+- [Instale com sua LLM](#instale-com-sua-llm)
+- [Comece aqui: desenvolvedores](#comece-aqui-desenvolvedores)
+- [Desenvolvimento local e testes](#desenvolvimento-local-e-testes)
+- [Mapa tecnico e fontes de verdade](#mapa-tecnico-e-fontes-de-verdade)
 - [Plugins](#plugins) e [arquitetura](#arquitetura-do-engineering-harness)
 - [Engineering Harness](#dev-workflow-standard-engineering-harness)
 - [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
@@ -13,6 +73,155 @@ O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel c
 - [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
 - [Setores e Context Routing](#setores-e-context-routing) e [QA independente](#qa-testing-standard)
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
+- [Como contribuir](#como-contribuir)
+- [Diagnostico para colaboradores](#diagnostico-para-colaboradores)
+
+## Comece aqui: desenvolvedores
+
+Este repositorio entrega **instrucoes versionadas para agentes, adaptadores de
+plugins, templates e utilitarios Python**. Nao e uma aplicacao web, um servidor
+MCP unico nem um servico que executa sozinho. O agente no host le as skills,
+usa ferramentas autorizadas e devolve evidencias; o Harness governa esse fluxo.
+
+Voce pode contribuir sem instalar todos os plugins ou conectar contas cloud.
+Para entender o projeto, siga esta ordem:
+
+1. Leia [AGENTS.md](AGENTS.md), o mapa de responsabilidades e regras locais.
+2. Execute os testes abaixo para conhecer o baseline do seu checkout.
+3. Leia a [arquitetura](#arquitetura-do-engineering-harness) e o
+   [pipeline](docs/workflow-pipeline.md).
+4. Escolha o componente no mapa tecnico e leia seu `SKILL.md` completo;
+   carregue referencias conforme o assunto da mudanca.
+5. Consulte o [exemplo de Task](docs/examples/sector-context-qa/TASK-EXAMPLE.md)
+   e seu [contrato JSON](docs/examples/sector-context-qa/execution-contract.json).
+   Sao exemplos sinteticos, nao funcionalidades de uma aplicacao entregue.
+6. Siga [Como contribuir](#como-contribuir) antes de implementar e abrir um PR.
+
+O README descreve a revisao em que esta versionado. Conteudo de uma branch de
+trabalho pode ainda nao existir na `main` ou no plugin instalado. Confira a
+branch, o commit e a origem do pacote ao reproduzir qualquer comportamento.
+
+## Desenvolvimento local e testes
+
+### Stack e requisitos
+
+| Camada | Tecnologia e necessidade |
+| --- | --- |
+| Metodologia | Markdown em `SKILL.md`, referencias, specs e templates |
+| Contratos e descoberta | JSON para manifests, marketplaces, contratos e registries; YAML para metadata de agentes |
+| Utilitarios e suite | Python 3.11+; Environment usa `tomllib` da biblioteca padrao |
+| Controle de versao | Git; conta GitHub somente para colaboracao remota |
+| Execucao por agente | Host compativel e autorizado, conforme a secao Instalacao |
+| Ferramentas externas | Apenas as exigidas pela task; nao sao pre-requisito para ler docs ou rodar a suite estrutural |
+
+Nao ha backend, banco de dados, migrations, servidor de desenvolvimento ou
+build frontend na raiz. Nao execute `npm install`, configure um `.env` de
+aplicacao ou suba Docker para conseguir editar uma skill. A suite usa
+`unittest` e biblioteca padrao; testes de integracoes usam fixtures/mocks e
+nao substituem verificacao real das contas e ferramentas externas.
+
+### Primeiro checkout
+
+Esta etapa manual e para desenvolver ou contribuir com o repositorio. Para
+instalar os plugins com ajuda do agente, use [o prompt inicial](#instale-com-sua-llm).
+
+Em uma pasta onde ainda nao exista `Dev-workflow`:
+
+```bash
+git clone https://github.com/guilhermedemorais-dev/Dev-workflow.git
+cd Dev-workflow
+git status --short --branch
+git rev-parse HEAD
+python3 --version
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+git diff --check
+```
+
+O resultado esperado da suite e `OK`, com exit code 0. A quantidade de testes
+depende da revisao; registre o numero efetivamente executado, nao copie o de
+outra entrega. Se houver falha antes da sua alteracao, registre-a como baseline.
+Nao descarte mudancas locais para tentar obter um checkout limpo.
+
+Para uma verificacao focada de documentacao:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_readme.py' -v
+```
+
+Execute novamente a suite completa antes de entregar. Ela verifica contratos,
+estrutura, invariantes e comportamento dos helpers em escopo controlado.
+Nao comprova obediencia futura de uma LLM, autenticacao MCP, qualidade visual,
+deploy ou QA de uma aplicacao cliente. Registre esses limites no PR.
+
+Diagnostico opcional do pacote, sem instalar ferramentas:
+
+```bash
+python3 plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py doctor --repo-root . --workspace . --json
+```
+
+`doctor` e read-only e nao executa a suite. Um estado `DEGRADED` exige ler as
+lacunas; nao significa automaticamente que o Markdown esta incorreto, nem
+permite afirmar prontidao completa. Preparacao e reparo sao operacoes separadas,
+com consentimento e escopo, descritas na secao Environment.
+
+## Mapa tecnico e fontes de verdade
+
+| Caminho | O que contem / quando alterar |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | Mapa curto para agentes; aponta para regras canonicas, nao duplica o manual |
+| [docs/workflow-pipeline.md](docs/workflow-pipeline.md) | Ciclo, gates, responsabilidades e profundidade proporcional |
+| `plugins/<plugin>/skills/<skill>/SKILL.md` | Instrucoes canonicas do especialista; ponto de entrada de sua metodologia |
+| `plugins/<plugin>/skills/<skill>/references/` | Detalhes carregados por necessidade; registries apenas quando o owner os possui |
+| `plugins/<plugin>/skills/<skill>/agents/openai.yaml` | Metadata da skill para o host; nao substitui suas instrucoes |
+| `plugins/<plugin>/{plugin.json,.codex-plugin/plugin.json,.claude-plugin/plugin.json}` | Adaptadores de descoberta/empacotamento, nao tres copias da metodologia |
+| [.agents/plugins/marketplace.json](.agents/plugins/marketplace.json) e [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json) | Catalogos de distribuicao; devem apontar para bundles existentes |
+| [plugins/sdd-spec-factory/templates/](plugins/sdd-spec-factory/templates/) | Templates canonicos de specs, Task, contrato, QA e PR |
+| [plugins/dev-implementation-standard/templates/](plugins/dev-implementation-standard/templates/) | Relatorios de execucao e checkpoints humanos |
+| `docs/specs/`, `docs/tasks/`, `docs/execution/` | Intencao duravel, acompanhamento humano e indice operacional de cada entrega |
+| [tests/](tests/) | Suite de regressao, verificacoes estruturais e fixtures locais |
+
+### Protocolo, codigo executavel e estado local
+
+Existem tres camadas distintas:
+
+1. **Protocolo para agentes:** skills, pipeline, Context Routing e gates dizem
+   o que o agente deve fazer. Nao existe um novo motor que interprete o contrato
+   e imponha automaticamente todas essas regras.
+2. **Execucao deterministica:** [tool-state.py](plugins/dev-workflow-standard/scripts/tool-state.py)
+   resolve/detecta/executa ferramentas e mantem observacoes por owner;
+   [environment.py](plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py)
+   faz discovery, diagnostico e preparo seletivo. A disponibilidade real ainda
+   depende da maquina, permissoes e credenciais.
+3. **Estado privado do host:** `runtime-state/`, preferencias e evidencias de
+   ferramentas nao sao conhecimento compartilhado nem devem ser commitados.
+   Veja [.gitignore](.gitignore). Uma maquina nao herda autenticacao de outra.
+
+Nao ha um `.env` global obrigatorio para desenvolver este repositorio.
+`TOOL_REGISTRY_PATH` e `TOOL_STATE_PATH` sao overrides pareados do helper para
+registry e estado gravavel; `TOOL_RUNTIME_ID` distingue runtimes no fingerprint.
+Environment permite `--state-dir` para armazenamento local. Os contratos exatos
+estao em [skill-owned-tools](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/skill-owned-tools.md)
+e [operations](plugins/dev-environment-standard/skills/dev-environment-standard/references/operations.md).
+Credenciais de provedores ficam no mecanismo seguro do host, nunca em templates,
+fixtures, receipts ou exemplos publicados.
+
+### Onde cada informacao pertence
+
+| Informacao | Fonte correta | Nao usar como substituto |
+| --- | --- | --- |
+| Comportamento esperado e restricoes | Spec aprovada | Conversa antiga sem registro |
+| Owners, progresso, bloqueios e evidencias | Human Task | Status dentro do contrato JSON |
+| Paths, setores, fontes e criterios relevantes | Execution Contract | Copia integral da spec no prompt |
+| O que foi realmente executado | EXECUTION_RECEIPT e artefatos observaveis | Nome da skill ou task atribuida |
+| Comunicacao cronologica | Comentario da Issue | Prova unica de validacao |
+| Versao disponivel para execucao | Bundle ativo e evidencias do host | Apenas o checkout ou entrada no marketplace |
+
+Para alterar o routing, comece na [referencia canonica](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md),
+depois confira templates, consumidores, exemplos e testes. Para adicionar uma
+ferramenta, altere o registry do owner existente, nao crie um catalogo paralelo
+no Harness ou no QA. Para adicionar um MCP, consulte a
+[MCP Library](plugins/dev-environment-standard/skills/dev-environment-standard/references/mcp-library.json)
+e seu protocolo de consentimento; estar catalogado nao significa estar conectado.
 
 ## Camada Global
 
@@ -1184,6 +1393,95 @@ versionada. A copia manual e util para desenvolvimento e testes locais.
 
 Hooks, MCPs e permissoes nao devem ser compartilhados cegamente entre as
 plataformas, pois os esquemas e modelos de seguranca sao diferentes.
+
+## Como contribuir
+
+Contribuicoes uteis incluem exemplos reproduziveis, correcoes de documentacao,
+testes de regressao, melhoria de uma skill existente e integracoes com escopo
+real. Antes de criar outro plugin, demonstre a lacuna e por que um owner atual
+nao pode resolve-la sem perder sua responsabilidade.
+
+### Da proposta ao PR
+
+1. **Defina o problema:** descreva esperado/observado, revisao, plataforma e
+   reproducao. Em trabalho nao trivial, vincule uma Issue; nao publique segredos
+   ou dados de clientes. Consulte Issues/PRs existentes para evitar duplicidade.
+2. **Feche o contrato:** classifique TRIVIAL, NORMAL ou COMPLEX conforme
+   [AGENTS.md](AGENTS.md) e pipeline. Correcao documental localizada pode usar
+   escopo/aceite inline; comportamento novo exige Task/contrato e specs na
+   profundidade aplicavel. Registre paths permitidos e proibidos.
+3. **Confirme a base:** use a branch definida pela Task. Em uma contribuicao
+   independente, parta da base combinada com o mantenedor; em um fork, use seu
+   remoto. Nao misture commits de outras entregas nem reescreva historico alheio.
+4. **Implemente no owner certo:** leia a skill e referencias obrigatorias;
+   preserve fronteiras, consentimento e compatibilidade. Uma mudanca no contrato
+   deve revisar produtores, consumidores, exemplos e cenarios negativos.
+5. **Valide e documente:** acrescente regressao quando houver comportamento
+   alterado, rode os testes focados e a suite completa, revise o diff e atualize
+   o README para mudancas de uso/arquitetura. Nao enfraqueca asserts so para passar.
+6. **Entregue para revisao:** use o [template de PR](plugins/sdd-spec-factory/templates/pr-template.md),
+   inclua evidencias e limites. QA, UI, Security e DevOps atuam conforme os
+   setores REQUIRED. Aceite, merge e publicacao dependem dos gates, nao apenas
+   de testes verdes.
+
+### Checklist do colaborador
+
+- [ ] Problema, escopo e criterios de aceite claros; Issue/Task vinculadas quando exigidas.
+- [ ] Branch/base corretas; sem alteracoes ou arquivos privados de outra entrega.
+- [ ] Owner existente reutilizado; nenhuma metodologia ou registry duplicado.
+- [ ] Manifestos/catalogos coerentes se houve mudanca no empacotamento.
+- [ ] Fontes e exemplos apontam para arquivos/anchors existentes.
+- [ ] Testes pertinentes e suite completa com comando, resultado e exit code.
+- [ ] `git diff --check` sem erros; diff revisado antes de stage/commit.
+- [ ] README atualizado; impactos de compatibilidade/migracao explicitados.
+- [ ] Setores REQUIRED com evidencias atuais; N/A com motivo, nao PASS inventado.
+- [ ] Limitacoes, verificacoes nao executadas e necessidade de aceite humano registradas.
+
+Modelo curto para evidencias no PR:
+
+```text
+Problema e resultado:
+Issue / Task / contrato:
+Branch / base / revisao validada:
+Arquivos e owners afetados:
+Comandos executados / exit codes / resultados:
+Cenarios e regressoes cobertos:
+Validacoes nao executadas e motivo:
+Compatibilidade / instalacao / riscos:
+Proximo gate e aprovacao necessaria:
+```
+
+### Publicacao, instalacao e proveniencia
+
+Este pacote e distribuido como plugins, nao como um servico Docker. Commit
+local, push, PR aprovado, merge na branch de distribuicao e atualizacao do
+plugin instalado sao etapas diferentes. Teste a copia local antes de publicar;
+depois confira a revisao efetivamente instalada no host. Nao edite caches como
+fonte primaria e nao suponha que um pull atualizou a sessao do agente.
+
+Nao ha workflow de GitHub Actions versionado em `.github/workflows/` nesta
+revisao. Portanto, nao assuma que abrir um PR dispara esta suite automaticamente.
+Inclua a evidencia local; adicionar CI e uma contribuicao separada com revisao
+DevOps quando aplicavel.
+
+Preserve autoria, origem, revisao e avisos de material externo. Alguns manifests
+declaram MIT, mas esta revisao nao possui um arquivo `LICENSE` na raiz; nao use
+isso para presumir licenciamento uniforme de tudo. Consulte os avisos de cada
+bundle, como [THIRD_PARTY_NOTICES](plugins/devops-standard/THIRD_PARTY_NOTICES.md),
+e esclareca ambiguidades com o mantenedor antes de redistribuir material externo.
+
+## Diagnostico para colaboradores
+
+| Sintoma | Verificacao e proximo passo seguro |
+| --- | --- |
+| Plugin nao aparece | Confira branch, catalogo, manifestos e caminho da skill; diferencie checkout local de marketplace remoto |
+| Agente segue regras antigas | Inspecione bundle ativo, revisao e cache pelo host; atualizar o fonte nao atualiza automaticamente a instalacao |
+| Erro ao importar `tomllib` | Confira `python3 --version`; os utilitarios Environment exigem Python 3.11+ |
+| Suite falha antes da mudanca | Registre baseline e comando exato; compare revisoes, nao remova o teste |
+| Doctor retorna DEGRADED/BLOCKED | Leia checks/blockers e limite a correcao ao requisito afetado; nao instale todas as ferramentas |
+| MCP consta no catalogo mas nao funciona | Verifique evidencia recente de conexao/auth no host; cadastro nao comprova disponibilidade |
+| Receipt diz PASS mas a revisao mudou | Confira escopo afetado e reexecute a validacao material; evidencias antigas nao aprovam codigo novo |
+| Instalacao passa, mas fluxo de agente falha | Reproduza no host com task minima, registre skill/revisao, esperado/observado e dados sanitizados; suite estrutural nao prova comportamento da LLM |
 
 ## Uso recomendado
 
