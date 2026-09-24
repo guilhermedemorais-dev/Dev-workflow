@@ -222,14 +222,16 @@ class TestDevWorkflowOfficialKanbanMethod(unittest.TestCase):
         """NEW section: Official Kanban Method must exist."""
         self.assertIn('## Official Kanban Method', self.content)
 
-    def test_six_kanban_columns(self):
-        """Must define exactly 6 Kanban columns."""
+    def test_eight_kanban_columns(self):
+        """TASK-010 explicitly adds validation and final human approval."""
         self.assertIn('1. Backlog', self.content)
         self.assertIn('2. Discovery / SDD', self.content)
         self.assertIn('3. Ready for Dev', self.content)
         self.assertIn('4. In Progress', self.content)
-        self.assertIn('5. In Review', self.content)
-        self.assertIn('6. Done', self.content)
+        self.assertIn('5. Validation', self.content)
+        self.assertIn('6. In Review', self.content)
+        self.assertIn('7. Awaiting Final Approval', self.content)
+        self.assertIn('8. Done', self.content)
 
     def test_no_blocked_column(self):
         """Must state: do not create a blocked column."""
@@ -316,12 +318,12 @@ class TestDevWorkflowDefinitionOfEntryExit(unittest.TestCase):
     def test_in_review_entry_exit(self):
         """In Review column must have entry and exit criteria."""
         self.assertIn('| In Review |', self.content)
-        self.assertIn('PR or review package exists with task, specs, evidence', self.content)
+        self.assertIn('PR exists with task, specs, evidence', self.content)
 
     def test_done_entry_exit(self):
         """Done column must have entry and exit criteria."""
         self.assertIn('| Done |', self.content)
-        self.assertIn('Review passed, required validations are evidenced', self.content)
+        self.assertIn('Human merge observed, required validations evidenced', self.content)
 
     def test_orchestrator_uses_definitions_as_gate_checks(self):
         """Orchestrator must use entry/exit definitions as gate checks."""
@@ -396,7 +398,7 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
 
     def test_template_kanban_all_columns(self):
         """Template status Kanban includes all 6 columns."""
-        self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done', self.content)
+        self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | Validation | In Review | Awaiting Final Approval | Done', self.content)
 
     def test_template_has_prompt_para_executor(self):
         """Template must include a short contract bootstrap."""

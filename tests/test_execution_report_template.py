@@ -51,7 +51,7 @@ class TestExecutionReportStatusSection(unittest.TestCase):
     def test_status_kanban_atual_field(self):
         """Status Kanban atual field must include all 6 columns."""
         self.assertIn('Status Kanban atual:', self.content)
-        kanban_columns = ['Backlog', 'Discovery / SDD', 'Ready for Dev', 'In Progress', 'In Review', 'Done']
+        kanban_columns = ['Backlog', 'Discovery / SDD', 'Ready for Dev', 'In Progress', 'Validation', 'In Review', 'Awaiting Final Approval', 'Done']
         for column in kanban_columns:
             with self.subTest(column=column):
                 self.assertIn(column, self.content)

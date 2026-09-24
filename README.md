@@ -63,6 +63,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 ## Indice
 
 - [Instale com sua LLM](#instale-com-sua-llm)
+- [Do zero ao projeto pronto](#do-zero-ao-projeto-pronto)
 - [Comece aqui: desenvolvedores](#comece-aqui-desenvolvedores)
 - [Desenvolvimento local e testes](#desenvolvimento-local-e-testes)
 - [Mapa tecnico e fontes de verdade](#mapa-tecnico-e-fontes-de-verdade)
@@ -100,6 +101,208 @@ Para entender o projeto, siga esta ordem:
 O README descreve a revisao em que esta versionado. Conteudo de uma branch de
 trabalho pode ainda nao existir na `main` ou no plugin instalado. Confira a
 branch, o commit e a origem do pacote ao reproduzir qualquer comportamento.
+
+## Do zero ao projeto pronto
+
+O Engineering Harness coordena agentes especializados para preparar e desenvolver
+seu projeto. Instalar o plugin nao configura automaticamente o GitHub, nao autentica
+contas e nao autoriza producao. O onboarding abaixo e para **um repositorio-alvo
+que voce controla**, antes da primeira Task que dependa de governanca remota.
+Para apenas contribuir neste plugin, siga os testes locais da proxima secao.
+
+### Roadmap do desenvolvedor
+
+| Etapa | O agente faz | Voce faz / criterio para avancar |
+| --- | --- | --- |
+| Fase 0 | Orienta a instalacao do Engineering Harness no host escolhido | Use o prompt de instalacao acima; confirme origem e versao ativa |
+| Fase 1 | Environment diagnostica Git, Python 3.11+ e GitHub CLI (`gh`) | Autorize preparacao somente se algo estiver ausente; nenhuma instalacao silenciosa |
+| Fase 2 | Verifica autenticacao sem exibir credenciais | Se houver `USER_ACTION_REQUIRED`, autentique pelo fluxo oficial e retome |
+| Fase 3 | DevOps distingue acesso ao repo, administracao, organizacao e Projects | Confirme owner/repositorio e obtenha apenas as permissoes necessarias |
+| Fase 4 | `diagnose` consulta arquivos, settings, labels, Project, CI e capacidades | Confira o alvo e as lacunas; diagnostico nao altera nada |
+| Fase 5 | `propose` compara estado atual com desired state e mostra diffs | Revise proposta, efeitos e fallback de cada limitacao; confirme a proposta exata |
+| Fase 6 | `apply --confirm` aplica somente a proposta revisada ainda compativel | Mantenha gates humanos; drift exige nova proposta e confirmacao |
+| Fase 7 | Reutiliza/cria Project, completa Status e prepara board quando suportado | Ajuste agrupamento/automacoes que exigirem interface e guarde evidencia |
+| Fase 8 | Prepara CI a partir da stack, lockfiles e comandos realmente existentes | Revise o workflow e publique por PR autorizado; aguarde checks reais |
+| Fase 9 | `verify` consulta novamente a configuracao e confronta requisitos | Resolva pendencias ou aprove fallback governado; nao confunda criado com validado |
+| Fase 10 | Harness reconcilia Environment, acesso, governanca, CI e gates | `PROJECT READY` apenas com verificacao e evidencias; primeira Task pode iniciar |
+
+As fases 6–8 sao partes do mesmo escopo aprovado, nao tres autorizacoes implicitas.
+Arquivos locais ainda precisam de commit/PR/publicacao autorizados para existir no
+GitHub. A confirmacao de governanca nao autoriza push, merge, aprovacao de PR ou deploy.
+
+```mermaid
+flowchart TD
+    A["Instalar Harness"] --> B["Environment: ferramentas disponiveis"]
+    B --> C{"GitHub autenticado?"}
+    C -->|Nao| D["USER_ACTION_REQUIRED: gh auth login"]
+    D --> C
+    C -->|Sim| E["Validar alvo e permissoes"]
+    E --> F["diagnose e propose, sem escrita"]
+    F --> G["Revisao e confirmacao humana"]
+    G --> H["apply: arquivos, settings, labels, Project e regras"]
+    H --> I["CI observado, ajustes manuais e verify"]
+    I --> J{"Gate de readiness"}
+    J -->|Evidencia suficiente| K["READY ou READY_WITH_LIMITATIONS"]
+    J -->|Pendencia| L["Acao humana ou rework limitado"]
+    K --> M["Primeira Task, producao continua separada"]
+```
+
+### Conectar GitHub sem entregar token ao agente
+
+O agente verifica `gh --version`, autenticacao e acesso com saida sanitizada.
+`AUTH_REQUIRED` e um handoff humano, nao motivo para reinstalar o plugin:
+
+```bash
+gh auth login --hostname github.com
+gh auth status --hostname github.com
+```
+
+Faca o login no seu terminal/navegador, nunca cole PAT, senha, cookie ou codigo
+de autenticacao no chat. O helper nao le nem copia arquivos de credenciais,
+nao executa `gh auth token` e nao faz login por voce. Depois diga ao agente para
+retomar o diagnostico. Se Projects exigir escopo adicional, o agente explica
+qual capacidade faltou antes de orientar um refresh minimo, por exemplo:
+
+```bash
+gh auth refresh --hostname github.com --scopes read:project
+# Somente quando for preciso escrever no Project e voce autorizar:
+gh auth refresh --hostname github.com --scopes project
+```
+
+Escopo OAuth nao concede administracao do repositorio ou da organizacao.
+Instalacao de CLI, autenticacao, acesso e autorizacao sao verificacoes diferentes.
+`authentication != authorization`; `repository access != repository admin`.
+
+### Governanca GitHub dentro do DevOps
+
+Nao existe uma nova skill de bootstrap. `devops-standard` possui a capacidade
+**GitHub Repository Governance** e seu helper Python; Environment so prepara
+ferramentas, Security revisa permissoes/segredos quando aplicavel e o Harness
+reconcilia a entrega. A configuracao desejada fica em `.github/governance.json`
+do projeto-alvo, usando o [template versionado](plugins/devops-standard/skills/devops-standard/templates/github-governance.json).
+Usamos JSON para aproveitar a biblioteca padrao, sem instalar um parser YAML.
+Nao versione credenciais, estado de login, IDs de Project/campos/opcoes ou
+resultados de execucao nesse contrato.
+
+| Operacao | Efeito e gate |
+| --- | --- |
+| `diagnose` | Apenas leitura, identifica estado e capacidades observadas |
+| `propose` | Apenas leitura, retorna proposta com diffs e vinculo ao alvo/estado |
+| `apply --confirm` | Exige a proposta exata revisada, verifica drift antes de escrever |
+| `verify` | Apenas leitura, consulta novamente e emite readiness baseada em evidencia |
+
+Uma proposta nao e um script arbitrario para executar. O helper recalcula as
+acoes permitidas; alterar alvo, desired state ou estado relevante invalida a
+proposta. Reexecutar nao deve duplicar labels/Project/Status. Aplicacao parcial
+para e relata o que aconteceu; nao ha rollback remoto atomico nem exclusao
+automatica para "voltar ao normal". Corrigir, propor novamente e confirmar e
+mais seguro que repetir cegamente a mesma mutacao.
+
+Por privacidade, o diff da proposta omite as linhas antigas dos arquivos; revise
+o conteudo atual localmente junto do novo conteudo proposto. O hash do arquivo
+antigo continua vinculando a aprovacao. Marcadores sensiveis reconhecidos bloqueiam
+a proposta sem eco; isso nao substitui uma revisao de segredos do projeto.
+
+Arquivos preparados incluem CODEOWNERS, templates de Issues e PR, CONTRIBUTING,
+estrutura de docs e workflow de qualidade conforme a stack. Settings podem
+propor squash como metodo de merge e exclusao da branch apos merge; a branch
+principal e o prefixo das branches de agente continuam configuraveis.
+Arquivos existentes e politicas mais fortes devem ser preservados ou apresentados
+em diff para decisao, nunca substituidos silenciosamente.
+
+### Project, Kanban e CI
+
+O Project e procurado por owner/titulo antes de criar; IDs sao descobertos na
+execucao. As oito etapas do fluxo sao:
+
+```text
+Backlog -> Discovery / SDD -> Ready for Dev -> In Progress
+        -> Validation -> In Review -> Awaiting Final Approval -> Done
+```
+
+`blocked` e uma label, nao uma coluna. Validation recebe a validacao tecnica;
+In Review corresponde ao PR; Awaiting Final Approval espera o responsavel
+humano apos CI e setores aprovados. Done somente apos **merge humano** observado.
+Um checkpoint local `COMPLETED` nao move o card para Done. Revise/desative
+automacoes que movam para Done apenas por fechar uma Issue ou PR sem merge.
+O limite padrao e tres ciclos de rework, depois diagnostico e bloqueio explicito.
+
+O helper pode criar/atualizar uma view board pela API disponivel, mas agrupar por
+Status e configurar Auto-add de Issues abertas deste repo em Backlog podem
+exigir ajuste manual. A API nao expor uma configuracao nao significa que o
+agente a executou. `MANUAL_ACTION_REQUIRED` deve indicar passo, alvo e evidencia
+faltante. Projetos existentes preservam opcoes e valores de Status.
+
+CI considera Node/Next, PHP/Laravel, Python e Go quando detectados. Prefere o
+gerenciador/lockfile e scripts nativos existentes; nao inventa `lint`, `test`,
+`typecheck` ou `build` para uma stack que nao os possui. Workflow criado nao
+significa workflow executado. Checks obrigatorios so sao propostos a partir de
+checks reais observados; falta de evidencia continua pendencia, nao sinal verde.
+
+### Capacidades, limites e readiness
+
+O Harness pode diagnosticar/preparar ambiente, gerar specs e Human Tasks, rotear
+contexto, coordenar implementacao, QA e Security, preparar PR, governanca e CI.
+DevOps pode reconciliar settings, labels, templates, Project e regras quando as
+APIs e permissoes do alvo permitirem. Os detalhes tecnicos, comandos do helper,
+schema, fontes oficiais e teste manual isolado estao na
+[referencia GitHub Governance](plugins/devops-standard/skills/devops-standard/references/github-governance.md).
+
+Nao faz automaticamente: login, concessao de permissoes, instalacao sem aprovacao,
+uso de token fornecido em chat, bypass de plano, aprovacao/merge de PR, force push
+na main ou deploy. Nao pede que voce leia uma SKILL para descobrir esses limites.
+
+Plano, tipo de owner e visibilidade sao contexto, nao prova isolada de capacidade.
+Um erro 403 nao prova que "o plano Free nao permite". Cada capacidade distingue
+suporte, permissao insuficiente, falta de configuracao e falta de validacao.
+CODEOWNERS presente nao prova review obrigatorio; regra criada nao prova
+enforcement ativo: `configured != enforced`; `created != validated`.
+
+| Readiness | Interpretacao |
+| --- | --- |
+| `READY` | `verify` executado e requisitos aplicaveis comprovados |
+| `READY_WITH_LIMITATIONS` | Verificado, com limitacoes declaradas e fallback suficiente explicitamente aprovado |
+| `AUTH_REQUIRED` | Acao humana de autenticacao necessaria para continuar |
+| `BLOCKED` | Requisito essencial sem rota segura ou conflito nao resolvido |
+| `NOT_VALIDATED` | Evidencia ainda insuficiente; nao anunciar projeto pronto |
+
+O gate exige Environment PASS, autenticacao quando governanca remota for requerida,
+acesso, arquivos, configuracao remota, Project/CI PASS ou N/A justificado e gates
+humanos documentados. Aprovar fallback nao comprova que uma acao manual foi feita:
+registre alvo, revisao, data, resultado e referencia verificavel separadamente.
+`PROJECT READY != PRODUCTION AUTHORIZED`; CI verde tambem nao autoriza producao.
+
+Para READY, o helper exige checkout limpo na mesma revisao remota verificada e
+compara os arquivos de governanca/stack com essa revisao. Criar arquivos localmente
+e aguardar CI de um commit anterior nao satisfaz o gate. Guarde propostas e
+evidencias privadas fora do checkout; publicacao continua uma acao autorizada
+separadamente. Esta versao do helper suporta github.com; GitHub Enterprise Server
+e outros hosts nao foram homologados.
+O helper foi testado em Linux; a escrita local exige primitivas POSIX de protecao
+de arquivos. Em plataformas sem esse suporte, como Windows nao homologado, um
+plano com escrita local bloqueia antes de qualquer mutacao remota.
+
+Este onboarding ocorre uma vez quando aplicavel. Nas Tasks seguintes reutilize
+evidencia compativel; reavalie por drift, mudanca relevante, falha real ou pedido
+explicito, sem repetir full bootstrap em toda Task. Nao alegue integracao GitHub
+real a partir da suite fake-gh deste plugin.
+
+### Prompt para preparar seu projeto
+
+```text
+Use o Engineering Harness instalado para preparar o repositorio-alvo que eu
+indicar. Confira origem, branch, HEAD e mudancas locais, sem descartar nada.
+Siga o roadmap de onboarding. Environment verifica/prepara ferramentas apenas
+com a autorizacao necessaria; DevOps cuida de GitHub Repository Governance.
+Nao configure o repositorio do plugin por engano.
+Se faltar login, entregue USER_ACTION_REQUIRED com gh auth login e aguarde;
+nao solicite tokens, senhas ou cookies no chat.
+Execute diagnose e propose, explique os diffs e limites, e pare para minha
+confirmacao antes de apply --confirm. Use somente a proposta revisada e bloqueie
+drift. Verifique de novo, reporte READY/READY_WITH_LIMITATIONS apenas com provas.
+Nao faca push, merge, aprove PR ou deploy por causa desta solicitacao.
+Ao concluir o onboarding, proponha a primeira Task com seus gates humanos.
+```
 
 ## Desenvolvimento local e testes
 

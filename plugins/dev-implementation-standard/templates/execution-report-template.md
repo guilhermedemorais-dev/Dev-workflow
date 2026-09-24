@@ -5,7 +5,7 @@
 
 ## Status e rastreabilidade
 - Status visual atual: [🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
-- Status Kanban atual: [Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done]
+- Status Kanban atual: [Backlog | Discovery / SDD | Ready for Dev | In Progress | Validation | In Review | Awaiting Final Approval | Done]
 - Data/hora de início:
 - Data/hora de conclusão:
 - Executor:
