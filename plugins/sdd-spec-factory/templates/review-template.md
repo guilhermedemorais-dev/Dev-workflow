@@ -28,6 +28,10 @@ O que o revisor entendeu que foi entregue.
 - **Frontend/UI:** estados, acessibilidade, responsividade ou `N/A`.
 
 ## Testes
+Conferir Sector Validation Matrix: todos REQUIRED têm receipt atual do owner,
+N/A tem motivo, QA independente quando obrigatório. Code review não fabrica
+PASS de UI/Security/DevOps/QA; Harness reconcilia todos os setores.
+
 - [ ] Testes existem e cobrem o comportamento esperado.
 - [ ] Suíte passa localmente/CI.
 - Evidência:

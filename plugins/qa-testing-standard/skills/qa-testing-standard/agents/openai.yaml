@@ -1,0 +1,4 @@
+interface:
+  display_name: "QA Testing Standard"
+  short_description: "Independent functional QA and fix verification"
+  default_prompt: "Use $qa-testing-standard to verify this change with reproducible evidence."

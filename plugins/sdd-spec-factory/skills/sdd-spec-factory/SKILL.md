@@ -36,7 +36,8 @@ applicable:
 This plugin **does not implement product code**. It produces the contract and the
 order of execution. `dev-workflow-standard` orchestrates; implementation is
 carried out by `dev-implementation-standard`, reviewed with `security-standard`,
-and visually validated with `ui-ux-standard`.
+functionally validated with `qa-testing-standard` when required, and visually
+validated with `ui-ux-standard`.
 
 ## Vocabulary (non-negotiable)
 
@@ -190,6 +191,13 @@ docs/specs/<modulo>/
 
 ### Fase 3 - Geração de Task Executável
 
+Load the active Harness `references/context-routing.md` before designing the
+sector matrix. In this monorepo its source is
+`plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md`;
+installed hosts resolve the active skill, never assume sibling cache paths.
+If unavailable, use an explicitly available canonical checkout or return the
+missing reference to the Harness before producing a conflicting contract.
+
 Produce one small, reviewable human task using `templates/task-template.md` and
 one lean JSON contract using `templates/execution-contract-template.json`:
 
@@ -210,6 +218,25 @@ one lean JSON contract using `templates/execution-contract-template.json`:
   and preferred tool when known. Put only those compact identifiers in the
   Execution Contract `required_validations`; never store installation state,
   official URLs, executable paths, or logs there.
+- Include all ten standard sectors with REQUIRED/N/A, concrete owner,
+  dependencies and a short verified N/A reason. Detail only REQUIRED sectors;
+  each has objective, sources with purpose, checklist, expected evidence and
+  result placeholder. No generic full OWASP/QA checklist on unrelated tasks.
+- Add optional v1 `sectors` and `global_acceptance_refs` to new routed contracts.
+  Use explicit `task:#anchor` section references; REQUIRED sources have
+  `path`/`purpose`, CONDITIONAL also has `condition`. OPTIONAL is never loaded
+  automatically. No statuses, receipts or spec bodies in the JSON.
+- Separate final `depends_on` from optional `planning_depends_on`. QA, Security
+  and UI planning may start early; only executed validation closes their gates.
+  Check unknown IDs, owners, missing required references and cycles before handoff.
+- Give the Harness the complete Human Task; give each specialist only its
+  sector, relevant global constraints/acceptance, necessary code and dependency
+  receipts. Missing context requests expansion, not loading all sources by default.
+- For behavioral changes, bugfixes, APIs, user flows, business rules, persistent
+  state, payments, tenancy, imports/exports, integrations or concurrency, route
+  independent QA planning to `qa-testing-standard`. It returns QA_GUARDRAILS,
+  TEST_SCENARIOS, REGRESSION_TARGETS and VALIDATION_REQUIREMENTS proportionally.
+  Docs/metadata-only work may record QA N/A; pure visual changes still require UI.
 
 The Execution Contract must be valid JSON and include `schema_version`,
 `task_id`, `task_path`, `goal`, `specs`, `docs`, `allowed_paths`,
@@ -234,7 +261,7 @@ Provide the delivery gates using `templates/pr-template.md`,
 `templates/qa-review-template.md` and `templates/review-template.md`:
 
 - Code review
-- QA funcional
+- QA funcional (delegated to `qa-testing-standard` when behavioral triggers apply)
 - QA visual (delegated to `ui-ux-standard`)
 - Segurança (delegated to `security-standard`)
 - Testes
@@ -252,6 +279,10 @@ Provide the delivery gates using `templates/pr-template.md`,
 - `ui-ux-standard` owns design systems, mockups and visual QA. Page/component/UI
   specs should reference approved mockups and design tokens instead of inventing
   visuals.
+- `qa-testing-standard` owns independent test strategy, functional validation,
+  reproduction, regression and fix verification. It receives the QA Task slice
+  and relevant sources; it neither writes product fixes nor attests UI/Security/
+  DevOps PASS. Those owners return their own evidence.
 - `security-standard` owns the security review and release gate. The security
   dimension of each spec and the security checklist of each PR are validated by
   it.
@@ -265,4 +296,6 @@ Provide the delivery gates using `templates/pr-template.md`,
 - Every new executable task has a valid lean Execution Contract and short
   bootstrap prompt; legacy tasks have the normalization fallback above.
 - PR and QA/review checklists are provided.
+- Sector matrix, purpose-based routing, phase dependencies and explicit N/A
+  reasons are consistent; legacy v1 contracts remain readable without sectors.
 - No product code was implemented and no existing architecture was invented.

@@ -16,6 +16,11 @@
 - Pronto para GitHub Projects: sim/não
 
 ## Referências
+- Setor e fase executados:
+- Revisão/artefato validado:
+- sources_loaded: paths e propósito efetivamente usado
+- conditional_sources_loaded: paths e condição observada
+- validation_scope: cobertura e limites do setor
 - Execution Contract utilizado:
 - Specs obrigatórias seguidas:
 - Docs obrigatórios seguidos:
@@ -78,6 +83,10 @@ Lista de arquivos criados / alterados / removidos.
 Comandos, prints, logs, links de CI, screenshots ou saídas relevantes.
 
 ## Resultado detalhado por camada
+
+Preencher somente resultados próprios. Demais setores apontam receipts dos
+respectivos owners ou NOT_VALIDATED; nunca certificar outro especialista.
+Harness consolida o ledger e o estado global da Task.
 
 ### Banco
 Migrações, schema, seeds, queries, dados afetados ou `N/A`.

@@ -126,6 +126,7 @@ use a documentation-only or Git-only label to bypass this gate.
 | `sdd-spec-factory` | Requirements LLM | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
 | `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
+| `qa-testing-standard` | Independent functional QA / test engineering | strategy, reproduction, behavior, regression, fix verification, QA_STATUS |
 | `security-standard` | Security specialist LLM | authn, authz, tokens/session, sensitive data, inputs, permissions, insecure logs, external integrations |
 | `devops-standard` | DevOps specialist | CI/CD, infrastructure, advanced releases, deployment operations, recovery and operational validation |
 
@@ -154,7 +155,8 @@ must be named as local and validated against their intended outcome.
 Keep five execution artifacts distinct:
 
 - **Human Task:** status, ownership, scope summary, links, progress, blockers,
-  result, and evidence for human tracking.
+  result, Sector Validation Matrix and evidence for human tracking. Harness
+  reads the complete Human Task; specialists read their routed slice by default.
 - **Execution Contract:** lean machine-readable operational index at
   `docs/execution/TASK-XXX.json` with repository paths and bounded constraints.
 - **Specs:** detailed functional and technical source of truth, loaded when the
@@ -169,6 +171,18 @@ New executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
 not mass-migrate inactive historical tasks.
 
+Before sector delegation load `references/context-routing.md`. New routed
+contracts add optional v1 `sectors` and `global_acceptance_refs`; every standard
+sector has REQUIRED/N/A, owner and dependencies, and every N/A has a reason.
+Each source has a purpose; CONDITIONAL adds a condition and OPTIONAL never
+loads automatically. Separate planning prerequisites from final validation.
+CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS;
+SECTOR_REQUIRED != OPTIONAL; OUTSIDE_OWNER != AUTHORIZED_TO_PASS;
+CONTEXT_AVAILABLE != CONTEXT_REQUIRED. Only each owner attests its own PASS.
+Harness reconciles all REQUIRED sectors, current receipts and criteria before
+closing the Task. Missing sources, unresolved IDs/cycles or source conflicts
+stop the affected checkpoint. This routing is a local extension, not an engine.
+
 ## Change Complexity Gate
 
 Classify the work before choosing artifacts. Complexity changes documentation
@@ -178,6 +192,7 @@ depth, not the obligation to validate.
   security, data, dependency, or public-contract impact. Use an inline intent
   contract: scope, acceptance criterion, command/check, and evidence. A durable
   spec, task file, and Issue are optional unless repository policy requires one.
+  Keep the ten-sector matrix compact even inline; N/A rows need only a reason.
 - `NORMAL`: bounded behavior or multi-file work with understood architecture.
   Use a concise Issue/task contract linked to the relevant existing docs; add a
   focused spec only for behavior that is not already specified.
@@ -205,9 +220,12 @@ Idea / demand
   -> selected executor: complete EXECUTION_RECEIPT
   -> update Human Task + publish EXECUTION_REPORT_COMMENT when applicable
   -> dev-workflow-standard: VALIDATING
-  -> Pull Request
-  -> ui-ux-standard / security-standard / QA review (as applicable)
+  -> ui-ux-standard / qa-testing-standard / security-standard review (as applicable)
+  -> sector reconciliation
+  -> Pull Request / PR gate
+  -> Harness final gate
   -> dev-workflow-standard: approve or request rework
+  -> human review / acceptance
   -> merge / deploy (only after PR approved)
 ```
 
@@ -249,6 +267,12 @@ A valid task must contain, at minimum:
 - Validação
 - Riscos/Lacunas
 - Resultado da execução
+- Matriz de Validação por Setor, Fontes globais da verdade, Ordem de Execução
+- Registro de Evidências, Gate do PR, Gate Final, Aceite Humano
+
+Legacy layer names remain recognizable; for new tasks the ten-sector matrix
+replaces redundant N/A detail sections. Required sectors use the canonical SDD
+block with purpose-based sources, expected evidence and owner results.
 
 The task filename remains stable for traceability. Do not put visual status,
 emojis, Kanban status, or transient workflow state in the physical filename.
@@ -291,7 +315,7 @@ orchestrator must use these definitions as gate checks.
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
 | Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read task/specs, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation, tests/validation, evidence, task update, and applicable Issue report are complete, then PR/review handoff is ready. |
+| In Progress | Executor accepted the task, read its routed Task sections and sources, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation, tests/validation, evidence, task update, and applicable Issue report are complete, then PR/review handoff is ready. |
 | In Review | PR or review package exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | Review approves and moves to Done with a `COMPLETED` report, or rejects and returns to In Progress with `rework` and an actionable report. |
 | Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
 
@@ -310,78 +334,12 @@ so it can be mapped later without restructuring:
 
 ## Recommended Task Template
 
-```markdown
-# Título
-
-## Status visual
-- Status visual: [A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
-- Status Kanban: [Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done]
-- Responsável:
-- Issue criada / vinculada:
-- Branch sugerida:
-- Milestone:
-- Labels sugeridas:
-- Pronto para GitHub Projects: sim/não
-
-## Tipo
-Feature | Bug | Refactor | QA | Security | Docs | Infra
-
-## Prioridade
-P0 | P1 | P2 | P3
-
-## Objetivo
-
-## Specs obrigatórias
-
-## Docs obrigatórios
-
-## Arquivos e módulos permitidos
-
-## Fora do escopo
-
-## Estado atual encontrado
-
-## Resultado esperado
-
-## Regras obrigatórias da implementação
-
-## Checklist de execução
-1. Leitura da task e specs
-2. Implementação
-3. Testes
-4. Validação
-5. Atualização do relatório
-6. Handoff para review
-
-## Prompt para o executor
-Execute esta task usando o contrato:
-`docs/execution/TASK-XXX.json`
-
-Siga o Engineering Harness e registre resultado e evidências na task.
-
-## Execution Contract
-`docs/execution/TASK-XXX.json`
-
-## Condições de parada
-
-## Testes obrigatórios
-
-## Evidências esperadas no PR
-
-## Critérios de aceite
-
-## Banco
-
-## API/Backend
-
-## Frontend/UI
-
-## Validação
-
-## Riscos/Lacunas
-
-## Resultado da execução
-```
+Use `plugins/sdd-spec-factory/templates/task-template.md` and its matching
+`execution-contract-template.json`; do not maintain a second template here.
+Resolve the active SDD bundle in installed hosts, not a sibling cache path.
+The template keeps identity/status, ten sectors, scoped source purposes,
+acceptance, execution order, evidence and human gates. Only REQUIRED sectors
+need detailed sections. See `references/context-routing.md` for compatibility.
 
 ## Delegation Rules
 
@@ -399,7 +357,7 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
   valid Execution Contract before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
   task, Execution Contract, and mandatory specs are approved. Prefer a lean
-  handoff containing `task_id`, `execution_contract_path`, current
+  handoff containing `task_id`, `execution_contract_path`, sector, phase, current
   branch/revision, and only the relevant prior receipt/handoff. The executor
   reconstructs required context from repository paths. Require
   `REUSE_INVENTORY` and the minimal-code gate before code is written.
@@ -457,6 +415,12 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
 - `ui-ux-standard`: **mandatory whenever there is UI** — new/changed screens,
   components, visual states, responsiveness, accessibility, or design-system
   adherence.
+- `qa-testing-standard`: mandatory for changed behavior, bugfixes, user flows,
+  APIs, business rules, persistent state, payments, tenancy, imports/exports,
+  integrations, concurrency and regressions. QA planning may start before
+  implementation; final QA depends on current executable artifacts. Docs-only
+  or metadata-only work may record N/A with a reason. Never silently substitute
+  the implementer's own tests for required independent QA.
 - `security-standard`: **mandatory whenever the change touches** authentication,
   authorization, tokens, session, sensitive data, uploads, payments, or external
   integrations (also parsers, webhooks, infrastructure, privileged operations,
@@ -486,6 +450,9 @@ When a PR comes back, the orchestrator reviews before approving:
 12. `EXECUTION_REPORT_COMMENT` matches the task, receipt, Project state, and PR
     when applicable; its remote URL/identifier proves publication. The comment
     never substitutes for receipt or validation evidence.
+13. QA_STATUS from the independent QA owner, when REQUIRED, includes executed
+    validation and bug/retest disposition. Every REQUIRED sector is reconciled;
+    stale receipts, missing evidence or PARTIAL/NOT_VALIDATED prevent completion.
 
 Then: **approve** (allowing merge/deploy) or **request rework** with specific,
 spec-anchored reasons. Rejected review moves the card back to `In Progress` with
@@ -496,17 +463,22 @@ the `rework` label until corrected.
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
 - Prefer `task_id` plus `execution_contract_path` over task/spec bodies.
 - Load the contract first, validate required fields and paths, then open only
-  the required skills, specs, docs, and code for the active scope.
+  the active skill, listed task_sections, relevant global acceptance/constraints,
+  required_sources, activated conditional_sources, code and dependency receipts.
 - A mandatory reference must be read before changing the area it governs;
   progressive disclosure reduces redundant context, not necessary context.
 - Use the Human Task for mutable status, blockers, results, and evidence without
   injecting it wholesale into the executor prompt.
+- The Harness reads the full Task; specialists request justified context
+  expansion if their slice is insufficient, not all docs preemptively.
 - For large work, keep specs and research in files (`docs/specs/...`,
   `docs/modules/<module>/research.md`) and continue from those files.
 - Load the references below only when directly needed.
 
 ## Reference Routing
 
+- Sector matrix, source purposes, phase dependencies and compatibility:
+  `references/context-routing.md`
 - Harness execution state, invocation evidence, retry/replan and completion:
   `references/harness-execution.md`
 - Capability selection, preferred executors and fallbacks:

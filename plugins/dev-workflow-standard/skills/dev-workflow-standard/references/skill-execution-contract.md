@@ -16,11 +16,22 @@ or market standard.
 6. Stop when a required skill cannot be resolved or read. Do not imitate it from
    memory or silently replace it with general reasoning.
 
+An entire SKILL.md is mandatory; an entire Human Task is not mandatory for
+every specialist. Harness reads the full Task and resolves context under
+`context-routing.md`. The specialist reads listed task_sections, relevant
+global acceptance/constraints and required_sources; conditional_sources only
+when their condition applies, optional_sources only with an actual purpose.
+Missing required source/anchor stops the checkpoint. Disclosure never weakens
+the active skill's mandatory rules.
+
 ## SKILL_RECEIPT
 
 ```text
 SKILL_RECEIPT
 - skill: <name>
+  task_id: <task>
+  sector: <routed ID when applicable>
+  phase: <planning or validation>
   path: <canonical SKILL.md path>
   references_loaded: <exact paths or N/A>
   applied_rules: <short concrete rules>

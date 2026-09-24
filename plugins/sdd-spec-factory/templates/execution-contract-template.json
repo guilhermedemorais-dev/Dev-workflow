@@ -16,6 +16,36 @@
   "required_tests": [],
   "required_skills": [],
   "required_validations": [],
+  "global_acceptance_refs": ["task:#criterios-de-aceite"],
+  "sectors": {
+    "database": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Replace with verified database scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "backend": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Replace with verified backend scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "frontend": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Replace with verified frontend scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "ui_ux": {"owner": "ui-ux-standard", "applicability": "N/A", "reason": "Replace with verified visual scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "qa": {"owner": "qa-testing-standard", "applicability": "N/A", "reason": "Replace with verified functional scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "security": {"owner": "security-standard", "applicability": "N/A", "reason": "Replace with verified security scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "devops": {"owner": "devops-standard", "applicability": "N/A", "reason": "Replace with verified operational scope decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "observability": {"owner": "devops-standard", "applicability": "N/A", "reason": "Replace with verified instrumentation or operations decision", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "documentation": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "depends_on": [],
+      "task_sections": ["task:#documentation"],
+      "required_sources": [{"path": "docs/specs/module/spec.md", "purpose": "Align the scoped documentation with approved intent"}],
+      "conditional_sources": [],
+      "optional_sources": [],
+      "required_validations": ["documentation-review"]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard",
+      "applicability": "REQUIRED",
+      "depends_on": ["documentation"],
+      "task_sections": ["task:#harness"],
+      "required_sources": [],
+      "conditional_sources": [],
+      "required_validations": ["sector-reconciliation"]
+    }
+  },
   "stop_conditions": [
     "architecture_change_required",
     "scope_expansion_required",

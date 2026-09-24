@@ -311,7 +311,7 @@ class TestDevWorkflowDefinitionOfEntryExit(unittest.TestCase):
     def test_in_progress_entry_exit(self):
         """In Progress column must have entry and exit criteria."""
         self.assertIn('| In Progress |', self.content)
-        self.assertIn('Executor accepted the task, read task/specs', self.content)
+        self.assertIn('Executor accepted the task, read its routed Task sections and sources', self.content)
 
     def test_in_review_entry_exit(self):
         """In Review column must have entry and exit criteria."""
@@ -371,18 +371,24 @@ class TestDevWorkflowGitHubReadyTaskStructure(unittest.TestCase):
 
 
 class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
-    """Tests for the NEW 'Recommended Task Template' section in dev-workflow-standard."""
+    """Harness links the single SDD template instead of copying its body."""
 
     def setUp(self):
-        self.content = read_skill()
+        self.skill = read_skill()
+        path = os.path.join(os.path.dirname(__file__), '..', 'plugins',
+                            'sdd-spec-factory', 'templates', 'task-template.md')
+        with open(path, encoding='utf-8') as source:
+            self.content = source.read()
 
     def test_recommended_task_template_section_exists(self):
         """NEW section: Recommended Task Template must exist."""
-        self.assertIn('## Recommended Task Template', self.content)
+        self.assertIn('## Recommended Task Template', self.skill)
+        self.assertIn('plugins/sdd-spec-factory/templates/task-template.md', self.skill)
+        self.assertIn('do not maintain a second template here', self.skill)
 
     def test_template_starts_with_titulo(self):
         """Template must start with # Título."""
-        self.assertIn('# Título', self.content)
+        self.assertIn('# TASK-XXX: Nome da task', self.content)
 
     def test_template_has_status_visual(self):
         """Template must include Status visual section."""
@@ -395,13 +401,13 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
     def test_template_has_prompt_para_executor(self):
         """Template must include a short contract bootstrap."""
         self.assertIn('## Prompt para o executor', self.content)
-        self.assertIn('Execute esta task usando o contrato:', self.content)
+        self.assertIn('Execute a TASK-XXX usando o contrato:', self.content)
         self.assertIn('docs/execution/TASK-XXX.json', self.content)
 
     def test_template_checklist_de_execucao(self):
         """Template must include Checklist de execução."""
         self.assertIn('## Checklist de execução', self.content)
-        self.assertIn('1. Leitura da task e specs', self.content)
+        self.assertIn('1. Leitura da fatia e fontes obrigatórias pelo owner', self.content)
         self.assertIn('6. Handoff para review', self.content)
 
     def test_template_has_resultado_da_execucao(self):
@@ -410,7 +416,8 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
 
     def test_template_has_all_layer_sections(self):
         """Template must have Banco, API/Backend, Frontend/UI, Validação sections."""
-        for section in ['## Banco', '## API/Backend', '## Frontend/UI', '## Validação']:
+        for section in ['Banco / database', 'API / Backend / backend',
+                        'Frontend / frontend', 'UI / UX / ui_ux', '## Validação']:
             with self.subTest(section=section):
                 self.assertIn(section, self.content)
 

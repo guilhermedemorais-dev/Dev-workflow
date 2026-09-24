@@ -21,6 +21,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | requirements / specs | `sdd-spec-factory` | orchestrator only for clarification, not silent replacement | specs + executable task |
 | implementation | `dev-implementation-standard` with an authorized executor runtime | another authorized executor using the same task/spec contract | diff/files + commands + execution report |
 | UI/UX design and review | `ui-ux-standard` | none when UI validation is mandatory | design/review findings + validation evidence |
+| functional QA / test engineering | `qa-testing-standard` | none when independent QA is mandatory | test strategy + executed validation + bug disposition + QA_STATUS |
 | security review | `security-standard` | none when security trigger is mandatory | findings/coverage + disposition |
 | CI/CD, containers and operational config | `devops-standard` | approved project-native tool under the same owner | validated config/build + relevant runtime evidence |
 | IaC, Kubernetes, GitOps and cloud operations | `devops-standard` | approved project-native platform, no forced migration | scoped plan/render/dry-run + explicit human gate for mutation |
@@ -41,6 +42,21 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 6. If no safe fallback exists, return `BLOCKED` with the missing capability.
 7. Do not create parallel implementations when switching executors.
 8. Reuse prior valid outputs and receipts instead of restarting finished stages.
+9. Use `context-routing.md` for the sector/phase handoff and purpose-based
+   source loading. A tool's technical owner is not necessarily the owner of
+   the functional conclusion; QA may use shared tools without copying registries.
+
+### Functional QA
+
+Invoke `qa-testing-standard` for behavior changes, bugfixes, user flows, API
+behavior, business rules, persistent state, payments, multi-tenant behavior,
+imports/exports, integrations, concurrency, state machines and regressions.
+Docs-only, metadata-only or administrative changes without runtime behavior
+may be N/A with a reason. Pure visual changes retain UI validation even if
+functional QA is N/A. Do not silently replace independent QA with the coder.
+Planning scenarios may precede implementation; final QA requires executable
+artifacts and current dependency receipts. QA owns behavior; Security owns
+vulnerability confirmation, UI owns visual quality, DevOps owns operations.
 
 ## Runtime Availability
 

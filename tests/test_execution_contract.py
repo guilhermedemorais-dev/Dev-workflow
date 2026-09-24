@@ -59,6 +59,15 @@ class TestExecutionContract(unittest.TestCase):
         self.assertNotIn("read the whole approved task and every mandatory", content)
         self.assertNotIn("prompt-base as the operational contract", content)
 
+    def test_sector_router_is_optional_v1_extension(self):
+        template = json.loads(TEMPLATE.read_text())
+        legacy = json.loads(CONTRACT.read_text())
+        self.assertEqual(template["schema_version"], legacy["schema_version"])
+        self.assertIn("sectors", template)
+        self.assertIn("global_acceptance_refs", template)
+        self.assertNotIn("sectors", legacy)
+        self.assertTrue(REQUIRED_FIELDS.issubset(template))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -86,13 +86,16 @@ Include only:
 
 - `task_id`
 - `execution_contract_path`
+- sector and phase for routed contracts
 - current branch/revision
 - relevant prior receipt or handoff path when resuming
 - output instruction: return only changed files, tests, and blockers in at most 12 lines
 
 Do not paste whole repositories, long chat transcripts, unrelated logs, or
 complete documentation trees. The executor validates the contract, then reads
-the Human Task, named files, and mandatory skills selectively. The orchestrator
+its routed Task sections, relevant global constraints, named sources with
+purpose and mandatory skills. Harness reads the complete Task; the specialist
+uses `context-routing.md` and requests expansion when needed. The orchestrator
 agent inspects the resulting files, receipt, and diff instead of requesting a
 long implementation explanation.
 

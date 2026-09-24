@@ -11,6 +11,7 @@ O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel c
 - [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
 - [UI/UX](#uiux-standard), [Security](#security-standard) e [SDD](#sdd-spec-factory)
 - [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
+- [Setores e Context Routing](#setores-e-context-routing) e [QA independente](#qa-testing-standard)
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
 
 ## Camada Global
@@ -73,6 +74,12 @@ deste projeto, nao padroes oficiais da OpenAI. A classificacao completa esta em
 
 ```text
 plugins/
+  qa-testing-standard/
+    .codex-plugin/plugin.json
+    .claude-plugin/plugin.json
+    plugin.json
+    skills/qa-testing-standard/SKILL.md
+    skills/qa-testing-standard/references/
   dev-environment-standard/
     .codex-plugin/plugin.json
     .claude-plugin/plugin.json
@@ -146,6 +153,7 @@ Engineering Harness
       +--> sdd-spec-factory
       +--> dev-implementation-standard
       +--> ui-ux-standard
+      +--> qa-testing-standard
       +--> security-standard
       +--> devops-standard
       +--> plugins / MCPs / CLIs / scripts / executor LLM
@@ -170,6 +178,7 @@ flowchart TD
     B --> C[SDD / Specs]
     B --> D[Implementation]
     B --> E[UI / UX]
+    B --> QA[QA / Test Engineering]
     B --> F[Security]
     B --> DOPS[DevOps]
     B --> G[Tools / MCP / Plugins]
@@ -191,6 +200,7 @@ hierarquica e uma decisao arquitetural local deste projeto.
 | `sdd-spec-factory` | LLM de requisitos: specs, Human Task e Execution Contract |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
+| `qa-testing-standard` | QA funcional independente, reproducao, regressao e reteste |
 | `security-standard` | LLM especialista em seguranca |
 | `devops-standard` | Especialista em CI/CD, infraestrutura, operacoes, releases e recuperacao |
 
@@ -202,6 +212,7 @@ Ideia / demanda
   -> dev-workflow-standard consolida escopo
   -> sdd-spec-factory gera specs
   -> sdd-spec-factory gera Human Task + lean Execution Contract
+  -> matriz de setores e Context Routing com fontes/propositos
   -> aprovacao humana
   -> executor recebe task_id + execution_contract_path
   -> contrato validado; referencias obrigatorias carregadas sob demanda
@@ -216,8 +227,10 @@ Ideia / demanda
   -> EXECUTION_RECEIPT completo
   -> EXECUTION_REPORT_COMMENT -> GitHub Issue / historico do Board
   -> dev-workflow-standard entra em VALIDATING
-  -> Pull Request
-  -> ui-ux-standard / security-standard / QA conforme aplicavel
+  -> ui-ux-standard / qa-testing-standard / security-standard / DevOps conforme REQUIRED
+  -> reconciliacao dos setores e gate do PR
+  -> Pull Request quando autorizado
+  -> gate final do Harness e review humano
   -> dev-workflow-standard aprova ou solicita rework
   -> merge / deploy (somente apos PR aprovado)
 ```
@@ -298,7 +311,8 @@ O orquestrador nunca escreve codigo de produto. Depois que as specs e a task
 estao aprovadas, ele delega a implementacao para `dev-implementation-standard`,
 que pode usar qualquer LLM autorizado como meio de execucao. Para economizar
 contexto e tokens, o orquestrador nao envia o projeto inteiro nem a conversa
-completa: cada delegacao recebe a task, as specs obrigatorias, o modulo
+completa: cada delegacao recebe identificadores, setor e revisao. O contrato
+aponta as secoes da Task, as specs obrigatorias relevantes, o modulo
 permitido, restricoes e os criterios de aceite. Banco, API/Backend, Frontend/UI,
 testes e documentacao sao separados quando puderem ser revisados de forma
 independente.
@@ -336,6 +350,58 @@ Regras:
 - `COMPLETED`: existe resultado + evidencia de validacao.
 
 `ASSIGNED` nao e estado de conclusao.
+
+## Setores e Context Routing
+
+A Human Task e o painel completo; o Harness le essa visao global e reconcilia
+os setores. Cada especialista recebe `task_id`, `execution_contract_path`,
+`sector`, revisao e receipts de dependencias materiais, nao corpos inteiros de
+Tasks/specs. O contrato e indice, nao armazena status, logs ou resultados.
+
+A Sector Validation Matrix mantem Banco, API/Backend, Frontend, UI/UX, QA/Testes,
+Seguranca, DevOps/Infraestrutura, Observabilidade, Documentacao e Gate Final.
+Cada linha tem owner, REQUIRED ou N/A, motivo de N/A, estado e dependencias.
+Dominio adicional material pode ser incluido. Uma Task trivial usa matriz
+compacta, sem secoes detalhadas ou invocacoes para os setores N/A.
+
+- REQUIRED: carregar path e proposito antes da acao.
+- CONDITIONAL: carregar somente quando a condicao explicita ocorrer.
+- OPTIONAL: consulta complementar, nunca leitura automatica.
+
+O especialista le seu SKILL.md completo, as secoes listadas da Task, criterios
+globais pertinentes, fontes requeridas, codigo relevante e receipts materiais.
+So expande para a Task inteira por necessidade justificada, conflito, regra
+normativa ou pedido do Harness. Fonte obrigatoria ausente e conflito de fontes
+bloqueiam o checkpoint. Menor contexto COMPLETO, nao contexto insuficiente.
+
+`depends_on` governa validacao final; `planning_depends_on` permite planejamento
+antecipado sem ignorar seus proprios requisitos. Planejar casos de QA nao e
+executa-los. Mudanca material de revisao invalida evidencias afetadas e exige
+revalidacao. O Harness registra o resultado do owner, nao inventa PASS por ele.
+
+```text
+CODE_COMPLETE != TASK_COMPLETE
+NO_EVIDENCE != PASS
+SECTOR_REQUIRED != OPTIONAL
+OUTSIDE_OWNER != AUTHORIZED_TO_PASS
+CONTEXT_AVAILABLE != CONTEXT_REQUIRED
+```
+
+Setor REQUIRED sem evidencia/receipt ou com PENDING, BLOCKED, PARTIAL ou
+NOT_VALIDATED impede conclusao. N/A justificado nao bloqueia. PASS com evidencia
+corresponde a COMPLETED na maquina existente; nenhuma segunda maquina foi criada.
+O gate final reconcilia criterios, docs e pacote de PR, preservando aceite humano.
+
+Compatibilidade: `schema_version: 1` recebe `sectors` e
+`global_acceptance_refs` opcionais. Contratos legados continuam legiveis;
+normalizacao e sob demanda, sem migracao em massa. Consumidor antigo que ignore
+setores nao oferece a nova garantia: atualizar Harness e especialistas antes
+de depender do roteamento. Nao existe parser/engine runtime novo neste pacote.
+Os checks estruturais nao garantem obediencia automatica de uma LLM.
+
+Consulte [Context Routing](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md)
+para o schema, migracao e gates. O [relatorio da entrega](docs/sector-context-qa-delivery.md)
+reune exemplo PT-BR, contrato correspondente, cenarios e limites de validacao.
 
 ### EXECUTION_RECEIPT
 
@@ -460,6 +526,7 @@ O harness usa um registro de capacidades para escolher o executor correto e, qua
 
 - requisitos/specs -> `sdd-spec-factory`
 - implementacao -> `dev-implementation-standard` + executor autorizado
+- QA funcional / test engineering -> `qa-testing-standard`, sem substituicao silenciosa pelo implementador
 - UI/UX -> `ui-ux-standard`
 - seguranca -> `security-standard`
 - CI/CD, infra, operacoes, releases avancados e recuperacao -> `devops-standard`
@@ -795,6 +862,41 @@ O plugin e uma implementacao original e independente. Ferramentas e plugins de
 terceiros podem ser usados como segunda opiniao, mas seus textos, scripts,
 templates e fluxos proprietarios nao sao copiados ou redistribuidos.
 
+## QA Testing Standard
+
+`qa-testing-standard` verifica comportamento independentemente de quem escreveu
+o produto. Modos proporcionais: Change Validation, Scoped QA, Repository
+Regression Audit (quando solicitado), Bug Reproduction e Fix Verification.
+Durante planning, produz QA_GUARDRAILS, TEST_SCENARIOS, REGRESSION_TARGETS e
+VALIDATION_REQUIREMENTS relevantes. Durante validation, executa os casos contra
+o artefato/revisao acordado e retorna QA_STATUS e os receipts existentes.
+
+Implementation constroi e corrige; QA reproduz e retesta; Security valida
+vulnerabilidade/abuso; UI/UX valida experiencia/design; DevOps valida operacao;
+Environment prepara capacidades; Harness reconcilia todos os setores.
+QA nao corrige produto silenciosamente nem declara PASS dos outros owners.
+
+Mudanca funcional, bugfix, API, regra de negocio, fluxo de usuario, integracao,
+estado persistente, pagamentos, import/export e concorrencia exigem QA
+proporcional. Docs/metadata sem impacto comportamental podem ser N/A com motivo.
+Alteracao visual ainda exige UI, mesmo quando QA funcional for N/A.
+
+Bug confirmado precisa de esperado/atual, reproducao, ambiente, revisao,
+evidencia, impacto e reprodutibilidade. QA distingue PRODUCT_BUG, TEST_BUG,
+ENVIRONMENT_FAILURE, FLAKY_TEST e TOOL_FAILURE. Candidato com impacto de seguranca
+vai a security-standard, sem CVE/severidade de seguranca atribuida por QA.
+O fluxo de bugfix e reproducao, confirmacao, correcao por Implementation,
+regressao e reteste independente. Teste vermelho nao confirma sozinho bug.
+
+QA_STATUS: PASS, PARTIAL, BLOCKED ou NOT_VALIDATED. PASS cobre somente escopo
+executado e obrigatorio aprovado, nao significa software sem bugs. Ferramenta
+indisponivel nao autoriza pular validacao obrigatoria.
+
+Sem registry duplicado: pytest, pytest-cov, Hypothesis e unittest continuam sob
+Implementation; Playwright sob UI. QA pode executar capability compartilhada,
+preservando owner tecnico e interpretando o resultado funcional. Environment
+continua responsavel por preparo seletivo. Nenhum dataset ou instalador novo.
+
 ## SDD Spec Factory
 
 Plugin especializado em Spec-Driven Development (SDD). Transforma um pedido de
@@ -854,7 +956,7 @@ dentro do escopo. Nao planeja, nao escreve specs e nao detem a aprovacao final.
 
 Funcao:
 
-- Ler a task aprovada e todas as specs obrigatorias vinculadas.
+- Ler o contrato e sua fatia da task aprovada, com as fontes obrigatorias relevantes.
 - Implementar somente o escopo da task, na branch sugerida.
 - Nao avancar para outra task.
 - Nao alterar arquitetura sem aprovacao.
@@ -973,6 +1075,8 @@ Plugins ainda em PR so ficam disponiveis no marketplace remoto `main` depois
 do merge. Antes disso, teste a copia local ou selecione explicitamente a branch
 de revisao. DevOps precisa do Harness atualizado com suporte ao novo owner no
 helper; instalar somente o bundle novo nao atualiza um cache antigo do Harness.
+O mesmo limite vale para QA/context routing: atualizar este checkout nao
+reinstala plugins nem atualiza caches do Codex/Claude em outros hosts.
 
 ### Codex
 
@@ -993,6 +1097,7 @@ codex plugin add security-standard@guilherme-dev-workflow
 codex plugin add sdd-spec-factory@guilherme-dev-workflow
 codex plugin add dev-implementation-standard@guilherme-dev-workflow
 codex plugin add devops-standard@guilherme-dev-workflow
+codex plugin add qa-testing-standard@guilherme-dev-workflow
 ```
 
 ### Claude Code
@@ -1014,6 +1119,7 @@ Instalar os plugins:
 /plugin install sdd-spec-factory@guilherme-dev-workflow
 /plugin install dev-implementation-standard@guilherme-dev-workflow
 /plugin install devops-standard@guilherme-dev-workflow
+/plugin install qa-testing-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
@@ -1026,7 +1132,8 @@ claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/security-standard \
   --plugin-dir ./plugins/sdd-spec-factory \
   --plugin-dir ./plugins/dev-implementation-standard \
-  --plugin-dir ./plugins/devops-standard
+  --plugin-dir ./plugins/devops-standard \
+  --plugin-dir ./plugins/qa-testing-standard
 ```
 
 ### Antigravity
@@ -1061,6 +1168,7 @@ cp -a plugins/security-standard ~/plugins/
 cp -a plugins/sdd-spec-factory ~/plugins/
 cp -a plugins/dev-implementation-standard ~/plugins/
 cp -a plugins/devops-standard ~/plugins/
+cp -a plugins/qa-testing-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao
@@ -1108,6 +1216,7 @@ Para conhecer todas as regras, consulte diretamente:
 - [`ui-ux-standard/SKILL.md`](plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md)
 - [`security-standard/SKILL.md`](plugins/security-standard/skills/security-standard/SKILL.md)
 - [`devops-standard/SKILL.md`](plugins/devops-standard/skills/devops-standard/SKILL.md)
+- [`qa-testing-standard/SKILL.md`](plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md)
 - [`workflow-pipeline.md`](docs/workflow-pipeline.md)
 - [`harness-execution.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md)
 - [`capability-registry.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md)

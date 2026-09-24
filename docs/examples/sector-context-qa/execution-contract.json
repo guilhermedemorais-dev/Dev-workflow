@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-EXAMPLE",
+  "task_path": "docs/examples/sector-context-qa/TASK-EXAMPLE.md",
+  "goal": "Illustrative tenant order lookup routing; no product execution authorized",
+  "specs": ["docs/examples/sector-context-qa/feature-spec.md"],
+  "docs": [],
+  "allowed_paths": ["docs/examples/sector-context-qa/**"],
+  "out_of_scope": ["product-implementation", "query-persistence-changes", "deploy"],
+  "requirements": ["tenant-boundary", "single-submit"],
+  "acceptance_criteria": ["AC1", "AC2", "AC3", "AC4", "AC5"],
+  "required_tests": ["integration", "functional-ui", "tenant-negative", "visual-review"],
+  "required_skills": [
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md",
+    "plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md",
+    "plugins/security-standard/skills/security-standard/SKILL.md",
+    "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md",
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md"
+  ],
+  "global_acceptance_refs": ["task:#global", "task:#criterios-de-aceite"],
+  "sectors": {
+    "database": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Existing query and persistence semantics unchanged", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "backend": {
+      "owner": "dev-implementation-standard", "applicability": "REQUIRED", "depends_on": [],
+      "task_sections": ["task:#backend"],
+      "required_sources": [
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#api", "purpose": "Implement API authorization and DTO contract"},
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#security", "purpose": "Preserve server tenant boundary"}
+      ],
+      "conditional_sources": [{"path": "docs/examples/sector-context-qa/feature-spec.md#persistence", "condition": "Query or persistence semantics change", "purpose": "Check invariants and request database scope reconciliation"}],
+      "required_validations": ["unit-tests", "integration-tests"]
+    },
+    "frontend": {
+      "owner": "dev-implementation-standard", "applicability": "REQUIRED", "depends_on": ["backend"],
+      "task_sections": ["task:#frontend"],
+      "required_sources": [
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#ui", "purpose": "Implement form states and single submit"},
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#api", "purpose": "Consume API DTO and safe errors"}
+      ],
+      "conditional_sources": [], "required_validations": ["state-tests"]
+    },
+    "ui_ux": {
+      "owner": "ui-ux-standard", "applicability": "REQUIRED", "depends_on": ["frontend"], "planning_depends_on": [],
+      "task_sections": ["task:#ui_ux"],
+      "required_sources": [{"path": "docs/examples/sector-context-qa/feature-spec.md#ui", "purpose": "Plan and validate visual states, focus and responsiveness"}],
+      "conditional_sources": [], "required_validations": ["visual-runtime-review"]
+    },
+    "qa": {
+      "owner": "qa-testing-standard", "applicability": "REQUIRED", "depends_on": ["backend", "frontend"], "planning_depends_on": [],
+      "task_sections": ["task:#qa"],
+      "required_sources": [
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#qa", "purpose": "Design and independently execute functional scenarios"},
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#api", "purpose": "Check expected outcomes against contract"}
+      ],
+      "conditional_sources": [], "required_validations": ["functional-qa", "regression-validation"]
+    },
+    "security": {
+      "owner": "security-standard", "applicability": "REQUIRED", "depends_on": ["backend"], "planning_depends_on": [],
+      "task_sections": ["task:#security"],
+      "required_sources": [
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#security", "purpose": "Validate tenant isolation and counterevidence"},
+        {"path": "docs/examples/sector-context-qa/feature-spec.md#api", "purpose": "Trace authorization to data effect"}
+      ],
+      "conditional_sources": [],
+      "optional_sources": [{"path": "docs/examples/sector-context-qa/feature-spec.md#ui", "purpose": "Consult only if tracing browser input or controls beyond API scope requires it"}],
+      "required_validations": ["authorization-review"]
+    },
+    "devops": {"owner": "devops-standard", "applicability": "N/A", "reason": "No CI runtime infrastructure or deployment change", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "observability": {"owner": "devops-standard", "applicability": "N/A", "reason": "No new operational instrumentation required", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "documentation": {
+      "owner": "dev-implementation-standard", "applicability": "REQUIRED", "depends_on": ["backend", "frontend"],
+      "task_sections": ["task:#documentation"],
+      "required_sources": [{"path": "docs/examples/sector-context-qa/feature-spec.md", "purpose": "Document intended behavior and boundaries without fabricating results"}],
+      "conditional_sources": [], "required_validations": ["documentation-review"]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard", "applicability": "REQUIRED", "depends_on": ["backend", "frontend", "ui_ux", "qa", "security", "documentation"],
+      "task_sections": ["task:#harness"], "required_sources": [], "conditional_sources": [],
+      "required_validations": ["sector-reconciliation"]
+    }
+  },
+  "stop_conditions": ["architecture_change_required", "scope_expansion_required", "mandatory_reference_missing", "source_of_truth_conflict"]
+}

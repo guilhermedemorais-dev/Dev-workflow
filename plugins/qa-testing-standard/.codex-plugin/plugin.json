@@ -1,0 +1,18 @@
+{
+  "name": "qa-testing-standard",
+  "version": "0.1.0",
+  "description": "Independent functional QA, bug reproduction, regression and fix verification.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "QA Testing Standard",
+    "shortDescription": "Verify behavior independently with reproducible evidence.",
+    "longDescription": "Risk-adaptive functional QA and Test Engineering integrated with Engineering Harness. Plans tests, reproduces bugs, verifies fixes and regression without replacing product implementation or security, visual and operational review.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": ["Use QA Testing Standard to verify this change and report evidence and limitations."]
+  }
+}

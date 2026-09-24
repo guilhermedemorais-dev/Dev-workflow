@@ -206,7 +206,10 @@ class TestDevImplementationWorkflow(unittest.TestCase):
         """Step 8: Set final status (Bloqueada or Concluída)."""
         self.assertIn('**Set final status**', self.content)
         self.assertIn('`🔴 Bloqueada` if blocked', self.content)
-        self.assertIn('`🟢 Concluída` only when\n   implementation and validation evidence support completion', self.content)
+        self.assertIn('**Set final status** for your own sector', self.content)
+        self.assertIn('only with implementation/developer-test evidence', self.content)
+        self.assertIn('not\n   completion of the entire Task', self.content)
+        self.assertIn('Harness reconciles all REQUIRED owners', self.content)
 
     def test_workflow_step_9_handoff_for_review(self):
         """Step 9: Handoff for review, do not self-approve, merge, or deploy."""
@@ -252,33 +255,39 @@ class TestDevImplementationGitHubProjectsReadiness(unittest.TestCase):
 
 
 class TestDevImplementationRecommendedTaskTemplate(unittest.TestCase):
-    """Tests for the NEW Recommended Task Template section."""
+    """Executor routes to SDD's single maintained task template."""
 
     def setUp(self):
-        self.content = read_skill()
+        self.skill = read_skill()
+        path = os.path.join(os.path.dirname(__file__), '..', 'plugins',
+                            'sdd-spec-factory', 'templates', 'task-template.md')
+        with open(path, encoding='utf-8') as source:
+            self.content = source.read()
 
     def test_recommended_task_template_section_exists(self):
         """NEW section: Recommended Task Template must exist."""
-        self.assertIn('## Recommended Task Template', self.content)
+        self.assertIn('## Recommended Task Template', self.skill)
+        self.assertIn('plugins/sdd-spec-factory/templates/task-template.md', self.skill)
+        self.assertNotIn('```markdown', self.skill)
 
     def test_template_contains_titulo(self):
         """Template must include a Título field."""
-        self.assertIn('# Título', self.content)
+        self.assertIn('# TASK-XXX:', self.content)
 
     def test_template_contains_status_visual(self):
         """Template must include Status visual section."""
         self.assertIn('## Status visual', self.content)
-        self.assertIn('Status visual: [A definir', self.content)
+        self.assertIn('Status visual: A definir', self.content)
 
     def test_template_contains_tipo(self):
         """Template must include Tipo section."""
         self.assertIn('## Tipo', self.content)
-        self.assertIn('Feature | Bug | Refactor | QA | Security | Docs | Infra', self.content)
+        self.assertIn('Feature | Bugfix | Refactor', self.content)
 
     def test_template_contains_prioridade(self):
         """Template must include Prioridade with P0-P3."""
         self.assertIn('## Prioridade', self.content)
-        self.assertIn('P0 | P1 | P2 | P3', self.content)
+        self.assertIn('Alta | Média | Baixa', self.content)
 
     def test_template_contains_prompt_para_executor(self):
         """Template must include Prompt para o executor section."""
@@ -288,11 +297,11 @@ class TestDevImplementationRecommendedTaskTemplate(unittest.TestCase):
         """Template must include Checklist de execução with correct steps."""
         self.assertIn('## Checklist de execução', self.content)
         checklist_items = [
-            'Leitura da task e specs',
-            'Implementação',
+            'Leitura da fatia e fontes obrigatórias',
+            'Execução do escopo',
             'Testes',
-            'Validação',
-            'Atualização do relatório',
+            'validação material',
+            'Evidências e resultado do próprio setor',
             'Handoff para review',
         ]
         for item in checklist_items:

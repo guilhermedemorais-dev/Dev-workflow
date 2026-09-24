@@ -1,6 +1,6 @@
 ---
 name: dev-implementation-standard
-description: "Use as the executor/coder for an already-approved task: read the task and its mandatory specs, implement only that scope on the suggested branch, do not advance to another task, do not change architecture without approval, run the required commands, update the task result, and prepare the PR. Driven by dev-workflow-standard; specs come from sdd-spec-factory."
+description: "Implement an approved task within its routed sector and required sources: write product code and developer tests, run validation, return evidence and request independent review. Does not substitute for mandatory QA, Security, UI/UX or DevOps approval. Driven by dev-workflow-standard; specs come from sdd-spec-factory."
 ---
 
 # Dev Implementation Standard (Executor Agent)
@@ -88,10 +88,15 @@ initial and final results. Escalate persistent or out-of-scope failures.
    `out_of_scope`, `requirements`, `acceptance_criteria`, `required_tests`,
    `required_skills`, and `stop_conditions`. Confirm referenced paths exist and
    the task ID matches the Human Task.
-3. **Progressive disclosure**: consult the Human Task for current status,
-   blockers, ownership, handoff, and results. Load each mandatory skill before
-   acting. Open only the referenced specs/docs and code needed for the active
-   scope; a mandatory reference must be read before changing the area it governs.
+3. **Progressive disclosure**: for a sector-routed contract, consult only the
+   listed Human Task sections, relevant global criteria/constraints, own status,
+   blockers and material dependency receipts. Load the active SKILL.md completely,
+   REQUIRED sources with purpose, and CONDITIONAL sources only when their stated
+   condition holds; OPTIONAL is not automatic. Resolve the active Harness
+   `references/context-routing.md` from its installed bundle or explicit canonical
+   checkout, never an assumed sibling cache. Legacy contracts remain readable
+   under the documented fallback. Do not load the complete Task by default;
+   missing required context or source conflict returns to Harness for resolution.
 4. **Skill receipt**: record
    `SKILL_RECEIPT` with skill name, exact path, references loaded, and the rules
    each one contributes. A skill name in a prompt is not proof it was applied.
@@ -103,7 +108,8 @@ initial and final results. Escalate persistent or out-of-scope failures.
    implementations. Every new abstraction needs at least two current concrete
    consumers or an explicit approved architectural requirement. Record the
    decision in `MINIMAL_CODE_GATE`.
-7. **Set status** to `🟡 Em andamento` in the Human Task when starting.
+7. **Set status** to `🟡 Em andamento` in the Human Task when starting your sector;
+   preserve other owners' results and let Harness reconcile global status.
 8. **Implementação**: implement only the approved scope, by layer when relevant:
    Banco, API/Backend, Frontend/UI. Do not invent files, endpoints, tables,
    payloads, or architecture.
@@ -124,8 +130,9 @@ initial and final results. Escalate persistent or out-of-scope failures.
    checkpoint report twice. Publish to the real linked Issue when possible and
    record the returned comment URL/identifier. A prepared body or failed call
    is `NOT PUBLISHED`; persist it in the Human Task with the reason instead.
-13. **Set final status**: `🔴 Bloqueada` if blocked, or `🟢 Concluída` only when
-   implementation and validation evidence support completion.
+13. **Set final status** for your own sector: `🔴 Bloqueada` if blocked, or
+   `🟢 Concluída` only with implementation/developer-test evidence. This is not
+   completion of the entire Task. Harness reconciles all REQUIRED owners.
 14. **Handoff para review**: prepare the PR or review package linked to task,
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
@@ -150,78 +157,12 @@ to normalize the task.
 
 ## Recommended Task Template
 
-```markdown
-# Título
-
-## Status visual
-- Status visual: [A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída]
-- Status Kanban: [Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done]
-- Responsável:
-- Issue criada / vinculada:
-- Branch sugerida:
-- Milestone:
-- Labels sugeridas:
-- Pronto para GitHub Projects: sim/não
-
-## Tipo
-Feature | Bug | Refactor | QA | Security | Docs | Infra
-
-## Prioridade
-P0 | P1 | P2 | P3
-
-## Objetivo
-
-## Specs obrigatórias
-
-## Docs obrigatórios
-
-## Execution Contract
-`docs/execution/TASK-XXX.json`
-
-## Arquivos e módulos permitidos
-
-## Fora do escopo
-
-## Estado atual encontrado
-
-## Resultado esperado
-
-## Regras obrigatórias da implementação
-
-## Checklist de execução
-1. Leitura da task e specs
-2. Implementação
-3. Testes
-4. Validação
-5. Atualização do relatório
-6. Handoff para review
-
-## Prompt para o executor
-Execute esta task usando o contrato:
-`docs/execution/TASK-XXX.json`
-
-Siga o Engineering Harness e registre resultado e evidências na task.
-
-## Condições de parada
-
-## Testes obrigatórios
-
-## Evidências esperadas no PR
-
-## Critérios de aceite
-
-## Banco
-
-## API/Backend
-
-## Frontend/UI
-
-## Validação
-
-## Riscos/Lacunas
-
-## Resultado da execução
-```
+Use the canonical `plugins/sdd-spec-factory/templates/task-template.md` in this
+checkout, or resolve `templates/task-template.md` from the active SDD bundle.
+Do not maintain another template here. It provides identity, scope, the Sector
+Validation Matrix, source purposes, execution order, evidence ledger and human
+gates. Request SDD normalization when needed; this executor does not invent
+missing specs or waive required sectors.
 
 ## Escalation
 
@@ -240,6 +181,13 @@ Kanban column, add the `blocked` label when a project board exists, and update
 visual status to `🔴 Bloqueada`.
 
 ## Interfaces with other skills
+
+- `qa-testing-standard` owns independent functional QA, reproduction, regression
+  selection and fix verification. This executor retains TDD, developer tests,
+  product fixes and regression-test implementation. A QA CONFIRMED_BUG requests
+  REWORK here; return the fix and test evidence for QA retest. Do not self-certify
+  QA or treat your passing developer tests as its receipt. CODE_COMPLETE !=
+  TASK_COMPLETE. A REWORK request never authorizes edits outside the contract.
 
 - Keep application implementation here. Route CI/CD, infrastructure, deployment,
   server changes and advanced release operations to `devops-standard` through
@@ -260,7 +208,8 @@ visual status to `🔴 Bloqueada`.
 - TDD used when applicable; otherwise manual validation is evidenced.
 - Required commands run; tests/validation pass or blockers are recorded.
 - `SKILL_RECEIPT`, `REUSE_INVENTORY`, and `MINIMAL_CODE_GATE` are complete.
-- Task execution result fully filled with the mandatory final report.
+- Task execution result fully filled with the mandatory final report for the
+  assigned sector, with dependency evidence and unvalidated areas explicit.
 - Applicable Issue reports are factual and non-duplicative; publication is
   claimed only with returned remote evidence. Missing capability is recorded as
   `NOT PUBLISHED` and does not replace validation.

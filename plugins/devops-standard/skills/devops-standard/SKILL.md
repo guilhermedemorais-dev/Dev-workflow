@@ -12,6 +12,18 @@ Source adaptation and local extensions are documented in [ORIGIN](references/ORI
 
 ## Responsibility boundaries
 
+- `qa-testing-standard` validates functional product behavior; DevOps validates
+  operational runtime, health, CI/CD, rollback and reliability. A service health
+  check is not functional QA. Environment prepares missing tools, not production
+  infrastructure. Preserve shared tool owners and return only your own PASS.
+- For sector routing, load listed Task sections, relevant global constraints,
+  required sources with purpose, triggered conditionals and material receipts.
+  Do not load the whole Task or optional sources by default. Read this SKILL.md
+  and the active operational references fully. Resolve context-routing from the
+  active Harness or explicit canonical checkout; missing required sources or
+  source conflicts block. Planning may precede the final runtime artifact, but
+  cannot fulfill its dependent validation gate or authorize production changes.
+
 - Harness owns scope, delegation, lifecycle, review and human gates.
 - DevOps owns operational design, bounded execution and validation of CI/CD,
   infrastructure, servers, release and recovery procedures.
