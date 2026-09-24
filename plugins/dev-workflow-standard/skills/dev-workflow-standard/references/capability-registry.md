@@ -23,6 +23,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | UI/UX design and review | `ui-ux-standard` | none when UI validation is mandatory | design/review findings + validation evidence |
 | functional QA / test engineering | `qa-testing-standard` | none when independent QA is mandatory | test strategy + executed validation + bug disposition + QA_STATUS |
 | security review | `security-standard` | none when security trigger is mandatory | findings/coverage + disposition |
+| GitHub repository governance / repository bootstrap | `devops-standard` | explicit manual steps with observed evidence and approved sufficient fallback | diagnose + approved apply when required + verify + readiness report |
 | CI/CD, containers and operational config | `devops-standard` | approved project-native tool under the same owner | validated config/build + relevant runtime evidence |
 | IaC, Kubernetes, GitOps and cloud operations | `devops-standard` | approved project-native platform, no forced migration | scoped plan/render/dry-run + explicit human gate for mutation |
 | deploy, server administration and advanced Git/releases | `devops-standard` | manual authorized handoff if target cannot be verified | target, approval, rollback and post-change health |
@@ -81,6 +82,13 @@ the fallback policy or block explicitly.
 ## Specialist Trigger Summary
 
 ### DevOps and environment boundary
+
+Repository onboarding, settings, labels, Projects and rules belong to DevOps,
+using its `references/github-governance.md` and deterministic helper. Environment
+only prepares Git/gh. Bootstrap before the first applicable Task; reuse compatible
+evidence until drift/change/failure/request. No new owner, installer or auth flow.
+Only fresh verification can justify readiness; a plan, CLI version or generated
+workflow is not evidence of remote enforcement or successful CI.
 
 Invoke `devops-standard` for operational infrastructure, not ordinary source
 edits or a basic git status/diff/fetch/commit/PR. Advanced Git history rewriting,

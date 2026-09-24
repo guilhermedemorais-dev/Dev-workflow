@@ -1,6 +1,6 @@
 ---
 name: devops-standard
-description: "Operate and review CI/CD, containers, infrastructure, releases, servers, cloud, observability and recovery under an approved Engineering Harness task. Use for operational changes, not ordinary application coding or routine Git status, commits and PRs."
+description: "Operate and review GitHub repository governance, CI/CD, containers, infrastructure, releases, servers, cloud, observability and recovery under an approved Engineering Harness task. Use for operational changes, not ordinary application coding or routine Git status, commits and PRs."
 ---
 
 # DevOps Standard
@@ -26,7 +26,8 @@ Source adaptation and local extensions are documented in [ORIGIN](references/ORI
 
 - Harness owns scope, delegation, lifecycle, review and human gates.
 - DevOps owns operational design, bounded execution and validation of CI/CD,
-  infrastructure, servers, release and recovery procedures.
+  infrastructure, servers, release and recovery procedures, including GitHub
+  repository settings, Projects, labels, rulesets and repository readiness.
 - `dev-implementation-standard` owns application code and ordinary executor
   validation. Routine Git status/diff/fetch/commit/PR stays with Harness/executor;
   release policy, tags, advanced history operations and GitOps route here.
@@ -91,6 +92,7 @@ templates, API tests, remote tools, command output or receipts.
 
 | Active need | Read |
 | --- | --- |
+| repository governance/bootstrap, GitHub settings, Rulesets, Project, labels, Issue/PR templates or readiness | [GitHub governance](references/github-governance.md) |
 | advanced Git, release policy, tags | [git-release](references/git-release.md) |
 | pipeline configuration and validation | [ci-cd](references/ci-cd.md) |
 | Dockerfile, image, Compose, container health | [containers](references/containers.md) |
@@ -123,3 +125,11 @@ bundle or this repository, not an assumed sibling plugin cache. Keep local
 `runtime-state/tool-state.json` ignored. A read-only bundle uses the helper's
 paired `TOOL_REGISTRY_PATH` and `TOOL_STATE_PATH` overrides to a writable runtime
 location. No runtime paths, secrets or machine state belong in the task contract.
+
+For repository onboarding, use the governance helper's diagnose → propose →
+human confirmation → apply → verify flow. Diagnose/propose/verify are read-only;
+apply requires the reviewed proposal and explicit confirmation for its exact
+target. Environment prepares missing git/gh; the developer authenticates through
+gh's secure flow, never tokens in chat. Resume that checkpoint after auth.
+Recheck for drift or a material change, not full bootstrap before every Task.
+PROJECT READY != PRODUCTION AUTHORIZED; configured != enforced.

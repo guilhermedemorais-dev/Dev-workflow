@@ -209,5 +209,26 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
         self.assertIn('agente executor usando `dev-implementation-standard`', self.content)
 
 
+class TestRepositoryGovernanceRoadmap(unittest.TestCase):
+    def test_onboarding_covers_all_phases_and_human_boundaries(self):
+        content = read_readme()
+        self.assertIn('## Do zero ao projeto pronto', content)
+        phases = re.findall(r'^\| Fase (\d+) \|', content, re.MULTILINE)
+        self.assertEqual(phases, [str(number) for number in range(11)])
+        for invariant in ('USER_ACTION_REQUIRED', 'READY_WITH_LIMITATIONS',
+                          'PROJECT READY != PRODUCTION AUTHORIZED',
+                          'authentication != authorization',
+                          'configured != enforced'):
+            self.assertIn(invariant, content)
+
+    def test_governance_reference_and_four_operations_are_discoverable(self):
+        content = read_readme()
+        self.assertIn('references/github-governance.md', content)
+        for operation in ('diagnose', 'propose', 'apply --confirm', 'verify'):
+            self.assertIn(operation, content)
+        self.assertIn('Awaiting Final Approval', content)
+        self.assertIn('merge humano', content)
+
+
 if __name__ == '__main__':
     unittest.main()

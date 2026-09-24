@@ -13,7 +13,7 @@ A fazer | Em andamento | Em revisão | Concluída | Bloqueada
 
 ## Status visual
 - Status visual: A definir | 🟡 Em andamento | 🔴 Bloqueada | 🟢 Concluída
-- Status Kanban: Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done
+- Status Kanban: Backlog | Discovery / SDD | Ready for Dev | In Progress | Validation | In Review | Awaiting Final Approval | Done
 - Pronto para GitHub Projects: sim/não
 
 ## Tipo

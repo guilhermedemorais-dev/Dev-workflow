@@ -19,6 +19,29 @@ the next. It never writes product code itself; it routes work to executable capa
 
 ## Pipeline
 
+First project onboarding, when remote governance is required:
+
+```text
+Environment available -> Git/gh prepared -> human auth handoff if required
+  -> repository access/admin/Project capability diagnosis
+  -> DevOps diagnose -> propose -> explicit human confirmation -> apply
+  -> verify -> readiness evidence -> Harness gate -> first Task
+```
+
+DevOps owns this repository readiness bootstrap; it is not a new skill.
+Environment prepares prerequisites only. Reuse compatible evidence for normal
+Tasks, rechecking on drift, relevant change, real failure or explicit request.
+Do not run the full bootstrap before every Task. Three read-only operations
+(diagnose/propose/verify) cannot mutate GitHub or the checkout. Apply is scoped
+to a reviewed proposal, never permission for push/merge/deploy. See the
+[DevOps reference](../plugins/devops-standard/skills/devops-standard/references/github-governance.md).
+
+Readiness requires Environment, applicable authentication, repository access,
+required files/governance, Project and CI evidence (or explicit justified N/A),
+human gates and executed verification. A sufficient approved fallback may yield
+READY_WITH_LIMITATIONS; unknown mandatory evidence cannot. Governance readiness
+does not replace Harness execution states. PROJECT READY != PRODUCTION AUTHORIZED.
+
 ```text
 Idea / demand
   -> dev-workflow-standard: diagnose (critical questions, risks)
@@ -51,7 +74,8 @@ Idea / demand
   -> Pull Request when authorized; no fabricated remote publication
   -> Harness Final Gate and Human Review
   -> dev-workflow-standard: approve or request rework
-  -> merge / deploy (only after PR approved)
+  -> human approval and human merge (Done only after observed merge)
+  -> deploy (separate explicit authorization after PR approval)
 ```
 
 ## Gates (must pass before advancing)
@@ -107,6 +131,13 @@ Idea / demand
   boundaries, secrets).
 
 ## Invariants
+
+Kanban policy: Backlog -> Discovery / SDD -> Ready for Dev -> In Progress ->
+Validation -> In Review -> Awaiting Final Approval -> Done. Validation is the
+technical checkpoint; In Review requires a PR; the final column requires human
+merge, not just a closed Issue or local COMPLETED receipt. Blocked is a label,
+not a column. Preserve existing Project option IDs and values when adding stages.
+At most three automatic rework cycles by default; then diagnosis and BLOCKED.
 
 - CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS.
 - SECTOR_REQUIRED != OPTIONAL; OUTSIDE_OWNER != AUTHORIZED_TO_PASS.

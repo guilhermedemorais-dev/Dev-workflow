@@ -141,7 +141,7 @@ standard without a primary source.
   disclosure, real tool execution, inspectable output, feedback loops,
   mechanical validation, and recovery.
 - **Local architectural decisions:** the orchestrator agent does not write
-  product code; the specialist skills remain independent; the six-column
+  product code; the specialist skills remain independent; the eight-column
   Kanban model and declared human gates remain project policy.
 - **Local extensions:** `EXECUTION_RECEIPT`, `EXECUTION_REPORT_COMMENT`,
   `SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`,
@@ -286,8 +286,10 @@ Use these columns as the global workflow status:
 2. Discovery / SDD
 3. Ready for Dev
 4. In Progress
-5. In Review
-6. Done
+5. Validation
+6. In Review
+7. Awaiting Final Approval
+8. Done
 
 Column means process step. Label means condition or classification. Do not create
 a blocked column. A blocked card stays in its current column with the `blocked`
@@ -315,9 +317,37 @@ orchestrator must use these definitions as gate checks.
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
 | Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read its routed Task sections and sources, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation, tests/validation, evidence, task update, and applicable Issue report are complete, then PR/review handoff is ready. |
-| In Review | PR or review package exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | Review approves and moves to Done with a `COMPLETED` report, or rejects and returns to In Progress with `rework` and an actionable report. |
-| Done | Review passed, required validations are evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
+| In Progress | Executor accepted the task, read its routed Task sections and sources, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation and developer evidence are ready for independent validation. |
+| Validation | Technical review package links task, specs, evidence and receipt; relevant implementation is available. | Required specialist validations pass and review package is prepared for PR. |
+| In Review | PR exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | CI and required reviews pass; advance to Awaiting Final Approval, or return to In Progress with `rework` and an actionable report. |
+| Awaiting Final Approval | Required technical validations pass and human decision is pending; identify whether this is a local package or published PR. | Human approval and human merge are observed; no automatic merge. |
+| Done | Human merge observed, required validations evidenced, and no unresolved blocker remains. | No normal exit; archive only when historical tracking is no longer useful. |
+
+A local `COMPLETED` execution checkpoint is not a merged Task or permission to
+move its card to Done. Default maximum is three automatic rework cycles, then
+stop with diagnosis and `BLOCKED`; do not retry unchanged permission failures.
+
+## Repository Readiness Bootstrap
+
+Before the first Task requiring remote governance, route repository onboarding
+to `devops-standard` and load its `references/github-governance.md`. Environment
+prepares Git/gh; DevOps owns diagnose/propose/confirmed apply/verify. Authentication
+handoff is human, never a request for tokens in chat. Authentication, repository
+access, administration, organization and Project permissions are separate gates.
+
+Require an existing EXECUTION_RECEIPT with target/revision, current verification,
+applicable capabilities, proposal/confirmation, actual mutations, limitations and
+readiness. `READY`/`READY_WITH_LIMITATIONS` from governance are scoped results, not
+new global execution states. Environment/auth/access/files/remote governance/
+Project/CI/human gates must be evidenced; explicit N/A and approved sufficient
+fallbacks must be justified. Missing required evidence is not a limitation waiver.
+`PROJECT READY != PRODUCTION AUTHORIZED`; never equate configured with enforced.
+
+Reuse compatible evidence after onboarding. Repeat only for drift, relevant
+change, actual failure or explicit request, not full bootstrap before every Task.
+Repository governance makes DevOps REQUIRED; trigger Security for permissions,
+secrets/IAM or equivalent risk. QA may be N/A for pure remote configuration with
+reason, but deterministic helper behavior changes require independent QA.
 
 ## GitHub-Ready Task Structure
 
@@ -454,7 +484,7 @@ When a PR comes back, the orchestrator reviews before approving:
     validation and bug/retest disposition. Every REQUIRED sector is reconciled;
     stale receipts, missing evidence or PARTIAL/NOT_VALIDATED prevent completion.
 
-Then: **approve** (allowing merge/deploy) or **request rework** with specific,
+Then: **approve** for human review (not automatic merge/deploy) or **request rework** with specific,
 spec-anchored reasons. Rejected review moves the card back to `In Progress` with
 the `rework` label until corrected.
 

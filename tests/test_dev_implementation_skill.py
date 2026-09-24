@@ -314,7 +314,7 @@ class TestDevImplementationRecommendedTaskTemplate(unittest.TestCase):
 
     def test_template_kanban_status_options(self):
         """Template must include all Kanban status options."""
-        self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | In Review | Done', self.content)
+        self.assertIn('Backlog | Discovery / SDD | Ready for Dev | In Progress | Validation | In Review | Awaiting Final Approval | Done', self.content)
 
     def test_template_pronto_para_github_projects(self):
         """Template must include Pronto para GitHub Projects field."""
