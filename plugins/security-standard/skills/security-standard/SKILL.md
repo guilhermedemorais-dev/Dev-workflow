@@ -42,6 +42,22 @@ tests, mocks, local fixtures, or an isolated environment.
 
 ## Relationship To The Main Workflow
 
+For a sector-routed contract, load the security Task sections, relevant global
+constraints/criteria, purpose-qualified REQUIRED sources, triggered CONDITIONAL
+sources and material dependency receipts/code. Do not read unrelated UI, QA or
+DevOps docs or the entire Task by default. The active SKILL.md and mandatory
+security references remain fully required. Resolve the Harness context-routing
+reference from the active bundle or explicit checkout; missing required sources
+or conflicting authority return to Harness, not a silent assumption.
+
+`qa-testing-standard` may reproduce a functional bug and send a
+SECURITY_CANDIDATE here. A CONFIRMED_BUG is not a CONFIRMED_SECURITY_FINDING.
+Only security-standard validates and classifies security impact under the
+existing finding/false-positive/publication gates. QA does not assign a security
+severity or CVE. Return your own sector evidence and request backend REWORK when
+needed; never mark Backend or QA PASS. Planning analysis may run early; final
+security validation still requires its relevant implemented artifact/dependencies.
+
 `devops-standard` owns operational infrastructure and reliability validation,
 not AppSec, SAST/DAST or security scanner interpretation. Review its IAM,
 secrets, TLS, firewall, public ports, elevated privileges, sensitive storage and

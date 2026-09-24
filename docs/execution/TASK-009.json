@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "task_id": "TASK-009",
+  "task_path": "docs/tasks/TASK-009-sector-context-qa.md",
+  "goal": "Sector context routing and independent functional QA within existing Harness",
+  "specs": ["docs/specs/sector-context-qa/module-spec.md", "docs/specs/sector-context-qa/validation-rules.md"],
+  "docs": ["AGENTS.md", "README.md", "docs/workflow-pipeline.md"],
+  "allowed_paths": [
+    "README.md", "docs/workflow-pipeline.md", "AGENTS.md",
+    "docs/specs/sector-context-qa/**", "docs/tasks/TASK-009-sector-context-qa.md",
+    "docs/execution/TASK-009.json", "docs/sector-context-qa-delivery.md", "docs/qa/**", "docs/examples/sector-context-qa/**",
+    "plugins/qa-testing-standard/**",
+    "plugins/sdd-spec-factory/templates/**", "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md",
+    "plugins/sdd-spec-factory/skills/sdd-spec-factory/references/**",
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/**",
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md",
+    "plugins/dev-implementation-standard/templates/**",
+    "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md",
+    "plugins/security-standard/skills/security-standard/SKILL.md",
+    "plugins/devops-standard/skills/devops-standard/SKILL.md",
+    ".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json", "tests/**"
+  ],
+  "out_of_scope": ["push-pr-merge-deploy", "global-install", "new-policy-engine", "new-runtime-parser", "duplicate-tool-owners", "bulk-legacy-migration", "unmerged-branch-import"],
+  "requirements": ["sector-matrix", "purpose-based-context-routing", "independent-qa", "reuse-existing-receipts", "v1-additive-compatibility"],
+  "acceptance_criteria": ["RN-01-RN-12", "T01-T38", "S01-S10", "all-required-evidenced", "readme-pipeline-current"],
+  "required_tests": ["structural-unittest", "scenario-review", "plugin-skill-validation", "git-diff-check"],
+  "required_skills": [
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md",
+    "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md",
+    "plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md"
+  ],
+  "required_validations": [
+    {"owner": "dev-implementation-standard", "capability": "structural-tests", "preferred_tool": "python-unittest"},
+    {"owner": "qa-testing-standard", "capability": "functional-qa"}
+  ],
+  "global_acceptance_refs": ["task:#acceptance"],
+  "sectors": {
+    "database": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Sem persistencia ou schema", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "backend": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Sem API de produto", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "frontend": {"owner": "dev-implementation-standard", "applicability": "N/A", "reason": "Sem interface renderizada", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "ui_ux": {"owner": "ui-ux-standard", "applicability": "N/A", "reason": "Somente boundary textual sem design alterado", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "security": {"owner": "security-standard", "applicability": "N/A", "reason": "Sem nova superficie AppSec; preservar limites no review QA", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "devops": {"owner": "devops-standard", "applicability": "N/A", "reason": "Sem mudanca operacional de infra", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "observability": {"owner": "devops-standard", "applicability": "N/A", "reason": "Sem telemetria nova", "depends_on": [], "task_sections": [], "required_sources": [], "conditional_sources": [], "required_validations": []},
+    "governance": {
+      "owner": "dev-implementation-standard", "applicability": "REQUIRED", "depends_on": [],
+      "task_sections": ["task:#governance"],
+      "required_sources": [{"path": "docs/specs/sector-context-qa/module-spec.md", "purpose": "Implementar arquitetura e limites aprovados"}, {"path": "docs/specs/sector-context-qa/validation-rules.md", "purpose": "Cobrir requisitos e compatibilidade"}],
+      "conditional_sources": [{"path": "plugins/dev-implementation-standard/skills/dev-implementation-standard/references/tool-registry.json", "purpose": "Resolver owner da ferramenta de teste", "condition": "Execucao de capability de teste"}],
+      "required_validations": ["structural-tests", "plugin-skill-validation"]
+    },
+    "qa": {
+      "owner": "qa-testing-standard", "applicability": "REQUIRED", "depends_on": ["governance"], "planning_depends_on": [],
+      "task_sections": ["task:#qa"],
+      "required_sources": [{"path": "docs/specs/sector-context-qa/validation-rules.md", "purpose": "Verificar oraculos T01-T38 e S01-S10"}, {"path": "docs/specs/sector-context-qa/module-spec.md", "purpose": "Revisar limites da metodologia"}],
+      "conditional_sources": [{"path": "tests/test_sector_context_routing.py", "purpose": "Executar regressao estrutural do routing", "condition": "Governance entrega implementacao para review"}, {"path": "tests/test_qa_testing_standard.py", "purpose": "Verificar estrutura e fronteiras QA", "condition": "Bundle QA entregue"}],
+      "required_validations": ["functional-qa", "scenario-review", "structural-tests"]
+    },
+    "documentation": {
+      "owner": "dev-implementation-standard", "applicability": "REQUIRED", "depends_on": ["governance"],
+      "task_sections": ["task:#documentation"],
+      "required_sources": [{"path": "README.md", "purpose": "Documentar arquitetura e uso"}, {"path": "docs/workflow-pipeline.md", "purpose": "Atualizar gates e ordem"}, {"path": "docs/specs/sector-context-qa/module-spec.md", "purpose": "Preservar decisao arquitetural"}],
+      "conditional_sources": [{"path": ".agents/plugins/marketplace.json", "purpose": "Conferir descoberta QA Codex", "condition": "Bundle QA criado"}, {"path": ".claude-plugin/marketplace.json", "purpose": "Conferir descoberta QA Claude", "condition": "Bundle QA criado"}],
+      "required_validations": ["documentation-review"]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard", "applicability": "REQUIRED", "depends_on": ["governance", "qa", "documentation"],
+      "task_sections": ["task:#harness"],
+      "required_sources": [{"path": "docs/tasks/TASK-009-sector-context-qa.md", "purpose": "Reconciliar visao completa e receipts dos owners"}, {"path": "docs/execution/TASK-009.json", "purpose": "Conferir escopo e routing"}],
+      "conditional_sources": [], "required_validations": ["sector-reconciliation"]
+    }
+  },
+  "stop_conditions": ["architecture_change_required", "scope_expansion_required", "mandatory_reference_missing", "source_of_truth_conflict"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "qa-testing-standard",
+  "version": "0.1.0",
+  "description": "Independent functional QA and Test Engineering for the Engineering Harness.",
+  "skills": "./skills/"
+}

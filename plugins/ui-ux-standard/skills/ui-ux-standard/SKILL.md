@@ -26,6 +26,21 @@ Own:
 Do not own backend architecture, database design, deployment, or final user
 approval.
 
+`qa-testing-standard` owns functional flows, form submission, navigation and
+duplicate/retry behavior. This skill retains design fidelity, visual hierarchy,
+accessibility design, responsiveness and visual runtime QA. Share relevant
+evidence without claiming the other owner's PASS. A misaligned button routes
+here; a button submitting twice routes to QA; unauthorized action routes to
+security-standard. Playwright tool ownership remains here, even when QA uses it.
+
+For sector-routed handoffs, read the Execution Contract and listed Task sections,
+relevant global criteria, REQUIRED sources with purpose and triggered CONDITIONAL
+sources. Do not load the whole Task or OPTIONAL sources by default. Read this
+SKILL.md fully and required active-mode references. Resolve context-routing from
+the active Harness or explicit canonical checkout; missing required context goes
+back to Harness. Planning/design may precede frontend completion; final visual
+validation requires the relevant rendered artifact and current revision evidence.
+
 ## Non-Negotiables
 
 - Inspect existing UI, routes, components, styling stack, dependencies, design

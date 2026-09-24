@@ -13,6 +13,7 @@ the next. It never writes product code itself; it routes work to executable capa
 | `sdd-spec-factory` | Requirements LLM / executable task |
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
+| `qa-testing-standard` | Independent functional QA / Test Engineering |
 | `security-standard` | Security specialist LLM |
 | `devops-standard` | Operational infrastructure, CI/CD, releases and recovery |
 
@@ -24,8 +25,10 @@ Idea / demand
   -> dev-workflow-standard: consolidate scope (in / out / constraints / decisions)
   -> sdd-spec-factory: generate specs (product/module/page/component/validation/API/DB)
   -> sdd-spec-factory: generate Human Task + lean Execution Contract
+  -> Sector Validation Matrix: REQUIRED/N/A, owners, sources and dependencies
+  -> Context Routing: Harness reads global Task, specialists receive own sections
   -> HUMAN APPROVAL
-  -> short bootstrap: task_id + execution_contract_path
+  -> short bootstrap: task_id + execution_contract_path + sector + revision + relevant receipts
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> environment status: compatible fast path for required capabilities
@@ -42,8 +45,11 @@ Idea / demand
   -> EXECUTION_REPORT_COMMENT -> linked GitHub Issue when available
   -> dev-workflow-standard: VALIDATING
   -> owner skill analyzes findings, corrects in scope, and revalidates on FAIL
-  -> Pull Request (links task, issue, branch, specs followed)
-  -> ui-ux-standard / security-standard / QA review (as applicable)
+  -> specialist validation: UI/UX / qa-testing-standard / Security / DevOps as REQUIRED
+  -> Sector Reconciliation: owner receipts, evidence and current revision
+  -> PR Gate: review package links task, issue, branch, specs followed
+  -> Pull Request when authorized; no fabricated remote publication
+  -> Harness Final Gate and Human Review
   -> dev-workflow-standard: approve or request rework
   -> merge / deploy (only after PR approved)
 ```
@@ -65,10 +71,19 @@ Idea / demand
    by the executor agent using `dev-implementation-standard`.
 5. **Review gate** — PR links task, issue, branch and specs; UI validated by
    `ui-ux-standard` when there is UI; security validated by `security-standard`
-   when triggers apply; QA passed. Approved or sent to rework by the orchestrator.
+   when triggers apply; independent QA passed when REQUIRED. All required sectors
+   reconciled with their own owners' evidence; N/A justified. Approved or sent to
+   rework by the orchestrator. A local package is not a published PR.
 6. **Release gate** — no deploy without an approved PR.
 
 ## Mandatory triggers
+
+- `qa-testing-standard`: behavioral changes, bugfixes, user/API flows, business
+  rules, persistence, payments, tenants, import/export, integration, concurrency,
+  state transitions and reported regressions. Docs/metadata without behavioral
+  impact may be N/A with reason. Pure visual changes still require UI review.
+  QA planning can precede implementation; final validation needs the relevant
+  implemented dependencies. No silent substitution by the product implementer.
 
 - `devops-standard`: CI/CD, containers, IaC, Kubernetes/GitOps, deployments,
   servers/cloud, observability, backup/restore, incidents and advanced Git/release
@@ -93,6 +108,19 @@ Idea / demand
 
 ## Invariants
 
+- CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS.
+- SECTOR_REQUIRED != OPTIONAL; OUTSIDE_OWNER != AUTHORIZED_TO_PASS.
+- CONTEXT_AVAILABLE != CONTEXT_REQUIRED: every loaded source has a purpose.
+- Harness reads the complete Task; specialists load their listed sections and
+  REQUIRED sources, triggered CONDITIONAL sources, relevant code and receipts.
+  OPTIONAL is never loaded automatically. The active SKILL.md remains mandatory.
+- Missing REQUIRED source or source_of_truth_conflict blocks the checkpoint.
+- Owners attest only their own sectors. Harness transcribes/reconciles evidence,
+  never fabricates another skill's PASS. Required PENDING/BLOCKED/NOT_VALIDATED
+  or PARTIAL sectors prevent completion; justified N/A does not block.
+- Use the existing states/receipts; PASS maps to evidenced COMPLETED. Planning
+  does not close final validation; materially stale evidence requires retest.
+
 - `dev-workflow-standard` never writes product code and never skips the intent
   contract required by the change-complexity tier.
 - `dev-implementation-standard` never implements without an approved task, and
@@ -116,11 +144,20 @@ The tiers control artifact depth, not validation quality:
 
 | Tier | Typical scope | Minimum contract |
 | --- | --- | --- |
-| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, validation command/check, evidence |
+| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, compact sector matrix with N/A reasons, validation and evidence |
 | `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/Human Task plus lean Execution Contract; focused spec only for unspecified behavior |
 | `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, Human Task, lean Execution Contract, traceability, specialists, review gates |
 
 Escalate when uncertain. Security and UI gates remain surface- and risk-based.
+
+## Context compatibility
+
+Human Task holds the matrix and evidence ledger; the v1 Execution Contract adds
+optional `sectors` and `global_acceptance_refs`, not spec bodies/status/logs.
+Legacy contracts remain readable and are normalized only when needed for resumed
+work. Exact schema, phase dependencies, migration and expansion rules live in
+the Harness [context-routing reference](../plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md).
+This is a local documented agent protocol, not a new runtime policy engine.
 
 ## Provenance
 

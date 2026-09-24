@@ -14,6 +14,7 @@ manual.
    - environment/bootstrap: `plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md`
    - requirements: `plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md`
    - implementation: `plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md`
+   - functional QA: `plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md`
    - UI/UX: `plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md`
    - security: `plugins/security-standard/skills/security-standard/SKILL.md`
    - DevOps: `plugins/devops-standard/skills/devops-standard/SKILL.md`
@@ -33,6 +34,9 @@ the active runtime before use. Never recreate its MCP/tool installation layer.
 - Do not call a capability executed until it actually ran and returned
   inspectable output.
 - Do not mark work complete before required validation passes.
+- Harness reads the complete Human Task and reconciles the Sector Validation
+  Matrix. Specialists read their routed sections and purpose-qualified sources;
+  each owner attests only its own sector. Code complete is not task complete.
 - Do not attribute local convention names to OpenAI or the wider ecosystem.
 
 ## Validation

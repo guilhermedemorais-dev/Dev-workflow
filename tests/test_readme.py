@@ -42,9 +42,9 @@ class TestReadmeOrchestratorRole(unittest.TestCase):
         self.assertIn('qualquer LLM autorizado como meio de execucao', self.content)
 
     def test_lean_delegation_fields(self):
-        """Each delegation receives only lean context: task, mandatory specs, module, constraints, acceptance criteria."""
-        # New text explicitly describes what each delegation receives
-        self.assertIn('cada delegacao recebe a task', self.content)
+        """Delegation identifies a sector; required context is resolved, not pasted."""
+        self.assertIn('cada delegacao recebe identificadores, setor e revisao', self.content)
+        self.assertIn('secoes da Task', self.content)
         self.assertIn('as specs obrigatorias', self.content)
         self.assertIn('o modulo\npermitido', self.content)
         self.assertIn('restricoes', self.content)

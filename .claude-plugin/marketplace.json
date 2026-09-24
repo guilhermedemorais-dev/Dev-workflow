@@ -105,6 +105,14 @@
       "version": "0.1.0",
       "category": "development",
       "tags": ["devops", "infrastructure", "ci-cd", "operations"]
+    },
+    {
+      "name": "qa-testing-standard",
+      "source": "./plugins/qa-testing-standard",
+      "description": "Independent functional QA, bug reproduction, regression and fix verification.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["qa", "testing", "regression", "verification"]
     }
   ]
 }

@@ -2,6 +2,8 @@
 
 > PR é a entrega revisável. Só é mergeado após review/QA aprovados.
 > Deploy só acontece depois do PR aprovado.
+> Selecionar somente checklists de setores REQUIRED, apontando receipt do owner.
+> Nos demais, registrar N/A e motivo, sem exigir todos os especialistas por padrão.
 
 ## Task
 Link da task (TASK-XXX) que originou este PR.
@@ -42,10 +44,16 @@ Resumo dos testes (passou/falhou) com evidência.
 - [ ] Banco / API/Backend / Frontend/UI revisados separadamente.
 
 ## Checklist de QA
-- [ ] QA funcional: fluxos principais e de erro validados.
+- [ ] QA funcional: receipt de qa-testing-standard quando requerido, ou N/A motivado.
 - [ ] QA visual: telas conferem com o mockup aprovado (ui-ux-standard).
 - [ ] Estados cobertos: loading, vazio, erro, sucesso, sem permissão.
 - [ ] Responsividade e acessibilidade verificadas.
+
+## Reconciliação dos setores
+Link para matriz/ledger da Task. Todos REQUIRED precisam de owner, evidência e
+receipts atuais; N/A exige motivo. Nenhum especialista atesta PASS de outro.
+Planning, build ou código concluído não substituem QA final. Harness fecha seu
+gate após todos os demais REQUIRED; aceite humano permanece separado.
 
 ## Checklist de segurança
 - [ ] Authz/authn corretos (security-standard).

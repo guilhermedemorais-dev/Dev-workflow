@@ -1,0 +1,9 @@
+{
+  "name": "qa-testing-standard",
+  "version": "0.1.0",
+  "description": "Independent functional QA, bug reproduction, regression and fix verification.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "skills": "./skills/"
+}

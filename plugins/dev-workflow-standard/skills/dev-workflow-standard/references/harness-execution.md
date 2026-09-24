@@ -47,12 +47,18 @@ execution result and command evidence have been observed:
 ```text
 EXECUTION_RECEIPT
 - task_id:
+- sector: routed sector ID, when applicable
+- phase: planning | validation
+- revision: tested revision/artifact
 - capability:
 - provider_or_runtime:
 - executor:
 - state: RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
 - invocation_evidence:
 - inputs_used:
+- sources_loaded: paths and purposes
+- conditional_sources_loaded: paths, conditions and activation evidence
+- validation_scope:
 - outputs_produced:
 - changed_files_or_artifacts:
 - commands_and_results:
@@ -102,17 +108,27 @@ Each capability receives only the minimum complete context:
 
 - `task_id`
 - `execution_contract_path`
+- `sector` and `phase` for routed contracts
 - current branch/revision when code is involved
 - relevant prior receipts
 - relevant prior handoff, when resuming another executor
 
-The executor validates the contract first and loads the Human Task, mandatory
-specs, source-of-truth files, and code on demand. Do not paste those bodies into
+The Harness reads the complete Human Task; the specialist validates the
+contract first and loads only its task_sections, relevant global acceptance
+and constraints, required_sources, activated conditional_sources, necessary
+code and dependency_receipts. Follow `context-routing.md`; do not load OPTIONAL
+automatically. The active SKILL.md is always read completely. Do not paste those bodies into
 the bootstrap prompt. An `EXECUTION_RECEIPT` is produced after execution from
 observed evidence; it is never treated as an implementation input for the same
 checkpoint. The output of one capability becomes explicit input to the next
 only when there is a dependency. Conversation memory alone is not a source of
 truth.
+
+For v1 without sectors, Harness resolves a bounded legacy handoff and records
+the routing decision; no bulk migration. Missing required references or
+source_of_truth_conflict stop the affected checkpoint. Planning completion
+does not satisfy final validation dependencies. A material artifact change
+requires checking receipt freshness and rerunning affected validations.
 
 ## Recovery
 
@@ -139,3 +155,13 @@ The harness may mark a checkpoint `COMPLETED` only when all are true:
 - evidence is inspectable from repository/tool state.
 - the Human Task is current and any applicable final Issue report is consistent
   with the receipt and validation result.
+
+This checkpoint gate applies to its own scope and phase prerequisites, not to
+future sectors that depend on it. Completing implementation enables dependent
+QA; it does not declare the complete Task finished.
+
+For final Task completion, every REQUIRED sector must have current owner
+evidence and receipts; N/A requires a verified reason. PARTIAL/NOT_VALIDATED
+never closes REQUIRED work. Harness reconciles all owners without fabricating
+their PASS and issues its own final receipt after reconciliation, preserving
+human acceptance gates.
