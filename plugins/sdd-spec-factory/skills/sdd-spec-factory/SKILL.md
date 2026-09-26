@@ -29,7 +29,8 @@ applicable:
 - api/backend spec (only when there is a backend)
 - frontend/ui spec (only when there is UI)
 - one executable task
-- one lean machine-readable execution contract for each new executable task
+- one v2 machine-readable execution contract with normative equivalence to the
+  complete GitHub Issue/card for each new executable task
 - a PR checklist
 - a QA/review checklist
 
@@ -44,14 +45,16 @@ validated with `ui-ux-standard`.
 - **Spec is not a PR.** A spec is the contract of what must be built.
 - **Task is the order of execution.** It is small, reviewable and executable.
 - **PR is the reviewable delivery.**
-- **Issue is the tracking record.**
+- **Issue is the complete human task/card.** A local Markdown may mirror it but
+  does not replace it when GitHub Issues is available.
 - **Review is approval or rejection.**
 - **Deploy only happens after the PR is approved.**
 
-A spec describes intent and acceptance. A task points to specs and tells a
-human what is being executed and tracked. The Execution Contract gives an
-executor a lean operational index of paths and constraints. They are never
-merged into the same document.
+A spec describes intent and acceptance. The Human Task tells people everything
+needed to understand and govern the work. The v2 Execution Contract expresses
+the same normative content as structured JSON for the LLM. This **normative
+equivalence** is deliberate, while runtime status, evidence and discussion stay
+in Issue comments and receipts.
 
 ## Mandatory hierarchy
 
@@ -158,7 +161,7 @@ load [DevOps planning](references/devops-planning.md) and add
 `devops-standard` to the required skills. Identify target_environment,
 validation, rollback_strategy and human gates in the spec/task. Do not add
 DevOps to unrelated application changes, UI-only work or routine Git commits.
-Keep tool availability, logs and installation state out of the lean contract.
+Keep tool availability, logs and installation state out of the normative contract.
 
 Generate the specs the request needs, following the hierarchy:
 
@@ -198,8 +201,9 @@ installed hosts resolve the active skill, never assume sibling cache paths.
 If unavailable, use an explicitly available canonical checkout or return the
 missing reference to the Harness before producing a conflicting contract.
 
-Produce one small, reviewable human task using `templates/task-template.md` and
-one lean JSON contract using `templates/execution-contract-template.json`:
+Produce one small, reviewable, complete GitHub Issue/card using
+`templates/task-template.md` and one equivalent v2 JSON contract using
+`templates/execution-contract-template.json`:
 
 - Link the mandatory specs.
 - Link the GitHub issue (or state that one must be created).
@@ -210,10 +214,19 @@ one lean JSON contract using `templates/execution-contract-template.json`:
 - Include mandatory tests (TDD when applicable).
 - Include what is out of scope.
 - Link the contract as `docs/execution/TASK-XXX.json`.
-- Keep `Prompt para o executor` to a short bootstrap containing the task ID,
-  contract path, Engineering Harness instruction, and evidence destination.
-- Put concise executor-only paths and constraints in the contract instead of
-  repeating them in the prompt.
+- Run Discovery/SDD collaboratively: ask the user critical questions, research
+  authoritative references, consolidate decisions, then publish a
+  `DISCOVERY_SDD_COMPLETED` Issue comment before requesting human approval.
+- Keep validated sources in `docs/biblioteca-referencias/` and route the exact
+  file/section and purpose. When UI applies, route the Design Guide, tokens,
+  component library, visual references and approved mockup under `docs/design/`.
+- Decompose execution into microtasks with owner skill/plugin, capability,
+  preferred tool, dependencies, exact references, allowed paths, checklist,
+  deliverables, completion condition and independent validator.
+- Make `Prompt para o executor` a copy-ready ignition prompt that verifies task
+  identity and contract revision, checks card/JSON equivalence, loads routed
+  skills/references, stops on divergence, collects receipts, publishes material
+  comments, and forbids merge/deploy without explicit authorization.
 - Record planned validations in the Human Task with owner skill, capability,
   and preferred tool when known. Put only those compact identifiers in the
   Execution Contract `required_validations`; never store installation state,
@@ -222,10 +235,9 @@ one lean JSON contract using `templates/execution-contract-template.json`:
   dependencies and a short verified N/A reason. Detail only REQUIRED sectors;
   each has objective, sources with purpose, checklist, expected evidence and
   result placeholder. No generic full OWASP/QA checklist on unrelated tasks.
-- Add optional v1 `sectors` and `global_acceptance_refs` to new routed contracts.
-  Use explicit `task:#anchor` section references; REQUIRED sources have
-  `path`/`purpose`, CONDITIONAL also has `condition`. OPTIONAL is never loaded
-  automatically. No statuses, receipts or spec bodies in the JSON.
+- Use v2 `sectors`, normative references and microtasks in new contracts. Human
+  card and JSON share `contract_revision`; any normative change updates both.
+  Mutable status, receipts, logs and execution evidence do not belong in JSON.
 - Separate final `depends_on` from optional `planning_depends_on`. QA, Security
   and UI planning may start early; only executed validation closes their gates.
   Check unknown IDs, owners, missing required references and cycles before handoff.
@@ -238,12 +250,12 @@ one lean JSON contract using `templates/execution-contract-template.json`:
   TEST_SCENARIOS, REGRESSION_TARGETS and VALIDATION_REQUIREMENTS proportionally.
   Docs/metadata-only work may record QA N/A; pure visual changes still require UI.
 
-The Execution Contract must be valid JSON and include `schema_version`,
-`task_id`, `task_path`, `goal`, `specs`, `docs`, `allowed_paths`,
-`out_of_scope`, `requirements`, `acceptance_criteria`, `required_tests`,
-`required_skills`, and `stop_conditions`. Values must be concise. Specs remain
-the detailed source of truth; do not copy their bodies, conversation history,
-secrets, or execution evidence into JSON.
+The Execution Contract must be valid JSON and include the v2 identity/revision,
+human task link and equivalence declaration, summary/goal/discovery, current and
+expected state, scope, protected and allowed paths, requirements, business
+rules, references, design, microtasks, ten sectors, tests, acceptance criteria,
+stop conditions, ignition prompt and reporting contract. Keep structure concise;
+do not copy source bodies, conversation history, secrets or execution evidence.
 
 Tasks live under `docs/tasks/TASK-XXX-<slug>.md` (or the repo's existing task
 location, if one exists — reuse it, do not duplicate).
@@ -293,9 +305,10 @@ Provide the delivery gates using `templates/pr-template.md`,
 - Banco, API/Backend, Frontend/UI, Testes, Segurança, Observabilidade,
   Decisões pendentes, Riscos and Critérios de aceite are separated.
 - There is one small executable task linking specs, issue, branch and PR.
-- Every new executable task has a valid lean Execution Contract and short
-  bootstrap prompt; legacy tasks have the normalization fallback above.
+- Every new executable task has a valid v2 Execution Contract with normative
+  equivalence to the complete Issue/card and a copy-ready ignition prompt;
+  legacy tasks have the compatibility fallback above.
 - PR and QA/review checklists are provided.
-- Sector matrix, purpose-based routing, phase dependencies and explicit N/A
-  reasons are consistent; legacy v1 contracts remain readable without sectors.
+- Sector matrix, microtasks, purpose-based routing, phase dependencies and
+  explicit N/A reasons are consistent; legacy v1 contracts remain readable.
 - No product code was implemented and no existing architecture was invented.

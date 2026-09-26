@@ -19,6 +19,15 @@ Do not use `ASSIGNED` as a completion state.
 
 ## Mandatory Execution Loop
 
+For new v2 tasks, finish collaborative Discovery/SDD and publish
+`DISCOVERY_SDD_COMPLETED` with a returned comment identifier before seeking
+human approval for Ready for Dev. This is a reporting checkpoint, not another
+execution state. Harness verifies full card/JSON normative equivalence and
+records the revision and Issue update time in its existing receipt. Specialists
+check their routed slices against that current comparison evidence.
+Every material comment ends with changed surface and runtime/API token usage,
+using NOT_AVAILABLE for measurements the runtime does not expose.
+
 For every executable checkpoint:
 
 1. Confirm task/spec/source-of-truth prerequisites.
@@ -114,7 +123,7 @@ Each capability receives only the minimum complete context:
 - relevant prior handoff, when resuming another executor
 
 The Harness reads the complete Human Task; the specialist validates the
-contract first and loads only its task_sections, relevant global acceptance
+contract first and loads its routed microtasks (v2) or task_sections (v1), relevant global acceptance
 and constraints, required_sources, activated conditional_sources, necessary
 code and dependency_receipts. Follow `context-routing.md`; do not load OPTIONAL
 automatically. The active SKILL.md is always read completely. Do not paste those bodies into

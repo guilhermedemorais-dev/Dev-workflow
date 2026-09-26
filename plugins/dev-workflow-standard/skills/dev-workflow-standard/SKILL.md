@@ -154,11 +154,13 @@ must be named as local and validated against their intended outcome.
 
 Keep five execution artifacts distinct:
 
-- **Human Task:** status, ownership, scope summary, links, progress, blockers,
-  result, Sector Validation Matrix and evidence for human tracking. Harness
-  reads the complete Human Task; specialists read their routed slice by default.
-- **Execution Contract:** lean machine-readable operational index at
-  `docs/execution/TASK-XXX.json` with repository paths and bounded constraints.
+- **Human Task:** the complete GitHub Issue/card for human reading, including a
+  glanceable summary, collaborative Discovery/SDD, normative requirements,
+  microtasks, sector matrix, links, progress and evidence. A local Markdown is
+  a mirror/fallback, never a replacement for an available Issue.
+- **Execution Contract:** v2 structured LLM representation at
+  `docs/execution/TASK-XXX.json`, with **normative equivalence** to the Human
+  Task under the same `contract_revision`. Mutable evidence remains outside it.
 - **Specs:** detailed functional and technical source of truth, loaded when the
   active scope requires them.
 - **Execution Receipt:** evidence produced after the capability actually ran;
@@ -171,9 +173,10 @@ New executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
 not mass-migrate inactive historical tasks.
 
-Before sector delegation load `references/context-routing.md`. New routed
-contracts add optional v1 `sectors` and `global_acceptance_refs`; every standard
-sector has REQUIRED/N/A, owner and dependencies, and every N/A has a reason.
+Before sector delegation load `references/context-routing.md`. New contracts
+use v2 with references, design context, microtasks and all ten sectors. Legacy
+v1 remains readable. Every sector has REQUIRED/N/A, owner and dependencies,
+and every N/A has a verified reason.
 Each source has a purpose; CONDITIONAL adds a condition and OPTIONAL never
 loads automatically. Separate planning prerequisites from final validation.
 CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS;
@@ -209,18 +212,18 @@ based on affected surface and risk, not on the tier label.
 ```text
 Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
-  -> dev-workflow-standard: consolidate scope
-  -> sdd-spec-factory: generate specs
-  -> sdd-spec-factory: generate human task + Execution Contract
+  -> collaborative Discovery / SDD with user + research
+  -> sdd-spec-factory: specs, reference/design libraries, complete Issue + v2 JSON
+  -> publish DISCOVERY_SDD_COMPLETED with token usage and changed surface
   -> human approval
   -> dev-workflow-standard: resolve executor capability + verify availability
   -> selected executor: invoked; state RUNNING
-  -> dev-implementation-standard: implement (only the task scope)
+  -> dev-implementation-standard: implement routed microtasks + executor tests
   -> execution result: diff / files / commands / artifacts
   -> selected executor: complete EXECUTION_RECEIPT
   -> update Human Task + publish EXECUTION_REPORT_COMMENT when applicable
   -> dev-workflow-standard: VALIDATING
-  -> ui-ux-standard / qa-testing-standard / security-standard review (as applicable)
+  -> independent UI/UX / QA / Security / DevOps validation as applicable
   -> sector reconciliation
   -> Pull Request / PR gate
   -> Harness final gate
@@ -386,7 +389,7 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
   (Banco, API/Backend, Frontend/UI). Require the spec hierarchy, human task, and
   valid Execution Contract before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
-  task, Execution Contract, and mandatory specs are approved. Prefer a lean
+  task, Execution Contract, and mandatory specs are approved. Prefer a bounded
   handoff containing `task_id`, `execution_contract_path`, sector, phase, current
   branch/revision, and only the relevant prior receipt/handoff. The executor
   reconstructs required context from repository paths. Require

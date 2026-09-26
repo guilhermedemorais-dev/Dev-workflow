@@ -1,0 +1,418 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-011",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/34",
+    "local_mirror": "docs/tasks/TASK-011-task-contract-v2.md",
+    "normative_equivalence": "The GitHub Issue and this JSON contain the same approved normative requirements; runtime evidence remains in comments and receipts."
+  },
+  "summary": "Adotar card humano completo e JSON equivalente para LLM.",
+  "goal": "Aplicar Task Contract v2 aos templates, documentação e skills consumidoras sem quebrar v1.",
+  "current_state": "JSON v1 é índice reduzido e o card não explicita todo o pipeline aprovado.",
+  "expected_result": "Issue completa e JSON v2 equivalente roteiam microtarefas, referências e gates.",
+  "scope": [
+    "templates",
+    "sete skills consumidoras",
+    "README",
+    "pipeline",
+    "referências",
+    "testes"
+  ],
+  "out_of_scope": [
+    "produto externo",
+    "deploy",
+    "migração em massa de tasks v1"
+  ],
+  "allowed_paths": [
+    "README.md",
+    "docs/**",
+    "plugins/**",
+    "tests/**"
+  ],
+  "protected_paths": [
+    "runtime-state/**",
+    "credenciais",
+    "contratos v1 históricos não retomados"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "description": "Issue e JSON v2 têm equivalência normativa",
+      "source": "docs/specs/task-contract-v2/module-spec.md#regras-de-equivalência",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-02",
+      "description": "Pipeline completo e validações independentes",
+      "source": "docs/specs/task-contract-v2/module-spec.md#pipeline-obrigatório",
+      "priority": "MUST"
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "RN-01",
+      "description": "Divergência card/JSON bloqueia execução",
+      "source": "docs/specs/task-contract-v2/validation-rules.md#tc2-02-equivalência-normativa"
+    },
+    {
+      "id": "RN-02",
+      "description": "Tokens sem fonte usam NOT_AVAILABLE",
+      "source": "docs/specs/task-contract-v2/validation-rules.md#tc2-06-tokens"
+    }
+  ],
+  "references": [
+    {
+      "id": "REF-01",
+      "title": "Context Routing",
+      "source_url": "repository",
+      "project_path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md",
+      "section": "#v2-task-contract-and-v1-compatibility",
+      "purpose": "Equivalência e roteamento",
+      "applies_to": [
+        "MT-01",
+        "MT-02"
+      ]
+    },
+    {
+      "id": "REF-02",
+      "title": "Execution Report Comments",
+      "source_url": "repository",
+      "project_path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/execution-report-comments.md",
+      "section": "#publication-protocol",
+      "purpose": "Publicação e evidência",
+      "applies_to": [
+        "MT-01",
+        "MT-02"
+      ]
+    }
+  ],
+  "design": {
+    "applicability": "N/A",
+    "guide": "N/A",
+    "tokens": "N/A",
+    "visual_references": [],
+    "component_library": "N/A",
+    "mockup": "N/A",
+    "reason_if_na": "Mudança documental sem interface de produto"
+  },
+  "microtasks": [
+    {
+      "id": "MT-01",
+      "title": "Criar teste do contrato",
+      "summary": "Fixar comportamento v2 antes da implementação",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "contract-testing",
+      "preferred_tool": "python-unittest",
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "tests/**"
+      ],
+      "checklist": [
+        "escrever teste",
+        "observar falha",
+        "preservar v1"
+      ],
+      "deliverables": [
+        "tests/test_task_contract_v2.py"
+      ],
+      "completion_condition": "Teste passa após mudança e v1 continua compatível",
+      "validator": "qa-testing-standard"
+    },
+    {
+      "id": "MT-02",
+      "title": "Aplicar Task Contract v2",
+      "summary": "Atualizar templates, docs e skills",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "documentation-implementation",
+      "preferred_tool": "repository-native-tooling",
+      "depends_on": [
+        "MT-01"
+      ],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "README.md",
+        "docs/**",
+        "plugins/**"
+      ],
+      "checklist": [
+        "templates",
+        "referências",
+        "pipeline",
+        "skills",
+        "README",
+        "testes"
+      ],
+      "deliverables": [
+        "Task Contract v2"
+      ],
+      "completion_condition": "Suíte e validação das skills passam",
+      "validator": "qa-testing-standard"
+    }
+  ],
+  "sectors": {
+    "database": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem banco",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "backend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem backend",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "frontend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem frontend",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "ui_ux": {
+      "owner": "ui-ux-standard",
+      "applicability": "N/A",
+      "reason": "Sem UI",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "qa": {
+      "owner": "qa-testing-standard",
+      "applicability": "REQUIRED",
+      "reason": "Regressão estrutural",
+      "depends_on": [
+        "documentation"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01",
+        "REF-02"
+      ],
+      "required_validations": [
+        "full-test-suite"
+      ]
+    },
+    "security": {
+      "owner": "security-standard",
+      "applicability": "N/A",
+      "reason": "Sem superfície de segurança",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "devops": {
+      "owner": "devops-standard",
+      "applicability": "N/A",
+      "reason": "Sem infraestrutura",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "observability": {
+      "owner": "devops-standard",
+      "applicability": "N/A",
+      "reason": "Sem instrumentação",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "documentation": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "reason": "Artefato principal",
+      "depends_on": [],
+      "microtasks": [
+        "MT-01",
+        "MT-02"
+      ],
+      "required_sources": [
+        "REF-01",
+        "REF-02"
+      ],
+      "required_validations": [
+        "documentation-review"
+      ]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard",
+      "applicability": "REQUIRED",
+      "reason": "Reconciliação final",
+      "depends_on": [
+        "qa",
+        "documentation"
+      ],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": [
+        "sector-reconciliation"
+      ]
+    }
+  },
+  "required_tests": [
+    {
+      "id": "TEST-01",
+      "type": "unit",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+      "expected": "exit 0"
+    },
+    {
+      "id": "TEST-02",
+      "type": "skill-validation",
+      "command": "quick_validate.py <skill-folder>",
+      "expected": "Sete skills válidas. Resolver o validador equivalente no host."
+    },
+    {
+      "id": "TEST-03",
+      "type": "diff-validation",
+      "command": "git diff --check",
+      "expected": "exit 0"
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-01",
+      "description": "Card e JSON v2 têm equivalência normativa e revisão compartilhada.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-02",
+      "description": "Referências, design e microtarefas são campos de primeira classe.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-03",
+      "description": "Pipeline inclui implementação e todas as validações independentes.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-04",
+      "description": "Comentários materiais registram publicação, superfície alterada e tokens.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-05",
+      "description": "Sete skills consumidoras aplicam o mesmo modelo.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-06",
+      "description": "Contratos v1 existentes continuam legíveis e testes passam.",
+      "validation": "TEST-01"
+    }
+  ],
+  "stop_conditions": [
+    "architecture_change_required",
+    "scope_expansion_required",
+    "mandatory_reference_missing",
+    "source_of_truth_conflict",
+    "human_task_json_divergence",
+    "authorization_required"
+  ],
+  "execution_prompt": {
+    "instruction": "Read this JSON, verify TASK-011 revision 1 and normative equivalence with its linked Issue, load routed skills and REF-01/REF-02, execute only allowed paths, collect receipts, publish material comments, and do not merge or deploy without explicit authorization.",
+    "required_checkpoints": [
+      "DISCOVERY_SDD_COMPLETED",
+      "RUNNING",
+      "VALIDATING",
+      "REWORK",
+      "BLOCKED",
+      "COMPLETED"
+    ]
+  },
+  "reporting": {
+    "issue_comment_required": true,
+    "publication_evidence_requirement": "returned comment URL or identifier",
+    "token_usage_fields": [
+      "input_tokens",
+      "output_tokens",
+      "total_tokens",
+      "measurement_source"
+    ],
+    "changed_surface_fields": [
+      "changed_files",
+      "issue_changes",
+      "json_spec_reference_changes",
+      "remote_mutations",
+      "code_changed",
+      "branch",
+      "commit",
+      "pull_request"
+    ],
+    "unavailable_value": "NOT_AVAILABLE",
+    "storage_rule": "Actual token counts, changed surface and publication evidence live in Issue comments and receipts, not in this normative contract."
+  },
+  "discovery": {
+    "questions_and_answers": [
+      "O card é completo para humanos e o JSON contém as mesmas especificações para a LLM: confirmado pelo usuário.",
+      "Referências exatas, Design Guide e skills/plugins por microtarefa: confirmados pelo usuário."
+    ],
+    "research": [
+      "Inspeção dos templates, skills, README, pipeline e testes do repositório."
+    ],
+    "decisions": [
+      "Novas tasks usam v2; contratos v1 inativos não são migrados em massa.",
+      "Issue é o card humano; JSON é sua representação normativa estruturada.",
+      "Resultados e evidência mutável ficam nos comentários e receipts."
+    ],
+    "open_hypotheses": [],
+    "approval_requirement": "Aprovação do usuário registrada na conversa: aprovado, pode aplicar e alterar as skills. Para novas tasks, publicar Discovery antes de solicitar aprovação."
+  },
+  "specs": [
+    "docs/specs/task-contract-v2/module-spec.md",
+    "docs/specs/task-contract-v2/validation-rules.md"
+  ],
+  "docs": [
+    "README.md",
+    "docs/workflow-pipeline.md"
+  ],
+  "pipeline": [
+    "collaborative_discovery_sdd",
+    "publish_discovery_sdd_completed",
+    "human_approval",
+    "environment_capability_readiness",
+    "implementation",
+    "executor_tests",
+    "independent_functional_qa",
+    "independent_security_qa",
+    "independent_ui_ux_qa",
+    "devops_observability_validation",
+    "rework_retest",
+    "pull_request_gate",
+    "harness_final_gate",
+    "human_acceptance_merge",
+    "separately_authorized_deploy"
+  ],
+  "gates": {
+    "discovery": "Published DISCOVERY_SDD_COMPLETED comment and human approval",
+    "implementation": "Approved microtasks, executor tests and current receipts",
+    "independent_validation": "Every REQUIRED sector validated by its owner",
+    "pull_request": "Issue, JSON, specs, revision and evidence reconciled",
+    "harness_final": "All REQUIRED sectors current and no unresolved blocker",
+    "merge": "Explicit human acceptance",
+    "deploy": "Fora do escopo desta task. Eventual deploy exige autorização humana separada."
+  }
+}
