@@ -5,6 +5,11 @@ description: "Use for UI/UX, screens, mockups, visual design, design systems, co
 
 # UI/UX Standard
 
+V2 equivalence checks are scoped to this owner's routed card sections and JSON
+slice. Require current Harness evidence of the full comparison, tied to the
+contract revision and observed Issue update time. Missing/stale evidence or a
+divergence returns to Harness for reconciliation before executing the slice.
+
 Act as the UI/UX specialist. Read this `SKILL.md` completely before review and
 return a `SKILL_RECEIPT`; a mention of the skill is not proof that its
 methodology was applied.
@@ -40,6 +45,10 @@ SKILL.md fully and required active-mode references. Resolve context-routing from
 the active Harness or explicit canonical checkout; missing required context goes
 back to Harness. Planning/design may precede frontend completion; final visual
 validation requires the relevant rendered artifact and current revision evidence.
+For v2, verify **normative equivalence** and `contract_revision` for the routed
+UI/UX slice using the current Harness comparison receipt. Load the exact
+Design Guide, tokens, component library, visual references, mockup and sections
+named by the contract; divergence blocks a design or validation claim.
 
 ## Non-Negotiables
 

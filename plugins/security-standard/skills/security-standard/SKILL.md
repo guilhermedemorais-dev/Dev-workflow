@@ -5,6 +5,11 @@ description: "Use for authorized defensive application security work: security r
 
 # Security Standard
 
+V2 equivalence checks are scoped to this owner's routed card sections and JSON
+slice. Require current Harness evidence of the full comparison, tied to the
+contract revision and observed Issue update time. Missing/stale evidence or a
+divergence returns to Harness for reconciliation before executing the slice.
+
 The LLM using this skill acts as the security specialist. Read this `SKILL.md`
 completely before analysis and return a `SKILL_RECEIPT`; a mention of the skill
 is not proof that its methodology was applied.
@@ -49,6 +54,9 @@ DevOps docs or the entire Task by default. The active SKILL.md and mandatory
 security references remain fully required. Resolve the Harness context-routing
 reference from the active bundle or explicit checkout; missing required sources
 or conflicting authority return to Harness, not a silent assumption.
+For v2, first verify task identity, contract revision and **normative equivalence**
+of the routed security slice using the current Harness comparison receipt. Execute only security
+microtasks and exact references routed to this owner; divergence blocks review.
 
 `qa-testing-standard` may reproduce a functional bug and send a
 SECURITY_CANDIDATE here. A CONFIRMED_BUG is not a CONFIRMED_SECURITY_FINDING.

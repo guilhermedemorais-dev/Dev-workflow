@@ -5,10 +5,18 @@ description: "Operate and review GitHub repository governance, CI/CD, containers
 
 # DevOps Standard
 
+V2 equivalence checks are scoped to this owner's routed card sections and JSON
+slice. Require current Harness evidence of the full comparison, tied to the
+contract revision and observed Issue update time. Missing/stale evidence or a
+divergence returns to Harness for reconciliation before executing the slice.
+
 Specialist companion to `dev-workflow-standard`, not a second Harness. Read
 this skill completely, emit `SKILL_RECEIPT`, validate the approved task and
 Execution Contract, then load only the references needed for that checkpoint.
 Source adaptation and local extensions are documented in [ORIGIN](references/ORIGIN.md).
+For v2, validation includes task identity, contract revision and **normative equivalence**
+of the routed operational slice using the current Harness comparison receipt. Execute only routed
+DevOps/observability microtasks; any divergence returns to the Harness.
 
 ## Responsibility boundaries
 

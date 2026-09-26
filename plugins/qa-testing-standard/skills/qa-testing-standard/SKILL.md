@@ -5,6 +5,11 @@ description: Independently plan and verify functional behavior, reproduce bugs, 
 
 # QA Testing Standard
 
+V2 equivalence checks are scoped to this owner's routed card sections and JSON
+slice. Require current Harness evidence of the full comparison, tied to the
+contract revision and observed Issue update time. Missing/stale evidence or a
+divergence returns to Harness for reconciliation before executing the slice.
+
 Own functional correctness and Test Engineering. The Harness coordinates; QA
 plans, executes and interprets behavior checks independently of the product
 implementer. Tool execution and actual evidence, not a checklist, justify results.
@@ -13,7 +18,11 @@ implementer. Tool execution and actual evidence, not a checklist, justify result
 
 1. Receive `task_id`, `execution_contract_path`, `sector`, `revision` and relevant
    `dependency_receipts`. Read the contract; match the task and current revision.
-2. Resolve your own sector and owner. For additive `schema_version: 1` contracts,
+   For v2, verify **normative equivalence** of the routed QA slice and the
+   current Harness comparison receipt; stop
+   on revision/content divergence before making any QA claim.
+2. Resolve your own sector, routed microtasks and owner. For legacy
+   `schema_version: 1` contracts,
    load the minimal global goal/acceptance references, listed `task_sections`,
    `required_sources` (each with a `purpose`), relevant code and material receipts.
    Evaluate `conditional_sources` and read only when their condition occurs.

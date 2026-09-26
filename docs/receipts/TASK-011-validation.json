@@ -1,0 +1,71 @@
+{
+  "task_id": "TASK-011",
+  "sector": "harness",
+  "phase": "validation",
+  "contract_revision": "1",
+  "revision": "working-tree changes based on 256ef7de1f57aa7c4cb7a40b7ee74f880827ab46",
+  "capability": "contract-reconciliation",
+  "provider_or_runtime": "Codex Desktop",
+  "executor": "primary agent",
+  "state": "VALIDATING",
+  "invocation_evidence": [
+    "Local unittest execution",
+    "Independent forward review by /root/forward_test_task_contract_v2",
+    "gh issue view 34 with remote body comparison"
+  ],
+  "inputs_used": [
+    "docs/execution/TASK-011.json",
+    "docs/tasks/TASK-011-task-contract-v2.md"
+  ],
+  "validation_scope": "Contract protocol, document consistency and regression checks; no product deployment or installed-plugin runtime test.",
+  "equivalence": {
+    "result": "VERIFIED",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/34",
+    "observed_issue_updated_at": "2026-09-26T00:17:16Z",
+    "remote_body_matches_local": true,
+    "contract_sha256": "845d5b72fa5b273477b2fa86a9c34b8980d093b6c87aff9df186c1cb28bcbe57",
+    "human_card_sha256": "a4fbad6f3612bec6a85643d8183b977b737dc03dbd38fb84896dfdad06a2b504",
+    "method": "Per-section coverage of all normative JSON values, source/ID checks, complete Harness comparison, independent semantic review followed by targeted corrections."
+  },
+  "outputs_produced": [
+    "v2 templates",
+    "seven updated skills",
+    "README and pipeline",
+    "Issue #34 and corrected report"
+  ],
+  "commands_and_results": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -q",
+      "exit_code": 0,
+      "result": "551 tests OK"
+    },
+    {
+      "command": "quick_validate.py on seven changed skills",
+      "exit_code": 0,
+      "result": "7 valid skills"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "No whitespace errors"
+    }
+  ],
+  "validation_evidence": {
+    "review_initial": "REWORK: card/schema/pipeline/reporting inconsistencies",
+    "review_followup": "Main corrections confirmed; missing receipt, mixed N/A design values and repeated specialist instructions reported",
+    "corrections": "Receipt created from observed remote snapshot; design N/A values cleared; all five specialists explicitly compare routed slices plus current Harness receipt.",
+    "limitations": [
+      "No proof of future LLM compliance",
+      "No global plugin installation performed",
+      "Historical Discovery publication occurred after implementation began and was recorded retrospectively"
+    ]
+  },
+  "blockers": [],
+  "next_safe_action": "Human review of the proposed source change; merge and deployment not performed",
+  "token_usage": {
+    "input_tokens": "NOT_AVAILABLE",
+    "output_tokens": "NOT_AVAILABLE",
+    "total_tokens": "NOT_AVAILABLE",
+    "measurement_source": "NOT_AVAILABLE"
+  }
+}

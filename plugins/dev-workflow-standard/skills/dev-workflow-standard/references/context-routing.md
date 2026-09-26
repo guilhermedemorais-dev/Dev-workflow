@@ -1,13 +1,18 @@
 # Context Routing and Sector Validation Matrix
 
 This is a [LOCAL EXTENSION] of the existing Harness contract, not a new runtime
-engine or provider standard. The [PROJECT CHOICE] is an additive
-`schema_version: 1`: existing contracts remain readable without `sectors`.
+engine or provider standard. New tasks use `schema_version: 2`. Existing v1
+contracts remain readable and are migrated only when resumed for material work.
 
 ## Sources of truth and ownership
 
-The Harness reads the complete Human Task and Execution Contract, reconciles
-scope, global acceptance criteria and all sectors, then delegates a slice.
+The GitHub Issue is the complete Human Task for people. The v2 Execution
+Contract is its structured LLM representation with **normative equivalence**:
+the same approved requirements, business rules, references, microtasks,
+constraints and acceptance criteria, under the same `contract_revision`.
+Mutable progress, evidence and discussion remain in Issue comments and
+receipts. Harness reads the complete Human Task and the v2 JSON, verifies
+equivalence, reconciles scope and all sectors, then delegates a slice.
 The specialist does not read the complete Human Task by default. It reads its
 entire canonical SKILL.md, routed sections and the smallest complete context
 needed for its claim. Progressive disclosure never removes a mandatory rule.
@@ -25,10 +30,11 @@ Only the sector owner attests its result. Another specialist can request
 cannot mark another sector PASS or fabricate another skill's receipt. The
 Harness records the owner's returned evidence and reconciles the final gate.
 
-## Additive v1 fields
+## v2 task contract and v1 compatibility
 
-`global_acceptance_refs` contains anchored references to relevant global
-criteria. `sectors` maps stable IDs to compact routing objects:
+In v2, `acceptance_criteria` contains the normative criteria. `references`
+resolves source IDs to `project_path`, `section` and `purpose`. `sectors` maps
+stable IDs to routing objects:
 
 | ID | Human sector | Default owner |
 | --- | --- | --- |
@@ -47,12 +53,22 @@ All ten IDs appear in new routed contracts and in the human matrix. Resolve a
 single concrete owner, including N/A rows. Additional material domains require
 an explicit ID, owner and rationale in the Task, not a guessed specialist.
 
-Every sector has `owner`, `applicability`, `depends_on`, `task_sections`,
-`required_sources`, `conditional_sources` and `required_validations`.
+Every v2 sector has `owner`, `applicability`, `depends_on`, `microtasks`,
+`required_sources` and `required_validations`. A microtask carries its concrete
+owner skill/plugin, capability, preferred tool, dependencies, exact reference
+IDs, allowed paths, checklist, deliverables and completion condition.
 `applicability` is `REQUIRED` or `N/A`; N/A also requires a nonempty `reason`.
 N/A needs no detailed Task section, sources, validations or dependencies.
-REQUIRED needs an objective, checklist and expected evidence in its routed Task
-section, not copied into JSON. Validation entries are compact capability IDs.
+REQUIRED needs objective, checklist and expected evidence in the Human Task and
+the equivalent v2 JSON representation. Validation entries remain capability
+IDs; exact reference records resolve project file and section plus purpose.
+
+V2 uses `required_sources` as reference ID arrays. Optional
+`conditional_sources` entries contain `reference_id` and `condition`;
+`optional_sources` is an optional reference ID array. Unknown IDs block.
+The following path-object fields describe legacy v1 only:
+
+- `global_acceptance_refs`: anchored references to global acceptance criteria.
 
 - `task_sections`: explicit `task:#anchor` references, resolved against
   `task_path`; use unique headings or explicit HTML anchors in the Human Task.
@@ -73,9 +89,11 @@ all legacy `specs`/`docs`/`required_skills` arrays: they remain compatible index
 while the Harness routes the necessary entries to each owner. A globally
 mandatory rule cannot be omitted by omitting it from a sector source list.
 
-Do not store status, result, logs, receipts, evidence, source bodies, checklists,
-tool paths or runtime installation state in sector JSON. Mutable status and
-receipt references live in the Human Task evidence ledger.
+Do not store mutable result, logs, receipts, execution evidence, copied source
+bodies or runtime installation state in the contract. V2 does store normative
+checklists and preferred tool identifiers because they are part of the approved
+execution instruction. Progress and receipt references live in the Human Task
+Issue/comments and evidence ledger.
 
 ## Resolve and load a slice
 
@@ -83,14 +101,22 @@ Handoff contains `task_id`, `execution_contract_path`, `sector`, `phase`
 (`planning` or `validation`), revision and relevant `dependency_receipts` paths.
 No Task/spec bodies are pasted into it.
 
-1. Validate the base v1 fields and resolve the named sector and owner.
+1. Validate the schema. For v2, Harness compares all normative content with the
+   linked Issue, records its revision and observed Issue update time in the
+   existing receipt, and routes the matching card sections and JSON slice.
+   Each specialist checks identity, revision and normative equivalence for its
+   own slice, plus the Harness comparison evidence. It need not independently
+   reload the whole card. Missing comparison evidence, changed Issue content or
+   divergence stops the checkpoint with `human_task_json_divergence`; request
+   a fresh Harness comparison. Do not add verification state to the JSON.
 2. Check all ten applicability decisions, N/A reasons, known dependency IDs,
    no self-dependencies or cycles in either phase graph, and that final Harness
    dependencies include every other REQUIRED sector.
 3. Resolve the sector's canonical SKILL.md and read it completely. Read its
    mandatory active-phase references and emit SKILL_RECEIPT.
-4. Read the minimal global summary/constraints and relevant
-   `global_acceptance_refs`, then all listed `task_sections`.
+4. Read the minimal global summary/constraints, routed microtasks and relevant
+   acceptance criteria. Use the Human Task for human context and the JSON for
+   structured execution; neither may override a divergence silently.
 5. Read REQUIRED sources for their stated purpose. Evaluate each CONDITIONAL
    source against observed scope and record activated/not activated with reason.
    OPTIONAL sources are not loaded by default. Inspect only relevant code.
@@ -138,10 +164,12 @@ remain mandatory. Code completion alone cannot bypass QA or another owner.
 
 ## Compatibility and installed hosts
 
-Without `sectors`, v1 is valid legacy input: Harness derives a bounded handoff
-from existing scope/specs, records the routing decision in the Task when work
-resumes and does not bulk-migrate inactive contracts. Never assume unknown
-sector fields were consumed by an older installed plugin; verify support.
+Without `sectors`, v1 is valid legacy input. Harness derives a bounded handoff from existing
+scope/specs, records the routing decision in the Task when work resumes and
+does not bulk-migrate inactive contracts. A resumed task requiring material
+specification changes should be upgraded deliberately to v2, with card/JSON
+revision and equivalence review. Never assume unknown sector fields were
+consumed by an older installed plugin; verify support.
 
 Resolve this reference from the active `dev-workflow-standard` skill's
 `references/context-routing.md`. Monorepo paths in documentation are source
@@ -151,7 +179,7 @@ missing capability to the Harness. Do not silently install or imitate it.
 
 | Previous responsibility | Location after extension |
 | --- | --- |
-| Flat required skills/specs/docs | Preserved v1 indexes; sector-specific source routing for new contracts |
+| Flat required skills/specs/docs | Preserved for v1; v2 uses equivalent structured references and microtasks |
 | Banco/API/Frontend task sections | Ten-row matrix plus details only for REQUIRED sectors |
 | Generic QA checklist | QA sector and qa-testing-standard; UI/Security retain their own evidence |
 | Large task handoffs | Identifiers, phase, sector, revision and dependency receipt paths |
