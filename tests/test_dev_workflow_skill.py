@@ -313,7 +313,7 @@ class TestDevWorkflowDefinitionOfEntryExit(unittest.TestCase):
     def test_in_progress_entry_exit(self):
         """In Progress column must have entry and exit criteria."""
         self.assertIn('| In Progress |', self.content)
-        self.assertIn('Executor accepted the task, read its routed Task sections and sources', self.content)
+        self.assertIn('Executor accepted the task, read its list JSON, canonical JSON context and required sources', self.content)
 
     def test_in_review_entry_exit(self):
         """In Review column must have entry and exit criteria."""
@@ -407,10 +407,13 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
         self.assertIn('docs/execution/TASK-XXX.json', self.content)
 
     def test_template_checklist_de_execucao(self):
-        """Template must include Checklist de execução."""
-        self.assertIn('## Checklist de execução', self.content)
-        self.assertIn('1. Leitura da fatia e fontes obrigatórias pelo owner', self.content)
-        self.assertIn('6. Handoff para review', self.content)
+        """Execution steps must be individually trackable and initially unchecked."""
+        checklist = self.content.split('## Checklist de execução\n', 1)[1].split('\n## ', 1)[0]
+        steps = [line for line in checklist.splitlines() if line.strip()]
+        self.assertEqual(len(steps), 6)
+        self.assertTrue(all(line.startswith('- [ ] ') for line in steps))
+        self.assertIn('Leitura da fatia e fontes obrigatórias pelo owner', steps[0])
+        self.assertIn('Handoff para review', steps[-1])
 
     def test_template_has_resultado_da_execucao(self):
         """Template must include Resultado da execução."""

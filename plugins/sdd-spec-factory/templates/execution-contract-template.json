@@ -96,6 +96,29 @@
       "validator": "qa-testing-standard"
     }
   ],
+  "execution_lists": [
+    {
+      "list_id": "MT-01/checklist",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "objective": "Implementar o recorte aprovado com testes e evidência observável.",
+      "microtask_ids": ["MT-01"],
+      "depends_on": [],
+      "references": ["REF-01"],
+      "allowed_paths": ["path/to/allowed/scope/**"],
+      "protected_paths": ["path/to/protected/scope/**"],
+      "deliverables": ["Código e testes do recorte"],
+      "completion_condition": "Critérios do recorte passam com evidência atual.",
+      "required_tests": ["TEST-01"],
+      "acceptance_criteria": ["AC-01"],
+      "stop_conditions": ["mandatory_reference_missing", "source_of_truth_conflict", "authorization_required"],
+      "checklist": [
+        {"instruction": "Criar teste que falha."},
+        {"instruction": "Implementar o mínimo."},
+        {"instruction": "Executar validação."}
+      ]
+    }
+  ],
   "sectors": {
     "database": {
       "owner": "dev-implementation-standard",
@@ -253,7 +276,7 @@
     "authorization_required"
   ],
   "execution_prompt": {
-    "instruction": "Read this JSON, verify task identity and normative equivalence with the linked GitHub Issue, load each microtask owner skill and exact references, stop on divergence, execute only approved scope, collect receipts, publish material checkpoint comments, and never merge or deploy without explicit authorization.",
+    "instruction": "Keep all execution_lists in this single JSON file, never embedded in the Human Task or split into per-list JSON files. Harness verifies normative equivalence of the Human Task and this file, then supplies one prompt per list pointing to execution_contract_path and list_id. Specialists read the file, select the identified execution_lists entry and inherit global constraints, required sources, tests and dependencies. Verify task identity, contract revision, owner and current Harness evidence without reading the Human Task. Execute only the selected approved list and its subitems, return evidence and receipts, and never merge or deploy without explicit authorization.",
     "required_checkpoints": [
       "DISCOVERY_SDD_COMPLETED",
       "RUNNING",

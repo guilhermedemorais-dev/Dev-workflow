@@ -90,6 +90,48 @@ class TestTaskContractV2(unittest.TestCase):
             self.assertIn(heading, self.task)
         self.assertEqual(set(self.contract["sectors"]), STANDARD_SECTORS)
 
+    def test_list_prompt_links_shared_json_without_embedding_it(self):
+        microtask = self.task.split("### MT-01:", 1)[1].split("## Matriz de Validação", 1)[0]
+        self.assertEqual(microtask.count("#### Prompt desta lista"), 1)
+        self.assertNotIn("```json", self.task)
+        payload = self.contract["execution_lists"][0]
+        self.assertEqual(payload["list_id"], "MT-01/checklist")
+        prompt = microtask.split("#### Prompt desta lista", 1)[1]
+        self.assertIn(payload["list_id"], prompt)
+        self.assertIn("[JSON da Task](../execution/TASK-XXX.json)", prompt)
+        markdown_items = re.findall(r"^\s*- \[ \] (.+)$", microtask, re.M)
+
+        def flatten(items):
+            result = []
+            for item in items:
+                self.assertNotIn("checked", item)
+                self.assertNotIn("status", item)
+                result.append(item["instruction"])
+                result.extend(flatten(item.get("children", [])))
+            return result
+
+        self.assertEqual(flatten(payload["checklist"]), markdown_items)
+        self.assertEqual(len(payload["checklist"]), 3)
+        microtask_items = self.contract["microtasks"][0]["checklist"]
+        self.assertEqual([s.rstrip('.') for s in flatten(payload["checklist"])], microtask_items)
+
+    def test_execution_lists_have_resolvable_detailed_contracts(self):
+        lists = self.contract["execution_lists"]
+        ids = [entry["list_id"] for entry in lists]
+        self.assertEqual(len(ids), len(set(ids)))
+        microtasks = {m["id"] for m in self.contract["microtasks"]}
+        references = {r["id"] for r in self.contract["references"]}
+        tests = {t["id"] for t in self.contract["required_tests"]}
+        criteria = {c["id"] for c in self.contract["acceptance_criteria"]}
+        for entry in lists:
+            for field in ("objective", "owner_skill", "phase", "allowed_paths", "protected_paths",
+                          "checklist", "deliverables", "completion_condition", "stop_conditions"):
+                self.assertTrue(entry[field], (entry["list_id"], field))
+            self.assertTrue(set(entry["microtask_ids"]) <= microtasks)
+            self.assertTrue(set(entry["references"]) <= references)
+            self.assertTrue(set(entry["required_tests"]) <= tests)
+            self.assertTrue(set(entry["acceptance_criteria"]) <= criteria)
+
     def test_template_sector_dependencies_are_executable(self):
         sectors = self.contract["sectors"]
         required = {

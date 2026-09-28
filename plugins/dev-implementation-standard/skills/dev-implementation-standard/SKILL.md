@@ -5,10 +5,13 @@ description: "Implement an approved task within its routed sector and required s
 
 # Dev Implementation Standard (Executor Agent)
 
-V2 equivalence checks are scoped to this owner's routed card sections and JSON
-slice. Require current Harness evidence of the full comparison, tied to the
-contract revision and observed Issue update time. Missing/stale evidence or a
-divergence returns to Harness for reconciliation before executing the slice.
+Receive one prompt per execution list, linking the Task's single JSON file
+and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
+All lists live in that file; do not expect JSON inside the Human Task/prompt.
+Read the list JSON and relevant canonical JSON fields, not Human Task sections
+as execution input. Require current Harness evidence of full card/JSON normative
+equivalence, tied to the contract revision and observed Issue update time.
+Missing/stale evidence or divergence returns to Harness before execution.
 
 The LLM using this skill becomes the executor agent for spec-driven delivery. It turns an **approved task** into code,
 strictly within scope. It does not do SDD, does not plan product scope, does not
@@ -87,23 +90,25 @@ project-approved official method when needed, verify, and record immediately.
 On validation failure, analyze, fix within scope, execute again, and retain
 initial and final results. Escalate persistent or out-of-scope failures.
 
-1. **Bootstrap**: receive `task_id` and `execution_contract_path`. Do not depend
+1. **Bootstrap**: receive the list prompt linking the shared JSON file, with `task_id`, `list_id`,
+   `contract_revision` and `execution_contract_path`. Do not depend
    on conversation memory or a pasted task body.
 2. **Contract validation**: parse the JSON. For v2, require identity,
    `contract_revision`, Human Task link/equivalence, scope, requirements,
    references, design, microtasks, sectors, tests, acceptance, stop conditions,
-   execution prompt and reporting. Compare the routed slice and revision with
-   the corresponding Issue sections and current Harness comparison receipt;
+   execution prompt and reporting. Compare the supplied list and revision with
+   the canonical JSON and current Harness comparison receipt, without reading
+   the Human Task;
    stop on `human_task_json_divergence`. Apply documented v1
    compatibility for legacy contracts rather than pretending they are v2.
 3. **Progressive disclosure**: for a sector-routed contract, consult only the
-   listed Human Task sections, relevant global criteria/constraints, own status,
+   list JSON, relevant canonical JSON criteria/constraints, own status,
    blockers and material dependency receipts. Load the active SKILL.md completely,
    REQUIRED sources with purpose, and CONDITIONAL sources only when their stated
    condition holds; OPTIONAL is not automatic. Resolve the active Harness
    `references/context-routing.md` from its installed bundle or explicit canonical
    checkout, never an assumed sibling cache. Legacy contracts remain readable
-   under the documented fallback. Do not load the complete Task by default;
+   under the documented fallback. Do not load the Human Task as execution input;
    missing required context or source conflict returns to Harness for resolution.
 4. **Skill receipt**: record
    `SKILL_RECEIPT` with skill name, exact path, references loaded, and the rules

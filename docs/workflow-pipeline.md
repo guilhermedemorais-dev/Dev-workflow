@@ -47,14 +47,16 @@ Idea / demand
   -> dev-workflow-standard: diagnose (critical questions, risks)
   -> Discovery / SDD colaborativo: perguntas ao usuário + pesquisa + referências
   -> sdd-spec-factory: consolidate specs, Design Guide and exact reference routes
-  -> sdd-spec-factory: generate complete GitHub Issue + equivalent JSON v2
+  -> module-boundary gate: one complete Task per functional module; reject layer/phase/specialist fragments
+  -> sdd-spec-factory: generate complete GitHub Issue + equivalent JSON v2 per module
+  -> validate generated Task set: consolidate fragments; justify authorization/rollback exceptions
   -> microtasks: skill/plugin/capability/tool/references/paths/checklist/deliverables
   -> Sector Validation Matrix: ten REQUIRED/N/A sectors, owners and dependencies
-  -> Context Routing: Harness reads global Task, specialists receive own sections
+  -> Context Routing: Harness reconciles Human Task/JSON; one prompt linking the single Task JSON file + list_id per execution list
   -> publish DISCOVERY_SDD_COMPLETED comment and capture returned identifier
   -> HUMAN APPROVAL
   -> Ready for Dev
-  -> short bootstrap: task_id + execution_contract_path + sector + revision + relevant receipts
+  -> list bootstrap: task_id + list_id + shared JSON link + execution_contract_path + sector + revision + relevant receipts
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> environment status: compatible fast path for required capabilities
@@ -90,7 +92,16 @@ Idea / demand
    (Product → Module → Page → Component), with Banco / API/Backend / Frontend/UI
    / Testes / Segurança / Observabilidade / Decisões / Riscos / Critérios de
    aceite separated. Owned by `sdd-spec-factory`, approved by the orchestrator.
-3. **Task gate** — the complete GitHub Issue and JSON v2 have the same
+3. **Task gate** — one complete Task per functional module, with disciplines
+   as internal microtasks. Stop generation/handoff for same-module fragments
+   split only by spec, layer, phase or specialist; require consolidation.
+   Separate only production migration, cutover, destructive operation or a
+   genuinely independent delivery requiring its own authorization and rollback,
+   with documented boundary, acceptance criteria, dependencies and gates.
+   Preserve the human template structure; store all execution_lists in one JSON file. Action checklists use `- [ ]`,
+   with nested steps for complex work within the same Task; `- [x]` requires
+   owner evidence and completed applicable children, not automatic approval.
+   The complete GitHub Issue and JSON v2 have the same
    `contract_revision` and normative equivalence for scope, rules, references,
    microtasks, acceptance criteria, tests and stop conditions. The published
    `DISCOVERY_SDD_COMPLETED` comment precedes HUMAN APPROVAL and Ready for Dev.
@@ -146,7 +157,7 @@ At most three automatic rework cycles by default; then diagnosis and BLOCKED.
 - CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS.
 - SECTOR_REQUIRED != OPTIONAL; OUTSIDE_OWNER != AUTHORIZED_TO_PASS.
 - CONTEXT_AVAILABLE != CONTEXT_REQUIRED: every loaded source has a purpose.
-- Harness reads the complete Task; specialists load their listed sections and
+- Harness reads the complete Task; specialists load their list/canonical JSON and
   REQUIRED sources, triggered CONDITIONAL sources, relevant code and receipts.
   OPTIONAL is never loaded automatically. The active SKILL.md remains mandatory.
 - Missing REQUIRED source or source_of_truth_conflict blocks the checkpoint.

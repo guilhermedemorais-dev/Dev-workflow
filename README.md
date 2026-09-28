@@ -812,9 +812,11 @@ Regras:
 
 A GitHub Issue e o painel humano completo; o JSON v2 e sua representacao
 normativamente equivalente para a LLM. O Harness le ambos e reconcilia os
-setores. Cada especialista recebe `task_id`, `execution_contract_path`,
-`sector`, revisao e receipts de dependencias materiais, nao corpos inteiros de
-Tasks/specs. O contrato inclui checklists normativos e referencias por
+setores. Cada especialista recebe um prompt com link para o arquivo JSON unico
+da Task e o ID da lista completa em `execution_lists`,
+identificada por `task_id`, `list_id`, `execution_contract_path`, `sector`,
+revisao e receipts de dependencias materiais, sem corpos da Task humana.
+O contrato inclui checklists normativos e referencias por
 microtarefa, mas nao armazena progresso, logs, receipts ou resultados mutaveis.
 
 A Sector Validation Matrix mantem Banco, API/Backend, Frontend, UI/UX, QA/Testes,
@@ -827,10 +829,10 @@ compacta, sem secoes detalhadas ou invocacoes para os setores N/A.
 - CONDITIONAL: carregar somente quando a condicao explicita ocorrer.
 - OPTIONAL: consulta complementar, nunca leitura automatica.
 
-O especialista le seu SKILL.md completo, as secoes listadas da Task, criterios
-globais pertinentes, fontes requeridas, codigo relevante e receipts materiais.
-So expande para a Task inteira por necessidade justificada, conflito, regra
-normativa ou pedido do Harness. Fonte obrigatoria ausente e conflito de fontes
+O especialista le seu SKILL.md completo, o JSON da lista, os campos necessarios
+do contrato JSON canonico, fontes requeridas, codigo e receipts materiais.
+Nao le a Task humana como entrada de execucao; se faltar contexto, o Harness
+reconcilia o card e fornece o JSON corrigido. Fonte ausente e conflito de fontes
 bloqueiam o checkpoint. Menor contexto COMPLETO, nao contexto insuficiente.
 
 `depends_on` governa validacao final; `planning_depends_on` permite planejamento
@@ -1359,8 +1361,8 @@ continua responsavel por preparo seletivo. Nenhum dataset ou instalador novo.
 ## SDD Spec Factory
 
 Plugin especializado em Spec-Driven Development (SDD). Transforma um pedido de
-cliente, feature, ideia ou problema em specs detalhadas e em uma task pequena e
-executavel, sem implementar codigo de produto.
+cliente, feature, ideia ou problema em specs detalhadas e em uma Task completa
+por modulo funcional, sem implementar codigo de produto.
 
 Funcao:
 
@@ -1370,14 +1372,36 @@ Funcao:
   validacao, banco e API/backend, alem de frontend/UI quando houver tela.
 - Separar sempre Banco, API/Backend, Frontend/UI, Testes, Seguranca,
   Observabilidade/logs, Decisoes pendentes, Riscos e Criterios de aceite.
-- Produzir uma task executavel ligada a specs, issue, branch e PR.
+- Produzir uma Task completa por modulo, ligada a specs, issue, branch e PR.
 - Entregar checklists de PR, code review e QA.
 
 Quando usar:
 
 - Sempre que um pedido novo precisar virar contrato antes de implementar.
 - Quando faltar clareza de escopo e for preciso fechar specs e perguntas.
-- Para quebrar uma feature grande em tasks pequenas e revisaveis.
+- Para decompor um modulo em microtarefas internas de banco, backend, frontend,
+  TDD, QA, seguranca e documentacao, mantendo uma unica Task ponta a ponta.
+
+O Harness e a fabrica validam o agrupamento antes da geracao e antes do handoff.
+Tasks do mesmo modulo separadas apenas por spec, camada, fase ou especialista
+interrompem a geracao e exigem consolidacao. Tamanho e limite de contexto nao
+justificam fragmentacao. As excecoes sao migracao produtiva, cutover, operacao
+destrutiva ou entrega realmente independente que precise de autorizacao e
+rollback proprios, com limites, aceite, dependencias e gates documentados.
+Uma migracao comum de schema em desenvolvimento continua como microtarefa.
+Os checklists usam caixas `- [ ]`, com subitens para etapas complexas dentro
+da mesma Task. `- [x]` exige evidencia do responsavel; um item pai so termina
+com seus subitens aplicaveis concluidos. Isso nao aprova setores ou merge.
+Cada lista executavel recebe um prompt com link para o arquivo JSON unico da
+Task e seu `list_id`, nunca um prompt por item ou subitem. Todos os objetos das
+listas ficam em `execution_lists` nesse arquivo, sem JSON dentro do card humano
+e sem arquivos separados por lista. O contrato detalha objetivos, regras, fontes,
+limites, dependencias, entregaveis, testes e criterios de aceite verificaveis. O Harness confere Task humana e JSON; o especialista executa
+pelo JSON da lista e contrato canonico, lendo sua skill, fontes e codigo
+necessarios. Contexto ausente volta ao Harness, sem exigir releitura do card.
+A estrutura humana permanece; o contrato recebe `execution_lists` no mesmo
+arquivo, mantendo leitura de contratos anteriores;
+issues existentes nao sao aprovadas, encerradas ou reescritas automaticamente.
 
 Hierarquia imposta:
 

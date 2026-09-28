@@ -6,8 +6,8 @@ description: "Use to turn a client request, feature, idea or problem into spec-d
 # SDD Spec Factory
 
 Specialist workflow for **Spec-Driven Development (SDD)**. It converts an idea,
-client request, feature or problem into detailed specs and a small executable
-task, then hands execution back to `dev-workflow-standard` and the review
+client request, feature or problem into detailed specs and one complete
+executable Task per functional module, then hands execution back to `dev-workflow-standard` and the review
 specialists. Keep this file lightweight: create only the specs and the task the
 current request actually needs, and load the templates on demand.
 
@@ -43,7 +43,8 @@ validated with `ui-ux-standard`.
 ## Vocabulary (non-negotiable)
 
 - **Spec is not a PR.** A spec is the contract of what must be built.
-- **Task is the order of execution.** It is small, reviewable and executable.
+- **Task is the order of execution.** Its default unit is a complete functional
+  module, with reviewable internal microtasks and end-to-end acceptance.
 - **PR is the reviewable delivery.**
 - **Issue is the complete human task/card.** A local Markdown may mirror it but
   does not replace it when GitHub Issues is available.
@@ -100,8 +101,10 @@ collapse them into one prose blob; if a dimension does not apply, write
   endpoint, service or component exists, do not assert it. Mark it as a
   hypothesis (`HIPÓTESE:`) or as a pending decision.
 - Mark every assumption explicitly. Unverified facts are hypotheses, not specs.
-- Keep tasks small enough to be reviewed in one PR. Split large work into
-  multiple tasks, each with its own specs and acceptance criteria.
+- Generate one complete Task per functional module in the approved demand.
+  Decompose large work into internal microtasks and resumable checkpoints,
+  never separate Tasks merely by layer, phase or specialist. Size, token budget,
+  context limits and review convenience are not exceptions.
 - Before specifying a new service, helper, component, route, abstraction or
   subsystem, search the source-of-truth repository for an existing equivalent.
   Prefer reuse or extension and record the decision in `REUSE_INVENTORY`.
@@ -201,7 +204,51 @@ installed hosts resolve the active skill, never assume sibling cache paths.
 If unavailable, use an explicitly available canonical checkout or return the
 missing reference to the Harness before producing a conflicting contract.
 
-Produce one small, reviewable, complete GitHub Issue/card using
+Run the module-boundary gate below before generating Tasks, then validate the
+generated set with the same gate before publication or handoff.
+
+#### Module-boundary gate
+
+1. Identify each functional module and its approved end-to-end outcome. Group
+   proposed and relevant existing Tasks by scope, dependencies and acceptance
+   criteria, not titles or folders alone. A module is a coherent business
+   capability, not a layer, phase or specialist. For an existing module, cover
+   the requested change completely without rebuilding unrelated functionality.
+2. Plan one complete Task per module. Put spec, database, backend, frontend,
+   TDD, independent QA, security and documentation into its existing microtasks
+   and sector matrix. Preserve owners, dependencies and evidence; justify N/A
+   where a discipline does not apply. Separate specs are supporting documents,
+   not a reason to create separate spec-only Tasks.
+3. Reject Tasks for the same module separated only into "spec", "backend",
+   "frontend", "QA" or "implementation", including synonyms and renamed
+   fragments. Stop generation/publication/handoff, list affected IDs/titles
+   and missing end-to-end coverage, and require consolidation into one complete
+   module Task. Do not declare the output ready until it passes a fresh check.
+   Detect relevant existing fragments without automatically approving, closing
+   or rewriting their Issues or mass-migrating historical Tasks.
+4. Allow separation only for production migration, cutover, destructive
+   operation, or a genuinely independent delivery requiring its own
+   authorization and rollback. Document each exception's boundary, independent
+   acceptance criteria, dependencies, explicit authorization gate and rollback
+   plan in existing fields. Missing justification blocks generation; size or
+   different specialists do not qualify. An ordinary development schema
+   migration remains a module microtask.
+5. Validate the complete output set, not just each card in isolation: every
+   module has its full approved outcome covered by one Task, all applicable
+   disciplines are microtasks, and each separated exception is justified.
+   Recheck Human Task/JSON equivalence after consolidation. Keep the Task
+   template structure and existing contract fields; keep execution_lists in
+   the same JSON file and preserve legacy reads. Render action
+   checklists with checkboxes as specified below.
+
+Examples: "Orders spec" + "Orders backend" + "Orders frontend" + "Orders QA"
+must consolidate into one Orders Task, even if renamed as sequential phases.
+One Orders Task with those microtasks passes. Orders and Inventory may be
+distinct Tasks when they are genuinely distinct functional modules. A separate
+production data cutover needs the documented authorization and rollback above;
+calling a backend fragment an "independent delivery" does not make it one.
+
+Produce one reviewable, complete GitHub Issue/card per module using
 `templates/task-template.md` and one equivalent v2 JSON contract using
 `templates/execution-contract-template.json`:
 
@@ -223,8 +270,50 @@ Produce one small, reviewable, complete GitHub Issue/card using
 - Decompose execution into microtasks with owner skill/plugin, capability,
   preferred tool, dependencies, exact references, allowed paths, checklist,
   deliverables, completion condition and independent validator.
-- Make `Prompt para o executor` a copy-ready ignition prompt that verifies task
-  identity and contract revision, checks card/JSON equivalence, loads routed
+- Render every stage, microtask and REQUIRED-sector action checklist as Markdown
+  `- [ ]` items, not semicolon-separated prose or uncheckable numbered steps.
+  Split complex items into nested checkbox subitems inside the same Task.
+  Give each leaf an observable completion condition; do not create new Tasks
+  or Issues for these internal steps. New items start unchecked. Mark `- [x]`
+  only with the responsible owner's completion evidence; a parent requires all
+  applicable children completed. Blocked/unvalidated items stay unchecked with
+  reasons; justified N/A is not a completed action. Human approval gates remain
+  separate. Keep checkbox progress in the Human Task/evidence ledger, while
+  normative actions remain equivalent in the existing JSON checklist fields,
+  without adding mutable checked-state fields.
+- Generate one prompt per execution checklist/list (microtask, stage or sector).
+  Each prompt contains a clickable link to the single Task JSON file and the
+  selected `list_id`. Put all list objects in that file's `execution_lists`,
+  beside the global contract. Never embed JSON in the Human Task, attach its
+  body to the prompt, or create separate JSON files per list. Use a real local
+  file link or versioned repository URL. Never generate a prompt per checkbox
+  or nested subitem. Preserve task identity/revision at file level and each
+  list's owner, phase, complete checklist/subitems and microtask references.
+  Global scope, protected paths, acceptance, tests, sources and stop conditions
+  remain mandatory through that contract. Check every prompt link resolves to
+  the same Task file, every list ID resolves exactly once, and list actions and
+  applicable microtask checklists agree with no omitted requirements or wrong owner.
+  The file is a detailed execution contract, not merely a routing index: each
+  list specifies objective, scoped actions, dependencies, exact required sources
+  and their purposes, allowed/protected paths, expected deliverables, observable
+  completion conditions, tests, acceptance and stop conditions. Resolve relevant
+  requirements/business rules and input/output, error and negative-path
+  expectations from the global contract/specs. Reference IDs are acceptable only
+  when they resolve to concrete instructions in the same file or required sources.
+  Never require the Human Task to discover an omitted execution rule. Reuse
+  global constraints without copying unrelated context into every list. Unknown
+  stack, paths, commands or product decisions remain explicit blockers, never
+  invented detail or empty fields presented as ready. No detail level alone
+  proves quality; execution and independent validation remain required.
+  Use the active Harness `references/context-routing.md` transport rules.
+  Harness alone compares the full Human Task and JSON. Specialists execute
+  from the supplied JSON plus mandatory skill/spec/code reads; do not require
+  them to read the Human Task or its sections as execution input. Missing or
+  conflicting JSON returns to Harness. A Human Task reference is provenance,
+  never permission to substitute prose for missing JSON instructions.
+- Make `Prompt para o executor` the Harness bootstrap for the full Task and
+  its per-list prompt/JSON handoffs. Specialists verify task/list identity,
+  contract revision and current Harness evidence of card/JSON equivalence, load routed
   skills/references, stops on divergence, collects receipts, publishes material
   comments, and forbids merge/deploy without explicit authorization.
 - Record planned validations in the Human Task with owner skill, capability,
@@ -241,8 +330,8 @@ Produce one small, reviewable, complete GitHub Issue/card using
 - Separate final `depends_on` from optional `planning_depends_on`. QA, Security
   and UI planning may start early; only executed validation closes their gates.
   Check unknown IDs, owners, missing required references and cycles before handoff.
-- Give the Harness the complete Human Task; give each specialist only its
-  sector, relevant global constraints/acceptance, necessary code and dependency
+- Give the Harness the complete Human Task; give each specialist its list JSON,
+  canonical JSON sector/global constraints/acceptance, necessary code and dependency
   receipts. Missing context requests expansion, not loading all sources by default.
 - For behavioral changes, bugfixes, APIs, user flows, business rules, persistent
   state, payments, tenancy, imports/exports, integrations or concurrency, route
@@ -304,7 +393,9 @@ Provide the delivery gates using `templates/pr-template.md`,
 - The needed specs exist and follow the hierarchy.
 - Banco, API/Backend, Frontend/UI, Testes, Segurança, Observabilidade,
   Decisões pendentes, Riscos and Critérios de aceite are separated.
-- There is one small executable task linking specs, issue, branch and PR.
+- There is one complete executable Task per module linking specs, issue, branch
+  and PR, with applicable disciplines as microtasks. The module-boundary gate
+  passed for the entire output set and every separation exception is justified.
 - Every new executable task has a valid v2 Execution Contract with normative
   equivalence to the complete Issue/card and a copy-ready ignition prompt;
   legacy tasks have the compatibility fallback above.

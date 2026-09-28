@@ -5,10 +5,13 @@ description: "Use for UI/UX, screens, mockups, visual design, design systems, co
 
 # UI/UX Standard
 
-V2 equivalence checks are scoped to this owner's routed card sections and JSON
-slice. Require current Harness evidence of the full comparison, tied to the
-contract revision and observed Issue update time. Missing/stale evidence or a
-divergence returns to Harness for reconciliation before executing the slice.
+Receive one prompt per execution list, linking the Task's single JSON file
+and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
+All lists live in that file; do not expect JSON inside the Human Task/prompt.
+Read the list JSON and relevant canonical JSON fields, not Human Task sections
+as execution input. Require current Harness evidence of full card/JSON normative
+equivalence, tied to the contract revision and observed Issue update time.
+Missing/stale evidence or divergence returns to Harness before execution.
 
 Act as the UI/UX specialist. Read this `SKILL.md` completely before review and
 return a `SKILL_RECEIPT`; a mention of the skill is not proof that its
@@ -38,9 +41,9 @@ evidence without claiming the other owner's PASS. A misaligned button routes
 here; a button submitting twice routes to QA; unauthorized action routes to
 security-standard. Playwright tool ownership remains here, even when QA uses it.
 
-For sector-routed handoffs, read the Execution Contract and listed Task sections,
+For sector-routed handoffs, read the list JSON and canonical Execution Contract,
 relevant global criteria, REQUIRED sources with purpose and triggered CONDITIONAL
-sources. Do not load the whole Task or OPTIONAL sources by default. Read this
+sources. Do not load the Human Task as execution input or OPTIONAL sources by default. Read this
 SKILL.md fully and required active-mode references. Resolve context-routing from
 the active Harness or explicit canonical checkout; missing required context goes
 back to Harness. Planning/design may precede frontend completion; final visual

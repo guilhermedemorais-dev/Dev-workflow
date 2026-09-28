@@ -5,10 +5,13 @@ description: "Use for authorized defensive application security work: security r
 
 # Security Standard
 
-V2 equivalence checks are scoped to this owner's routed card sections and JSON
-slice. Require current Harness evidence of the full comparison, tied to the
-contract revision and observed Issue update time. Missing/stale evidence or a
-divergence returns to Harness for reconciliation before executing the slice.
+Receive one prompt per execution list, linking the Task's single JSON file
+and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
+All lists live in that file; do not expect JSON inside the Human Task/prompt.
+Read the list JSON and relevant canonical JSON fields, not Human Task sections
+as execution input. Require current Harness evidence of full card/JSON normative
+equivalence, tied to the contract revision and observed Issue update time.
+Missing/stale evidence or divergence returns to Harness before execution.
 
 The LLM using this skill acts as the security specialist. Read this `SKILL.md`
 completely before analysis and return a `SKILL_RECEIPT`; a mention of the skill
@@ -47,10 +50,10 @@ tests, mocks, local fixtures, or an isolated environment.
 
 ## Relationship To The Main Workflow
 
-For a sector-routed contract, load the security Task sections, relevant global
+For a sector-routed contract, load the security list JSON, relevant canonical JSON global
 constraints/criteria, purpose-qualified REQUIRED sources, triggered CONDITIONAL
 sources and material dependency receipts/code. Do not read unrelated UI, QA or
-DevOps docs or the entire Task by default. The active SKILL.md and mandatory
+DevOps docs; do not load the Human Task as execution input. The active SKILL.md and mandatory
 security references remain fully required. Resolve the Harness context-routing
 reference from the active bundle or explicit checkout; missing required sources
 or conflicting authority return to Harness, not a silent assumption.

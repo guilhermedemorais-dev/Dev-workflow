@@ -108,7 +108,8 @@ class TestSectorContextRouting(unittest.TestCase):
     def test_t10_t13_harness_full_task_specialist_slice_and_sources(self):
         normalized = " ".join(self.rules.split())
         self.assertIn("Harness reads the complete Human Task", normalized)
-        self.assertIn("specialist does not read the complete Human Task by default", normalized)
+        self.assertIn("specialist reads the list JSON and relevant canonical JSON fields", normalized)
+        self.assertIn("not the Human Task or its sections as execution input", normalized)
         for field in ("task_sections", "required_sources", "global_acceptance_refs",
                       "dependency_receipts", "allowed paths"):
             self.assertIn(field, self.rules)

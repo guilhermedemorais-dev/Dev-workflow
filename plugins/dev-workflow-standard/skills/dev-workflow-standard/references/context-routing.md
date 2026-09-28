@@ -12,8 +12,9 @@ the same approved requirements, business rules, references, microtasks,
 constraints and acceptance criteria, under the same `contract_revision`.
 Mutable progress, evidence and discussion remain in Issue comments and
 receipts. Harness reads the complete Human Task and the v2 JSON, verifies
-equivalence, reconciles scope and all sectors, then delegates a slice.
-The specialist does not read the complete Human Task by default. It reads its
+equivalence, reconciles scope and all sectors, then delegates a list.
+The specialist reads the list JSON and relevant canonical JSON fields, not the
+Human Task or its sections as execution input. It also reads its
 entire canonical SKILL.md, routed sections and the smallest complete context
 needed for its claim. Progressive disclosure never removes a mandatory rule.
 
@@ -97,16 +98,60 @@ Issue/comments and evidence ledger.
 
 ## Resolve and load a slice
 
-Handoff contains `task_id`, `execution_contract_path`, `sector`, `phase`
+### One linked prompt per list, one JSON file per Task
+
+Every execution checklist/list has one prompt containing a clickable link to
+the single Task JSON file and the selected `list_id`. Store every list object
+under `execution_lists` in that file, alongside shared scope and constraints.
+No JSON body belongs in the Human Task or prompt, and no per-list JSON files
+are generated. Use actual local-file links or versioned repository-file URLs.
+Items and nested subitems do not receive separate prompts. Microtask, stage and sector lists use stable
+`list_id` values; a repeated view of the same list reuses its ID and does not
+authorize executing it twice. Approval lists remain human gates, not agent
+permission to approve them.
+
+The canonical Task JSON has shared `task_id`, `contract_revision`, global
+constraints and an `execution_lists` collection. Each entry contains `list_id`,
+`owner_skill`, `phase`, applicable `microtask_ids` and the entire `checklist`.
+Include objective, dependencies, references with resolvable purposes,
+allowed/protected paths, deliverables, completion condition, required tests,
+acceptance criteria and stop conditions. Relevant business rules and boundary,
+input/output and error cases resolve through the global contract/specs. A list
+must be executable from this JSON and its declared technical sources without
+needing Human Task prose to fill missing requirements. Unknown decisions,
+paths or commands are explicit planning blockers, not invented instructions.
+Preserve nested items
+as objects with `instruction` and optional `children`; do not include mutable
+checked state in the normative instructions. Keep actionable text equivalent
+to the canonical contract. All inherited scope, allowed/protected paths,
+criteria, tests, required sources, dependencies and stop conditions still
+apply. Resolve them from the same JSON file before execution; never treat a small list as
+permission to omit global restrictions. Linked source documents and code are
+still read when required; JSON replaces the Human Task as specialist input,
+not the technical evidence needed for implementation or review.
+
+Harness validates link resolution, unique list identity and revision, owner,
+all checklist items/subitems and normative equivalence before handoff. Attach or
+link its current comparison receipt and relevant dependency receipts outside
+the normative Task JSON. A stale/missing receipt, missing canonical contract,
+unknown/duplicate list ID, changed checklist or wrong owner blocks execution.
+Ask Harness to correct the shared JSON file, not to supply the Human Task.
+Update card and file revision together after normative edits; a checkbox
+progress change alone is not a new contract. Existing v2 files without
+`execution_lists` remain readable; Harness adds this collection when routing
+new list prompts, rather than silently treating missing lists as executable.
+Legacy contracts must be normalized/routed by Harness before this handoff;
+historical `task_sections` remain provenance, not required specialist reading.
+
+Handoff contains `task_id`, `list_id`, `execution_contract_path`, `sector`, `phase`
 (`planning` or `validation`), revision and relevant `dependency_receipts` paths.
 No Task/spec bodies are pasted into it.
 
 1. Validate the schema. For v2, Harness compares all normative content with the
    linked Issue, records its revision and observed Issue update time in the
-   existing receipt, and routes the matching card sections and JSON slice.
-   Each specialist checks identity, revision and normative equivalence for its
-   own slice, plus the Harness comparison evidence. It need not independently
-   reload the whole card. Missing comparison evidence, changed Issue content or
+   existing receipt, and routes a list prompt linking the shared JSON file.
+   Each specialist checks list identity, revision, canonical JSON and Harness
+   comparison evidence without reading the human card. Missing comparison evidence, changed Issue content or
    divergence stops the checkpoint with `human_task_json_divergence`; request
    a fresh Harness comparison. Do not add verification state to the JSON.
 2. Check all ten applicability decisions, N/A reasons, known dependency IDs,
@@ -115,8 +160,8 @@ No Task/spec bodies are pasted into it.
 3. Resolve the sector's canonical SKILL.md and read it completely. Read its
    mandatory active-phase references and emit SKILL_RECEIPT.
 4. Read the minimal global summary/constraints, routed microtasks and relevant
-   acceptance criteria. Use the Human Task for human context and the JSON for
-   structured execution; neither may override a divergence silently.
+   acceptance criteria from JSON. Harness owns Human Task reconciliation;
+   specialists do not substitute its prose for missing JSON instructions.
 5. Read REQUIRED sources for their stated purpose. Evaluate each CONDITIONAL
    source against observed scope and record activated/not activated with reason.
    OPTIONAL sources are not loaded by default. Inspect only relevant code.
@@ -137,9 +182,9 @@ determined and affects a required claim, request context before proceeding.
 
 For insufficient context, send `CONTEXT_EXPANSION` using the existing handoff:
 `reason`, `required_source`, `blocking_claim`. The Harness resolves the request.
-Full Task reading is allowed for an actual conflict, a governing source rule,
-necessary global context or explicit Harness instruction, with the reason
-recorded; it is not the default fallback.
+Harness resolves Human Task conflicts and supplies corrected JSON. Specialists
+read the human card only if the user explicitly requests a card audit or edit,
+not as an automatic execution/context-expansion fallback.
 
 ## Phases, states and final gate
 

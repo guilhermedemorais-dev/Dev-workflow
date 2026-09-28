@@ -5,10 +5,13 @@ description: "Operate and review GitHub repository governance, CI/CD, containers
 
 # DevOps Standard
 
-V2 equivalence checks are scoped to this owner's routed card sections and JSON
-slice. Require current Harness evidence of the full comparison, tied to the
-contract revision and observed Issue update time. Missing/stale evidence or a
-divergence returns to Harness for reconciliation before executing the slice.
+Receive one prompt per execution list, linking the Task's single JSON file
+and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
+All lists live in that file; do not expect JSON inside the Human Task/prompt.
+Read the list JSON and relevant canonical JSON fields, not Human Task sections
+as execution input. Require current Harness evidence of full card/JSON normative
+equivalence, tied to the contract revision and observed Issue update time.
+Missing/stale evidence or divergence returns to Harness before execution.
 
 Specialist companion to `dev-workflow-standard`, not a second Harness. Read
 this skill completely, emit `SKILL_RECEIPT`, validate the approved task and
@@ -24,9 +27,9 @@ DevOps/observability microtasks; any divergence returns to the Harness.
   operational runtime, health, CI/CD, rollback and reliability. A service health
   check is not functional QA. Environment prepares missing tools, not production
   infrastructure. Preserve shared tool owners and return only your own PASS.
-- For sector routing, load listed Task sections, relevant global constraints,
+- For sector routing, load the list JSON, relevant canonical JSON global constraints,
   required sources with purpose, triggered conditionals and material receipts.
-  Do not load the whole Task or optional sources by default. Read this SKILL.md
+  Do not load the Human Task as execution input or optional sources by default. Read this SKILL.md
   and the active operational references fully. Resolve context-routing from the
   active Harness or explicit canonical checkout; missing required sources or
   source conflicts block. Planning may precede the final runtime artifact, but

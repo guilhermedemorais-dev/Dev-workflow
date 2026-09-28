@@ -168,7 +168,10 @@ class TestDevImplementationWorkflow(unittest.TestCase):
         self.assertIn('## Workflow', self.content)
 
     def test_workflow_starts_from_contract(self):
-        self.assertIn('**Bootstrap**: receive `task_id` and `execution_contract_path`', self.content)
+        bootstrap = self.content.split('**Bootstrap**:', 1)[1].split('2. **Contract validation**', 1)[0]
+        for field in ('`task_id`', '`list_id`', '`contract_revision`', '`execution_contract_path`'):
+            self.assertIn(field, bootstrap)
+        self.assertIn('list prompt linking the shared JSON file', bootstrap)
         self.assertIn('**Contract validation**', self.content)
         self.assertIn('**Progressive disclosure**', self.content)
         self.assertNotIn('read the whole approved task and every mandatory', self.content)
