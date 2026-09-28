@@ -45,13 +45,18 @@ does not replace Harness execution states. PROJECT READY != PRODUCTION AUTHORIZE
 ```text
 Idea / demand
   -> dev-workflow-standard: diagnose (critical questions, risks)
-  -> dev-workflow-standard: consolidate scope (in / out / constraints / decisions)
-  -> sdd-spec-factory: generate specs (product/module/page/component/validation/API/DB)
-  -> sdd-spec-factory: generate Human Task + lean Execution Contract
-  -> Sector Validation Matrix: REQUIRED/N/A, owners, sources and dependencies
-  -> Context Routing: Harness reads global Task, specialists receive own sections
+  -> Discovery / SDD colaborativo: perguntas ao usuário + pesquisa + referências
+  -> sdd-spec-factory: consolidate specs, Design Guide and exact reference routes
+  -> module-boundary gate: one complete Task per functional module; reject layer/phase/specialist fragments
+  -> sdd-spec-factory: generate complete GitHub Issue + equivalent JSON v2 per module
+  -> validate generated Task set: consolidate fragments; justify authorization/rollback exceptions
+  -> microtasks: skill/plugin/capability/tool/references/paths/checklist/deliverables
+  -> Sector Validation Matrix: ten REQUIRED/N/A sectors, owners and dependencies
+  -> Context Routing: Harness reconciles Human Task/JSON; one prompt linking the single Task JSON file + list_id per execution list
+  -> publish DISCOVERY_SDD_COMPLETED comment and capture returned identifier
   -> HUMAN APPROVAL
-  -> short bootstrap: task_id + execution_contract_path + sector + revision + relevant receipts
+  -> Ready for Dev
+  -> list bootstrap: task_id + list_id + shared JSON link + execution_contract_path + sector + revision + relevant receipts
   -> contract validation + progressive disclosure of mandatory references
   -> required skills read + SKILL_RECEIPT
   -> environment status: compatible fast path for required capabilities
@@ -61,14 +66,15 @@ Idea / demand
   -> cached fast path or detect/install/verify/persist slow path
   -> selected capability invoked; state RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
-  -> dev-implementation-standard: implement (only the task scope, on the branch)
+  -> dev-implementation-standard: implement DB/backend/frontend/docs microtasks
+  -> developer TDD and executor tests
   -> execution result: diff / files / commands / artifacts
   -> completed EXECUTION_RECEIPT
   -> Human Task updated
   -> EXECUTION_REPORT_COMMENT -> linked GitHub Issue when available
   -> dev-workflow-standard: VALIDATING
-  -> owner skill analyzes findings, corrects in scope, and revalidates on FAIL
-  -> specialist validation: UI/UX / qa-testing-standard / Security / DevOps as REQUIRED
+  -> independent functional QA / Security QA / UI-UX QA / DevOps-observability as REQUIRED
+  -> owner skill corrects failures; the same validator retests the new revision
   -> Sector Reconciliation: owner receipts, evidence and current revision
   -> PR Gate: review package links task, issue, branch, specs followed
   -> Pull Request when authorized; no fabricated remote publication
@@ -86,10 +92,19 @@ Idea / demand
    (Product → Module → Page → Component), with Banco / API/Backend / Frontend/UI
    / Testes / Segurança / Observabilidade / Decisões / Riscos / Critérios de
    aceite separated. Owned by `sdd-spec-factory`, approved by the orchestrator.
-3. **Task gate** — one Human Task links its issue, branch, expected PR, and a
-   valid lean Execution Contract with scope, acceptance criteria, tests, skills,
-   stop conditions, and mandatory reference paths. Human approval required
-   before code.
+3. **Task gate** — one complete Task per functional module, with disciplines
+   as internal microtasks. Stop generation/handoff for same-module fragments
+   split only by spec, layer, phase or specialist; require consolidation.
+   Separate only production migration, cutover, destructive operation or a
+   genuinely independent delivery requiring its own authorization and rollback,
+   with documented boundary, acceptance criteria, dependencies and gates.
+   Preserve the human template structure; store all execution_lists in one JSON file. Action checklists use `- [ ]`,
+   with nested steps for complex work within the same Task; `- [x]` requires
+   owner evidence and completed applicable children, not automatic approval.
+   The complete GitHub Issue and JSON v2 have the same
+   `contract_revision` and normative equivalence for scope, rules, references,
+   microtasks, acceptance criteria, tests and stop conditions. The published
+   `DISCOVERY_SDD_COMPLETED` comment precedes HUMAN APPROVAL and Ready for Dev.
 4. **Implementation gate** — task implemented within scope; required commands run;
    tests pass; task result updated; skill receipt and reuse evidence exist. Owned
    by the executor agent using `dev-implementation-standard`.
@@ -142,7 +157,7 @@ At most three automatic rework cycles by default; then diagnosis and BLOCKED.
 - CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS.
 - SECTOR_REQUIRED != OPTIONAL; OUTSIDE_OWNER != AUTHORIZED_TO_PASS.
 - CONTEXT_AVAILABLE != CONTEXT_REQUIRED: every loaded source has a purpose.
-- Harness reads the complete Task; specialists load their listed sections and
+- Harness reads the complete Task; specialists load their list/canonical JSON and
   REQUIRED sources, triggered CONDITIONAL sources, relevant code and receipts.
   OPTIONAL is never loaded automatically. The active SKILL.md remains mandatory.
 - Missing REQUIRED source or source_of_truth_conflict blocks the checkpoint.
@@ -156,13 +171,14 @@ At most three automatic rework cycles by default; then diagnosis and BLOCKED.
   contract required by the change-complexity tier.
 - `dev-implementation-standard` never implements without an approved task, and
   never changes anything out of scope without a recorded justification.
-- Every new executable task points to a valid Execution Contract, and that
-  contract points to its mandatory specs. Legacy tasks are normalized on demand.
+- Every new executable task points to a valid v2 Execution Contract normatively
+  equivalent to its GitHub Issue. Legacy v1 tasks are normalized on demand.
 - Every PR points to task, issue, branch and the specs it followed.
 - Naming a skill never counts as applying it; every mandatory skill has a receipt.
 - Assigning a task never counts as executing it; every delegated checkpoint has an `EXECUTION_RECEIPT`.
 - A human Issue report communicates material progress but never replaces the
-  receipt or validation. Publication requires a returned comment URL/identifier.
+  receipt or validation. Every material comment records token usage and changed
+  surface. Publication requires a returned comment URL/identifier.
 - Consolidate small operations and never post an identical checkpoint report twice.
 - `COMPLETED` requires inspectable result plus validation evidence.
 - No new code unit is accepted without a reuse inventory and minimal-code gate.
@@ -176,17 +192,17 @@ The tiers control artifact depth, not validation quality:
 | Tier | Typical scope | Minimum contract |
 | --- | --- | --- |
 | `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, compact sector matrix with N/A reasons, validation and evidence |
-| `NORMAL` | bounded behavior or multi-file change in known architecture | concise Issue/Human Task plus lean Execution Contract; focused spec only for unspecified behavior |
-| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | durable SDD, Human Task, lean Execution Contract, traceability, specialists, review gates |
+| `NORMAL` | bounded behavior or multi-file change in known architecture | complete Issue/card plus equivalent v2 JSON; focused spec only for unspecified behavior |
+| `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | collaborative SDD, reference/design libraries, complete Issue, equivalent v2 JSON, traceability, specialists, review gates |
 
 Escalate when uncertain. Security and UI gates remain surface- and risk-based.
 
 ## Context compatibility
 
-Human Task holds the matrix and evidence ledger; the v1 Execution Contract adds
-optional `sectors` and `global_acceptance_refs`, not spec bodies/status/logs.
-Legacy contracts remain readable and are normalized only when needed for resumed
-work. Exact schema, phase dependencies, migration and expansion rules live in
+The GitHub Issue is the complete human card; JSON v2 is the equivalent normative
+LLM contract. Mutable progress, evidence, logs and receipts remain in Issue
+comments and ledgers. Legacy v1 contracts remain readable and are normalized
+only when needed for resumed work. Exact schema and compatibility rules live in
 the Harness [context-routing reference](../plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md).
 This is a local documented agent protocol, not a new runtime policy engine.
 

@@ -5,6 +5,14 @@ description: Independently plan and verify functional behavior, reproduce bugs, 
 
 # QA Testing Standard
 
+Receive one prompt per execution list, linking the Task's single JSON file
+and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
+All lists live in that file; do not expect JSON inside the Human Task/prompt.
+Read the list JSON and relevant canonical JSON fields, not Human Task sections
+as execution input. Require current Harness evidence of full card/JSON normative
+equivalence, tied to the contract revision and observed Issue update time.
+Missing/stale evidence or divergence returns to Harness before execution.
+
 Own functional correctness and Test Engineering. The Harness coordinates; QA
 plans, executes and interprets behavior checks independently of the product
 implementer. Tool execution and actual evidence, not a checklist, justify results.
@@ -13,15 +21,20 @@ implementer. Tool execution and actual evidence, not a checklist, justify result
 
 1. Receive `task_id`, `execution_contract_path`, `sector`, `revision` and relevant
    `dependency_receipts`. Read the contract; match the task and current revision.
-2. Resolve your own sector and owner. For additive `schema_version: 1` contracts,
-   load the minimal global goal/acceptance references, listed `task_sections`,
+   For v2, verify **normative equivalence** of the routed QA slice and the
+   current Harness comparison receipt; stop
+   on revision/content divergence before making any QA claim.
+2. Resolve your own sector, routed microtasks and owner. For legacy
+   `schema_version: 1` contracts,
+   ask Harness to normalize historical `task_sections` into a JSON handoff. Load
+   minimal global goal/acceptance references from JSON,
    `required_sources` (each with a `purpose`), relevant code and material receipts.
    Evaluate `conditional_sources` and read only when their condition occurs.
    OPTIONAL sources are not loaded automatically.
 3. Read this SKILL completely and references required by the active mode.
    Record the existing `SKILL_RECEIPT`: skill, exact path, references_loaded,
    applied_rules and status LOADED or BLOCKED; sector/mode are contextual details.
-4. The Harness reads the complete Human Task; QA does not by default. With a
+4. The Harness reads the complete Human Task; QA executes from JSON only. With a
    legacy contract without sectors, request a scoped handoff from the Harness,
    preserving its mandatory sources and existing gates. Do not invent a sector
    or silently omit a source required by another applicable instruction.

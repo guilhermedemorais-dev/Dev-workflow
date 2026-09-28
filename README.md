@@ -408,13 +408,50 @@ e [operations](plugins/dev-environment-standard/skills/dev-environment-standard/
 Credenciais de provedores ficam no mecanismo seguro do host, nunca em templates,
 fixtures, receipts ou exemplos publicados.
 
+### Padrao de task: card humano + JSON para a LLM
+
+Toda task nova usa duas representacoes sob a mesma `contract_revision`:
+
+1. **GitHub Issue / Human Task:** card humano completo, com resumo no cabecalho,
+   contexto atual e esperado, Discovery/SDD, escopo, referencias, microtarefas,
+   setores, pipeline, criterios, riscos, evidencias e gates.
+2. **Execution Contract v2:** as mesmas especificacoes normativas em JSON,
+   organizadas para leitura deterministica da LLM e menor ambiguidade.
+
+Essa equivalencia normativa nao significa duplicar logs. Status de execucao,
+resultados, receipts e discussoes ficam na Issue e nos artefatos de evidencia.
+Se card e JSON divergirem, a execucao para com
+`human_task_json_divergence`; uma alteracao normativa exige atualizar os dois.
+
+O Discovery/SDD e colaborativo: a LLM faz perguntas ao usuario, pesquisa fontes
+adequadas a stack e consolida decisoes. Referencias validadas ficam em
+`docs/biblioteca-referencias/`; a task roteia arquivo e secao exatos. Trabalho
+visual tambem referencia `docs/design/`, Design Guide, tokens, biblioteca de
+componentes, referencias visuais e mockup aprovado.
+
+Cada microtarefa declara skill executora, plugin, capability, tool preferencial,
+dependencias, referencias, paths, checklist, entregaveis, condicao de conclusao
+e validador independente. Depois do planejamento, a LLM publica o comentario
+`DISCOVERY_SDD_COMPLETED`; so entao pede aprovacao humana para Ready for Dev.
+O comentario so conta como publicado com URL/identificador retornado.
+
+Todos os comentarios materiais terminam com:
+
+- `input_tokens`, `output_tokens`, `total_tokens` e `measurement_source`;
+- `changed_files`, alteracoes na Issue/card, JSON/specs/referencias,
+  `remote_mutations`, indicador de codigo e branch/commit/PR.
+
+Sem contagem fornecida pelo runtime/API, o valor correto e `NOT_AVAILABLE`.
+Estimativa nunca pode ser apresentada como medicao exata.
+
 ### Onde cada informacao pertence
 
 | Informacao | Fonte correta | Nao usar como substituto |
 | --- | --- | --- |
 | Comportamento esperado e restricoes | Spec aprovada | Conversa antiga sem registro |
-| Owners, progresso, bloqueios e evidencias | Human Task | Status dentro do contrato JSON |
-| Paths, setores, fontes e criterios relevantes | Execution Contract | Copia integral da spec no prompt |
+| Card completo para pessoas, progresso, bloqueios e evidencias | GitHub Issue / Human Task | Markdown local como substituto da Issue |
+| Mesmas regras normativas em estrutura para a LLM | Execution Contract v2 | JSON reduzido a indice ambiguo |
+| Evidencia mutavel de execucao | Comentarios da Issue e receipts | Logs/resultados dentro do contrato JSON |
 | O que foi realmente executado | EXECUTION_RECEIPT e artefatos observaveis | Nome da skill ou task atribuida |
 | Comunicacao cronologica | Comentario da Issue | Prova unica de validacao |
 | Versao disponivel para execucao | Bundle ativo e evidencias do host | Apenas o checkout ou entrada no marketplace |
@@ -447,7 +484,7 @@ Fluxo essencial:
 ```text
 demanda
   -> Engineering Harness
-  -> Human Task + lean Execution Contract
+  -> GitHub Issue completa + Execution Contract v2 equivalente
   -> bootstrap curto (task_id + execution_contract_path)
   -> capability routing
   -> skills / tools / executors
@@ -457,10 +494,12 @@ demanda
   -> conclusao ou rework
 ```
 
-O Human Task permanece legivel para acompanhamento, decisao e status. O
-Execution Contract em `docs/execution/TASK-XXX.json` e o indice operacional
-enxuto: aponta para escopo, criterios, testes, skills e fontes obrigatorias. O
-executor valida esse JSON primeiro e carrega specs, docs e codigo sob demanda.
+O GitHub Issue/Human Task e o card completo para acompanhamento e decisao. O
+Execution Contract v2 em `docs/execution/TASK-XXX.json` contem as mesmas regras
+normativas de forma estruturada para a LLM: escopo, requisitos, regras,
+referencias, design, microtarefas, testes e criterios. Ambos compartilham
+`contract_revision`; divergencia bloqueia a execucao. Logs, resultados e
+evidencias mutaveis permanecem nos comentarios e receipts.
 O `EXECUTION_RECEIPT` so nasce depois da execucao, a partir de evidencia
 observada, e nao e entrada do proprio checkpoint. O
 `EXECUTION_REPORT_COMMENT` traduz checkpoints materiais em um diario humano
@@ -620,11 +659,12 @@ Pipeline de ponta a ponta:
 
 ```text
 Ideia / demanda
-  -> dev-workflow-standard diagnostica (perguntas criticas, riscos)
-  -> dev-workflow-standard consolida escopo
-  -> sdd-spec-factory gera specs
-  -> sdd-spec-factory gera Human Task + lean Execution Contract
-  -> matriz de setores e Context Routing com fontes/propositos
+  -> Discovery / SDD colaborativo: perguntas ao usuario + pesquisa
+  -> sdd-spec-factory consolida specs, referencias e Design Guide
+  -> GitHub Issue completa + Execution Contract v2 equivalente
+  -> microtarefas com skill/plugin/capability/tool/fontes/paths/checklist
+  -> matriz dos dez setores e Context Routing
+  -> comentario DISCOVERY_SDD_COMPLETED publicado com URL/identificador
   -> aprovacao humana
   -> executor recebe task_id + execution_contract_path
   -> contrato validado; referencias obrigatorias carregadas sob demanda
@@ -633,18 +673,20 @@ Ideia / demanda
   -> disponibilidade do runtime e verificada
   -> capacidade selecionada e invocada; estado RUNNING
   -> REUSE_INVENTORY + MINIMAL_CODE_GATE
-  -> dev-implementation-standard implementa (somente o escopo da task)
+  -> dev-implementation-standard implementa microtarefas e testes do executor
   -> resultado inspecionavel: diff / arquivos / comandos / artefatos
   -> TASK.md atualizada
   -> EXECUTION_RECEIPT completo
   -> EXECUTION_REPORT_COMMENT -> GitHub Issue / historico do Board
   -> dev-workflow-standard entra em VALIDATING
-  -> ui-ux-standard / qa-testing-standard / security-standard / DevOps conforme REQUIRED
+  -> QA funcional / Security QA / UI-UX QA / DevOps-observabilidade independentes
+  -> falha retorna para rework e reteste pelo mesmo validador
   -> reconciliacao dos setores e gate do PR
   -> Pull Request quando autorizado
   -> gate final do Harness e review humano
   -> dev-workflow-standard aprova ou solicita rework
-  -> merge / deploy (somente apos PR aprovado)
+  -> aceite e merge humanos
+  -> deploy somente com autorizacao separada
 ```
 
 Regras invariantes:
@@ -656,12 +698,15 @@ Regras invariantes:
 - `ui-ux-standard` e obrigatoria quando houver UI.
 - `security-standard` e obrigatoria quando houver auth, autorizacao, tokens,
   sessao, dados sensiveis, uploads, pagamentos ou integracoes externas.
-- Toda task aponta para specs obrigatorias.
+- Toda task nova tem Issue completa e JSON v2 com equivalencia normativa e a
+  mesma revisao; toda microtarefa aponta a skill e referencias exatas.
 - Todo PR aponta para task, issue, branch e specs seguidas.
 - Skill mencionada nao e skill aplicada: toda skill obrigatoria gera `SKILL_RECEIPT`.
 - Task atribuida nao e task executada: toda delegacao real gera `EXECUTION_RECEIPT`.
 - Comentario humano nao e evidencia de execucao: ele resume checkpoints
   materiais e so conta como publicado quando a operacao retorna URL/identificador.
+  Todo comentario material termina com tokens e superficie alterada; sem medicao
+  do runtime/API, usa `NOT_AVAILABLE`, nunca uma estimativa apresentada como exata.
 - `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
 - Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
@@ -765,10 +810,14 @@ Regras:
 
 ## Setores e Context Routing
 
-A Human Task e o painel completo; o Harness le essa visao global e reconcilia
-os setores. Cada especialista recebe `task_id`, `execution_contract_path`,
-`sector`, revisao e receipts de dependencias materiais, nao corpos inteiros de
-Tasks/specs. O contrato e indice, nao armazena status, logs ou resultados.
+A GitHub Issue e o painel humano completo; o JSON v2 e sua representacao
+normativamente equivalente para a LLM. O Harness le ambos e reconcilia os
+setores. Cada especialista recebe um prompt com link para o arquivo JSON unico
+da Task e o ID da lista completa em `execution_lists`,
+identificada por `task_id`, `list_id`, `execution_contract_path`, `sector`,
+revisao e receipts de dependencias materiais, sem corpos da Task humana.
+O contrato inclui checklists normativos e referencias por
+microtarefa, mas nao armazena progresso, logs, receipts ou resultados mutaveis.
 
 A Sector Validation Matrix mantem Banco, API/Backend, Frontend, UI/UX, QA/Testes,
 Seguranca, DevOps/Infraestrutura, Observabilidade, Documentacao e Gate Final.
@@ -780,10 +829,10 @@ compacta, sem secoes detalhadas ou invocacoes para os setores N/A.
 - CONDITIONAL: carregar somente quando a condicao explicita ocorrer.
 - OPTIONAL: consulta complementar, nunca leitura automatica.
 
-O especialista le seu SKILL.md completo, as secoes listadas da Task, criterios
-globais pertinentes, fontes requeridas, codigo relevante e receipts materiais.
-So expande para a Task inteira por necessidade justificada, conflito, regra
-normativa ou pedido do Harness. Fonte obrigatoria ausente e conflito de fontes
+O especialista le seu SKILL.md completo, o JSON da lista, os campos necessarios
+do contrato JSON canonico, fontes requeridas, codigo e receipts materiais.
+Nao le a Task humana como entrada de execucao; se faltar contexto, o Harness
+reconcilia o card e fornece o JSON corrigido. Fonte ausente e conflito de fontes
 bloqueiam o checkpoint. Menor contexto COMPLETO, nao contexto insuficiente.
 
 `depends_on` governa validacao final; `planning_depends_on` permite planejamento
@@ -804,11 +853,11 @@ NOT_VALIDATED impede conclusao. N/A justificado nao bloqueia. PASS com evidencia
 corresponde a COMPLETED na maquina existente; nenhuma segunda maquina foi criada.
 O gate final reconcilia criterios, docs e pacote de PR, preservando aceite humano.
 
-Compatibilidade: `schema_version: 1` recebe `sectors` e
-`global_acceptance_refs` opcionais. Contratos legados continuam legiveis;
-normalizacao e sob demanda, sem migracao em massa. Consumidor antigo que ignore
-setores nao oferece a nova garantia: atualizar Harness e especialistas antes
-de depender do roteamento. Nao existe parser/engine runtime novo neste pacote.
+Compatibilidade: contratos `schema_version: 1` continuam legiveis e sao
+normalizados sob demanda, sem migracao em massa. Toda task nova usa v2. Consumidor
+antigo que ignore equivalencia, microtarefas ou setores nao oferece a nova
+garantia: atualizar Harness e especialistas antes de depender do roteamento.
+Nao existe parser/engine runtime novo neste pacote.
 Os checks estruturais nao garantem obediencia automatica de uma LLM.
 
 Consulte [Context Routing](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md)
@@ -1312,8 +1361,8 @@ continua responsavel por preparo seletivo. Nenhum dataset ou instalador novo.
 ## SDD Spec Factory
 
 Plugin especializado em Spec-Driven Development (SDD). Transforma um pedido de
-cliente, feature, ideia ou problema em specs detalhadas e em uma task pequena e
-executavel, sem implementar codigo de produto.
+cliente, feature, ideia ou problema em specs detalhadas e em uma Task completa
+por modulo funcional, sem implementar codigo de produto.
 
 Funcao:
 
@@ -1323,14 +1372,36 @@ Funcao:
   validacao, banco e API/backend, alem de frontend/UI quando houver tela.
 - Separar sempre Banco, API/Backend, Frontend/UI, Testes, Seguranca,
   Observabilidade/logs, Decisoes pendentes, Riscos e Criterios de aceite.
-- Produzir uma task executavel ligada a specs, issue, branch e PR.
+- Produzir uma Task completa por modulo, ligada a specs, issue, branch e PR.
 - Entregar checklists de PR, code review e QA.
 
 Quando usar:
 
 - Sempre que um pedido novo precisar virar contrato antes de implementar.
 - Quando faltar clareza de escopo e for preciso fechar specs e perguntas.
-- Para quebrar uma feature grande em tasks pequenas e revisaveis.
+- Para decompor um modulo em microtarefas internas de banco, backend, frontend,
+  TDD, QA, seguranca e documentacao, mantendo uma unica Task ponta a ponta.
+
+O Harness e a fabrica validam o agrupamento antes da geracao e antes do handoff.
+Tasks do mesmo modulo separadas apenas por spec, camada, fase ou especialista
+interrompem a geracao e exigem consolidacao. Tamanho e limite de contexto nao
+justificam fragmentacao. As excecoes sao migracao produtiva, cutover, operacao
+destrutiva ou entrega realmente independente que precise de autorizacao e
+rollback proprios, com limites, aceite, dependencias e gates documentados.
+Uma migracao comum de schema em desenvolvimento continua como microtarefa.
+Os checklists usam caixas `- [ ]`, com subitens para etapas complexas dentro
+da mesma Task. `- [x]` exige evidencia do responsavel; um item pai so termina
+com seus subitens aplicaveis concluidos. Isso nao aprova setores ou merge.
+Cada lista executavel recebe um prompt com link para o arquivo JSON unico da
+Task e seu `list_id`, nunca um prompt por item ou subitem. Todos os objetos das
+listas ficam em `execution_lists` nesse arquivo, sem JSON dentro do card humano
+e sem arquivos separados por lista. O contrato detalha objetivos, regras, fontes,
+limites, dependencias, entregaveis, testes e criterios de aceite verificaveis. O Harness confere Task humana e JSON; o especialista executa
+pelo JSON da lista e contrato canonico, lendo sua skill, fontes e codigo
+necessarios. Contexto ausente volta ao Harness, sem exigir releitura do card.
+A estrutura humana permanece; o contrato recebe `execution_lists` no mesmo
+arquivo, mantendo leitura de contratos anteriores;
+issues existentes nao sao aprovadas, encerradas ou reescritas automaticamente.
 
 Hierarquia imposta:
 

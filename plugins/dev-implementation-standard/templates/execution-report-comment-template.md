@@ -1,25 +1,43 @@
 ## Execution Report - TASK-XXX
 
-**Status:** RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
+**Status:** DISCOVERY_SDD_COMPLETED | RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
 **Executor:**
-**Branch:**
+**Branch / commit / PR:**
+
+### Resumo do checkpoint
+- Resultado material deste checkpoint.
 
 ### O que foi feito
-- Fatos materiais deste checkpoint.
-
-### Método e decisões
-- Estratégia técnica, reutilização, alternativa relevante e rationale verificável.
+- Fatos verificáveis, decisões, limites e rationale verificável.
 
 ### Validação
-- Checagem: PASS | FAIL | NOT VALIDATED.
+- Checagem: PASS | FAIL | NOT_VALIDATED.
+- Evidência: comando, receipt, artefato ou link.
 
 ### Problemas ou bloqueios
-- Problema, impacto e evidência, quando aplicável.
-
-### Evidências
-- Receipt, comandos, commit ou PR, quando disponível.
+- Problema, impacto, causa conhecida e próxima ação segura.
 
 ### Próximo passo
-- Próxima ação segura.
+- Próxima ação, responsável e gate necessário.
 
-> Remova seções vazias. Não inclua chain-of-thought, segredos ou logs extensos.
+### Superfície alterada
+- changed_files: []
+- issue_changes: []
+- json_spec_reference_changes: []
+- remote_mutations: []
+- code_changed: yes | no
+- branch: NOT_AVAILABLE
+- commit: NOT_AVAILABLE
+- pull_request: NOT_AVAILABLE
+
+### Uso de tokens
+- input_tokens: NOT_AVAILABLE
+- output_tokens: NOT_AVAILABLE
+- total_tokens: NOT_AVAILABLE
+- measurement_source: NOT_AVAILABLE
+
+Use números exatos somente quando o runtime ou a API os fornecer. Nunca trate
+estimativa como medição. `NOT_AVAILABLE` é obrigatório quando não houver fonte.
+
+> Remova seções realmente não aplicáveis, mas preserve Superfície alterada e
+> Uso de tokens. Não inclua chain-of-thought, segredos ou logs extensos.

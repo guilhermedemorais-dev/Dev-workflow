@@ -154,11 +154,13 @@ must be named as local and validated against their intended outcome.
 
 Keep five execution artifacts distinct:
 
-- **Human Task:** status, ownership, scope summary, links, progress, blockers,
-  result, Sector Validation Matrix and evidence for human tracking. Harness
-  reads the complete Human Task; specialists read their routed slice by default.
-- **Execution Contract:** lean machine-readable operational index at
-  `docs/execution/TASK-XXX.json` with repository paths and bounded constraints.
+- **Human Task:** the complete GitHub Issue/card for human reading, including a
+  glanceable summary, collaborative Discovery/SDD, normative requirements,
+  microtasks, sector matrix, links, progress and evidence. A local Markdown is
+  a mirror/fallback, never a replacement for an available Issue.
+- **Execution Contract:** v2 structured LLM representation at
+  `docs/execution/TASK-XXX.json`, with **normative equivalence** to the Human
+  Task under the same `contract_revision`. Mutable evidence remains outside it.
 - **Specs:** detailed functional and technical source of truth, loaded when the
   active scope requires them.
 - **Execution Receipt:** evidence produced after the capability actually ran;
@@ -171,9 +173,10 @@ New executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
 not mass-migrate inactive historical tasks.
 
-Before sector delegation load `references/context-routing.md`. New routed
-contracts add optional v1 `sectors` and `global_acceptance_refs`; every standard
-sector has REQUIRED/N/A, owner and dependencies, and every N/A has a reason.
+Before sector delegation load `references/context-routing.md`. New contracts
+use v2 with references, design context, microtasks and all ten sectors. Legacy
+v1 remains readable. Every sector has REQUIRED/N/A, owner and dependencies,
+and every N/A has a verified reason.
 Each source has a purpose; CONDITIONAL adds a condition and OPTIONAL never
 loads automatically. Separate planning prerequisites from final validation.
 CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS;
@@ -209,18 +212,18 @@ based on affected surface and risk, not on the tier label.
 ```text
 Idea / demand
   -> dev-workflow-standard: diagnose + critical questions
-  -> dev-workflow-standard: consolidate scope
-  -> sdd-spec-factory: generate specs
-  -> sdd-spec-factory: generate human task + Execution Contract
+  -> collaborative Discovery / SDD with user + research
+  -> sdd-spec-factory: specs, reference/design libraries, complete Issue + v2 JSON
+  -> publish DISCOVERY_SDD_COMPLETED with token usage and changed surface
   -> human approval
   -> dev-workflow-standard: resolve executor capability + verify availability
   -> selected executor: invoked; state RUNNING
-  -> dev-implementation-standard: implement (only the task scope)
+  -> dev-implementation-standard: implement routed microtasks + executor tests
   -> execution result: diff / files / commands / artifacts
   -> selected executor: complete EXECUTION_RECEIPT
   -> update Human Task + publish EXECUTION_REPORT_COMMENT when applicable
   -> dev-workflow-standard: VALIDATING
-  -> ui-ux-standard / qa-testing-standard / security-standard review (as applicable)
+  -> independent UI/UX / QA / Security / DevOps validation as applicable
   -> sector reconciliation
   -> Pull Request / PR gate
   -> Harness final gate
@@ -234,6 +237,68 @@ satisfied. The full pipeline lives in
 [`workflow-pipeline.md`](../../../../docs/workflow-pipeline.md).
 
 ## Mandatory Task Governance
+
+### Complete module as the default Task unit
+
+Use one complete Task per functional module within the approved demand. A
+module is a coherent business capability with an end-to-end outcome, not a
+technical layer, workflow phase, specialist assignment or arbitrary folder.
+For changes to an existing module, cover the requested outcome completely;
+do not expand scope to rebuild unrelated parts of that module.
+
+Keep spec, database, backend, frontend, TDD, independent QA, security and
+documentation as microtasks and gates inside the same Task. Preserve sector
+owners, dependencies, evidence and justified N/A. Size, token budget, context
+limits, specialist handoffs and review convenience do not justify separate
+Tasks; use internal microtasks and resumable checkpoints instead.
+
+Require Markdown checkboxes (`- [ ]`) for each actionable checklist item in
+every stage, microtask and REQUIRED sector. Complex items may have nested
+checkbox subitems within the same Task; this internal decomposition is allowed
+and does not create separate Tasks or Issues. Check `- [x]` only after the
+responsible owner records completion evidence. A parent stays unchecked until
+all applicable children are evidenced; blocked or unvalidated items stay
+unchecked with their reason. Checked items do not approve a sector, Issue,
+merge or deploy automatically. Keep progress in the Human Task and evidence
+ledger, not as mutable checkbox state in the normative JSON.
+
+Each execution checklist/list has one prompt containing a clickable link to
+the Task's single JSON file and its `list_id`, not a prompt per item/subitem.
+Keep all list objects in `execution_lists` inside that same canonical file,
+with the Task's shared context. Never embed JSON in the Human Task or create
+one JSON file per list. This applies to microtask, stage and sector lists.
+Give each list a stable ID, owner and phase; task identity/revision come from
+the shared file. Use a real local-file link or versioned GitHub file link,
+not a link to an Issue or an invented URL.
+Validate list completeness, owner, dependencies and inherited scope/constraints
+before handoff. See `references/context-routing.md` for the transport contract.
+Harness compares the complete Human Task and canonical JSON. Specialists read
+the list JSON and necessary canonical JSON fields, their skill, mandatory
+sources and relevant code, not the Human Task as an execution input. Missing
+context returns to Harness for a corrected JSON handoff; do not send the human
+card as a substitute. Human approval gates are recorded only when observed.
+
+Before requesting Task generation and before accepting its output, inspect
+proposed and relevant existing Tasks by module, scope and acceptance outcome,
+not titles alone. If Tasks for the same module are separated only into
+"spec", "backend", "frontend", "QA" or "implementation" (including synonyms
+or renamed fragments), stop generation/handoff and require consolidation into
+one complete module Task. Report the affected IDs/titles, missing end-to-end
+coverage and required consolidation. Do not mark the plan ready or silently
+approve, close or rewrite existing Issues.
+
+The only separation exceptions are production migration, cutover, destructive
+operation, or a genuinely independent delivery requiring its own authorization
+and rollback. Require a documented boundary, independent acceptance criteria,
+dependencies, explicit authorization gate and rollback plan for each exception;
+a different owner, phase or layer is not an independent delivery. An ordinary
+development schema migration remains a microtask of its module.
+
+This is a pre-generation and output-validation criterion. Keep the existing
+Task template structure and existing contract fields; add execution_lists in
+the single canonical JSON file for list routing, preserving legacy reads. Render its
+action checklists with checkboxes and nested items when needed. Apply it to the active
+demand; do not mass-migrate historical Tasks.
 
 Every non-trivial feature must follow the official order: sufficient intent or
 spec first, executable task second, implementation third. The orchestrator
@@ -317,7 +382,7 @@ orchestrator must use these definitions as gate checks.
 | Backlog | Demand, bug, idea, or risk captured as an item. | Item has enough context to enter Discovery / SDD, or is intentionally rejected/archived. |
 | Discovery / SDD | Backlog item selected for clarification, source-of-truth review, and spec work. | Required specs exist, scope is clear, risks are known, and an executable task can be created. |
 | Ready for Dev | Executable task exists, mandatory specs are linked, allowed files/modules are defined, branch is suggested, acceptance criteria and tests are clear. | Executor starts the approved task and updates task status to `🟡 Em andamento`. |
-| In Progress | Executor accepted the task, read its routed Task sections and sources, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation and developer evidence are ready for independent validation. |
+| In Progress | Executor accepted the task, read its list JSON, canonical JSON context and required sources, and is implementing only the approved scope. A material `RUNNING`, `REWORK`, or `BLOCKED` checkpoint is reported to the linked Issue when available. | Implementation and developer evidence are ready for independent validation. |
 | Validation | Technical review package links task, specs, evidence and receipt; relevant implementation is available. | Required specialist validations pass and review package is prepared for PR. |
 | In Review | PR exists with task, specs, evidence, receipt, and applicable Issue report linked. A `VALIDATING` report records the review handoff. | CI and required reviews pass; advance to Awaiting Final Approval, or return to In Progress with `rework` and an actionable report. |
 | Awaiting Final Approval | Required technical validations pass and human decision is pending; identify whether this is a local package or published PR. | Human approval and human merge are observed; no automatic merge. |
@@ -386,8 +451,9 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
   (Banco, API/Backend, Frontend/UI). Require the spec hierarchy, human task, and
   valid Execution Contract before approving implementation.
 - **Implementation** -> delegate to `dev-implementation-standard` only after the
-  task, Execution Contract, and mandatory specs are approved. Prefer a lean
-  handoff containing `task_id`, `execution_contract_path`, sector, phase, current
+  task, Execution Contract, and mandatory specs are approved. Prefer a bounded
+  list prompt linking the single Task JSON file, containing `task_id`, `list_id`,
+  `execution_contract_path`, sector, phase, current
   branch/revision, and only the relevant prior receipt/handoff. The executor
   reconstructs required context from repository paths. Require
   `REUSE_INVENTORY` and the minimal-code gate before code is written.
@@ -493,7 +559,7 @@ the `rework` label until corrected.
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
 - Prefer `task_id` plus `execution_contract_path` over task/spec bodies.
 - Load the contract first, validate required fields and paths, then open only
-  the active skill, listed task_sections, relevant global acceptance/constraints,
+  the active skill, routed JSON list, relevant global acceptance/constraints,
   required_sources, activated conditional_sources, code and dependency receipts.
 - A mandatory reference must be read before changing the area it governs;
   progressive disclosure reduces redundant context, not necessary context.
