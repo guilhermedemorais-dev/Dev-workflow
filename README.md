@@ -64,6 +64,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 
 - [Instale com sua LLM](#instale-com-sua-llm)
 - [Do zero ao projeto pronto](#do-zero-ao-projeto-pronto)
+- [Desenvolver um software desde a etapa zero](#desenvolver-um-software-desde-a-etapa-zero)
 - [Comece aqui: desenvolvedores](#comece-aqui-desenvolvedores)
 - [Desenvolvimento local e testes](#desenvolvimento-local-e-testes)
 - [Mapa tecnico e fontes de verdade](#mapa-tecnico-e-fontes-de-verdade)
@@ -302,6 +303,177 @@ confirmacao antes de apply --confirm. Use somente a proposta revisada e bloqueie
 drift. Verifique de novo, reporte READY/READY_WITH_LIMITATIONS apenas com provas.
 Nao faca push, merge, aprove PR ou deploy por causa desta solicitacao.
 Ao concluir o onboarding, proponha a primeira Task com seus gates humanos.
+```
+
+## Desenvolver um software desde a etapa zero
+
+**Instalar o Harness no agente e preparar o repositorio do seu software sao
+duas entregas diferentes.** O plugin fornece metodologia e ferramentas de
+apoio; nao cria um produto, configura o GitHub ou aprova uma entrega sozinho.
+Voce informa o problema, decide escopo e autoriza os gates. O agente aplica as
+skills, executa as capacidades disponiveis e registra o que realmente ocorreu.
+
+O repositorio-alvo e o do **seu software**, nao `Dev-workflow`. Se ainda nao
+existir, primeiro combinar nome, owner, visibilidade, destino local e autorizacao
+para cria-lo. O helper de governanca trabalha sobre um repositorio existente;
+nao e um criador automatico de repositorios. Em produto existente, preservar
+codigo, regras, documentos, Issues, Project e configuracoes, registrando o baseline.
+
+### Jornada do produto e metodos utilizados
+
+As etapas abaixo descrevem o uso do produto, nao outro instalador nem uma
+promessa de executar tudo sem intervencao humana. O onboarding tecnico da secao
+anterior prepara a governanca antes das Tasks que dependem dela.
+
+| Etapa | Trabalho do agente e metodo | Registro e condicao para avancar |
+| --- | --- | --- |
+| 0. Entender o negocio | Harness faz Discovery colaborativo: problema, usuarios, fluxos, resultado mensuravel, restricoes, dados sensiveis, prazo, custo e fora do escopo. A camada global opcional ajuda nas decisoes de estrategia e build vs buy. | Contexto e decisoes em PRD/spec do projeto; perguntas pendentes e hipoteses explicitas. Nao escolher stack ou implementar por suposicao silenciosa. |
+| 1. Pesquisar e definir a solucao | SDD pesquisa referencias da stack, alternativas, arquitetura, APIs e riscos; UI/UX prepara Design Guide e mockups quando houver interface. | `docs/biblioteca-referencias/`, specs e `docs/design/` quando aplicavel. Fontes com origem, data, proposito e decisao; aprovacao das escolhas materiais. |
+| 2. Preparar ambiente e governanca | Environment verifica capacidades; DevOps diagnostica o repositorio, propoe configuracoes e aplica somente apos confirmacao. | `.github/governance.json`, proposta revisada, configuracoes observadas e resultado de `verify`. Login, acesso, administracao e acesso ao Project sao checks separados. |
+| 3. Transformar escopo em trabalho executavel | Spec-Driven Development: product, module, page/feature e component specs, banco, API e validacoes conforme a complexidade. Uma Task completa por modulo funcional, com microtarefas internas. | Issue humana completa e um `docs/execution/TASK-XXX.json` equivalente. Publicar `DISCOVERY_SDD_COMPLETED` e pedir aprovacao antes de Ready for Dev. |
+| 4. Implementar o modulo | Implementation recebe a lista JSON e fontes necessarias; busca reutilizacao, aplica mudanca minima, usa TDD quando aplicavel e executa testes do desenvolvedor. | Branch de trabalho, diff, testes e `EXECUTION_RECEIPT`. Spec, banco, backend, frontend e testes continuam dentro da mesma Task do modulo. |
+| 5. Validar independentemente | QA verifica comportamento e regressao; Security valida riscos/achados; UI/UX verifica interface, acessibilidade e Design Guide; DevOps verifica a superficie operacional aplicavel. | Cada owner registra seu resultado e evidencia na matriz de setores. Falha retorna para correcao e reteste; sem evidencia nao ha PASS. |
+| 6. Revisar e entregar | Harness reconcilia contrato, implementacao, setores, docs, CI e PR. A pessoa responsavel revisa a entrega e decide o merge. | PR vinculado a Issue e specs, criterios comprovados e aceite humano. Done somente apos merge humano observado. |
+| 7. Operar e evoluir | Deploy, migracao produtiva e rollback sao operacoes separadas, aprovadas para o alvo correto; incidentes e novas demandas retornam ao fluxo. | Evidencia operacional, limitacoes e proxima Task. Merge ou CI verde nao autorizam producao. |
+
+Os metodos se complementam: Discovery reduz ambiguidade; SDD fixa o contrato;
+pesquisa fundamenta decisoes; mockup-first alinha a interface; reutilizacao e
+mudanca minima evitam duplicacao; TDD/testes produzem feedback; QA independente
+e revisao de seguranca confrontam a implementacao; Kanban e receipts tornam
+progresso e evidencias rastreaveis. O nome de um metodo no card nao prova sua
+execucao. O detalhe normativo permanece nas skills e no
+[pipeline](docs/workflow-pipeline.md).
+
+### O que precisa existir no repositorio do seu software
+
+O quadro separa o que o helper pode preparar do que o agente deve construir
+com voce. Nao copie o repositorio inteiro do Harness para dentro do produto.
+Use a estrutura canonica ja existente quando equivalente, sem duplicar docs.
+
+| Arquivo ou area no projeto-alvo | Finalidade e responsavel | Como fica pronto |
+| --- | --- | --- |
+| `AGENTS.md` e README do produto | Regras locais, comandos reais, arquitetura, limites e fontes de verdade, mantidos pelo time/Harness. | Elaborados ou atualizados em trabalho aprovado; o helper de governanca nao gera `AGENTS.md` automaticamente. |
+| PRD, `docs/specs/` e specs por modulo | Objetivos, comportamento e contratos produzidos pela SDD com o usuario. | Conteudo revisado e proporcional ao risco; criar pasta nao significa escrever specs. |
+| `docs/biblioteca-referencias/` | Fontes tecnicas da stack e caminhos exatos para consulta durante cada Task. | Pesquisa validada pela SDD; nao e gerada automaticamente pelo helper. |
+| `docs/design/` | Design Guide, tokens, componentes, referencias e mockups quando houver UI. | Produzido/reutilizado com UI/UX e aprovacao pertinente. |
+| `.github/governance.json` | Politica desejada de governanca do projeto. | Adaptar e revisar o [template DevOps](plugins/devops-standard/skills/devops-standard/templates/github-governance.json) antes de executar o helper. |
+| `.github/CODEOWNERS` | Indicar responsaveis por revisao. | Helper pode propor o arquivo; revisao obrigatoria depende tambem das regras efetivas no GitHub. |
+| `.github/ISSUE_TEMPLATE/config.yml`, `bug.yml`, `feature.yml`, `task.yml` | Formularios de entrada para organizar demandas. | Helper pode preparar formularios basicos. Eles nao substituem o card completo gerado pela SDD. |
+| `.github/PULL_REQUEST_TEMPLATE.md` e `CONTRIBUTING.md` | Orientar contribuicao e pacote de revisao. | Gerados/reconciliados pelo helper somente com proposta aprovada. |
+| `docs/tasks/` e `docs/execution/` | Espelhos locais quando necessarios e contrato JSON unico de cada Task. | Helper prepara estrutura; SDD/Harness preenchem e reconciliam o conteudo com a Issue. |
+| `.github/workflows/quality.yml` ou CI existente | Executar checks reais da stack em ambiente reproduzivel. | Reutilizar CI existente ou revisar geracao suportada. Workflow local precisa ser publicado e executado; isso exige autorizacao separada. |
+| Lockfile, versoes e scripts da stack | Tornar instalacao e validacao reproduziveis. | Definidos no projeto; helper nao inventa scripts nem instala dependencias durante diagnostico. |
+
+Os arquivos exatos gerados, restricoes de stack e regras de preservacao estao
+na [referencia de governanca](plugins/devops-standard/skills/devops-standard/references/github-governance.md).
+O helper prepara as pastas `docs/specs`, `docs/tasks` e `docs/execution`, mas
+nao escreve o PRD, o design ou o planejamento do produto por voce.
+
+### Configuracao de governanca: decisoes que voce precisa fechar
+
+O contrato `.github/governance.json` nao contem credenciais nem estado de login.
+Revisar estes campos do template com o agente, antes de autorizar aplicacao:
+
+| Grupo | Decisao do projeto |
+| --- | --- |
+| `repository` | Host, owner, nome, branch principal, prefixo das branches do agente e politica de merge/exclusao de branch. O baseline propoe squash, mas nao substitui sua politica sem revisao. |
+| `project` | Usar ou nao GitHub Project, titulo, view e oito estados. Reutilizar Project existente; desabilitar exige justificativa. |
+| `labels` | Tipos e condicoes, incluindo `blocked`, `needs-info` e `rework`; preservar labels existentes. |
+| `human_gates` | Aprovacoes humanas de Task, PR, merge e deploy. |
+| `automation` | Sem auto-merge ou auto-deploy; limite de ciclos de rework, tres no baseline. |
+| `local` | Geracao de arquivos e responsaveis CODEOWNERS reais; arquivos divergentes precisam de diff revisado. |
+| `ci` | CI aplicavel e nomes de checks efetivamente observados, nao nomes inventados para completar o JSON. |
+| `rules` | Protecao da branch e revisoes viaveis para o time, considerando permissoes e suporte observados. |
+| `exceptions` | Limitacoes com justificativa e aprovacao explicita; nunca adicionar excecao apenas para obter READY. |
+
+O ciclo de aplicacao e **diagnose -> propose -> confirmacao humana ->
+apply --confirm -> verify**. Os comandos com os caminhos a resolver estao na
+[referencia do helper](plugins/devops-standard/skills/devops-standard/references/github-governance.md).
+`diagnose`, `propose` e `verify` nao alteram GitHub nem arquivos do projeto.
+O agente apresenta a proposta concreta, seu alvo e os diffs antes de `apply`.
+Se o estado mudar, a proposta precisa ser refeita e confirmada novamente.
+
+No GitHub, conferir separadamente: Issues habilitadas e acessiveis, permissoes
+da conta para cada operacao, Project correto, Status e agrupamento do board,
+labels, politica de merge, regras efetivas da branch e checks publicados.
+Estar autenticado nao comprova administracao; existir CODEOWNERS nao comprova
+enforcement; configurar CI nao comprova que ele rodou.
+Agrupamento do board e automacoes que a API nao permitir configurar ficam como
+acao manual identificada, nunca como tarefa concluida por inferencia.
+
+### Como a demanda vira Issue, card e contrato JSON
+
+1. **Resolver o alvo e o trabalho existente.** Identificar owner/repositorio e
+   Project; conferir Tasks relevantes para evitar duplicar ou fragmentar o
+   mesmo modulo. Criacao/publicacao remota ocorre no escopo autorizado.
+2. **Construir o card humano completo.** Usar o
+   [template de Task](plugins/sdd-spec-factory/templates/task-template.md):
+   resumo no cabecalho, objetivo, atual/esperado, escopo/exclusoes, perguntas e
+   decisoes, referencias, Design Guide quando aplicavel, microtarefas, owners,
+   skills/plugins/tools, checklists, testes, riscos, aceite e gates.
+   O corpo da Issue contem esse card, nao apenas um link para Markdown local.
+3. **Gerar o equivalente para a LLM.** Um arquivo
+   `docs/execution/TASK-XXX.json` por Task, com as mesmas regras normativas e
+   `contract_revision`. Todas as listas ficam em `execution_lists`; cada lista
+   recebe um prompt copiavel com link para esse JSON e seu `list_id`, nao um
+   arquivo ou prompt por subitem. Divergencia entre card e JSON bloqueia execucao.
+4. **Publicar e verificar.** Registrar URL/numero retornado e reler o corpo da
+   Issue para conferir conteudo, links e revisao. Inserir/verificar o item no
+   Project correto quando aplicavel. Criar a Issue nao comprova sua inclusao no
+   board; Auto-add nao deve ser presumido nem usado como prova retroativa.
+5. **Encerrar Discovery com comentario.** Publicar `DISCOVERY_SDD_COMPLETED`
+   com decisoes, fontes, pendencias e equivalencia card/JSON; registrar a URL
+   do comentario e so entao pedir aprovacao para Ready for Dev.
+6. **Executar e acompanhar.** Atualizar checklists apenas com evidencia;
+   publicar checkpoints materiais na mesma Issue. Status de execucao, achados
+   e receipts ficam no registro de evidencias/comentarios, nao como estado
+   mutavel no JSON normativo. Revisao de requisito atualiza card e JSON juntos.
+
+O comentario relata o que foi feito, ferramentas realmente usadas, comandos e
+resultados, arquivos alterados, lacunas, bloqueios e proximo passo. Termina com
+superficie alterada e depois consumo de tokens; sem medicao do runtime, usar
+`NOT_AVAILABLE`, nunca inventar contagem. Cada publicacao precisa de URL ou ID
+retornado. Consulte o [protocolo de comentarios](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/execution-report-comments.md).
+
+Se nao houver acesso ao GitHub, preservar o trabalho local como rascunho ou
+`NOT PUBLISHED` e explicar o bloqueio. Arquivo criado localmente nao e Issue
+publicada, comentario preparado nao e comentario enviado, e checklist marcado
+nao substitui teste executado. Templates e protocolo orientam o agente; nao ha
+um servico em segundo plano que cria Issues ou garante obediencia da LLM.
+
+### Checklist antes da primeira implementacao
+
+- [ ] Repositorio-alvo e ambiente identificados; mudancas locais preservadas.
+- [ ] Problema, usuarios, escopo inicial e decisoes materiais aprovados.
+- [ ] Specs/fontes necessarias disponiveis; Design Guide/mockup quando aplicavel.
+- [ ] Skills e ferramentas requeridas realmente disponiveis; instalacoes e autenticacoes pendentes declaradas.
+- [ ] Governanca diagnosticada, proposta revisada, aplicacao autorizada e verificacao registrada quando exigida.
+- [ ] Issues/Project/CI/regras comprovados ou N/A justificado dentro da politica, sem transformar pendencia obrigatoria em excecao.
+- [ ] Card humano publicado e conferido; JSON equivalente com fontes e listas validas.
+- [ ] Discovery comentado na Issue e Task aprovada pela pessoa responsavel.
+- [ ] Branch, arquivos permitidos, condicoes de parada, testes e validadores definidos.
+
+Sem esses requisitos aplicaveis, a proxima acao e fechar contexto ou resolver
+o bloqueio, nao iniciar implementacao nem declarar o projeto pronto.
+
+### Prompt para iniciar um software do zero
+
+```text
+Use o Engineering Harness para iniciar meu software desde o Discovery.
+Problema/ideia: <descreva>.
+Repositorio-alvo: <owner/repo e caminho, ou informe que ainda nao existe>.
+Comece por perguntas sobre negocio, usuarios, fluxos, dados, limites e sucesso.
+Pesquise referencias da stack e registre as decisoes no projeto; quando houver
+UI, inclua Design Guide e mockups. Nao implemente enquanto o contexto e o
+escopo nao estiverem aprovados.
+Confira o ambiente e proponha a governanca do repositorio-alvo com o helper
+DevOps existente. Explique arquivos, settings, Project, regras, CI e passos
+manuais. Pare para minha confirmacao antes de aplicar a proposta.
+Depois gere uma Task completa por modulo: Issue humana integral, JSON unico
+equivalente, listas com prompt copiavel, referencias e validadores por setor.
+Confira a Issue remota e publique o comentario de encerramento do Discovery.
+Peça aprovacao antes de executar. Nao crie repositorio, publique, faca push,
+merge ou deploy sem a autorizacao correspondente. Nao peca segredos no chat.
 ```
 
 ## Desenvolvimento local e testes
