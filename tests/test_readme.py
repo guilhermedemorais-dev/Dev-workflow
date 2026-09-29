@@ -210,6 +210,22 @@ class TestReadmeNegativeAndBoundary(unittest.TestCase):
 
 
 class TestRepositoryGovernanceRoadmap(unittest.TestCase):
+    def test_product_journey_distinguishes_bootstrap_from_delivery(self):
+        content = read_readme()
+        section = content.split('## Desenvolver um software desde a etapa zero', 1)[1].split('## Desenvolvimento local e testes', 1)[0]
+        for heading in ('### Jornada do produto e metodos utilizados',
+                        '### O que precisa existir no repositorio do seu software',
+                        '### Configuracao de governanca: decisoes que voce precisa fechar',
+                        '### Como a demanda vira Issue, card e contrato JSON',
+                        '### Checklist antes da primeira implementacao'):
+            self.assertIn(heading, section)
+        for boundary in ('nao gera `AGENTS.md` automaticamente',
+                         'formularios basicos', 'NOT PUBLISHED',
+                         'corpo da Issue contem esse card',
+                         'contract_revision', 'list_id', 'NOT_AVAILABLE',
+                         'nao ha\num servico em segundo plano'):
+            self.assertIn(boundary, section)
+
     def test_onboarding_covers_all_phases_and_human_boundaries(self):
         content = read_readme()
         self.assertIn('## Do zero ao projeto pronto', content)
