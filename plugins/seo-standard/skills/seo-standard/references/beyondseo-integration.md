@@ -26,4 +26,11 @@ For ordinary landing pages and small sites:
 4. produce exact affected URLs and acceptance checks;
 5. after implementation, run a fresh audit folder and compare results.
 
+## Vendored methodology
+
+Load only the playbooks needed for the current page/task from
+`vendor/beyondseo/playbooks/`. The selected local references cover conversion
+SEO, on-page SEO, technical SEO, schema, AEO, GEO and search intent. Do not load
+the whole upstream knowledge base into model context by default.
+
 A crawler result is evidence, not authority to alter code or publish.
