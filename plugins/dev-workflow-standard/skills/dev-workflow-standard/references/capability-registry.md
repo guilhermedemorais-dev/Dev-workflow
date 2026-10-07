@@ -32,6 +32,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | deterministic repetitive operation | repository script/tool | approved equivalent tool | exit status + output |
 | provider/model resolution | `provider-resolver.py` + `provider-routing.md` | explicit approved runtime when automatic discovery is unavailable | provider/model probe + routing evidence |
 | context retrieval | `context-retriever.py` with Potpie when healthy | bounded local lexical retrieval | required sources + retrieved paths/snippets + backend evidence |
+| reverse engineering | `reverse-engineering-standard` with REA when healthy | approved equivalent analysis tool/provider | target identity + evidence IDs/findings + limitations + specialist receipt |
 | provider failure recovery | replacement authorized LLM/runtime | none if no compatible provider exists | `EXECUTION_HANDOFF` + resumed result |
 
 ## Routing Rules
