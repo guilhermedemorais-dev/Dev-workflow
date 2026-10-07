@@ -31,6 +31,14 @@ Only the sector owner attests its result. Another specialist can request
 cannot mark another sector PASS or fabricate another skill's receipt. The
 Harness records the owner's returned evidence and reconciles the final gate.
 
+Context retrieval is an auxiliary step after normative routing. The Harness or
+specialist may use `context-retriever.py` to discover additional relevant code
+or engineering context, preferably through Potpie when healthy. Every
+`required_source` remains mandatory regardless of retrieval ranking. Retrieved
+material never changes `allowed_paths`, protected paths, owner, applicability,
+acceptance criteria or stop conditions. Conflicts return
+`source_of_truth_conflict`.
+
 ## v2 task contract and v1 compatibility
 
 In v2, `acceptance_criteria` contains the normative criteria. `references`
@@ -165,6 +173,9 @@ No Task/spec bodies are pasted into it.
 5. Read REQUIRED sources for their stated purpose. Evaluate each CONDITIONAL
    source against observed scope and record activated/not activated with reason.
    OPTIONAL sources are not loaded by default. Inspect only relevant code.
+   After required sources are loaded, context retrieval may add bounded
+   supplemental paths/snippets under `context-retrieval.md`; record the backend
+   and returned evidence and never treat retrieval as authorization.
 6. Check the phase's dependency receipts for owner, validation scope, artifact
    and revision. Unavailable, incomplete or stale evidence is not a passed
    prerequisite. Revalidate after material artifact changes; a new revision
