@@ -11,8 +11,10 @@ Use this skill when the answer depends on behavior or structure of a shipped
 artifact rather than an ordinary source repository. For normal source analysis,
 use repository/code tools and do not invoke REA merely because it exists.
 
-Read [rea-integration.md](references/rea-integration.md) whenever REA is used.
-Consult [tool-registry.json](references/tool-registry.json) for tool ownership.
+Read [rea-integration.md](references/rea-integration.md) whenever reverse
+engineering runtime capabilities are used. Consult
+[tool-registry.json](references/tool-registry.json) for tool ownership and use
+the bundled reverse-context gateway as the normal execution boundary.
 
 ## Preconditions
 
@@ -31,7 +33,9 @@ If target authorization is unclear, stop before active/runtime inspection.
 1. Establish the question to answer, target identity and evidence required.
 2. Reuse existing source, docs, symbols, analysis sessions and evidence before
    opening a new investigation.
-3. Use REA when available and appropriate. REA is a tool, not the methodology.
+3. Use the bundled reverse-context gateway for runtime capability discovery and
+   execution. The gateway may invoke the pinned REA runtime and its providers;
+   the specialist owns methodology and interpretation.
 4. Prefer static analysis first when it can answer the question.
 5. Use runtime observation only when needed and authorized.
 6. Keep a finding ledger with OBSERVED, INFERRED and UNKNOWN claims.
