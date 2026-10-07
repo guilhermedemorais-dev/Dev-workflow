@@ -70,7 +70,13 @@ project being prepared. They can be different.
    optional engines by default. Install/prepare Ghidra, Hopper, IDA, JADX,
    Binwalk, Unblob or Wakaru only when the selected target actually requires
    that provider and the user approves the preparation.
-10. Persist sanitized local observations and return HEALTH_REPORT plus human
+10. When `seo-standard` is selected, detect Python 3.10+ and the plugin-local
+    SEO runtime. If it is absent, propose the scoped bootstrap under
+    `plugins/seo-standard/runtime/`; after approval run `python bootstrap.py`
+    and then `python seo-gateway.py probe`. Prefer the vendored BeyondSEO
+    release. Do not install browser support or crawl arbitrary sites unless the
+    selected Task requires it and scope is authorized.
+11. Persist sanitized local observations and return HEALTH_REPORT plus human
    summary, installations actually performed, blockers and next action.
 
 ## Library, ownership and local state

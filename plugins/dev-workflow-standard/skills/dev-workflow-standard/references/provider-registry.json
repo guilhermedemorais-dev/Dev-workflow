@@ -16,6 +16,7 @@
     "sdd-spec-factory": ["reasoning"],
     "dev-environment-standard": ["reasoning"],
     "reverse-engineering-standard": ["reasoning", "agentic"],
+    "seo-standard": ["reasoning"],
     "dev-workflow-standard": ["reasoning", "agentic"]
   },
   "providers": [

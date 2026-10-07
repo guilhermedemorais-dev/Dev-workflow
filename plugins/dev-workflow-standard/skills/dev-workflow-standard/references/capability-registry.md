@@ -33,6 +33,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | provider/model resolution | `provider-resolver.py` + `provider-routing.md` | explicit approved runtime when automatic discovery is unavailable | provider/model probe + routing evidence |
 | context retrieval | `context-retriever.py` with Potpie when healthy | bounded local lexical retrieval | required sources + retrieved paths/snippets + backend evidence |
 | reverse engineering | `reverse-engineering-standard` with REA when healthy | approved equivalent analysis tool/provider | target identity + evidence IDs/findings + limitations + specialist receipt |
+| website SEO / AEO / GEO / conversion readiness | `seo-standard` with BeyondSEO when healthy | bounded manual/site-tool audit under the same owner | crawl evidence + prioritized findings + exact acceptance checks + specialist receipt |
 | provider failure recovery | replacement authorized LLM/runtime | none if no compatible provider exists | `EXECUTION_HANDOFF` + resumed result |
 
 ## Routing Rules
@@ -118,6 +119,15 @@ installed, connected, authenticated and successfully executed capabilities.
 
 Invoke `ui-ux-standard` when work changes screens, components, layout,
 responsiveness, accessibility, interaction states or design-system behavior.
+
+### SEO / AEO / GEO
+
+Invoke `seo-standard` for landing pages, institutional websites, service pages
+and small ecommerce work where search readiness, answer-engine readiness,
+schema, search intent or conversion copy materially affects delivery. Use it as
+a delivery gate before handoff when SEO readiness is in scope. Backlink,
+reputation and competitor work are secondary and should be invoked only when
+relevant to the Task.
 
 ### Security
 
