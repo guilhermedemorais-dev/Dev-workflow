@@ -9,13 +9,22 @@
   ],
   "tools": [
     {
-      "id": "rea",
-      "capabilities": ["reverse-engineering","binary-analysis","javascript-application-analysis","electron-analysis","managed-code-analysis","android-static-analysis","firmware-analysis","runtime-observation","feature-reconstruction"],
+      "id": "reverse-context-gateway",
+      "capabilities": ["reverse-engineering","binary-analysis","artifact-analysis","javascript-application-analysis","electron-analysis","managed-code-analysis","android-static-analysis","firmware-analysis","runtime-observation","feature-reconstruction","evidence-comparison"],
+      "repository": "local",
+      "command": "node",
+      "verify_args": ["plugins/reverse-engineering-standard/runtime/reverse-context-gateway.mjs","probe"],
+      "install_policy": "plugin-bundled-gateway-with-approved-local-runtime-dependencies"
+    },
+    {
+      "id": "rea-runtime",
+      "capabilities": ["reverse-engineering-runtime"],
       "repository": "https://github.com/morluto/rea",
       "command": "rea",
       "verify_args": ["--version"],
-      "install_policy": "project-approved-official-npm-package-or-release",
-      "license": "MIT"
+      "install_policy": "version-pinned-local-runtime-dependency",
+      "license": "MIT",
+      "version": "4.1.0"
     }
   ]
 }
