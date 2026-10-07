@@ -1,0 +1,6 @@
+{
+  "name": "reverse-engineering-standard",
+  "version": "0.1.0",
+  "description": "Evidence-first reverse engineering specialist for the Engineering Harness.",
+  "skills": "./skills/"
+}

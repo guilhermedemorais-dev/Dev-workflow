@@ -39,17 +39,31 @@ Quero que voce execute a instalacao assistida, nao apenas me entregue um tutoria
    Use o Environment Bootstrap existente para requisitos ausentes, com preparo
    seletivo. Nao instale todos os MCPs, scanners, runtimes ou ferramentas do
    catalogo. Mudancas privilegiadas ou fora do plano exigem nova aprovacao.
-7. Pergunte quais integracoes opcionais preciso. Hostinger, AWS e WordPress
+7. Configure a camada de executores do Harness. Leia o provider registry atual,
+   detecte quais credenciais existem sem exibir valores, gere apenas propostas
+   de blocos para o host (por exemplo config.toml no Codex), preserve e faca
+   backup da configuracao existente antes de qualquer merge e apresente os links
+   oficiais de setup/documentacao dos providers escolhidos. Priorize providers
+   OpenAI-compatible verificados, incluindo NVIDIA NIM quando solicitado.
+   Nunca grave API keys no repositorio. Rode status/probe e registre
+   CONFIGURED separadamente de AVAILABLE. Se nenhum executor externo compatível
+   for comprovado, reporte modo single-agent/degradado em vez de fingir delegacao.
+8. Verifique o backend opcional de contexto. Prefira Potpie quando instalado e
+   saudavel; se ausente, mantenha o fallback local do Harness. Nao ingira fontes
+   externas nem envie codigo sensivel sem autorizacao. Required sources da Task
+   continuam obrigatorias independentemente do ranking do retriever.
+9. Pergunte quais integracoes opcionais preciso. Hostinger, AWS e WordPress
    somente quando solicitados e com conta/site e permissoes definidos. Nunca
    peca tokens, senhas ou cookies no chat; conduza login pelo fluxo seguro do
    host. Nao autorize cobrancas, deploy, DNS ou publicacao por instalar um MCP.
-8. Confirme quais plugins o host realmente reconhece e qual revisao esta ativa.
+10. Confirme quais plugins o host realmente reconhece e qual revisao esta ativa.
    Rode as verificacoes locais aplicaveis e um teste minimo, sem efeitos
    externos, de descoberta/carregamento da skill. Se exigir reiniciar ou abrir
    uma nova sessao, explique e deixe essa verificacao pendente ate ser feita.
-9. Entregue um resumo: instalado e verificado, pendencias, comandos executados,
+11. Entregue um resumo: instalado e verificado, pendencias, comandos executados,
    caminhos alterados e como comecar a usar. Diferencie estrutura valida,
-   plugin carregado e MCP autenticado. Nao declare sucesso sem evidencia.
+   plugin carregado, MCP autenticado, provider configurado e provider/modelo
+   realmente disponivel. Nao declare sucesso sem evidencia.
 
 Se faltar permissao ou ferramenta para executar, diga exatamente o bloqueio
 e a menor acao que preciso fazer. Nao altere codigo do meu projeto, nao faca
@@ -73,6 +87,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 - [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
 - [UI/UX](#uiux-standard), [Security](#security-standard) e [SDD](#sdd-spec-factory)
 - [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
+- [Reverse Engineering](#reverse-engineering-standard)
 - [Setores e Context Routing](#setores-e-context-routing) e [QA independente](#qa-testing-standard)
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
 - [Como contribuir](#como-contribuir)
@@ -899,7 +914,11 @@ Responsabilidades:
 - Consolidar escopo (incluido, fora de escopo, restricoes, riscos, decisoes).
 - Decidir quais skills, plugins, tools, MCPs, scripts ou executores usar.
 - Resolver a capacidade preferencial e um fallback seguro quando aplicavel.
+- Resolver primeiro a owner skill e so depois selecionar provider/modelo pelo
+  Model/Provider Resolver, mantendo o modelo como runtime substituivel.
 - Verificar se a capacidade existe e esta disponivel no runtime atual.
+- Carregar fontes normativas e usar Context Retrieval apenas como complemento
+  bounded, nunca como autorizacao para expandir a Task.
 - Exigir specs antes de tasks e tasks antes da implementacao.
 - Invocar a criacao de specs via `sdd-spec-factory`.
 - Invocar a implementacao via `dev-implementation-standard` ou executor explicitamente aprovado.
@@ -947,10 +966,11 @@ testes e documentacao sao separados quando puderem ser revisados de forma
 independente.
 
 Quando Claude Code for o transporte escolhido, o agente orquestrador verifica
-`claude --version` e `claude auth status` e registra `CLAUDE_STATUS`. Se esse LLM
-ficar sem tokens, contexto, autenticacao ou rede, o estado e persistido em
-`EXECUTION_HANDOFF` e outro LLM autorizado continua a mesma task sem reiniciar
-ou duplicar a implementacao. O adaptador de terminal visivel esta em
+`claude --version` e `claude auth status` e registra `CLAUDE_STATUS`. O mesmo
+principio vale para qualquer provider: configuracao, disponibilidade e capacidade
+sao verificadas separadamente. Se um LLM ficar sem tokens, contexto,
+autenticacao ou rede, o estado e persistido em `EXECUTION_HANDOFF` e outro LLM
+autorizado continua a mesma task sem reiniciar ou duplicar a implementacao. O adaptador de terminal visivel esta em
 [`claude-delegation.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/claude-delegation.md).
 
 Esse transporte e apenas o meio de execucao do `dev-implementation-standard`; a
@@ -1459,6 +1479,10 @@ O modelo operacional recomendado e:
 - LLM de requisitos usando `sdd-spec-factory`: specs e task executavel.
 - agente executor usando `dev-implementation-standard`: implementa a task
   aprovada com qualquer LLM autorizado e disponivel.
+- Model/Provider Resolver: escolhe o runtime somente depois que o Harness resolve
+  a capability e a owner skill; API key/configuracao nao equivalem a disponibilidade.
+- Context Retrieval: carrega required sources e, quando necessario, complementa
+  contexto com Potpie ou fallback local, sempre dentro do escopo autorizado.
 - LLMs auxiliares: consultas limitadas, somente depois de um health check.
 
 As ferramentas auxiliares nao substituem PRD, specs, documentacao, testes nem
@@ -1477,6 +1501,33 @@ Responsabilidades:
 - Padrao de componentes.
 - PRDs de prompts para imagens e videos.
 - Validacao visual, responsividade, acessibilidade e estados da UI.
+
+## Reverse Engineering Standard
+
+`reverse-engineering-standard` investiga software empacotado quando o codigo-fonte
+esta indisponivel ou insuficiente: binarios nativos, Electron/JavaScript, .NET,
+APK, firmware e comportamento observado em runtime. O owner produz evidencias,
+separa OBSERVED, INFERRED e UNKNOWN e entrega requisitos de reconstrucao para SDD.
+
+REA (`morluto/rea`, MIT) e a ferramenta externa preferencial dessa skill quando
+instalada e saudavel. O Harness nao copia o monorepo REA para dentro deste
+repositorio; registra a ferramenta no registry da skill, detecta sua disponibilidade
+e usa seu MCP/CLI conforme a capacidade exigida. Ghidra, Hopper, IDA, JADX,
+Binwalk e demais engines continuam opcionais e dependentes do alvo real.
+
+Reconstrucao segue o fluxo normal:
+
+```text
+reverse-engineering-standard
+  -> evidencia e comportamento observado
+  -> sdd-spec-factory
+  -> dev-implementation-standard
+  -> qa-testing-standard
+  -> security/ui/devops conforme aplicavel
+```
+
+A skill nao autoriza inspecao de terceiros, nao substitui AppSec e nao transforma
+codigo proprietario recuperado em implementacao nova.
 
 ## Security Standard
 
@@ -1753,6 +1804,31 @@ codex plugin add sdd-spec-factory@guilherme-dev-workflow
 codex plugin add dev-implementation-standard@guilherme-dev-workflow
 codex plugin add devops-standard@guilherme-dev-workflow
 codex plugin add qa-testing-standard@guilherme-dev-workflow
+codex plugin add reverse-engineering-standard@guilherme-dev-workflow
+```
+
+Depois da instalacao, o Harness pode diagnosticar os executores sem mostrar
+segredos:
+
+```bash
+python3 plugins/dev-workflow-standard/scripts/provider-resolver.py status
+python3 plugins/dev-workflow-standard/scripts/provider-resolver.py codex-template
+```
+
+O segundo comando gera apenas uma proposta de blocos; revise a documentacao da
+versao instalada do Codex antes de aplicar. Para NVIDIA, Groq, OpenRouter,
+Gemini e demais providers registrados, a API key fica em variavel de ambiente
+ou secret storage do host. Descubra modelos em runtime, por exemplo:
+
+```bash
+python3 plugins/dev-workflow-standard/scripts/provider-resolver.py discover --provider nvidia
+```
+
+Context retrieval usa Potpie quando disponivel e fallback local caso contrario:
+
+```bash
+python3 plugins/dev-workflow-standard/scripts/context-retriever.py "authentication flow" \
+  --workspace . --allowed-path "src/**" --allowed-path "docs/**"
 ```
 
 ### Claude Code
@@ -1775,6 +1851,7 @@ Instalar os plugins:
 /plugin install dev-implementation-standard@guilherme-dev-workflow
 /plugin install devops-standard@guilherme-dev-workflow
 /plugin install qa-testing-standard@guilherme-dev-workflow
+/plugin install reverse-engineering-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
@@ -1788,7 +1865,8 @@ claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/sdd-spec-factory \
   --plugin-dir ./plugins/dev-implementation-standard \
   --plugin-dir ./plugins/devops-standard \
-  --plugin-dir ./plugins/qa-testing-standard
+  --plugin-dir ./plugins/qa-testing-standard \
+  --plugin-dir ./plugins/reverse-engineering-standard
 ```
 
 ### Antigravity
@@ -1824,6 +1902,7 @@ cp -a plugins/sdd-spec-factory ~/plugins/
 cp -a plugins/dev-implementation-standard ~/plugins/
 cp -a plugins/devops-standard ~/plugins/
 cp -a plugins/qa-testing-standard ~/plugins/
+cp -a plugins/reverse-engineering-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao

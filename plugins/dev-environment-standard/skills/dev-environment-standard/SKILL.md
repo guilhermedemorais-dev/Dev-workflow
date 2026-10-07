@@ -13,8 +13,10 @@ UI/UX, and an installation is not evidence that the specialist ran.
 Read [operations.md](references/operations.md) before running the CLI and
 [state-and-consent.md](references/state-and-consent.md) when preparing, repairing,
 or accepting host evidence/custom MCPs. Consult [mcp-library.json](references/mcp-library.json)
-for public provider knowledge. Do not load every specialist's methodology merely
-to discover its registry.
+for public MCP knowledge. LLM provider/model knowledge is owned by the Harness
+provider registry when that plugin is available; Environment detects credentials,
+runtime tools and host compatibility but does not duplicate the provider catalog.
+Do not load every specialist's methodology merely to discover its registry.
 
 ## Choose the operation
 
@@ -56,7 +58,19 @@ project being prepared. They can be different.
    a conflict requires review, never an overwrite.
 8. Verify tool presence/execution and MCP availability/connection/auth separately.
    Use host tools for connection and authentication; a config entry is insufficient.
-9. Persist sanitized local observations and return HEALTH_REPORT plus human
+   When the Harness requests multi-provider execution, run its provider status/
+   probe flow without printing secrets. A provider config or environment-variable
+   name is not proof of an executable model.
+9. When `reverse-engineering-standard` is selected, detect Node.js 22.19+ and
+   the plugin-local reverse context runtime. If runtime dependencies are absent,
+   propose the scoped install inside
+   `plugins/reverse-engineering-standard/runtime/`; after approval run
+   `npm run bootstrap` there, which verifies and installs the vendored REA
+   tarball, and then run `node reverse-context-gateway.mjs probe`. Do not globally install REA or
+   optional engines by default. Install/prepare Ghidra, Hopper, IDA, JADX,
+   Binwalk, Unblob or Wakaru only when the selected target actually requires
+   that provider and the user approves the preparation.
+10. Persist sanitized local observations and return HEALTH_REPORT plus human
    summary, installations actually performed, blockers and next action.
 
 ## Library, ownership and local state
@@ -117,7 +131,9 @@ specialist execution receipt on that specialist's behalf.
 ## Scope and security
 
 Do not persist or print passwords, tokens, API keys, OAuth tokens, cookies,
-headers or raw host configuration. Use host credential storage and scoped
+headers or raw host configuration. Provider setup may show the required
+environment-variable name and official setup/documentation URL, but never the
+secret value. Use host credential storage and scoped
 permissions; report USER_ACTION_REQUIRED for a real manual auth requirement.
 Do not acquire credentials as part of discovery. Custom provider claims require
 review and stay local even after approval.

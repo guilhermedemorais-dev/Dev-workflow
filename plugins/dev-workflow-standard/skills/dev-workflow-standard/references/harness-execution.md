@@ -32,20 +32,25 @@ For every executable checkpoint:
 
 1. Confirm task/spec/source-of-truth prerequisites.
 2. Resolve the required capability via `capability-registry.md`.
-3. Verify the preferred capability is available in the current runtime.
-4. Invoke the capability. Naming it, planning for it, or drafting a prompt is not invocation.
-5. Set `RUNNING` and execute the bounded checkpoint.
-6. Inspect the returned output, diff, files, commands, artifacts or specialist findings.
-7. Complete an `EXECUTION_RECEIPT` from that observed result.
-8. Update the Human Task and, for a material checkpoint, follow
+3. Resolve the owner skill before selecting any provider/model. For executor
+   runtimes follow `provider-routing.md`, verify configuration separately from
+   availability, and record the provider/model choice.
+4. Verify the preferred capability is available in the current runtime. After
+   required sources are loaded, use `context-retrieval.md` only when additional
+   bounded context materially helps the checkpoint.
+5. Invoke the capability. Naming it, planning for it, or drafting a prompt is not invocation.
+6. Set `RUNNING` and execute the bounded checkpoint.
+7. Inspect the returned output, diff, files, commands, artifacts or specialist findings.
+8. Complete an `EXECUTION_RECEIPT` from that observed result.
+9. Update the Human Task and, for a material checkpoint, follow
    `execution-report-comments.md` to publish an `EXECUTION_REPORT_COMMENT` when
    a linked Issue and authorized capability exist.
-9. Set `VALIDATING` and check acceptance criteria and mandatory specialist rules.
-10. If validation passes, mark `COMPLETED` and publish the final factual report.
-11. If validation fails, mark `REWORK`, report the failure and correction plan,
+10. Set `VALIDATING` and check acceptance criteria and mandatory specialist rules.
+11. If validation passes, mark `COMPLETED` and publish the final factual report.
+12. If validation fails, mark `REWORK`, report the failure and correction plan,
    and invoke the responsible capability again.
-12. If the capability fails or becomes unavailable, select an approved fallback or create an `EXECUTION_HANDOFF`.
-13. Mark `BLOCKED` only when no safe capable path remains, with an actionable report.
+13. If the capability fails or becomes unavailable, select an approved fallback or create an `EXECUTION_HANDOFF`.
+14. Mark `BLOCKED` only when no safe capable path remains, with an actionable report.
 
 ## EXECUTION_RECEIPT
 
@@ -61,6 +66,7 @@ EXECUTION_RECEIPT
 - revision: tested revision/artifact
 - capability:
 - provider_or_runtime:
+- model:
 - executor:
 - state: RUNNING | VALIDATING | REWORK | BLOCKED | COMPLETED
 - invocation_evidence:

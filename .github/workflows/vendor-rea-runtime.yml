@@ -1,0 +1,94 @@
+name: Vendor REA Runtime
+
+on:
+  push:
+    branches:
+      - feat/multi-provider-context-retrieval
+    paths:
+      - ".github/workflows/vendor-rea-runtime.yml"
+      - "plugins/reverse-engineering-standard/runtime/rea-runtime.lock.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vendor-rea-runtime-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  vendor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/multi-provider-context-retrieval
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Read pinned version
+        id: lock
+        shell: bash
+        run: |
+          node - <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require("fs");
+          const lock = JSON.parse(fs.readFileSync("plugins/reverse-engineering-standard/runtime/rea-runtime.lock.json", "utf8"));
+          console.log("package=" + lock.package);
+          console.log("version=" + lock.version);
+          NODE
+
+      - name: Fetch exact published runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .tmp-rea-vendor
+          mkdir -p .tmp-rea-vendor
+          cd .tmp-rea-vendor
+          npm pack "${{ steps.lock.outputs.package }}@${{ steps.lock.outputs.version }}" --silent
+          TARBALL="${{ steps.lock.outputs.package }}-${{ steps.lock.outputs.version }}.tgz"
+          test -f "$TARBALL"
+
+          mkdir inspect
+          tar -xzf "$TARBALL" -C inspect
+          test -f inspect/package/package.json
+          test -f inspect/package/LICENSE
+          test -f inspect/package/scripts/rea.mjs
+          test -d inspect/package/dist
+          test -d inspect/package/bridge
+
+          node - <<'NODE'
+          const fs = require("fs");
+          const pkg = JSON.parse(fs.readFileSync("inspect/package/package.json", "utf8"));
+          if (pkg.name !== "rea-agents") throw new Error("unexpected package name");
+          if (pkg.version !== "4.1.0") throw new Error("unexpected package version");
+          if (pkg.license !== "MIT") throw new Error("unexpected package license");
+          NODE
+
+          mkdir -p ../plugins/reverse-engineering-standard/vendor/rea-runtime
+          mv "$TARBALL" "../plugins/reverse-engineering-standard/vendor/rea-runtime/$TARBALL"
+          sha256sum "../plugins/reverse-engineering-standard/vendor/rea-runtime/$TARBALL"             | awk '{print $1}'             > ../plugins/reverse-engineering-standard/vendor/rea-runtime/rea-agents-4.1.0.tgz.sha256
+
+      - name: Record vendored package inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAR="plugins/reverse-engineering-standard/vendor/rea-runtime/rea-agents-4.1.0.tgz"
+          tar -tzf "$TAR" | LC_ALL=C sort > plugins/reverse-engineering-standard/vendor/rea-runtime/PACKAGE-CONTENTS.txt
+
+      - name: Commit vendored runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add             plugins/reverse-engineering-standard/vendor/rea-runtime/rea-agents-4.1.0.tgz             plugins/reverse-engineering-standard/vendor/rea-runtime/rea-agents-4.1.0.tgz.sha256             plugins/reverse-engineering-standard/vendor/rea-runtime/PACKAGE-CONTENTS.txt
+          if git diff --cached --quiet; then
+            echo "Vendored runtime already matches the pin."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "vendor(rea): pin executable runtime 4.1.0 [skip ci]"
+          git push origin HEAD:feat/multi-provider-context-retrieval

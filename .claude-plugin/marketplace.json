@@ -113,6 +113,14 @@
       "version": "0.1.0",
       "category": "development",
       "tags": ["qa", "testing", "regression", "verification"]
+    },
+    {
+      "name": "reverse-engineering-standard",
+      "source": "./plugins/reverse-engineering-standard",
+      "description": "Authorized evidence-first reverse engineering of binaries, applications and runtime behavior with REA as the preferred external analysis tool.",
+      "version": "0.1.0",
+      "category": "security",
+      "tags": ["reverse-engineering", "rea", "binary-analysis", "electron", "apk", "firmware"]
     }
   ]
 }

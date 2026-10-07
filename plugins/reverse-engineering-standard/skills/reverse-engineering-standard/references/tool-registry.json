@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "owner": "reverse-engineering-standard",
+  "policy_notes": [
+    "REA is the preferred external reverse-engineering tool when installed and healthy.",
+    "The skill owns interpretation, authorization boundary, evidence classification and reconstruction guidance; REA remains a replaceable tool.",
+    "Installing REA does not install Ghidra, IDA, Hopper, JADX, Binwalk, Unblob or other external engines automatically.",
+    "Do not analyze third-party targets without authorization. Do not use the tool for persistence, credential theft, evasion or destructive testing."
+  ],
+  "tools": [
+    {
+      "id": "reverse-context-gateway",
+      "capabilities": ["reverse-engineering","binary-analysis","artifact-analysis","javascript-application-analysis","electron-analysis","managed-code-analysis","android-static-analysis","firmware-analysis","runtime-observation","feature-reconstruction","evidence-comparison"],
+      "repository": "local",
+      "command": "node",
+      "verify_args": ["plugins/reverse-engineering-standard/runtime/reverse-context-gateway.mjs","probe"],
+      "install_policy": "plugin-bundled-gateway-with-approved-local-runtime-dependencies"
+    },
+    {
+      "id": "rea-runtime",
+      "capabilities": ["reverse-engineering-runtime"],
+      "repository": "https://github.com/morluto/rea",
+      "command": "rea",
+      "verify_args": ["--version"],
+      "install_policy": "version-pinned-local-runtime-dependency",
+      "license": "MIT",
+      "version": "4.1.0"
+    }
+  ]
+}

@@ -40,14 +40,17 @@ For every executable task, the harness must perform this loop:
 1. classify the required capability;
 2. resolve the preferred skill, plugin, tool, MCP, script, or executor;
 3. verify that the capability is actually available in the current runtime;
-4. invoke it with the minimum complete task contract and required context paths;
-5. observe the execution result: output, diff, files, commands, or findings;
-6. complete an `EXECUTION_RECEIPT` with concrete evidence of what ran;
-7. update the Human Task and publish an `EXECUTION_REPORT_COMMENT` for a
+4. resolve the owner skill before selecting a provider/model; if an executor LLM
+   is needed, verify the runtime with the provider resolver and do not equate
+   configured credentials with availability;
+5. invoke it with the minimum complete task contract and required context paths;
+6. observe the execution result: output, diff, files, commands, or findings;
+7. complete an `EXECUTION_RECEIPT` with concrete evidence of what ran;
+8. update the Human Task and publish an `EXECUTION_REPORT_COMMENT` for a
    material checkpoint when a linked Issue and comment capability are available;
-8. validate the result against the task acceptance criteria;
-9. mark the task `COMPLETED` only after validation passes;
-10. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
+9. validate the result against the task acceptance criteria;
+10. mark the task `COMPLETED` only after validation passes;
+11. otherwise retry, select an approved fallback, replan, or mark `BLOCKED` with
    the exact reason.
 
 Use these execution states for delegated work:
@@ -67,7 +70,11 @@ Before non-trivial delegated execution, load:
 - `references/harness-execution.md` for the execution state machine, receipts,
   retries, handoff and validation contract;
 - `references/capability-registry.md` for capability selection and fallback
-  rules.
+  rules;
+- `references/provider-routing.md` when an executor LLM/provider must be
+  selected or changed;
+- `references/context-retrieval.md` when supplemental project context beyond
+  routed normative sources is needed.
 
 ## Mandatory Entry Gate
 

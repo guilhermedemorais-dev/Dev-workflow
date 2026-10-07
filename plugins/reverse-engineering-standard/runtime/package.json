@@ -1,0 +1,18 @@
+{
+  "name": "@dev-workflow/reverse-context-runtime",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "bootstrap": "node ./install-local-runtime.mjs",
+    "probe": "node ./reverse-context-gateway.mjs probe",
+    "call": "node ./reverse-context-gateway.mjs call"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.3.1",
+    "rea-agents": "file:../vendor/rea-runtime/rea-agents-4.1.0.tgz"
+  }
+}
