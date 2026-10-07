@@ -64,9 +64,9 @@ project being prepared. They can be different.
 9. When `reverse-engineering-standard` is selected, detect Node.js 22.19+ and
    the plugin-local reverse context runtime. If runtime dependencies are absent,
    propose the scoped install inside
-   `plugins/reverse-engineering-standard/runtime/`; after approval run the
-   project-local package install and then
-   `node reverse-context-gateway.mjs probe`. Do not globally install REA or
+   `plugins/reverse-engineering-standard/runtime/`; after approval run
+   `npm run bootstrap` there, which verifies and installs the vendored REA
+   tarball, and then run `node reverse-context-gateway.mjs probe`. Do not globally install REA or
    optional engines by default. Install/prepare Ghidra, Hopper, IDA, JADX,
    Binwalk, Unblob or Wakaru only when the selected target actually requires
    that provider and the user approves the preparation.
