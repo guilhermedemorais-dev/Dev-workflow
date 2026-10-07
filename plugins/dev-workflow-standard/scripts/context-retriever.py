@@ -147,7 +147,8 @@ def required_sources(root: Path, sources: list[str], patterns: list[str]) -> tup
     loaded: list[dict] = []
     warnings: list[str] = []
     for raw in sources:
-        path = (root / raw).resolve()
+        source_path = raw.split("#", 1)[0]
+        path = (root / source_path).resolve()
         try:
             relative = relative_safe(root, path)
         except ValueError:
