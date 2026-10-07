@@ -61,7 +61,16 @@ project being prepared. They can be different.
    When the Harness requests multi-provider execution, run its provider status/
    probe flow without printing secrets. A provider config or environment-variable
    name is not proof of an executable model.
-9. Persist sanitized local observations and return HEALTH_REPORT plus human
+9. When `reverse-engineering-standard` is selected, detect Node.js 22.19+ and
+   the plugin-local reverse context runtime. If runtime dependencies are absent,
+   propose the scoped install inside
+   `plugins/reverse-engineering-standard/runtime/`; after approval run the
+   project-local package install and then
+   `node reverse-context-gateway.mjs probe`. Do not globally install REA or
+   optional engines by default. Install/prepare Ghidra, Hopper, IDA, JADX,
+   Binwalk, Unblob or Wakaru only when the selected target actually requires
+   that provider and the user approves the preparation.
+10. Persist sanitized local observations and return HEALTH_REPORT plus human
    summary, installations actually performed, blockers and next action.
 
 ## Library, ownership and local state
