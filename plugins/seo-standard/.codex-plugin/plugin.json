@@ -1,0 +1,18 @@
+{
+  "name": "seo-standard",
+  "version": "0.1.0",
+  "description": "SEO, AEO, GEO and conversion specialist for websites, landing pages and small ecommerce projects.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SEO Standard",
+    "shortDescription": "Audit and improve websites for search, AI answers and conversion.",
+    "longDescription": "Engineering Harness specialist for technical SEO, AEO/GEO, schema, search intent, content structure and conversion copy. Uses a pinned BeyondSEO runtime for evidence-driven audits and revalidation.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": ["Use SEO Standard to audit this website, produce evidence-backed improvements and define validation checks."]
+  }
+}
