@@ -1,7 +1,10 @@
 # REA Integration
 
-REA (morluto/rea, MIT) is the preferred external reverse-engineering runtime
-for this skill. It is not vendored into the Engineering Harness.
+REA (morluto/rea, MIT) supplies the reverse-engineering engine used by this
+skill. The Harness exposes it through the local
+`runtime/reverse-context-gateway.mjs` boundary so the LLM does not receive all
+low-level tool schemas. The runtime is version-pinned and the capability catalog
+is mirrored locally.
 
 ## Boundary
 
@@ -13,15 +16,19 @@ The Harness and this skill own:
 - reconstruction decisions;
 - receipts and final validation.
 
-REA owns its own MCP/CLI implementation and analysis adapters.
+The vendored gateway/catalog define the Harness-facing contract. REA provides
+the underlying analysis implementation and providers.
 
 ## Capability discovery
 
-Do not assume every REA tool is available. Detect the installed CLI first:
+Do not assume every REA tool is available. Probe the local gateway first:
 
 ```bash
-rea --version
+node plugins/reverse-engineering-standard/runtime/reverse-context-gateway.mjs probe
 ```
+
+The gateway owns runtime discovery and exposes capability families. Direct REA
+CLI/MCP calls are implementation details unless a fallback is explicitly needed.
 
 Use scoped diagnostics only when needed:
 
