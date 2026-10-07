@@ -30,6 +30,8 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | observability, backup/DR and incidents | `devops-standard` | project-native runbook with same evidence requirements | checks, restore evidence or NOT VALIDATED, incident disposition |
 | repository operations | GitHub connector/tooling when available | local git tooling in the active workspace | remote/local state evidence |
 | deterministic repetitive operation | repository script/tool | approved equivalent tool | exit status + output |
+| provider/model resolution | `provider-resolver.py` + `provider-routing.md` | explicit approved runtime when automatic discovery is unavailable | provider/model probe + routing evidence |
+| context retrieval | `context-retriever.py` with Potpie when healthy | bounded local lexical retrieval | required sources + retrieved paths/snippets + backend evidence |
 | provider failure recovery | replacement authorized LLM/runtime | none if no compatible provider exists | `EXECUTION_HANDOFF` + resumed result |
 
 ## Routing Rules
@@ -75,6 +77,13 @@ current environment:
 - connected plugin/MCP/tool
 - executable script/CLI
 - authorized executor LLM/runtime
+
+For an executor LLM, resolve the owner skill first and then follow
+`provider-routing.md`. A configured API key or TOML block is not availability;
+probe the runtime and preserve provider/model evidence. When additional project
+context is needed after normative sources are loaded, use
+`context-retrieval.md`. Retrieval supplements required sources and never
+expands scope or authorization.
 
 If the desired capability is not actually available, do not pretend it ran. Use
 the fallback policy or block explicitly.
