@@ -87,7 +87,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 - [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
 - [UI/UX](#uiux-standard), [Security](#security-standard) e [SDD](#sdd-spec-factory)
 - [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
-- [Reverse Engineering](#reverse-engineering-standard)
+- [Reverse Engineering](#reverse-engineering-standard) e [SEO](#seo-standard)
 - [Setores e Context Routing](#setores-e-context-routing) e [QA independente](#qa-testing-standard)
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
 - [Como contribuir](#como-contribuir)
@@ -1528,6 +1528,30 @@ reverse-engineering-standard
 
 A skill nao autoriza inspecao de terceiros, nao substitui AppSec e nao transforma
 codigo proprietario recuperado em implementacao nova.
+
+## SEO Standard
+
+`seo-standard` e o especialista de sites para **SEO tecnico, AEO/GEO, schema,
+intencao de busca e copy de conversao**, com foco em landing pages, sites
+institucionais, paginas de servico e ecommerce pequeno.
+
+O motor preferencial e BeyondSEO 2.9.1, fixado localmente no plugin para crawl e
+evidencias. O Harness continua dono do fluxo: SEO audita e especifica; SDD
+transforma achados em requisitos; Implementation altera codigo; SEO revalida;
+QA/UI/Security entram quando aplicaveis.
+
+Fluxo padrao:
+
+```text
+site -> seo-standard -> findings/evidencias -> Task/SDD
+     -> implementation -> seo-standard revalidation -> QA/delivery
+```
+
+Para sites comerciais, o gate cobre quando aplicavel: crawl/indexacao, robots,
+sitemap, canonical, metadata, headings, schema, semantica, links internos,
+AEO/GEO, performance observavel, intencao de busca, headline, beneficios,
+objecoes, prova factual e CTA. Backlinks, reputacao e concorrentes ficam
+disponiveis, mas nao sao obrigatorios em toda entrega.
 
 ## Security Standard
 
