@@ -87,6 +87,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 - [Relatorios humanos](#human-execution-reporting) e [tools por skill](#skill-owned-tool-registry)
 - [UI/UX](#uiux-standard), [Security](#security-standard) e [SDD](#sdd-spec-factory)
 - [Implementation](#dev-implementation-standard) e [DevOps](#devops-standard)
+- [Reverse Engineering](#reverse-engineering-standard)
 - [Setores e Context Routing](#setores-e-context-routing) e [QA independente](#qa-testing-standard)
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
 - [Como contribuir](#como-contribuir)
@@ -1501,6 +1502,33 @@ Responsabilidades:
 - PRDs de prompts para imagens e videos.
 - Validacao visual, responsividade, acessibilidade e estados da UI.
 
+## Reverse Engineering Standard
+
+`reverse-engineering-standard` investiga software empacotado quando o codigo-fonte
+esta indisponivel ou insuficiente: binarios nativos, Electron/JavaScript, .NET,
+APK, firmware e comportamento observado em runtime. O owner produz evidencias,
+separa OBSERVED, INFERRED e UNKNOWN e entrega requisitos de reconstrucao para SDD.
+
+REA (`morluto/rea`, MIT) e a ferramenta externa preferencial dessa skill quando
+instalada e saudavel. O Harness nao copia o monorepo REA para dentro deste
+repositorio; registra a ferramenta no registry da skill, detecta sua disponibilidade
+e usa seu MCP/CLI conforme a capacidade exigida. Ghidra, Hopper, IDA, JADX,
+Binwalk e demais engines continuam opcionais e dependentes do alvo real.
+
+Reconstrucao segue o fluxo normal:
+
+```text
+reverse-engineering-standard
+  -> evidencia e comportamento observado
+  -> sdd-spec-factory
+  -> dev-implementation-standard
+  -> qa-testing-standard
+  -> security/ui/devops conforme aplicavel
+```
+
+A skill nao autoriza inspecao de terceiros, nao substitui AppSec e nao transforma
+codigo proprietario recuperado em implementacao nova.
+
 ## Security Standard
 
 Plugin especializado em seguranca de aplicacoes e integrado ao ciclo principal.
@@ -1776,6 +1804,7 @@ codex plugin add sdd-spec-factory@guilherme-dev-workflow
 codex plugin add dev-implementation-standard@guilherme-dev-workflow
 codex plugin add devops-standard@guilherme-dev-workflow
 codex plugin add qa-testing-standard@guilherme-dev-workflow
+codex plugin add reverse-engineering-standard@guilherme-dev-workflow
 ```
 
 Depois da instalacao, o Harness pode diagnosticar os executores sem mostrar
@@ -1822,6 +1851,7 @@ Instalar os plugins:
 /plugin install dev-implementation-standard@guilherme-dev-workflow
 /plugin install devops-standard@guilherme-dev-workflow
 /plugin install qa-testing-standard@guilherme-dev-workflow
+/plugin install reverse-engineering-standard@guilherme-dev-workflow
 ```
 
 Para testar uma copia local antes de publicar:
@@ -1835,7 +1865,8 @@ claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/sdd-spec-factory \
   --plugin-dir ./plugins/dev-implementation-standard \
   --plugin-dir ./plugins/devops-standard \
-  --plugin-dir ./plugins/qa-testing-standard
+  --plugin-dir ./plugins/qa-testing-standard \
+  --plugin-dir ./plugins/reverse-engineering-standard
 ```
 
 ### Antigravity
@@ -1871,6 +1902,7 @@ cp -a plugins/sdd-spec-factory ~/plugins/
 cp -a plugins/dev-implementation-standard ~/plugins/
 cp -a plugins/devops-standard ~/plugins/
 cp -a plugins/qa-testing-standard ~/plugins/
+cp -a plugins/reverse-engineering-standard ~/plugins/
 ```
 
 O uso via marketplace e preferivel porque oferece descoberta e atualizacao
