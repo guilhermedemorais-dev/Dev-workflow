@@ -1,0 +1,9 @@
+{
+  "name": "seo-standard",
+  "version": "0.1.0",
+  "description": "SEO, AEO, GEO and conversion specialist for websites, landing pages and small ecommerce projects.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "license": "MIT",
+  "skills": "./skills/"
+}
