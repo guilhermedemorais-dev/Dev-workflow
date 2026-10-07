@@ -104,6 +104,18 @@ def infer_capabilities(provider: dict, model_id: str) -> list[str]:
     return sorted(found)
 
 
+def capability_for_owner(registry: dict, owner_skill: str | None, explicit: str | None) -> str:
+    if explicit:
+        return explicit
+    if not owner_skill:
+        raise ValueError("either --capability or --owner-skill is required")
+    mapping = registry.get("owner_skill_capabilities", {})
+    capabilities = mapping.get(owner_skill, []) if isinstance(mapping, dict) else []
+    if not capabilities or not isinstance(capabilities[0], str):
+        raise ValueError("owner skill has no provider capability mapping")
+    return capabilities[0]
+
+
 def status(registry: dict) -> dict:
     providers = []
     for provider in sorted(registry["providers"], key=lambda p: p.get("priority", 9999)):
@@ -220,7 +232,8 @@ def main() -> int:
     parser.add_argument("action", choices=("catalog", "status", "discover", "select", "codex-template"))
     parser.add_argument("--provider")
     parser.add_argument("--model")
-    parser.add_argument("--capability", default="coding")
+    parser.add_argument("--capability")
+    parser.add_argument("--owner-skill")
     parser.add_argument("--discover", action="store_true")
     parser.add_argument("--registry", type=Path, default=REGISTRY_PATH)
     args = parser.parse_args()
@@ -235,7 +248,11 @@ def main() -> int:
             parser.error("--provider is required for discover")
         output = discover(provider_by_id(registry, args.provider))
     elif args.action == "select":
-        output = select(registry, args.capability, args.provider, args.model, args.discover)
+        try:
+            capability = capability_for_owner(registry, args.owner_skill, args.capability)
+        except ValueError as error:
+            parser.error(str(error))
+        output = select(registry, capability, args.provider, args.model, args.discover)
     else:
         sys.stdout.write(codex_template(registry))
         return 0
