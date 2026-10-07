@@ -82,7 +82,12 @@
       "description": "Portable environment bootstrap, MCP discovery and evidence-based plugin health.",
       "version": "0.1.0",
       "category": "development",
-      "tags": ["environment", "bootstrap", "mcp", "health"]
+      "tags": [
+        "environment",
+        "bootstrap",
+        "mcp",
+        "health"
+      ]
     },
     {
       "name": "dev-implementation-standard",
@@ -104,7 +109,12 @@
       "description": "Governed DevOps specialist: CI/CD, infrastructure, releases, validation and rollback.",
       "version": "0.1.0",
       "category": "development",
-      "tags": ["devops", "infrastructure", "ci-cd", "operations"]
+      "tags": [
+        "devops",
+        "infrastructure",
+        "ci-cd",
+        "operations"
+      ]
     },
     {
       "name": "qa-testing-standard",
@@ -112,7 +122,12 @@
       "description": "Independent functional QA, bug reproduction, regression and fix verification.",
       "version": "0.1.0",
       "category": "development",
-      "tags": ["qa", "testing", "regression", "verification"]
+      "tags": [
+        "qa",
+        "testing",
+        "regression",
+        "verification"
+      ]
     },
     {
       "name": "reverse-engineering-standard",
@@ -120,7 +135,29 @@
       "description": "Authorized evidence-first reverse engineering of binaries, applications and runtime behavior with REA as the preferred external analysis tool.",
       "version": "0.1.0",
       "category": "security",
-      "tags": ["reverse-engineering", "rea", "binary-analysis", "electron", "apk", "firmware"]
+      "tags": [
+        "reverse-engineering",
+        "rea",
+        "binary-analysis",
+        "electron",
+        "apk",
+        "firmware"
+      ]
+    },
+    {
+      "name": "seo-standard",
+      "source": "./plugins/seo-standard",
+      "description": "Website SEO/AEO/GEO and conversion specialist with BeyondSEO evidence runtime, conversion copy and post-change validation.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": [
+        "seo",
+        "aeo",
+        "geo",
+        "landing-page",
+        "conversion",
+        "schema"
+      ]
     }
   ]
 }
