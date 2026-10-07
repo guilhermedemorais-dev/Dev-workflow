@@ -15,6 +15,7 @@
     "devops-standard": ["coding", "reasoning", "agentic"],
     "sdd-spec-factory": ["reasoning"],
     "dev-environment-standard": ["reasoning"],
+    "reverse-engineering-standard": ["reasoning", "agentic"],
     "dev-workflow-standard": ["reasoning", "agentic"]
   },
   "providers": [
