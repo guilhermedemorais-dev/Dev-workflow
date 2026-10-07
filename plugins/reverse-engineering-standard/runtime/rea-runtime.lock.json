@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "package": "rea-agents",
+  "version": "4.1.0",
+  "upstream_repository": "https://github.com/morluto/rea",
+  "upstream_tag": "rea-agents-4.1.0",
+  "license": "MIT",
+  "vendored_tarball": "../vendor/rea-runtime/rea-agents-4.1.0.tgz",
+  "required_package_entries": [
+    "package/package.json",
+    "package/LICENSE",
+    "package/scripts/rea.mjs",
+    "package/dist/",
+    "package/bridge/"
+  ],
+  "purpose": "Pin the executable REA runtime inside Dev Workflow so normal reverse-engineering execution does not require the upstream REA repository or npm package to remain available after vendoring."
+}
