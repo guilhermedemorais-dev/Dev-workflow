@@ -9,7 +9,9 @@ Own SEO/AEO/GEO and conversion-readiness analysis inside the Engineering Harness
 
 Read [site-delivery.md](references/site-delivery.md) for website delivery work.
 Read [beyondseo-integration.md](references/beyondseo-integration.md) when using
-the BeyondSEO runtime. Consult
+the BeyondSEO runtime. Load only the relevant vendored BeyondSEO playbooks for
+technical SEO, on-page, schema, AEO/GEO, search intent or conversion copy.
+Consult
 [tool-registry.json](references/tool-registry.json) for runtime ownership.
 
 ## Preconditions
