@@ -49,6 +49,17 @@ class ProviderResolverTests(unittest.TestCase):
                 os.environ["NVIDIA_API_KEY"] = previous
         self.assertEqual(result["state"], "BLOCKED")
 
+    def test_owner_skill_maps_before_provider_selection(self):
+        registry = provider.load_registry()
+        self.assertEqual(
+            provider.capability_for_owner(registry, "qa-testing-standard", None),
+            "reasoning",
+        )
+        self.assertEqual(
+            provider.capability_for_owner(registry, "security-standard", None),
+            "security",
+        )
+
     def test_model_capabilities_are_hints_not_authority(self):
         registry = provider.load_registry()
         nvidia = provider.provider_by_id(registry, "nvidia")
