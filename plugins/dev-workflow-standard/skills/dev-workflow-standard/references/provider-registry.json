@@ -7,6 +7,16 @@
     "routing": "Skills own methodology; providers and models are replaceable execution runtimes.",
     "degraded_mode": "When no compatible external executor is verified, report single-agent/degraded mode instead of fabricating delegation."
   },
+  "owner_skill_capabilities": {
+    "dev-implementation-standard": ["coding", "reasoning", "agentic"],
+    "qa-testing-standard": ["reasoning", "coding"],
+    "security-standard": ["security", "reasoning"],
+    "ui-ux-standard": ["reasoning"],
+    "devops-standard": ["coding", "reasoning", "agentic"],
+    "sdd-spec-factory": ["reasoning"],
+    "dev-environment-standard": ["reasoning"],
+    "dev-workflow-standard": ["reasoning", "agentic"]
+  },
   "providers": [
     {
       "id": "openai",
