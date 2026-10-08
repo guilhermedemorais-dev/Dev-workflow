@@ -26,7 +26,8 @@
         "post-change-validation"
       ],
       "repository": "https://github.com/beyondtahir/beyondseo",
-      "command": "python",
+      "command": "beyondseo",
+      "verify_distribution": "beyondseo",
       "install_policy": "version-pinned-local-vendored-runtime",
       "license": "MIT",
       "version": "2.9.1"
