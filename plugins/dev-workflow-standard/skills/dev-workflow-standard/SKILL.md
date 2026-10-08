@@ -401,6 +401,14 @@ stop with diagnosis and `BLOCKED`; do not retry unchanged permission failures.
 
 ## Repository Readiness Bootstrap
 
+When organizing a client project's folders, include portal preparation in the
+onboarding plan and read [Client portal](references/client-portal.md). The
+destination is `docs/portal/` in that project, not the plugin cache. An external
+template repository may be supplied later: record that pending dependency and
+continue unrelated work; never invent a URL, substitute a reference website,
+or claim the portal installed. Route approved preparation/Pages configuration
+to DevOps, preserving the separate backend and publication gates.
+
 Before the first Task requiring remote governance, route repository onboarding
 to `devops-standard` and load its `references/github-governance.md`. Environment
 prepares Git/gh; DevOps owns diagnose/propose/confirmed apply/verify. Authentication

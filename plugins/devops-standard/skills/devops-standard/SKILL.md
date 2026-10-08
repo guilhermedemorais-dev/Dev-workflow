@@ -101,6 +101,17 @@ templates, API tests, remote tools, command output or receipts.
 
 ## Progressive domain routing
 
+For client portal onboarding or Pages preparation, read the active Harness
+`references/client-portal.md` (in this monorepo:
+`plugins/dev-workflow-standard/skills/dev-workflow-standard/references/client-portal.md`).
+Resolve the active bundle or explicit canonical checkout, not a guessed sibling
+cache path. Prepare `docs/portal/` in the client project from the separately
+supplied template only when available; an absent future repository is a portal
+dependency, not a global onboarding blocker. Do not invent the template or a
+deploy workflow. Preserve existing files, use the client's database via its
+authorized backend, and distinguish static Pages output from private services.
+Follow the existing human gates before publication or remote configuration.
+
 | Active need | Read |
 | --- | --- |
 | repository governance/bootstrap, GitHub settings, Rulesets, Project, labels, Issue/PR templates or readiness | [GitHub governance](references/github-governance.md) |
