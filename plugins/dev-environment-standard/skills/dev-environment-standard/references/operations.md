@@ -76,6 +76,40 @@ remains MANUAL_ONLY, regardless of claimed origin. `authentication` accepts
 
 ## Approve concrete actions
 
+### GitHub Actions MCP, read-only
+
+For an existing official GitHub MCP server, or to add the official remote server
+to a host that does not yet register it, run
+`python3 scripts/github_actions_mcp.py codex --config PATH` or
+`python3 scripts/github_actions_mcp.py claude --config PATH`. The updater changes
+only the GitHub server entry and tool-filter headers, preserves existing auth,
+other server entries and unrelated configuration, and never creates credentials.
+For a new entry it adds the official endpoint without Authorization, leaving the
+host's normal secure authentication flow to the user. It is idempotent. It enables
+`actions_list`, `actions_get` and `get_job_logs`, excludes `actions_run_trigger`,
+and sets `X-MCP-Readonly=true`.
+
+The default GitHub MCP toolsets remain unchanged; the three Actions tools are added
+explicitly. Read-only mode and exclusions filter the MCP surface, not the underlying
+credential's authority. Tool visibility is not proof of authorization. Fine-grained
+PATs need the repository selected and `Actions: read` for each intended repository;
+confirm by making read-only requests for workflows, runs, jobs and logs. OAuth and
+classic PAT tool challenges currently require the `repo` scope for Actions tools.
+A classic PAT's scope filter can hide tools, but visible fine-grained PAT tools may
+still be denied. Report repository-by-repository results, distinguishing 403
+permission/policy denials from 404 not-found-or-no-repository-access; never infer
+organization-wide or global access. Inspect Actions policy if relevant, but do not
+change it.
+Do not change repository or organization Actions policy, workflows, secrets, or
+deployments as part of this setup. If access is denied, ask the owner to grant
+`Actions: read` to the existing credential connection and include the intended
+repository, or to authorize a replacement credential through the host's normal
+secure flow. Never request a token in chat.
+
+Codex and Claude config files are supported by this updater. Gemini, Cursor and
+other MCP clients are not rewritten by it; inspect each client's own configuration
+format and mark it unverified until separately adapted and tested.
+
 First request a dry-run with the intended `--host codex|claude` and explicit
 `--host-config PATH`. Codex TOML and Claude JSON are supported for adding an
 absent public MCP definition. An existing differing definition is never replaced.

@@ -18,6 +18,12 @@ provider registry when that plugin is available; Environment detects credentials
 runtime tools and host compatibility but does not duplicate the provider catalog.
 Do not load every specialist's methodology merely to discover its registry.
 
+For GitHub Actions inspection, use the dedicated
+[`github_actions_mcp.py`](scripts/github_actions_mcp.py) updater for an existing
+or new official GitHub MCP entry. It exposes a minimal read-only Actions tool set,
+preserves existing credentials and never creates credentials. Tool discovery is
+not authorization evidence; verify access per repository using `references/operations.md`.
+
 ## Choose the operation
 
 - **doctor**: read-only discovery and health report. No installation, cache

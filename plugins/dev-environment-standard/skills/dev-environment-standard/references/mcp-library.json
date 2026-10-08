@@ -4,13 +4,14 @@
     {
       "id": "github", "name": "GitHub MCP", "provider": "GitHub",
       "repository": "https://github.com/github/github-mcp-server",
-      "documentation": "https://github.com/github/github-mcp-server#remote-github-mcp-server",
+      "documentation": "https://github.com/github/github-mcp-server/blob/main/docs/server-configuration.md",
       "tier": "CORE", "origin": "OFFICIAL",
-      "capabilities": ["repositories", "files", "issues", "pull-requests", "collaboration", "reviews"],
+      "capabilities": ["repositories", "files", "issues", "pull-requests", "collaboration", "reviews", "actions-workflows-read", "actions-runs-read", "actions-jobs-read", "actions-logs-read"],
       "preparation": {"policy": "AUTH_REQUIRED", "method": "host_config", "scope": "host"},
       "configuration": {"transport": "http", "url": "https://api.githubcopilot.com/mcp/"},
       "auth": {"required": true},
-      "provenance": {"verified_at": "2026-09-23", "source": "https://github.com/github/github-mcp-server"}
+      "provenance": {"verified_at": "2026-10-08", "source": "https://github.com/github/github-mcp-server"},
+      "actions_read_configuration": {"tools": ["actions_list", "actions_get", "get_job_logs"], "excluded_tools": ["actions_run_trigger"], "readonly": true, "fine_grained_pat_permission": "Actions: read", "repository_scope": "Only repositories selected in the credential; verify each repository with a read request."}
     },
     {
       "id": "context7", "name": "Context7", "provider": "Upstash",
