@@ -1,4 +1,4 @@
-"""Safely enable read-only GitHub Actions tools in Codex or Claude MCP config."""
+"""Safely expose read-only GitHub Actions tools in Codex or Claude MCP config."""
 import argparse
 import json
 from pathlib import Path
@@ -12,7 +12,6 @@ ENDPOINT = "https://api.githubcopilot.com/mcp/"
 HEADERS = {
     "X-MCP-Tools": TOOLS,
     "X-MCP-Exclude-Tools": "actions_run_trigger",
-    "X-MCP-Readonly": "true",
 }
 
 
@@ -137,7 +136,8 @@ def main(argv=None):
         changed = update_codex(args.config) if args.host == "codex" else update_claude(args.config)
         print(json.dumps({"status": "UPDATED" if changed else "ALREADY_CONFIGURED", "host": args.host,
                           "actions_tools": ["actions_list", "actions_get", "get_job_logs"],
-                          "trigger_excluded": True, "readonly": True}))
+                          "trigger_excluded": True, "actions_tools_readonly": True,
+                          "sets_global_readonly": False}))
         return 0
     except (OSError, ValueError, TypeError, KeyError):
         print(json.dumps({"status": "BLOCKED", "error": "invalid or inaccessible MCP configuration"}))

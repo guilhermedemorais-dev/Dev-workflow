@@ -28,7 +28,7 @@ class GitHubActionsMcpTests(unittest.TestCase):
         self.assertEqual(github["http_headers"]["Authorization"], "Bearer fixture-secret")
         self.assertEqual(github["http_headers"]["X-MCP-Tools"], "get_me,actions_list,actions_get,get_job_logs")
         self.assertEqual(github["http_headers"]["X-MCP-Exclude-Tools"], "actions_run_trigger")
-        self.assertEqual(github["http_headers"]["X-MCP-Readonly"], "true")
+        self.assertNotIn("X-MCP-Readonly", github["http_headers"])
         self.assertEqual(data["mcp_servers"]["other"]["url"], "https://example.test/mcp")
         self.assertEqual(data["model"], "keep")
         self.assertNotIn("actions_run_trigger", github["http_headers"]["X-MCP-Tools"])
@@ -38,7 +38,8 @@ class GitHubActionsMcpTests(unittest.TestCase):
         path = self.root / "mcp.json"
         path.write_text(json.dumps({"mcpServers": {
             "github": {"type": "http", "url": "https://api.githubcopilot.com/mcp/",
-                       "headers": {"Authorization": "Bearer fixture-secret"}},
+                       "headers": {"Authorization": "Bearer fixture-secret",
+                                   "X-MCP-Readonly": "true"}},
             "other": {"command": "fixture", "args": []}}, "keep": True}))
         self.assertTrue(mcp.update_claude(path))
         data = json.loads(path.read_text())
@@ -51,7 +52,7 @@ class GitHubActionsMcpTests(unittest.TestCase):
         self.assertTrue(data["keep"])
         self.assertFalse(mcp.update_claude(path))
 
-    def test_fresh_codex_install_adds_single_uncredentialed_readonly_server(self):
+    def test_fresh_codex_install_adds_only_actions_read_filters(self):
         path = self.root / "config.toml"
         path.write_text('model = "keep"\n')
         self.assertTrue(mcp.update_codex(path))
@@ -60,6 +61,7 @@ class GitHubActionsMcpTests(unittest.TestCase):
         self.assertEqual(server["url"], mcp.ENDPOINT)
         self.assertEqual(server["http_headers"]["X-MCP-Tools"], mcp.TOOLS)
         self.assertNotIn("Authorization", server["http_headers"])
+        self.assertNotIn("X-MCP-Readonly", server["http_headers"])
         self.assertEqual(data["model"], "keep")
         self.assertFalse(mcp.update_codex(path))
 

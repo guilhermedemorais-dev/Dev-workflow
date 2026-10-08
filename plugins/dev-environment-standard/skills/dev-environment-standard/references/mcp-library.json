@@ -11,7 +11,7 @@
       "configuration": {"transport": "http", "url": "https://api.githubcopilot.com/mcp/"},
       "auth": {"required": true},
       "provenance": {"verified_at": "2026-10-08", "source": "https://github.com/github/github-mcp-server"},
-      "actions_read_configuration": {"tools": ["actions_list", "actions_get", "get_job_logs"], "excluded_tools": ["actions_run_trigger"], "readonly": true, "fine_grained_pat_permission": "Actions: read", "repository_scope": "Only repositories selected in the credential; verify each repository with a read request."}
+      "actions_read_configuration": {"tools": ["actions_list", "actions_get", "get_job_logs"], "excluded_tools": ["actions_run_trigger"], "actions_tools_readonly": true, "sets_global_readonly": false, "fine_grained_pat_permission": "Actions: read", "repository_scope": "Only repositories selected in the credential; verify each repository with a read request."}
     },
     {
       "id": "context7", "name": "Context7", "provider": "Upstash",

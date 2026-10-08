@@ -86,12 +86,16 @@ only the GitHub server entry and tool-filter headers, preserves existing auth,
 other server entries and unrelated configuration, and never creates credentials.
 For a new entry it adds the official endpoint without Authorization, leaving the
 host's normal secure authentication flow to the user. It is idempotent. It enables
-`actions_list`, `actions_get` and `get_job_logs`, excludes `actions_run_trigger`,
-and sets `X-MCP-Readonly=true`.
+`actions_list`, `actions_get` and `get_job_logs`, and excludes
+`actions_run_trigger`. It does not set or remove the server-wide
+`X-MCP-Readonly` header; a pre-existing value is preserved.
 
 The default GitHub MCP toolsets remain unchanged; the three Actions tools are added
-explicitly. Read-only mode and exclusions filter the MCP surface, not the underlying
-credential's authority. Tool visibility is not proof of authorization. Fine-grained
+explicitly. Only the Actions tool surface added here is read-only. Existing GitHub
+tools retain their existing read/write availability, governed by the credential,
+server configuration and the DevOps task's human gates. Excluding workflow trigger
+does not disable other DevOps operations. Tool visibility is not proof of
+authorization. Fine-grained
 PATs need the repository selected and `Actions: read` for each intended repository;
 confirm by making read-only requests for workflows, runs, jobs and logs. OAuth and
 classic PAT tool challenges currently require the `repo` scope for Actions tools.
