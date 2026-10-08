@@ -228,6 +228,28 @@ em diff para decisao, nunca substituidos silenciosamente.
 
 ### Project, Kanban e CI
 
+#### Portal do cliente em docs/portal
+
+Ao organizar a estrutura do projeto do cliente, o orquestrador considera o
+portal em `docs/portal/`. O template tem como origem prevista o repositorio
+[portal-clientes](https://github.com/guilhermedemorais-dev/portal-clientes),
+que o usuario ainda vai criar e preencher. URL definida nao comprova template
+disponivel; sua revisao permanece pendente ate inspecao. Enquanto faltar o
+template, a preparacao autorizada registra a pendencia em um README no
+destino, sem sobrescrever arquivos, inventar URL ou bloquear outras Tasks.
+
+Quando o repositorio for fornecido, o agente inspeciona e fixa sua revisao,
+propoe a copia preservando personalizacoes e prepara os comandos reais de
+build. DevOps conduz a configuracao do frontend para GitHub Pages; o backend
+acessa o banco ja existente do cliente. Login GitHub nao substitui autorizacao
+por projeto nem transforma Pages em servidor de banco/API.
+
+Publicar somente o artefato estatico revisado do portal, nunca toda a pasta
+`docs/`, segredos ou dados privados. Preparar arquivos nao autoriza push,
+ativacao de Pages ou deploy. Esta entrega e uma regra de orquestracao, nao um
+portal pronto nem um novo instalador. Veja o
+[procedimento e cenarios](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/client-portal.md).
+
 O Project e procurado por owner/titulo antes de criar; IDs sao descobertos na
 execucao. As oito etapas do fluxo sao:
 
