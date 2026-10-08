@@ -121,6 +121,30 @@ collapse them into one prose blob; if a dimension does not apply, write
 
 ## Phases
 
+### Studio PRD handoff
+
+When briefed through `studio-prd`, consume the approved briefing, PRD module
+inventory and matching-revision internal plan MD/JSON. Reuse decisions and
+research instead of repeating the interview. Approval of the PRD is not
+implementation authorization. The handoff proposes the first module in the
+approved dependency/urgency order and waits for the user's instruction to
+start its specification; do not silently specify all modules in a batch.
+Unspecified module cards remain awaiting Discovery/SDD, not Ready for Dev.
+
+Work through that module's actors, journeys, business rules, database, backend,
+frontend, integrations, observability, security and tests using the existing
+templates below. Research relevant source implementation/tests, not README
+alone; record exact source/revision/purpose in the project's reference library.
+Ask material gaps as they arise. Finish with coverage, pending decisions and
+the existing `DISCOVERY_SDD_COMPLETED` Issue report, then request approval
+before the next module. Report publication only with the returned comment URL.
+Update the plan's real task/contract links after creation; its short task
+prompt is not a replacement for the execution-list prompts or authorization.
+
+An in-scope discovery or acceptance fix updates the same module Task and
+equivalent JSON with revision/impact. A genuinely independent or out-of-scope
+demand needs a scoped decision; do not fragment by layer or specialist.
+
 ### Fase 0 - Diagnóstico
 
 Before writing any spec, produce a short diagnosis:
@@ -157,6 +181,17 @@ Consolidate the closed scope (becomes the basis of the product/module spec):
 - Decisões pendentes
 
 ### Fase 2 - Geração de Specs
+
+When UI applies, route `ui-ux-standard` and its `references/live-design-guide.md`
+from the active bundle (or explicit canonical checkout, not guessed sibling
+cache paths). Before closing frontend specs, require the client project's
+Markdown Design Guide plus cumulative HTML catalogue or mapped existing
+equivalent, tokens, source inventory and the applicable visual approval.
+Extend the same catalogue while specifying each module. Route exact component
+IDs/revisions, catalogue anchors, rules, fixtures and limitations through the
+existing design/references fields of the Human Task and equivalent JSON.
+Missing catalogue/approval blocks frontend readiness, never becomes a fictitious
+PASS or a separate frontend Task. Backend-only work records UI N/A.
 
 When the requested surface includes CI/CD, containers, IaC, servers, deployment,
 cloud, GitOps, observability, backup/DR, incidents or advanced release strategy,

@@ -153,6 +153,20 @@ initial and final results. Escalate persistent or out-of-scope failures.
    issue, branch and specs, then return to `dev-workflow-standard`. Do not
    self-approve, merge, or deploy.
 
+## Frontend design sources
+
+For frontend work, resolve the routed project Design Guide Markdown, live HTML
+catalogue (or documented equivalent), tokens, component source inventory and
+exact component IDs/revisions from the JSON contract. Require the applicable
+visual approval evidence before implementing that surface. Missing, stale or
+conflicting sources return to Harness; do not invent a replacement style.
+Reuse real approved components, and keep the same client-project catalogue
+and guide coherent with authorized changes. Never edit the installed plugin
+to store a client's widgets. A catalogue fixture remains a labelled simulation;
+it cannot satisfy backend/integration acceptance. Return changed component
+revisions and actual developer-test evidence to UI/UX and QA for independent
+validation, including final application rendering rather than catalogue alone.
+
 ## GitHub Projects Readiness
 
 Do not assume GitHub Projects is available. Keep the task ready for future

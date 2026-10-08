@@ -1,0 +1,19 @@
+{
+  "name": "studio-prd",
+  "version": "0.1.0",
+  "description": "Collaborative briefing, module PRD and equivalent internal MD/JSON delivery planning before supervised SDD.",
+  "author": {
+    "name": "Guilherme"
+  },
+  "skills": "./skills/",
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
+  "interface": {
+    "displayName": "Studio PRD",
+    "shortDescription": "Briefing, PRD and module-based internal delivery plans.",
+    "longDescription": "Build shared context for new and existing software through questions and evidence, then prepare a complete module PRD and equivalent MD/JSON plan. Preserve human approval before each SDD handoff and execution.",
+    "developerName": "Guilherme",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Interactive"],
+    "defaultPrompt": ["Use Studio PRD to conduct my briefing and prepare a module-based PRD and internal delivery plan."]
+  }
+}

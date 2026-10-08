@@ -10,6 +10,7 @@ the next. It never writes product code itself; it routes work to executable capa
 | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer |
 | `dev-environment-standard` | Environment bootstrap / plugin health |
+| `studio-prd` | Collaborative briefing, PRD and internal MD/JSON delivery plan |
 | `sdd-spec-factory` | Requirements LLM / executable task |
 | `dev-implementation-standard` | Executor agent / coder |
 | `ui-ux-standard` | UI/UX specialist LLM |
@@ -18,6 +19,22 @@ the next. It never writes product code itself; it routes work to executable capa
 | `devops-standard` | Operational infrastructure, CI/CD, releases and recovery |
 
 ## Pipeline
+
+For new products or existing-system reassessment, Studio PRD first researches
+authorized sources and interviews the user in bounded rounds. Record actors,
+journeys, module count/IDs, production scope, urgency and real dependencies.
+Store the internal plan separately from the PRD, with the same normative
+decisions/revision in MD and JSON. Effort hours differ from calendar duration;
+capacity, ranges, risks and unknowns remain explicit. A short contextual prompt
+per task helps the user start separate chats without duplicating task contracts.
+
+After approval of PRD and ordering, ask before the first module specification.
+SDD retains the complete existing task/card/JSON model, including backend and
+all required validation sectors. Pause for material business gaps and review
+each module before advancing, not an unattended batch. For UI, build the
+project's live HTML catalogue alongside the Markdown guide while specifying,
+then reuse component IDs/revisions during implementation and independent QA.
+This does not require rebuilding a briefing for an already specified bounded task.
 
 First project onboarding, when remote governance is required:
 

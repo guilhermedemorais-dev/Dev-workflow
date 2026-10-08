@@ -1,0 +1,4 @@
+interface:
+  display_name: "Studio PRD"
+  short_description: "Briefing, PRD e planejamento por módulo"
+  default_prompt: "Use $studio-prd para conduzir meu briefing e preparar PRD e planejamento interno antes da SDD."

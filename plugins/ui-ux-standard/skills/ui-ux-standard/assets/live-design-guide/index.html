@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo de componentes | Modelo não aprovado</title>
+  <style>
+    :root { color-scheme: light; --space: 1rem; --ink: #152638; --surface: #fff; --line: #526576; }
+    * { box-sizing: border-box; }
+    body { margin: auto; padding: var(--space); max-width: 60rem; font: 1rem/1.6 system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+    a { color: #154ca3; }
+    :focus-visible { outline: 3px solid #154ca3; outline-offset: 3px; }
+    section, details { padding: var(--space); border: 1px solid var(--line); margin-block: var(--space); border-radius: .5rem; }
+    summary { cursor: pointer; font-weight: 600; }
+    select { font: inherit; max-width: 100%; padding: .5rem; }
+    output { display: block; padding-block: var(--space); }
+    dt { font-weight: 600; } dd { margin-inline-start: 0; margin-block-end: .5rem; }
+    @media (max-width: 35rem) { body { padding: .75rem; } section { padding: .75rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Biblioteca visual do projeto</h1>
+    <p>Modelo inicial, não aprovado. Substitua o exemplo por componentes reais
+      do projeto e sincronize os tokens com o guia antes do uso.</p>
+    <nav aria-label="Referências do catálogo">
+      <a href="design-guide.md">Guia de design</a> ·
+      <a href="design-tokens.json">Tokens</a> ·
+      <a href="component-source-inventory.md">Origem dos componentes</a> ·
+      <a href="#sample-status">Exemplo de fixture</a>
+    </nav>
+  </header>
+  <main>
+    <section id="sample-status" data-component-id="SAMPLE-STATUS" data-revision="1">
+      <h2>SAMPLE-STATUS · revisão 1</h2>
+      <p>Simulação local: não consulta API, não grava dados e não comprova backend pronto.</p>
+      <dl>
+        <dt>Origem e consumidores</dt><dd>Exemplo do template. Nenhum módulo aprovado.</dd>
+        <dt>Contrato</dt><dd>Input: estado selecionado. Output: mensagem de estado. Evento: change, sem efeitos externos.</dd>
+        <dt>Layout e tokens</dt><dd>Uma coluna fluida, espaço de 1rem neste exemplo. Adaptar aos tokens aprovados do projeto.</dd>
+        <dt>Teclado e foco</dt><dd>Select nativo, Tab e setas. Foco visível; mensagem em região de status.</dd>
+        <dt>Estados não aplicáveis</dt><dd>Permissões, seleção de itens e confirmação destrutiva: este exemplo não executa operações de negócio.</dd>
+        <dt>Aprovação e validação</dt><dd>Não aprovado. Renderização, responsividade e acessibilidade: NAO VALIDADO até execução no ambiente do projeto.</dd>
+      </dl>
+      <label for="fixture-state">Estado da fixture</label>
+      <select id="fixture-state" aria-controls="fixture-result">
+        <option value="default">Padrão</option>
+        <option value="loading">Carregando</option>
+        <option value="empty">Vazio</option>
+        <option value="error">Erro</option>
+        <option value="success">Sucesso</option>
+      </select>
+      <output id="fixture-result" role="status" aria-live="polite">Selecione um estado para inspecionar a fixture.</output>
+      <details><summary>Critério de aceite do exemplo</summary>
+        <p>Cada opção mostra a mensagem correspondente sem navegação ou requisição.
+          Hover, active e focus do controle são nativos, devem ser inspecionados
+          no navegador. Disabled não é necessário neste seletor de demonstração.</p>
+      </details>
+      <noscript>A troca de estado precisa de JavaScript. O catálogo estático permanece legível.</noscript>
+    </section>
+  </main>
+  <script>
+    const fixtureMessages = Object.freeze({
+      default: 'Selecione um estado para inspecionar a fixture.',
+      loading: 'Simulação: carregando registros, sem requisição real.',
+      empty: 'Simulação: nenhum registro encontrado.',
+      error: 'Simulação: falha de leitura. Nenhum serviço foi consultado.',
+      success: 'Simulação: três registros carregados.'
+    });
+    document.getElementById('fixture-state').addEventListener('change', (event) => {
+      document.getElementById('fixture-result').textContent = fixtureMessages[event.target.value];
+    });
+  </script>
+</body>
+</html>

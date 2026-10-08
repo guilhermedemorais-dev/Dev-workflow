@@ -13,6 +13,7 @@ manual.
    - orchestration: `plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md`
    - environment/bootstrap: `plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md`
    - requirements: `plugins/sdd-spec-factory/skills/sdd-spec-factory/SKILL.md`
+   - product briefing: `plugins/studio-prd/skills/studio-prd/SKILL.md`
    - implementation: `plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md`
    - functional QA: `plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md`
    - UI/UX: `plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md`
