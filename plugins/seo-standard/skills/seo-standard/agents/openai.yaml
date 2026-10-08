@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO Standard"
+  short_description: "Evidence-based SEO audits and validation"
+  default_prompt: "Use $seo-standard to inspect the authorized site and report evidence and limitations."

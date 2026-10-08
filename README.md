@@ -77,6 +77,7 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 ## Indice
 
 - [Instale com sua LLM](#instale-com-sua-llm)
+- [Studio PRD: briefing e planejamento](#studio-prd-briefing-e-planejamento)
 - [Do zero ao projeto pronto](#do-zero-ao-projeto-pronto)
 - [Desenvolver um software desde a etapa zero](#desenvolver-um-software-desde-a-etapa-zero)
 - [Comece aqui: desenvolvedores](#comece-aqui-desenvolvedores)
@@ -92,6 +93,68 @@ A [instalacao manual](#instalacao) permanece disponivel como referencia.
 - [Instalacao](#instalacao), [compatibilidade](#compatibilidade) e [uso](#uso-recomendado)
 - [Como contribuir](#como-contribuir)
 - [Diagnostico para colaboradores](#diagnostico-para-colaboradores)
+
+## Studio PRD: briefing e planejamento
+
+O `studio-prd` conduz o briefing com voce antes das specs detalhadas. Serve
+tanto para um produto novo quanto para evoluir um sistema existente, inclusive
+low-code. Pesquisa as fontes autorizadas, identifica o que foi observado ou
+testado e faz ate tres perguntas relevantes por rodada. Nao transforma uma
+funcionalidade encontrada em referencia em requisito aprovado automaticamente.
+
+O PRD explicita **quantos modulos existem**, seus IDs, atores, jornadas,
+regras compartilhadas, fronteiras e dependencias. Cada modulo gera uma task
+completa no padrao existente, com banco, backend, frontend e validacoes como
+microtarefas. A entrega mira qualidade de producao dentro do escopo aprovado,
+sem reduzir silenciosamente o produto a MVP.
+
+Os artefatos ficam no projeto atendido, nao no cache do plugin:
+
+| Artefato | Para que serve |
+| --- | --- |
+| `docs/briefing/briefing.md` | Perguntas, decisoes, fontes, atores e diagnostico do existente |
+| `docs/prd/PRD.md` | Escopo, quantidade de modulos, jornadas e link do planejamento |
+| `docs/planejamento/plano-de-execucao.md` | Planejamento interno do desenvolvedor, etapas, horas, recursos, riscos e prompt curto por task |
+| `docs/planejamento/plano-de-execucao.json` | As mesmas decisoes e revisao, em formato estruturado para a LLM |
+| `docs/design/design-guide.md` e `docs/design/index.html` | Regras visuais e catalogo vivo de componentes/widgets do projeto |
+
+O planejamento nao e proposta comercial. Separa horas de esforco de duracao
+de calendario, considerando capacidade e esperas; sem dados suficientes,
+estimativas ficam desconhecidas ou preliminares. Urgencia nao elimina uma
+dependencia: a skill explica as opcoes e pede decisao. Cada task recebe um
+recado curto de tech lead para colar em outro chat, com links reais e cuidados
+do briefing. Isso nao abre agentes nem autoriza implementar automaticamente.
+
+Depois de aprovar PRD e ordem, voce autoriza a primeira especificacao.
+`sdd-spec-factory` continua responsavel pelas specs completas, inclusive backend,
+card humano e JSON normativamente equivalente. Ao terminar cada modulo, entrega
+cobertura, lacunas e relatorio na Issue antes de avancar com sua aprovacao.
+
+Quando houver interface, UI/UX mantem o catalogo HTML durante a especificacao,
+com IDs/revisoes, tokens, espacamentos, estados, responsividade e interacoes.
+Implementacao reutiliza os componentes; QA verifica comportamento e UI/UX
+valida fidelidade e acessibilidade. Fixtures sao identificadas: demonstrar um
+widget nao significa que seu backend esta pronto. O portal continua separado,
+conforme a regra de preparacao em `docs/portal/`; nao faz parte deste catalogo.
+
+Para comecar em uma sessao com o plugin instalado:
+
+```text
+Use $studio-prd para conduzir o briefing deste projeto comigo. Pesquise as
+referencias disponiveis, consolide o PRD e o planejamento interno por modulos.
+Nao inicie implementacao. Ao concluir, indique a primeira task para especificar.
+```
+
+Consulte a [skill canonica](plugins/studio-prd/skills/studio-prd/SKILL.md)
+e seus templates para o contrato detalhado. Sao instrucoes executadas pelo
+agente e utilitarios locais, nao garantia automatica de prazo ou retrabalho zero.
+
+O helper `plugins/studio-prd/skills/studio-prd/scripts/plan.py` usa somente
+Python stdlib. `validate ARQUIVO.json` verifica estrutura e dependencias;
+`render ARQUIVO.json` imprime o MD equivalente; `check ARQUIVO.json ARQUIVO.md`
+detecta divergencia. Nao grava arquivos, acessa rede ou confirma aprovacoes.
+Revise alteracoes humanas antes de regenerar o MD. Os templates de briefing,
+PRD e plano ficam em `plugins/studio-prd/skills/studio-prd/assets/`.
 
 ## Comece aqui: desenvolvedores
 
@@ -857,6 +920,7 @@ hierarquica e uma decisao arquitetural local deste projeto.
 | `parceiro-estrategico-global` | Camada global: descoberta, verificacao e roteamento dinamico de capacidades |
 | `dev-workflow-standard` | Engineering Harness / revisor final |
 | `dev-environment-standard` | Bootstrap portatil, preparacao seletiva e Plugin Health |
+| `studio-prd` | Briefing colaborativo, PRD e planejamento interno MD/JSON |
 | `sdd-spec-factory` | LLM de requisitos: specs, Human Task e Execution Contract |
 | `dev-implementation-standard` | Agente executor / coder |
 | `ui-ux-standard` | LLM especialista em UI/UX |
@@ -918,7 +982,7 @@ Regras invariantes:
   do runtime/API, usa `NOT_AVAILABLE`, nunca uma estimativa apresentada como exata.
 - `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
-- Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
+- Se um LLM ficar sem tokens ou indisponivel, outro LLM autorizado continua a mesma task pelo `EXECUTION_HANDOFF`.
 - Nenhum deploy e aprovado sem PR aprovado.
 
 O pipeline completo, com gates e gatilhos, esta em
@@ -1844,6 +1908,7 @@ Instalar os plugins:
 codex plugin add parceiro-estrategico-global@guilherme-dev-workflow
 codex plugin add dev-workflow-standard@guilherme-dev-workflow
 codex plugin add dev-environment-standard@guilherme-dev-workflow
+codex plugin add studio-prd@guilherme-dev-workflow
 codex plugin add ui-ux-standard@guilherme-dev-workflow
 codex plugin add security-standard@guilherme-dev-workflow
 codex plugin add sdd-spec-factory@guilherme-dev-workflow
@@ -1870,6 +1935,14 @@ ou secret storage do host. Descubra modelos em runtime, por exemplo:
 python3 plugins/dev-workflow-standard/scripts/provider-resolver.py discover --provider nvidia
 ```
 
+**Compatibilidade NVIDIA/Codex:** descoberta de modelos nao prova execucao nem
+gratuidade. O endpoint NVIDIA documentado usa Chat Completions; o Codex CLI
+0.158.0 rejeita `wire_api = "chat"`. Nao habilite esse endpoint como se fosse
+Responses. Para essa combinacao, um adaptador compativel precisa ser escolhido
+e validado antes de configurar o perfil/apelido. Preserve o provedor atual ate
+confirmar autenticacao, resposta do modelo exato e as capacidades exigidas pela
+Task. Nunca coloque a API key no README, no card ou no chat.
+
 Context retrieval usa Potpie quando disponivel e fallback local caso contrario:
 
 ```bash
@@ -1891,6 +1964,7 @@ Instalar os plugins:
 /plugin install parceiro-estrategico-global@guilherme-dev-workflow
 /plugin install dev-workflow-standard@guilherme-dev-workflow
 /plugin install dev-environment-standard@guilherme-dev-workflow
+/plugin install studio-prd@guilherme-dev-workflow
 /plugin install ui-ux-standard@guilherme-dev-workflow
 /plugin install security-standard@guilherme-dev-workflow
 /plugin install sdd-spec-factory@guilherme-dev-workflow
@@ -1906,6 +1980,7 @@ Para testar uma copia local antes de publicar:
 claude --plugin-dir ./plugins/parceiro-estrategico-global \
   --plugin-dir ./plugins/dev-workflow-standard \
   --plugin-dir ./plugins/dev-environment-standard \
+  --plugin-dir ./plugins/studio-prd \
   --plugin-dir ./plugins/ui-ux-standard \
   --plugin-dir ./plugins/security-standard \
   --plugin-dir ./plugins/sdd-spec-factory \

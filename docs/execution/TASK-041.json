@@ -1,0 +1,655 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-041",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/41",
+    "local_mirror": "docs/tasks/TASK-041-studio-prd.md",
+    "normative_equivalence": "Card e JSON representam os mesmos requisitos aprovados; evidências ficam nos comentários e receipts."
+  },
+  "summary": "Studio PRD e templates de planejamento; Integração SDD e biblioteca visual viva; Packaging, roteamento e documentação",
+  "goal": "Aplicar o briefing e planejamento aprovados ao Engineering Harness",
+  "current_state": "Portal na main, correções runtime em branch e especificações Studio locais ainda não implementadas",
+  "expected_result": "Plugin Studio e integrações verificáveis, publicáveis e instaláveis",
+  "scope": [
+    "Studio PRD conduz briefing adaptativo com até três perguntas, pesquisa prévia, atores/jornadas/regras e inventário autorizado de software existente; sugestões não são requisitos aprovados.",
+    "PRD explicita quantidade, IDs e limites dos módulos; uma task completa por módulo, sem fragmentar por camada, especialista ou tokens; sem redução automática a MVP.",
+    "Planejamento interno separado em MD e JSON com mesma revisão e decisões, etapas, urgência versus dependências, esforço versus calendário, recursos, riscos, capacidade e incerteza explícita.",
+    "Cada task no plano possui prompt curto específico com links reais; contrato inexistente indica especificação, não implementação. SDD mantém template completo e JSON equivalente; aguarda autorização por módulo.",
+    "Guia visual vivo no projeto atendido: Markdown, HTML navegável, tokens e fontes, componentes identificados por revisão, estados e fixtures rotuladas; catálogo não prova backend pronto.",
+    "Harness, SDD, UI, implementação e QA compartilham roteamento e gates; comentários da Issue registram evidência, superfícies e tokens apenas medidos.",
+    "Adicionar plugin nos marketplaces, atualizar README/pipeline, incorporar correção de metadata/runtime existente, preservar credenciais e verificar instalação separadamente do carregamento.",
+    "Portal somente regras já existentes de fonte externa para docs/portal; não construir portal, hospedar, configurar banco ou publicar dados privados."
+  ],
+  "out_of_scope": [
+    "Aplicação portal",
+    "Deploy de projeto cliente",
+    "Alterar credenciais",
+    "Migração em massa de tasks históricas"
+  ],
+  "allowed_paths": [
+    "plugins/studio-prd/**",
+    "tests/test_studio_prd.py",
+    "plugins/ui-ux-standard/**",
+    "plugins/sdd-spec-factory/**",
+    "plugins/dev-implementation-standard/**",
+    "plugins/qa-testing-standard/**",
+    "tests/test_live_design_guide.py",
+    "README.md",
+    "AGENTS.md",
+    "docs/**",
+    ".agents/plugins/marketplace.json",
+    ".claude-plugin/marketplace.json",
+    "plugins/dev-workflow-standard/**",
+    "plugins/dev-environment-standard/**",
+    "tests/**",
+    "plugins/studio-prd/.codex-plugin/plugin.json",
+    "plugins/studio-prd/.claude-plugin/plugin.json",
+    "plugins/reverse-engineering-standard/**",
+    "plugins/seo-standard/**"
+  ],
+  "protected_paths": [
+    "credenciais",
+    "runtime-state/**"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "description": "Studio PRD conduz briefing adaptativo com até três perguntas, pesquisa prévia, atores/jornadas/regras e inventário autorizado de software existente; sugestões não são requisitos aprovados.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-02",
+      "description": "PRD explicita quantidade, IDs e limites dos módulos; uma task completa por módulo, sem fragmentar por camada, especialista ou tokens; sem redução automática a MVP.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-03",
+      "description": "Planejamento interno separado em MD e JSON com mesma revisão e decisões, etapas, urgência versus dependências, esforço versus calendário, recursos, riscos, capacidade e incerteza explícita.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-04",
+      "description": "Cada task no plano possui prompt curto específico com links reais; contrato inexistente indica especificação, não implementação. SDD mantém template completo e JSON equivalente; aguarda autorização por módulo.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-05",
+      "description": "Guia visual vivo no projeto atendido: Markdown, HTML navegável, tokens e fontes, componentes identificados por revisão, estados e fixtures rotuladas; catálogo não prova backend pronto.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-06",
+      "description": "Harness, SDD, UI, implementação e QA compartilham roteamento e gates; comentários da Issue registram evidência, superfícies e tokens apenas medidos.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-07",
+      "description": "Adicionar plugin nos marketplaces, atualizar README/pipeline, incorporar correção de metadata/runtime existente, preservar credenciais e verificar instalação separadamente do carregamento.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    },
+    {
+      "id": "REQ-08",
+      "description": "Portal somente regras já existentes de fonte externa para docs/portal; não construir portal, hospedar, configurar banco ou publicar dados privados.",
+      "source": "docs/specs/studio-prd.md#requisitos",
+      "priority": "MUST"
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "RN-01",
+      "description": "Aprovação de PRD não autoriza execução, merge ou deploy em projetos atendidos",
+      "source": "docs/specs/studio-prd.md#requisitos"
+    }
+  ],
+  "references": [
+    {
+      "id": "REF-01",
+      "title": "Especificação aprovada",
+      "source_url": "repository",
+      "project_path": "docs/specs/studio-prd.md",
+      "section": "#requisitos",
+      "purpose": "Escopo aprovado e aceites",
+      "applies_to": [
+        "MT-01",
+        "MT-02",
+        "MT-03"
+      ]
+    },
+    {
+      "id": "REF-02",
+      "title": "Context routing",
+      "source_url": "repository",
+      "project_path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/context-routing.md",
+      "section": "#sources-of-truth-and-ownership",
+      "purpose": "Preservar contratos, setores e equivalência",
+      "applies_to": [
+        "MT-01",
+        "MT-02",
+        "MT-03"
+      ]
+    }
+  ],
+  "design": {
+    "applicability": "N/A",
+    "guide": "N/A",
+    "tokens": "N/A",
+    "visual_references": [],
+    "component_library": "N/A",
+    "mockup": "N/A",
+    "reason_if_na": "Esta entrega altera protocolo e templates, não interface final do cliente"
+  },
+  "microtasks": [
+    {
+      "id": "MT-01",
+      "title": "Studio PRD e templates de planejamento",
+      "summary": "Studio PRD e templates de planejamento",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "skill-authoring",
+      "preferred_tool": "apply_patch",
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "plugins/studio-prd/**",
+        "tests/test_studio_prd.py"
+      ],
+      "checklist": [
+        "Inspecionar fontes e reuso",
+        "Implementar recorte aprovado",
+        "Executar testes e relatar limitações"
+      ],
+      "deliverables": [
+        "Studio PRD e templates de planejamento"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "validator": "qa-testing-standard"
+    },
+    {
+      "id": "MT-02",
+      "title": "Integração SDD e biblioteca visual viva",
+      "summary": "Integração SDD e biblioteca visual viva",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "skill-authoring",
+      "preferred_tool": "apply_patch",
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "plugins/ui-ux-standard/**",
+        "plugins/sdd-spec-factory/**",
+        "plugins/dev-implementation-standard/**",
+        "plugins/qa-testing-standard/**",
+        "tests/test_live_design_guide.py"
+      ],
+      "checklist": [
+        "Inspecionar fontes e reuso",
+        "Implementar recorte aprovado",
+        "Executar testes e relatar limitações"
+      ],
+      "deliverables": [
+        "Integração SDD e biblioteca visual viva"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "validator": "qa-testing-standard"
+    },
+    {
+      "id": "MT-03",
+      "title": "Packaging, roteamento e documentação",
+      "summary": "Packaging, roteamento e documentação",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "skill-authoring",
+      "preferred_tool": "apply_patch",
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "README.md",
+        "AGENTS.md",
+        "docs/**",
+        ".agents/plugins/marketplace.json",
+        ".claude-plugin/marketplace.json",
+        "plugins/dev-workflow-standard/**",
+        "plugins/dev-environment-standard/**",
+        "tests/**",
+        "plugins/studio-prd/.codex-plugin/plugin.json",
+        "plugins/studio-prd/.claude-plugin/plugin.json"
+      ],
+      "checklist": [
+        "Inspecionar fontes e reuso",
+        "Implementar recorte aprovado",
+        "Executar testes e relatar limitações"
+      ],
+      "deliverables": [
+        "Packaging, roteamento e documentação"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "validator": "qa-testing-standard"
+    }
+  ],
+  "sectors": {
+    "database": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "backend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "frontend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "ui_ux": {
+      "owner": "ui-ux-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "qa": {
+      "owner": "qa-testing-standard",
+      "applicability": "REQUIRED",
+      "reason": "Autoria, regressão e reconciliação do protocolo",
+      "depends_on": [
+        "documentation"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01",
+        "REF-02"
+      ],
+      "required_validations": [
+        "full-test-suite"
+      ]
+    },
+    "security": {
+      "owner": "security-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "devops": {
+      "owner": "devops-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "observability": {
+      "owner": "devops-standard",
+      "applicability": "N/A",
+      "reason": "Sem aplicação, dados, infraestrutura ou interface de produto nesta entrega; regras para futuros projetos não são sua execução",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "documentation": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "reason": "Autoria, regressão e reconciliação do protocolo",
+      "depends_on": [],
+      "microtasks": [
+        "MT-01",
+        "MT-02",
+        "MT-03"
+      ],
+      "required_sources": [
+        "REF-01",
+        "REF-02"
+      ],
+      "required_validations": [
+        "documentation-review"
+      ]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard",
+      "applicability": "REQUIRED",
+      "reason": "Autoria, regressão e reconciliação do protocolo",
+      "depends_on": [
+        "documentation",
+        "qa"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01",
+        "REF-02"
+      ],
+      "required_validations": [
+        "sector-reconciliation"
+      ]
+    }
+  },
+  "required_tests": [
+    {
+      "id": "TEST-01",
+      "type": "unit",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -q",
+      "expected": "exit 0"
+    },
+    {
+      "id": "TEST-02",
+      "type": "diff",
+      "command": "git diff --check",
+      "expected": "exit 0"
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-01",
+      "description": "Studio PRD conduz briefing adaptativo com até três perguntas, pesquisa prévia, atores/jornadas/regras e inventário autorizado de software existente; sugestões não são requisitos aprovados.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-02",
+      "description": "PRD explicita quantidade, IDs e limites dos módulos; uma task completa por módulo, sem fragmentar por camada, especialista ou tokens; sem redução automática a MVP.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-03",
+      "description": "Planejamento interno separado em MD e JSON com mesma revisão e decisões, etapas, urgência versus dependências, esforço versus calendário, recursos, riscos, capacidade e incerteza explícita.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-04",
+      "description": "Cada task no plano possui prompt curto específico com links reais; contrato inexistente indica especificação, não implementação. SDD mantém template completo e JSON equivalente; aguarda autorização por módulo.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-05",
+      "description": "Guia visual vivo no projeto atendido: Markdown, HTML navegável, tokens e fontes, componentes identificados por revisão, estados e fixtures rotuladas; catálogo não prova backend pronto.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-06",
+      "description": "Harness, SDD, UI, implementação e QA compartilham roteamento e gates; comentários da Issue registram evidência, superfícies e tokens apenas medidos.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-07",
+      "description": "Adicionar plugin nos marketplaces, atualizar README/pipeline, incorporar correção de metadata/runtime existente, preservar credenciais e verificar instalação separadamente do carregamento.",
+      "validation": "TEST-01"
+    },
+    {
+      "id": "AC-08",
+      "description": "Portal somente regras já existentes de fonte externa para docs/portal; não construir portal, hospedar, configurar banco ou publicar dados privados.",
+      "validation": "TEST-01"
+    }
+  ],
+  "stop_conditions": [
+    "source_of_truth_conflict",
+    "human_task_json_divergence",
+    "authorization_required",
+    "scope_expansion_required"
+  ],
+  "specs": [
+    "docs/specs/studio-prd.md"
+  ],
+  "docs": [
+    "README.md",
+    "docs/workflow-pipeline.md"
+  ],
+  "execution_prompt": {
+    "instruction": "Executar somente a lista atribuída, herdar restrições e critérios globais, ler skill completa e fontes requeridas; devolver receipt com testes reais.",
+    "required_checkpoints": [
+      "RUNNING",
+      "VALIDATING",
+      "COMPLETED"
+    ]
+  },
+  "reporting": {
+    "issue_comment_required": true,
+    "unavailable_value": "NOT_AVAILABLE"
+  },
+  "discovery": {
+    "questions_and_answers": [
+      "Usuário confirmou implementação e publicação do conjunto consolidado"
+    ],
+    "research": [
+      "Main e branches inspecionadas; especificações locais consolidadas examinadas"
+    ],
+    "decisions": [
+      "Studio PRD conduz briefing adaptativo com até três perguntas, pesquisa prévia, atores/jornadas/regras e inventário autorizado de software existente; sugestões não são requisitos aprovados.",
+      "PRD explicita quantidade, IDs e limites dos módulos; uma task completa por módulo, sem fragmentar por camada, especialista ou tokens; sem redução automática a MVP.",
+      "Planejamento interno separado em MD e JSON com mesma revisão e decisões, etapas, urgência versus dependências, esforço versus calendário, recursos, riscos, capacidade e incerteza explícita.",
+      "Cada task no plano possui prompt curto específico com links reais; contrato inexistente indica especificação, não implementação. SDD mantém template completo e JSON equivalente; aguarda autorização por módulo.",
+      "Guia visual vivo no projeto atendido: Markdown, HTML navegável, tokens e fontes, componentes identificados por revisão, estados e fixtures rotuladas; catálogo não prova backend pronto.",
+      "Harness, SDD, UI, implementação e QA compartilham roteamento e gates; comentários da Issue registram evidência, superfícies e tokens apenas medidos.",
+      "Adicionar plugin nos marketplaces, atualizar README/pipeline, incorporar correção de metadata/runtime existente, preservar credenciais e verificar instalação separadamente do carregamento.",
+      "Portal somente regras já existentes de fonte externa para docs/portal; não construir portal, hospedar, configurar banco ou publicar dados privados."
+    ],
+    "open_hypotheses": [],
+    "approval_requirement": "Autorização explícita nesta conversa: sim por favor"
+  },
+  "gates": {
+    "implementation": "Autorizado nesta conversa",
+    "pull_request": "Revisão e testes",
+    "merge": "Autorização do usuário e checks aplicáveis",
+    "deploy": "Fora de escopo"
+  },
+  "execution_lists": [
+    {"list_id":"QA/checklist","owner_skill":"qa-testing-standard","phase":"validation","objective":"Revisão independente de cenários, regressão e packaging","microtask_ids":[],"depends_on":["documentation"],"references":["REF-01","REF-02"],"allowed_paths":["tests/**","docs/receipts/**"],"protected_paths":["credenciais","runtime-state/**"],"deliverables":["QA_STATUS com evidência e limitações"],"completion_condition":"Testes passam e nenhuma divergência material aberta","required_tests":["TEST-01","TEST-02"],"acceptance_criteria":["AC-01","AC-02","AC-03","AC-04","AC-05","AC-06","AC-07","AC-08"],"stop_conditions":["source_of_truth_conflict","human_task_json_divergence","authorization_required","scope_expansion_required"],"checklist":[{"instruction":"Executar cenários representativos e suíte completa"},{"instruction":"Revisar equivalência, links e gates"},{"instruction":"Relatar defeitos e retestes"}]},
+    {
+      "list_id": "MT-01/checklist",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "objective": "Studio PRD e templates de planejamento",
+      "microtask_ids": [
+        "MT-01"
+      ],
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "plugins/studio-prd/**",
+        "tests/test_studio_prd.py"
+      ],
+      "protected_paths": [
+        "credenciais",
+        "runtime-state/**"
+      ],
+      "deliverables": [
+        "Studio PRD e templates de planejamento"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "required_tests": [
+        "TEST-01",
+        "TEST-02"
+      ],
+      "acceptance_criteria": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08"
+      ],
+      "stop_conditions": [
+        "source_of_truth_conflict",
+        "human_task_json_divergence",
+        "authorization_required",
+        "scope_expansion_required"
+      ],
+      "checklist": [
+        {
+          "instruction": "Inspecionar fontes e reuso"
+        },
+        {
+          "instruction": "Implementar recorte aprovado"
+        },
+        {
+          "instruction": "Executar testes e relatar limitações"
+        }
+      ]
+    },
+    {
+      "list_id": "MT-02/checklist",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "objective": "Integração SDD e biblioteca visual viva",
+      "microtask_ids": [
+        "MT-02"
+      ],
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "plugins/ui-ux-standard/**",
+        "plugins/sdd-spec-factory/**",
+        "plugins/dev-implementation-standard/**",
+        "plugins/qa-testing-standard/**",
+        "tests/test_live_design_guide.py"
+      ],
+      "protected_paths": [
+        "credenciais",
+        "runtime-state/**"
+      ],
+      "deliverables": [
+        "Integração SDD e biblioteca visual viva"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "required_tests": [
+        "TEST-01",
+        "TEST-02"
+      ],
+      "acceptance_criteria": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08"
+      ],
+      "stop_conditions": [
+        "source_of_truth_conflict",
+        "human_task_json_divergence",
+        "authorization_required",
+        "scope_expansion_required"
+      ],
+      "checklist": [
+        {
+          "instruction": "Inspecionar fontes e reuso"
+        },
+        {
+          "instruction": "Implementar recorte aprovado"
+        },
+        {
+          "instruction": "Executar testes e relatar limitações"
+        }
+      ]
+    },
+    {
+      "list_id": "MT-03/checklist",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "objective": "Packaging, roteamento e documentação",
+      "microtask_ids": [
+        "MT-03"
+      ],
+      "depends_on": [],
+      "references": [
+        "REF-01",
+        "REF-02"
+      ],
+      "allowed_paths": [
+        "README.md",
+        "AGENTS.md",
+        "docs/**",
+        ".agents/plugins/marketplace.json",
+        ".claude-plugin/marketplace.json",
+        "plugins/dev-workflow-standard/**",
+        "plugins/dev-environment-standard/**",
+        "tests/**",
+        "plugins/studio-prd/.codex-plugin/plugin.json",
+        "plugins/studio-prd/.claude-plugin/plugin.json"
+      ],
+      "protected_paths": [
+        "credenciais",
+        "runtime-state/**"
+      ],
+      "deliverables": [
+        "Packaging, roteamento e documentação"
+      ],
+      "completion_condition": "Critérios aprovados cobertos e testes do recorte passam",
+      "required_tests": [
+        "TEST-01",
+        "TEST-02"
+      ],
+      "acceptance_criteria": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08"
+      ],
+      "stop_conditions": [
+        "source_of_truth_conflict",
+        "human_task_json_divergence",
+        "authorization_required",
+        "scope_expansion_required"
+      ],
+      "checklist": [
+        {
+          "instruction": "Inspecionar fontes e reuso"
+        },
+        {
+          "instruction": "Implementar recorte aprovado"
+        },
+        {
+          "instruction": "Executar testes e relatar limitações"
+        }
+      ]
+    }
+  ]
+}

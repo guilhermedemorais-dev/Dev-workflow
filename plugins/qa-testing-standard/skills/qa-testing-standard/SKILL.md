@@ -120,6 +120,18 @@ destructive fuzz/concurrency workloads as a routine validation shortcut.
 
 ## Evidence gate
 
+For UI workflows, use the contract's component IDs/revisions and the project
+Design Guide/catalogue as scoped behavior sources. Plan applicable widget
+transitions, validation, retries, permissions and error paths against their
+specified outcomes. Deterministic catalogue fixtures allow isolated checks,
+not a claim that real APIs, persistence or end-to-end flows work. Identify mock
+versus real boundaries and execute required integration checks separately.
+Report fixture-only coverage as such; missing backend evidence cannot yield
+final QA PASS. UI/UX separately validates catalogue and final rendered product
+fidelity, spacing, responsive states, keyboard/focus and accessibility. Check
+that evidence matches current component/source revisions; stale screenshots or
+static HTML parsing do not close required browser gates.
+
 Return `QA_STATUS` in the existing `EXECUTION_RECEIPT`, with sector, phase/mode,
 revision, sources_loaded (path and purpose), conditional_sources_loaded,
 validation_scope, commands/exit codes, scenarios executed, bug disposition,

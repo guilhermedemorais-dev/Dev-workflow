@@ -130,6 +130,7 @@ use a documentation-only or Git-only label to bypass this gate.
 | --- | --- | --- |
 | `dev-workflow-standard` | Engineering harness / final reviewer | demand, diagnosis, planning, capability routing, execution state, handoff, validation, recovery, approval |
 | `dev-environment-standard` | Environment specialist | portable bootstrap, plugin health, MCP preparation, local environment state |
+| `studio-prd` | Collaborative product briefing | new/existing product discovery, actors/journeys, module inventory and internal delivery plan |
 | `sdd-spec-factory` | Requirements LLM | product/module/page/component/validation/API/DB specs, executable task, PR/QA checklists |
 | `dev-implementation-standard` | Executor agent / coder | implement the approved task within scope, run commands, prepare PR |
 | `ui-ux-standard` | UI/UX specialist LLM | layout, responsiveness, visual states, accessibility, design system, components |
@@ -215,6 +216,29 @@ When risk is uncertain, choose the higher tier. UI and security triggers are
 based on affected surface and risk, not on the tier label.
 
 ## Mandatory Flow
+
+For product briefing, a new project or reassessment of an existing/low-code
+system, invoke the available `studio-prd` skill before detailed module specs.
+It owns briefing, PRD and the separate internal execution plan, not a competing
+task template. Resolve the active bundle; do not guess sibling cache paths.
+If absent, report the missing capability and use an explicitly available
+canonical checkout, without claiming it installed.
+
+Require the approved module count/IDs, actors/journeys and boundaries, plus
+`docs/planejamento/plano-de-execucao.md` and its equivalent JSON revision.
+Urgency cannot silently override prerequisites; unknown capacity/estimates
+stay explicit. Preserve the full agreed production scope, not an automatic MVP.
+After PRD/order approval, announce the first module ready for SDD and await
+the user's instruction. Each module spec ends with coverage/gaps and its Issue
+report before approval to continue. PRD approval is not implementation approval.
+Existing bounded tasks need not repeat an entire product briefing.
+
+For UI-bearing modules, require the project-owned Markdown guide and live HTML
+component catalogue from UI/UX during specification. Route exact component
+IDs/revisions to SDD, implementation and QA. A mock widget is not a tested backend.
+Reuse the existing task template, sector matrix and list prompts unchanged.
+The short per-task prompt in the internal plan is a contextual tech-lead note,
+not a second execution contract or automatic permission to spawn chats.
 
 ```text
 Idea / demand

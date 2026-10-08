@@ -1,0 +1,7 @@
+{
+  "name": "studio-prd",
+  "version": "0.1.0",
+  "description": "Briefing colaborativo, PRD por módulos e planejamento interno com handoff supervisionado para SDD.",
+  "author": {"name": "Guilherme"},
+  "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow"
+}

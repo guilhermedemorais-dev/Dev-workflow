@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reverse Engineering Standard"
+  short_description: "Authorized artifact analysis and reconstruction evidence"
+  default_prompt: "Use $reverse-engineering-standard to inspect the authorized artifact and distinguish observed evidence from inference."

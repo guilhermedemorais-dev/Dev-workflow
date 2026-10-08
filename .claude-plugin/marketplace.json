@@ -6,6 +6,14 @@
   "description": "Global strategic, engineering, UI/UX and security workflow plugins for Claude Code.",
   "plugins": [
     {
+      "name": "studio-prd",
+      "source": "./plugins/studio-prd",
+      "description": "Briefing colaborativo, PRD por módulos e planejamento interno supervisionado.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["briefing", "prd", "planning"]
+    },
+    {
       "name": "parceiro-estrategico-global",
       "source": "./plugins/parceiro-estrategico-global",
       "description": "Global strategic layer: discovery, verification, critical reasoning and dynamic capability routing across available skills/plugins/tools; proposes new capabilities when a real gap exists.",

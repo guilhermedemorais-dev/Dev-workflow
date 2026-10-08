@@ -169,11 +169,18 @@ instead of generating JSX from memory.
 
 ## Default Design Structure
 
-Use only when needed:
+For module discovery/specification with frontend, read
+[Live design guide](references/live-design-guide.md). Maintain both a Markdown
+guide and a cumulative, navigable HTML component/widget catalogue in the client
+project, or explicitly map its existing equivalent. This is not an optional
+Markdown-only deliverable. Backend-only work records UI N/A without scaffolding.
+
+Create only the applicable parts:
 
 ```text
 docs/design/
   design-guide.md
+  index.html
   design.json
   design-tokens.json
   component-standards.md

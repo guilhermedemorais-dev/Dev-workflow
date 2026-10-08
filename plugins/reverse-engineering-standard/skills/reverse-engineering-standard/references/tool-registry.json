@@ -11,7 +11,7 @@
     {
       "id": "reverse-context-gateway",
       "capabilities": ["reverse-engineering","binary-analysis","artifact-analysis","javascript-application-analysis","electron-analysis","managed-code-analysis","android-static-analysis","firmware-analysis","runtime-observation","feature-reconstruction","evidence-comparison"],
-      "repository": "local",
+      "repository": "https://github.com/guilhermedemorais-dev/Dev-workflow",
       "command": "node",
       "verify_args": ["plugins/reverse-engineering-standard/runtime/reverse-context-gateway.mjs","probe"],
       "install_policy": "plugin-bundled-gateway-with-approved-local-runtime-dependencies"
