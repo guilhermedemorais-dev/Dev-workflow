@@ -918,7 +918,7 @@ Regras invariantes:
   do runtime/API, usa `NOT_AVAILABLE`, nunca uma estimativa apresentada como exata.
 - `ASSIGNED` nunca equivale a `COMPLETED`; conclusao exige resultado inspecionavel e evidencia de validacao.
 - Nenhum novo codigo e aceito sem `REUSE_INVENTORY` e `MINIMAL_CODE_GATE`.
-- Se um LLM ficar sem tokens ou indisponivel, outro assume pelo `EXECUTION_HANDOFF`.
+- Se um LLM ficar sem tokens ou indisponivel, outro LLM autorizado continua a mesma task pelo `EXECUTION_HANDOFF`.
 - Nenhum deploy e aprovado sem PR aprovado.
 
 O pipeline completo, com gates e gatilhos, esta em
@@ -1869,6 +1869,14 @@ ou secret storage do host. Descubra modelos em runtime, por exemplo:
 ```bash
 python3 plugins/dev-workflow-standard/scripts/provider-resolver.py discover --provider nvidia
 ```
+
+**Compatibilidade NVIDIA/Codex:** descoberta de modelos nao prova execucao nem
+gratuidade. O endpoint NVIDIA documentado usa Chat Completions; o Codex CLI
+0.158.0 rejeita `wire_api = "chat"`. Nao habilite esse endpoint como se fosse
+Responses. Para essa combinacao, um adaptador compativel precisa ser escolhido
+e validado antes de configurar o perfil/apelido. Preserve o provedor atual ate
+confirmar autenticacao, resposta do modelo exato e as capacidades exigidas pela
+Task. Nunca coloque a API key no README, no card ou no chat.
 
 Context retrieval usa Potpie quando disponivel e fallback local caso contrario:
 
