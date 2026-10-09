@@ -595,6 +595,25 @@ the `rework` label until corrected.
 
 ## Context Budget Rules
 
+### Project-local capability evolution
+
+At task discovery/resumption, inspect the project's existing
+`docs/ai-workflow/capability-registry.md` if present. Resolve only ACTIVE entries
+relevant to the routed capability, with their approved scope, source revision
+and current validation evidence. Read the selected SKILL.md completely and its
+required references, recording the actual path/revision in SKILL_RECEIPT.
+An index entry or file on disk is not proof of host discovery or execution.
+Missing/stale/conflicting entries require review, never silent global fallback
+or permission expansion. Do not load the entire local library.
+
+When a verified gap triggers improvement, read
+[Controlled continuous improvement](references/continuous-improvement.md).
+Reuse, adapt, then create only if needed. Domain-specific lessons belong in
+the client project, not the installed plugin cache. Specs, source references,
+scripts and reusable skills have different owners; not every challenge needs
+a skill. Keep global governance and acceptance gates intact. This is an
+agent-executed protocol, not an autonomous self-modifying runtime.
+
 - Do not paste whole files, docs trees, logs, or conversations into prompts.
 - Prefer `task_id` plus `execution_contract_path` over task/spec bodies.
 - Load the contract first, validate required fields and paths, then open only

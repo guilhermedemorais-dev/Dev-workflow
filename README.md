@@ -990,6 +990,34 @@ O pipeline completo, com gates e gatilhos, esta em
 
 ## Dev Workflow Standard: Engineering Harness
 
+### Evolucao controlada por projeto
+
+O Harness ja possui um fluxo de melhoria continua: observar uma lacuna real,
+pesquisar capacidades existentes, reutilizar, adaptar e somente entao propor
+criacao. Nao e um processo autonomo que se reescreve nem cria uma skill para
+cada task. Regras de negocio ficam nas specs; referencias na biblioteca;
+operacoes repetitivas em scripts; procedimentos reutilizaveis podem virar skills.
+
+Skills especificas ficam no repositorio do cliente. Reutilize sua convencao;
+na ausencia dela, a fonte canonica proposta e
+`docs/ai-workflow/skills/<capacidade>/SKILL.md`. O indice e
+`docs/ai-workflow/capability-registry.md`, referenciado pelo AGENTS.md do projeto.
+Essa pasta nao implica descoberta automatica pelo host: verificar suporte ou
+usar carregamento explicito pelo Harness, sem duplicar a fonte.
+
+Ao retomar uma task, o Harness consulta o indice e carrega somente capacidades
+ACTIVE pertinentes, com escopo, revisao e validacao atuais. Candidatos nao
+validados nao entram em execucao normal. Alteracoes exigem revalidacao;
+regressoes suspendem o uso e levam a rollback revisado. A aprovacao de uma
+melhoria local nao concede permissao permanente para futuras mudancas.
+
+O plugin global conserva governanca, QA e gates. Nenhuma skill local pode
+afrouxar testes/aceites para aprovar o proprio resultado ou alterar credenciais.
+Promocao global exige decisao separada, sem levar dados do cliente junto.
+Consulte o [protocolo completo](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/continuous-improvement.md#project-local-learning-and-activation).
+
+### Responsabilidade do Harness
+
 Skill central do harness de engenharia. E a unica responsavel por aprovar a passagem de um gate para o proximo e nunca escreve codigo de produto diretamente.
 
 O ponto principal da refatoracao e simples: **delegar nao significa apenas atribuir uma task ou citar o nome de uma skill**. O harness so considera uma delegacao executada quando a capacidade selecionada realmente roda, produz resultado inspecionavel e retorna evidencia suficiente para validacao.
