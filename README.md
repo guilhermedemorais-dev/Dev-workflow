@@ -998,6 +998,19 @@ criacao. Nao e um processo autonomo que se reescreve nem cria uma skill para
 cada task. Regras de negocio ficam nas specs; referencias na biblioteca;
 operacoes repetitivas em scripts; procedimentos reutilizaveis podem virar skills.
 
+A pesquisa pode usar lojas de skills, marketplaces e repositorios mantidos,
+depois de conferir as capacidades ja instaladas e locais. Leia a skill e suas
+referencias, inspecione scripts, dependencias e permissoes; a descricao da loja
+nao prova que ela funciona. Reutilize ou adapte ao projeto antes de criar do zero,
+registrando origem, revisao e alteracoes, com aprovacao antes de instalar ou ativar.
+
+Exemplo: numa task WordPress, identifique a lacuna concreta, como desenvolver um
+bloco, e procure uma skill adequada. Confira a stack real, adapte somente o
+necessario no projeto do cliente e valide em ambiente de teste antes de ativar.
+Isso nao instala WordPress, PHP, WP-CLI, plugins do site ou MCPs automaticamente,
+nem autoriza alterar o site em producao. Veja o
+[cenario WordPress](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/continuous-improvement.md#example-wordpress-capability-gap).
+
 Skills especificas ficam no repositorio do cliente. Reutilize sua convencao;
 na ausencia dela, a fonte canonica proposta e
 `docs/ai-workflow/skills/<capacidade>/SKILL.md`. O indice e

@@ -45,13 +45,49 @@ Check in this order:
 
 1. Skills and plugins already installed and enabled.
 2. Project-local skills, rules, scripts, and documented patterns.
-3. Official marketplace entries maintained by the platform vendor.
-4. Maintained community marketplaces or repositories.
+3. Official skill stores and marketplace entries maintained by the platform vendor.
+4. Maintained community skill stores, marketplaces, or source repositories.
 5. A small custom skill or script when no suitable capability exists.
 
 Prefer reuse or a focused update over adding another overlapping capability.
 Inspect metadata first and load only candidates relevant to the missing
 capability. Do not inject the entire marketplace or skill library into context.
+Search for the specific missing capability, not just a technology name. Before
+selecting a candidate, read its actual SKILL.md and required references and
+inspect its scripts; store descriptions are not evidence of fitness. Record the
+source URL and revision, and preserve provenance and the adaptation diff when
+creating a project-local variant. Reading a candidate does not authorize running
+its code, installing it, or activating it.
+
+#### Example: WordPress capability gap
+
+A WordPress project needs block development, but the current capabilities do not
+cover that task. The same procedure applies to another verified gap, such as a
+theme, plugin, WooCommerce behavior, or performance analysis; do not add all of
+these to scope just because the project uses WordPress.
+
+1. Identify the required result and inspect the actual project's WordPress/PHP
+   versions, theme, editor, relevant plugins, and architecture. Do not assume
+   that every WordPress skill fits this project.
+2. Search existing local capabilities, then skill stores, marketplaces, and
+   repositories. Read and audit relevant candidates using this protocol. Reuse
+   a suitable candidate; otherwise propose a focused local adaptation. Create
+   a new skill only when no suitable reusable capability exists.
+3. Present the source, pinned revision, adaptation, required dependencies,
+   permissions, validation plan, and rollback for approval. Keep the resulting
+   specialization in the client project, not the global plugin or its cache.
+4. After approval, prepare only required dependencies through the existing
+   Environment Bootstrap and test in an authorized development/test environment.
+   Check the intended behavior and representative regressions. A skill file
+   does not prove that PHP, WP-CLI, WordPress, or an MCP is installed, usable, or
+   authenticated; report those states separately with evidence.
+5. Activate only after the validation and registry requirements below are met.
+   Preserve the task contract, QA, security, and Harness gates. Skill adoption
+   does not authorize installing plugins on the site, changing production,
+   deploying, or enabling/authenticating an external MCP; these require their
+   own scoped approval.
+
+This is a reuse/adaptation example, not a bundled WordPress skill or installer.
 
 ### 3. Audit The Candidate
 
