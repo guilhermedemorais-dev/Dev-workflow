@@ -54,6 +54,7 @@ search while a sufficient specialized capability is available.
 | Library/SDK versioned documentation and API examples | Context7 or an equivalent documentation MCP | official version-matched documentation |
 | Public implementation examples | official Grep MCP or GitHub code search, under SDD public-code discovery rules | original public repositories/search website |
 | Repository files, commits, tests and license | GitHub repository/file tools | authorized source checkout or original public file |
+| Known dependency advisories and preventive security requirements | `security-standard`: OSV public advisory/API through a suitable available capability; versioned ASVS controls | official source records or approved local/offline audit, with coverage limits |
 | Page extraction/crawl needed for a reference | available Firecrawl or equivalent extraction MCP | bounded page fetch; browser only when interaction is required and authorized |
 | General discovery of primary sources | available purpose-fit search MCP/connector discovered from the host/catalog | generic web search, then original sources |
 

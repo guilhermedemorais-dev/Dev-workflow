@@ -1655,6 +1655,15 @@ disponiveis, mas nao sao obrigatorios em toda entrega.
 
 ## Security Standard
 
+Durante Discovery/SDD, Security consulta [OSV.dev](https://osv.dev) para
+dependencias/versoes relevantes e seleciona controles aplicaveis do OWASP ASVS.
+Converte riscos em invariantes, pontos de enforcement, microtarefas e testes
+negativos dentro da mesma Task. A referencia
+[preventive-security-research.md](plugins/security-standard/skills/security-standard/references/preventive-security-research.md)
+orienta consulta, evidencias, reuso e limites. OSV e uma fonte/API consultiva,
+nao um MCP instalado; ausencia de advisory nao comprova seguranca. Planejamento
+nao substitui a validacao final nem confirma vulnerabilidade no projeto.
+
 Plugin especializado em seguranca de aplicacoes e integrado ao ciclo principal.
 
 Responsabilidades:

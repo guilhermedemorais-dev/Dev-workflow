@@ -189,6 +189,13 @@ Consolidate the closed scope (becomes the basis of the product/module spec):
 
 ### Fase 2 - Geração de Specs
 
+When dependencies are selected/changed or security boundaries apply, route
+early planning to `security-standard` and its preventive security research
+reference. Incorporate applicable OSV advisories and versioned ASVS controls
+as explicit rules, enforcement points and negative tests in the existing
+module Task/security sector. Reuse the project dependency/source inventory;
+do not claim a planned control or advisory match proves runtime security.
+
 When UI applies, route `ui-ux-standard` and its `references/live-design-guide.md`
 from the active bundle (or explicit canonical checkout, not guessed sibling
 cache paths). Before closing frontend specs, require the client project's

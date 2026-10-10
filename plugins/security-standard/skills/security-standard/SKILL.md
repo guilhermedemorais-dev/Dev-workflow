@@ -29,6 +29,8 @@ Load only the reference required by the active phase:
 - `references/finding-standard.md`: evidence contract, severity, confidence, and deduplication
 - `references/false-positive-validation.md`: mandatory rejection checklist and publication gate
 - `references/stack-profiles.md`: multistack discovery and version-aware review rules
+- `references/preventive-security-research.md`: OSV dependency advisories and
+  applicable ASVS controls during specification or dependency changes
 - `references/report-template.md`: durable report and release-gate format
 
 ## Scope And Safety
@@ -180,6 +182,11 @@ Threat models must reflect the actual repository and runtime. Generic OWASP
 lists are prompts for investigation, not evidence of vulnerabilities.
 
 ### 3. Trace Security-Relevant Flows
+
+During Discovery/SDD, translate applicable advisory research and threat-model
+controls into testable prevention requirements using
+`references/preventive-security-research.md`. Reuse the module Task, security
+sector and reference library. Planning is not a finding or a validation PASS.
 
 Follow data and authority from entry point to effect:
 
