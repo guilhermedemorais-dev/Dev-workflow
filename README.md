@@ -1343,10 +1343,34 @@ O catalogo nao declara o que esta conectado nesta maquina:
 | --- | --- |
 | CORE | GitHub, Context7, Playwright |
 | RECOMMENDED | Chrome DevTools, Docker MCP Gateway, Docker MCP Registry |
-| OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry |
+| OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry, Grep oficial |
 | PROJECT_SPECIFIC | Supabase, Hostinger, AWS API e WordPress MCP Adapter, somente quando o projeto precisar |
 | COMMUNITY | grep-mcp, origem atual UNKNOWN e instalacao automatica bloqueada |
 | RUNTIME_PROVIDED | node_repl, somente deteccao quando fornecido pelo host |
+
+O `grep-mcp` comunitario nao e o servico oficial Grep da Vercel. A descoberta
+de codigo do SDD agora orienta o uso seletivo do Grep oficial quando disponivel,
+com fallback GitHub/pesquisa publica e validacao na origem. O endpoint documentado
+e `https://mcp.grep.app`, com entrada propria `grep` no catalogo;
+documentacao/catalogo nao comprovam conexao no host.
+Veja [public-code-discovery.md](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/public-code-discovery.md).
+
+Em qualquer fase, o Harness consulta todo o inventario ativo de capacidades:
+MCP Library, registros de ferramentas dos especialistas e ferramentas reais do
+host. Isso inclui implementacao, QA/browser, UI/UX, seguranca, DevOps e pesquisa,
+alem dos mecanismos de contexto e providers quando pertinentes. Reutiliza a
+descoberta valida do Environment, considera novos registros ativos e registra
+lacunas de cobertura e motivos relevantes de selecao/fallback nos relatos
+existentes. Consulta de metadados nao exige chamar todas as ferramentas nem
+carregar a metodologia inteira de todos os especialistas.
+
+Discovery/PRD/SDD aplicam esse inventario antes de pesquisar.
+Priorizam Context7 para documentacao de bibliotecas,
+Grep/GitHub para codigo e Firecrawl/equivalente para extracao quando apropriado;
+outros MCPs de busca sao descobertos conforme a necessidade. Fallback generico
+exige motivo no registro de pesquisa. Nao chamam todos os MCPs nem presumem que
+cadastro significa conexao. Respostas de MCP tambem consomem contexto/tokens.
+O roteamento vive no [capability-registry](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md).
 
 Docker MCP Registry e fonte de catalogo, nao servidor conectavel. Gateway pode
 simplificar lifecycle/isolamento, mas nao torna Docker obrigatorio. A auditoria
@@ -1641,6 +1665,15 @@ disponiveis, mas nao sao obrigatorios em toda entrega.
 
 ## Security Standard
 
+Durante Discovery/SDD, Security consulta [OSV.dev](https://osv.dev) para
+dependencias/versoes relevantes e seleciona controles aplicaveis do OWASP ASVS.
+Converte riscos em invariantes, pontos de enforcement, microtarefas e testes
+negativos dentro da mesma Task. A referencia
+[preventive-security-research.md](plugins/security-standard/skills/security-standard/references/preventive-security-research.md)
+orienta consulta, evidencias, reuso e limites. OSV e uma fonte/API consultiva,
+nao um MCP instalado; ausencia de advisory nao comprova seguranca. Planejamento
+nao substitui a validacao final nem confirma vulnerabilidade no projeto.
+
 Plugin especializado em seguranca de aplicacoes e integrado ao ciclo principal.
 
 Responsabilidades:
@@ -1707,6 +1740,13 @@ Funcao:
   Observabilidade/logs, Decisoes pendentes, Riscos e Criterios de aceite.
 - Produzir uma Task completa por modulo, ligada a specs, issue, branch e PR.
 - Entregar checklists de PR, code review e QA.
+
+No checkpoint existente de cobertura/equivalencia, a
+[analise de consistencia](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/spec-consistency-analysis.md)
+cruza requisitos aprovados com microtarefas/listas, aceite e validacao planejada.
+Identifica requisitos sem cobertura, acoes sem requisito/regra/dependencia/gate,
+ambiguidades e contradicoes, com fonte, severidade e correcao. Achados bloqueantes
+impedem Ready for Dev. Mantem uma Task por modulo, sem novo estado ou ciclo de QA.
 
 Quando usar:
 

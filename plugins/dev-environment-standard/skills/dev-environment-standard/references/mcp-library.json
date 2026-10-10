@@ -157,6 +157,17 @@
       "provenance": {"verified_at": "2026-09-23", "source": "https://make.wordpress.org/ai/handbook/projects/mcp-adapter/"}
     },
     {
+      "id": "grep", "name": "Grep hosted MCP", "provider": "Vercel",
+      "repository": "https://vercel.com/blog/grep-a-million-github-repositories-via-mcp",
+      "documentation": "https://vercel.com/blog/grep-a-million-github-repositories-via-mcp",
+      "tier": "OPTIONAL", "origin": "OFFICIAL",
+      "capabilities": ["public-code-search"],
+      "preparation": {"policy": "PROJECT_SCOPED", "method": "host_config", "scope": "host"},
+      "configuration": {"transport": "http", "url": "https://mcp.grep.app"},
+      "auth": {"required": false},
+      "provenance": {"verified_at": "2026-10-10", "source": "https://vercel.com/blog/grep-a-million-github-repositories-via-mcp", "result": "Official hosted HTTP endpoint and client configuration documented. The repository field identifies the provider source page, not a published source-code repository; host connection and execution remain unverified."}
+    },
+    {
       "id": "grep-mcp", "name": "grep-mcp", "provider": "galperetz (declared by PyPI, repository unavailable)",
       "repository": "https://github.com/galperetz/grep-mcp",
       "documentation": "https://pypi.org/project/grep-mcp/",
@@ -164,6 +175,7 @@
       "capabilities": ["public-code-search"],
       "preparation": {"policy": "MANUAL_ONLY", "method": "host_handoff", "scope": "host"},
       "auth": {"required": false},
+      "handoff": "This community wrapper is distinct from the official hosted Grep service. Prefer the official service when available; its provider documents HTTP MCP at https://mcp.grep.app in https://vercel.com/blog/grep-a-million-github-repositories-via-mcp . Use existing host discovery/approved preparation; this note is not a configured connection or permission to install the wrapper.",
       "provenance": {"verified_at": "2026-09-23", "source": "https://pypi.org/pypi/grep-mcp/json", "result": "Declared GitHub repository returned 404; maintainer not verified. No automatic installation."}
     },
     {

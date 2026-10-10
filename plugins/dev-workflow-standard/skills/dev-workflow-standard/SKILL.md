@@ -477,6 +477,13 @@ need detailed sections. See `references/context-routing.md` for compatibility.
 
 ## Delegation Rules
 
+Before capability selection in any phase, apply the whole-inventory consultation
+in `references/capability-registry.md`: consider all active MCP/catalog and
+specialist tool-registry metadata, actual host capabilities, and relevant
+context/provider routes. Reuse valid Environment discovery evidence; select
+and invoke only capabilities relevant to the task. Record coverage gaps and
+material fallback reasons in existing routing evidence.
+
 Before every delegation, load `references/harness-execution.md`,
 `references/capability-registry.md`, `references/skill-execution-contract.md`
 and `references/minimal-code-gate.md`. Naming a skill is not activation, and

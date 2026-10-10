@@ -25,6 +25,11 @@ human approval for Ready for Dev. This is a reporting checkpoint, not another
 execution state. Harness verifies full card/JSON normative equivalence and
 records the revision and Issue update time in its existing receipt. Specialists
 check their routed slices against that current comparison evidence.
+At this same checkpoint, require SDD's current spec consistency result under
+its `references/spec-consistency-analysis.md`: requirement-to-microtask/list
+coverage, actions without approved intent, ambiguities and contradictions.
+Unresolved blocking findings prevent readiness; missing analysis returns to
+SDD. Do not create another workflow state or duplicate the downstream QA loop.
 Every material comment ends with changed surface and runtime/API token usage,
 using NOT_AVAILABLE for measurements the runtime does not expose.
 

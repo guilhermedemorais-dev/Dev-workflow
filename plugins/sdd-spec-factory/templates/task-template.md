@@ -147,6 +147,19 @@ Caminhos prováveis a alterar (marcar `HIPÓTESE:` quando não confirmado).
 Repita o bloco para cada recorte executável. Uma task pode usar skills
 diferentes em microtarefas diferentes.
 
+Declare aqui a selecao concreta feita na Discovery: skill/plugin executor,
+capability, tool preferencial e ferramentas auxiliares necessarias, cada uma
+com finalidade, condicao de uso e fallback aprovado quando houver. Resolva
+referencias para arquivos/secoes; nao cole o catalogo inteiro nem corpos de
+skills. No JSON, use os campos existentes de `microtasks`, `references` e
+`execution_lists`: owner/tool nos campos proprios; ferramentas auxiliares e
+condicoes nas instrucoes da lista, ou referencia obrigatoria com proposito.
+Cada lista resolve seus `microtask_ids` no mesmo arquivo para obter o roteamento.
+O executor parte dessa selecao, le sua skill canonica e as fontes obrigatorias;
+so amplia descoberta diante de lacuna, falha, mudanca de disponibilidade ou
+necessidade nova, respeitando os limites e retornando ao Harness se mudar o
+contrato. Disponibilidade e receipts ficam nas evidencias, nao no JSON.
+
 Todo checklist de etapa, microtarefa e setor deve usar caixas `- [ ]`.
 Etapas complexas podem ser decompostas em subitens aninhados dentro da mesma
 Task. Cada item deve ter conclusão verificável. Marque `- [x]` somente com
@@ -170,6 +183,7 @@ Listas repetidas como resumo reutilizam o ID, sem representar nova execução.
 - Plugin: `plugin-name`
 - Capability: `capability-id`
 - Tool preferencial: `tool-name` ou `repository-native-tooling`
+- Ferramentas auxiliares: identificador, finalidade, condicao e fallback aprovado; ou N/A com motivo
 - Depende de: IDs ou nenhuma
 - Referências obrigatórias: `REF-01`, com arquivo e seção
 - Paths permitidos: caminhos explícitos

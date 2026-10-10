@@ -72,6 +72,15 @@ REQUIRED needs objective, checklist and expected evidence in the Human Task and
 the equivalent v2 JSON representation. Validation entries remain capability
 IDs; exact reference records resolve project file and section plus purpose.
 
+Persist the Discovery tool/skill selection in these existing routing fields,
+with auxiliary tools, purpose, conditions and approved fallback in execution
+list instructions or purpose-qualified required references. The list resolves
+its microtask_ids in the same JSON; the executor need not rediscover the whole
+inventory for each list. Read the selected canonical skill and required sources;
+expand discovery for missing context, failures, changed availability or new
+needs. Return contract changes to Harness. Keep runtime availability and tool
+receipts in evidence, not normative JSON; never copy catalog or skill bodies.
+
 V2 uses `required_sources` as reference ID arrays. Optional
 `conditional_sources` entries contain `reference_id` and `condition`;
 `optional_sources` is an optional reference ID array. Unknown IDs block.

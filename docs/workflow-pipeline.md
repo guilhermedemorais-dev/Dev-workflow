@@ -69,6 +69,7 @@ Idea / demand
   -> validate generated Task set: consolidate fragments; justify authorization/rollback exceptions
   -> microtasks: skill/plugin/capability/tool/references/paths/checklist/deliverables
   -> Sector Validation Matrix: ten REQUIRED/N/A sectors, owners and dependencies
+  -> existing SDD coverage/equivalence check: requirement-to-microtask mapping, orphan actions, ambiguities and contradictions
   -> Context Routing: Harness reconciles Human Task/JSON; one prompt linking the single Task JSON file + list_id per execution list
   -> publish DISCOVERY_SDD_COMPLETED comment and capture returned identifier
   -> HUMAN APPROVAL

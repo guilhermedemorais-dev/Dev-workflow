@@ -32,8 +32,10 @@ severity.
 
 Reject or downgrade when evidence shows:
 
-- a scanner reported a vulnerable package that is development-only, unreachable,
-  patched downstream, or outside the deployed artifact
+- a scanner reported a vulnerable package but evidence excludes every relevant
+  runtime, build and install path, or proves an effective downstream patch;
+  development-only or outside the deployed artifact alone does not exclude
+  supply-chain impact
 - a dependency is merely old and no applicable advisory or vulnerable behavior
   is established
 - authentication or authorization exists in an imported guard, policy, base

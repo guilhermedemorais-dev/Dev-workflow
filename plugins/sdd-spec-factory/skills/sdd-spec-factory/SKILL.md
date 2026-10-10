@@ -97,6 +97,11 @@ collapse them into one prose blob; if a dimension does not apply, write
 
 - The repo, PRD, existing architecture, approved mockups and `AGENTS.md` are the
   source of truth. Inspect the real repo before writing specs.
+- Before external research, apply the active Harness capability registry's
+  whole-inventory consultation and research routing. Inspect the MCP Library,
+  all active specialist tool-registry metadata and actual host tools,
+  prefer suitable available documentation/code/extraction/search capabilities,
+  and record the reason for generic fallbacks. Reuse existing source records.
 - **Do not invent existing architecture.** If you do not know whether a table,
   endpoint, service or component exists, do not assert it. Mark it as a
   hypothesis (`HIPÓTESE:`) or as a pending decision.
@@ -108,6 +113,9 @@ collapse them into one prose blob; if a dimension does not apply, write
 - Before specifying a new service, helper, component, route, abstraction or
   subsystem, search the source-of-truth repository for an existing equivalent.
   Prefer reuse or extension and record the decision in `REUSE_INVENTORY`.
+- When an unresolved implementation question needs public code examples, read
+  [public code discovery](references/public-code-discovery.md). Prefer the
+  official Grep service when available; validate candidates at their source.
 - Reject speculative abstractions and duplicated responsibilities. New
   abstractions require two current concrete consumers or an explicit approved
   architectural requirement.
@@ -181,6 +189,13 @@ Consolidate the closed scope (becomes the basis of the product/module spec):
 - Decisões pendentes
 
 ### Fase 2 - Geração de Specs
+
+When dependencies are selected/changed or security boundaries apply, route
+early planning to `security-standard` and its preventive security research
+reference. Incorporate applicable OSV advisories and versioned ASVS controls
+as explicit rules, enforcement points and negative tests in the existing
+module Task/security sector. Reuse the project dependency/source inventory;
+do not claim a planned control or advisory match proves runtime security.
 
 When UI applies, route `ui-ux-standard` and its `references/live-design-guide.md`
 from the active bundle (or explicit canonical checkout, not guessed sibling
@@ -305,6 +320,15 @@ Produce one reviewable, complete GitHub Issue/card per module using
 - Decompose execution into microtasks with owner skill/plugin, capability,
   preferred tool, dependencies, exact references, allowed paths, checklist,
   deliverables, completion condition and independent validator.
+- Materialize the selected execution routes in the Task and equivalent JSON,
+  not only in a Discovery comment. Use existing microtask owner/plugin,
+  capability, preferred_tool and reference fields; put necessary auxiliary
+  tool identifiers, purpose, conditions and approved fallback in list
+  instructions or purpose-qualified required references. Each execution list
+  resolves its microtask_ids in the same contract. Do not paste the inventory
+  or full skill bodies. The executor starts from this selection plus mandatory
+  canonical skill/source reads; expand discovery only for gaps, failures,
+  changed availability or new needs. Return normative changes to Harness.
 - Render every stage, microtask and REQUIRED-sector action checklist as Markdown
   `- [ ]` items, not semicolon-separated prose or uncheckable numbered steps.
   Split complex items into nested checkbox subitems inside the same Task.
@@ -381,6 +405,12 @@ rules, references, design, microtasks, ten sectors, tests, acceptance criteria,
 stop conditions, ignition prompt and reporting contract. Keep structure concise;
 do not copy source bodies, conversation history, secrets or execution evidence.
 
+Before `DISCOVERY_SDD_COMPLETED`, publication/handoff or Ready for Dev, apply
+[spec consistency analysis](references/spec-consistency-analysis.md) to the
+current artifacts. This refines the existing coverage/equivalence checkpoint,
+not a new state, Task or approval gate. Return blocking findings to their source,
+reconcile affected specs/card/JSON and recheck before claiming readiness.
+
 Tasks live under `docs/tasks/TASK-XXX-<slug>.md` (or the repo's existing task
 location, if one exists — reuse it, do not duplicate).
 
@@ -437,4 +467,6 @@ Provide the delivery gates using `templates/pr-template.md`,
 - PR and QA/review checklists are provided.
 - Sector matrix, microtasks, purpose-based routing, phase dependencies and
   explicit N/A reasons are consistent; legacy v1 contracts remain readable.
+- Spec consistency analysis maps approved in-scope requirements to microtasks,
+  acceptance and planned validation; blocking gaps/conflicts are resolved.
 - No product code was implemented and no existing architecture was invented.
