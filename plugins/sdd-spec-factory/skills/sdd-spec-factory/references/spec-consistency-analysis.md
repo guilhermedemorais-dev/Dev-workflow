@@ -53,7 +53,8 @@ Do not claim semantic equivalence from field presence or keyword matching.
 - **CRITICAL:** conflicting mandatory safety/authorization invariant or missing
   coverage that prevents the approved core outcome.
 - **HIGH:** conflicting executable instructions, ambiguous material business
-  behavior, missing required validation or unapproved scope addition.
+  behavior, any approved in-scope obligation missing implementation/action
+  coverage or required validation, or unapproved scope addition.
 - **MEDIUM/LOW:** non-blocking clarity/maintenance issues with bounded impact.
 
 Block the affected readiness claim on CRITICAL/HIGH findings or unresolved

@@ -19,8 +19,9 @@ with a concrete conflict or requested change. Read [briefing.md](references/brie
 for the interview and existing-system inventory.
 
 Before external briefing research, apply the active Harness capability
-registry's research and reference routing. Inspect the MCP Library and actual
-host availability; prefer suitable documentation/code/extraction/search MCPs
+registry's whole-inventory consultation and research routing. Inspect the MCP
+Library, all active specialist tool-registry metadata and actual host
+availability; prefer suitable documentation/code/extraction/search capabilities
 and record justified fallbacks in research evidence. Reuse existing records,
 never install the whole catalog or claim an unavailable MCP was invoked.
 

@@ -1343,7 +1343,7 @@ O catalogo nao declara o que esta conectado nesta maquina:
 | --- | --- |
 | CORE | GitHub, Context7, Playwright |
 | RECOMMENDED | Chrome DevTools, Docker MCP Gateway, Docker MCP Registry |
-| OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry |
+| OPTIONAL | Figma, Firecrawl, Hugging Face, Sentry, Grep oficial |
 | PROJECT_SPECIFIC | Supabase, Hostinger, AWS API e WordPress MCP Adapter, somente quando o projeto precisar |
 | COMMUNITY | grep-mcp, origem atual UNKNOWN e instalacao automatica bloqueada |
 | RUNTIME_PROVIDED | node_repl, somente deteccao quando fornecido pelo host |
@@ -1351,11 +1351,21 @@ O catalogo nao declara o que esta conectado nesta maquina:
 O `grep-mcp` comunitario nao e o servico oficial Grep da Vercel. A descoberta
 de codigo do SDD agora orienta o uso seletivo do Grep oficial quando disponivel,
 com fallback GitHub/pesquisa publica e validacao na origem. O endpoint documentado
-e `https://mcp.grep.app`; documentacao/catalogo nao comprovam conexao no host.
+e `https://mcp.grep.app`, com entrada propria `grep` no catalogo;
+documentacao/catalogo nao comprovam conexao no host.
 Veja [public-code-discovery.md](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/public-code-discovery.md).
 
-Discovery/PRD/SDD consultam o catalogo e as capacidades realmente disponiveis
-antes de pesquisar. Priorizam Context7 para documentacao de bibliotecas,
+Em qualquer fase, o Harness consulta todo o inventario ativo de capacidades:
+MCP Library, registros de ferramentas dos especialistas e ferramentas reais do
+host. Isso inclui implementacao, QA/browser, UI/UX, seguranca, DevOps e pesquisa,
+alem dos mecanismos de contexto e providers quando pertinentes. Reutiliza a
+descoberta valida do Environment, considera novos registros ativos e registra
+lacunas de cobertura e motivos relevantes de selecao/fallback nos relatos
+existentes. Consulta de metadados nao exige chamar todas as ferramentas nem
+carregar a metodologia inteira de todos os especialistas.
+
+Discovery/PRD/SDD aplicam esse inventario antes de pesquisar.
+Priorizam Context7 para documentacao de bibliotecas,
 Grep/GitHub para codigo e Firecrawl/equivalente para extracao quando apropriado;
 outros MCPs de busca sao descobertos conforme a necessidade. Fallback generico
 exige motivo no registro de pesquisa. Nao chamam todos os MCPs nem presumem que

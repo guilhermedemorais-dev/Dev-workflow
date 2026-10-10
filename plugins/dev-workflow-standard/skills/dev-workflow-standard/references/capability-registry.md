@@ -40,10 +40,41 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 
 ## Routing Rules
 
+### Whole-inventory consultation
+
+Before choosing a capability or a fallback for any phase, inspect the complete
+active capability inventory: this routing registry, the Environment MCP
+Library, every discoverable active specialist `references/tool-registry.json`,
+and actual host tools/connectors. Include the existing context-retrieval and
+provider-routing mechanisms when selecting context or an executor. Discover
+registries through Environment's existing skill-owned-tools mechanism; do not
+duplicate its catalog here or restrict discovery to a fixed vendor list.
+
+Consult all inventory metadata to match the task's needs to owners and candidate
+tools, including implementation, QA/browser, UI/UX, Security, DevOps and research.
+This does not require reading every specialist methodology or invoking every
+tool. Read the selected canonical skills and required references according to
+the execution contract. Newly installed active owner registries participate in
+the same discovery without adding a row for every product here.
+
+Reuse Environment's current status/discovery evidence when its scope and
+freshness cover the active inventory. Refresh through its read-only status or
+doctor path when coverage is missing or stale; do not install, authenticate or
+probe unrelated services merely to enumerate them. A catalog entry is a
+candidate, not evidence that a tool is connected or usable.
+
+Record inventory coverage, selected capabilities and material exclusions or
+fallback reasons in the existing routing/report evidence. Distinguish not
+applicable, unavailable and failed; do not silently omit an unreadable registry
+or claim full coverage when discovery is incomplete. Keep this compact, with
+registry paths/revisions and host evidence rather than a new Task field or
+per-tool checklist. Invoke only relevant available capabilities under their
+owner's scope and permissions; route required preparation through Environment.
+
 ### Research and reference routing
 
-Before external Discovery/SDD research, inspect this registry, the active
-Environment MCP Library and actual host tools. Resolve connected/available
+Before external Discovery/SDD research, apply whole-inventory consultation
+above, including specialist tool registries and actual host tools. Resolve connected/available
 capabilities, not merely names in a catalog. Prefer the narrowest suitable
 MCP/connector when it can satisfy the question; do not default to generic web
 search while a sufficient specialized capability is available.

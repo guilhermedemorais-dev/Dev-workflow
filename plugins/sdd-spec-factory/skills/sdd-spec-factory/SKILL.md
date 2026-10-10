@@ -98,7 +98,8 @@ collapse them into one prose blob; if a dimension does not apply, write
 - The repo, PRD, existing architecture, approved mockups and `AGENTS.md` are the
   source of truth. Inspect the real repo before writing specs.
 - Before external research, apply the active Harness capability registry's
-  research and reference routing. Inspect the MCP Library and actual host tools,
+  whole-inventory consultation and research routing. Inspect the MCP Library,
+  all active specialist tool-registry metadata and actual host tools,
   prefer suitable available documentation/code/extraction/search capabilities,
   and record the reason for generic fallbacks. Reuse existing source records.
 - **Do not invent existing architecture.** If you do not know whether a table,
@@ -319,6 +320,15 @@ Produce one reviewable, complete GitHub Issue/card per module using
 - Decompose execution into microtasks with owner skill/plugin, capability,
   preferred tool, dependencies, exact references, allowed paths, checklist,
   deliverables, completion condition and independent validator.
+- Materialize the selected execution routes in the Task and equivalent JSON,
+  not only in a Discovery comment. Use existing microtask owner/plugin,
+  capability, preferred_tool and reference fields; put necessary auxiliary
+  tool identifiers, purpose, conditions and approved fallback in list
+  instructions or purpose-qualified required references. Each execution list
+  resolves its microtask_ids in the same contract. Do not paste the inventory
+  or full skill bodies. The executor starts from this selection plus mandatory
+  canonical skill/source reads; expand discovery only for gaps, failures,
+  changed availability or new needs. Return normative changes to Harness.
 - Render every stage, microtask and REQUIRED-sector action checklist as Markdown
   `- [ ]` items, not semicolon-separated prose or uncheckable numbered steps.
   Split complex items into nested checkbox subitems inside the same Task.
