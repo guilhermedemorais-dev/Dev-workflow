@@ -1348,6 +1348,20 @@ O catalogo nao declara o que esta conectado nesta maquina:
 | COMMUNITY | grep-mcp, origem atual UNKNOWN e instalacao automatica bloqueada |
 | RUNTIME_PROVIDED | node_repl, somente deteccao quando fornecido pelo host |
 
+O `grep-mcp` comunitario nao e o servico oficial Grep da Vercel. A descoberta
+de codigo do SDD agora orienta o uso seletivo do Grep oficial quando disponivel,
+com fallback GitHub/pesquisa publica e validacao na origem. O endpoint documentado
+e `https://mcp.grep.app`; documentacao/catalogo nao comprovam conexao no host.
+Veja [public-code-discovery.md](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/public-code-discovery.md).
+
+Discovery/PRD/SDD consultam o catalogo e as capacidades realmente disponiveis
+antes de pesquisar. Priorizam Context7 para documentacao de bibliotecas,
+Grep/GitHub para codigo e Firecrawl/equivalente para extracao quando apropriado;
+outros MCPs de busca sao descobertos conforme a necessidade. Fallback generico
+exige motivo no registro de pesquisa. Nao chamam todos os MCPs nem presumem que
+cadastro significa conexao. Respostas de MCP tambem consomem contexto/tokens.
+O roteamento vive no [capability-registry](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md).
+
 Docker MCP Registry e fonte de catalogo, nao servidor conectavel. Gateway pode
 simplificar lifecycle/isolamento, mas nao torna Docker obrigatorio. A auditoria
 de fontes esta em [`mcp-source-audit.md`](docs/specs/environment-bootstrap/mcp-source-audit.md).
@@ -1707,6 +1721,13 @@ Funcao:
   Observabilidade/logs, Decisoes pendentes, Riscos e Criterios de aceite.
 - Produzir uma Task completa por modulo, ligada a specs, issue, branch e PR.
 - Entregar checklists de PR, code review e QA.
+
+No checkpoint existente de cobertura/equivalencia, a
+[analise de consistencia](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/spec-consistency-analysis.md)
+cruza requisitos aprovados com microtarefas/listas, aceite e validacao planejada.
+Identifica requisitos sem cobertura, acoes sem requisito/regra/dependencia/gate,
+ambiguidades e contradicoes, com fonte, severidade e correcao. Achados bloqueantes
+impedem Ready for Dev. Mantem uma Task por modulo, sem novo estado ou ciclo de QA.
 
 Quando usar:
 

@@ -18,6 +18,12 @@ system, including low-code. Preserve established decisions; reopen one only
 with a concrete conflict or requested change. Read [briefing.md](references/briefing.md)
 for the interview and existing-system inventory.
 
+Before external briefing research, apply the active Harness capability
+registry's research and reference routing. Inspect the MCP Library and actual
+host availability; prefer suitable documentation/code/extraction/search MCPs
+and record justified fallbacks in research evidence. Reuse existing records,
+never install the whole catalog or claim an unavailable MCP was invoked.
+
 Ask at most three useful questions per round. Research what can be discovered
 from authorized sources before asking. Separate APPROVED, PROPOSED, UNKNOWN
 and EXCLUDED requirements with source and rationale. Reference functionality

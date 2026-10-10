@@ -20,6 +20,7 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | product briefing / PRD / internal delivery planning | `studio-prd` | explicitly available canonical skill, otherwise report missing capability | approved module inventory, briefing, PRD and equivalent MD/JSON plan; supervised SDD handoff |
 | environment bootstrap / plugin health | `dev-environment-standard` | explicit manual host handoff when unsupported | HEALTH_REPORT + required capability evidence |
 | requirements / specs | `sdd-spec-factory` | orchestrator only for clarification, not silent replacement | specs + executable task |
+| public implementation examples during SDD | available official Grep MCP under `sdd-spec-factory` public-code discovery rules | available GitHub code tools or bounded public/official-source research | original source/revision, license, compatibility and validation limits in the existing reference library |
 | implementation | `dev-implementation-standard` with an authorized executor runtime | another authorized executor using the same task/spec contract | diff/files + commands + execution report |
 | UI/UX design and review | `ui-ux-standard` | none when UI validation is mandatory | design/review findings + validation evidence |
 | functional QA / test engineering | `qa-testing-standard` | none when independent QA is mandatory | test strategy + executed validation + bug disposition + QA_STATUS |
@@ -38,6 +39,42 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 | provider failure recovery | replacement authorized LLM/runtime | none if no compatible provider exists | `EXECUTION_HANDOFF` + resumed result |
 
 ## Routing Rules
+
+### Research and reference routing
+
+Before external Discovery/SDD research, inspect this registry, the active
+Environment MCP Library and actual host tools. Resolve connected/available
+capabilities, not merely names in a catalog. Prefer the narrowest suitable
+MCP/connector when it can satisfy the question; do not default to generic web
+search while a sufficient specialized capability is available.
+
+| Research need | Preferred available route | Bounded fallback |
+| --- | --- | --- |
+| Existing project facts/reuse | required project sources and repository tools; existing context retrieval when additional context is needed | local file/symbol search |
+| Library/SDK versioned documentation and API examples | Context7 or an equivalent documentation MCP | official version-matched documentation |
+| Public implementation examples | official Grep MCP or GitHub code search, under SDD public-code discovery rules | original public repositories/search website |
+| Repository files, commits, tests and license | GitHub repository/file tools | authorized source checkout or original public file |
+| Page extraction/crawl needed for a reference | available Firecrawl or equivalent extraction MCP | bounded page fetch; browser only when interaction is required and authorized |
+| General discovery of primary sources | available purpose-fit search MCP/connector discovered from the host/catalog | generic web search, then original sources |
+
+These are routing examples, not an exhaustive fixed inventory or mandatory
+calls to every vendor. Context7 does not replace code inspection; extraction
+does not prove application behavior. Search only what the current uncertainty
+needs. Follow owner instructions and required source reads.
+
+Record actual capability used, source/version, question answered and limitations
+in the existing research evidence/report. On fallback, record why the suitable
+specialized route was unavailable, failed or insufficient. Do not claim a MCP
+ran without invocation output. An optional missing MCP is not a blocker when
+the fallback provides equivalent evidence. Route requested preparation through
+Environment; never install/connect all catalog entries to perform research.
+
+Reuse reference records, retrieve narrow sections/snippets and avoid repeatedly
+loading whole pages. MCP response content still consumes model context/tokens;
+do not promise token-free research or unmeasured savings. Keep host status/logs
+in evidence rather than adding runtime state to normative Task JSON.
+
+### General routing
 
 1. Resolve the need, not merely a product name.
 2. Prefer the narrowest capability that owns the work.
