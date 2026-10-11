@@ -127,6 +127,10 @@ collapse them into one prose blob; if a dimension does not apply, write
   traceability. This skill must not inflate a bounded change into a full
   document tree.
 
+## Consultative Technical Knowledge Routing
+
+For NORMAL/COMPLEX modules, before finalizing technical specs, read [Technical Knowledge Router](references/technical-knowledge-router.md). Select only the domains triggered by the changed surfaces and risk; inspect current code, tests, architecture, version-matched official sources and existing specialist references. Record decision alternatives, provenance, negative/positive tests and unresolved blocking decisions in the existing specs, Human Task and equivalent JSON fields. Never infer project behavior or tax/regulatory rules. The resulting PR must carry a concise Engineering Explanation linked to evidence. This is not a new schema or a reason to load every technical reference.
+
 ## Phases
 
 ### Studio PRD handoff
