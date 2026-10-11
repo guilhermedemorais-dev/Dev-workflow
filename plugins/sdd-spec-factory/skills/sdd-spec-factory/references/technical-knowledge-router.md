@@ -12,21 +12,87 @@ Use this index only for NORMAL/COMPLEX tasks where a technical decision, affecte
 For each material technical decision capture: question; affected code/contract; alternatives and tradeoffs; chosen approach; source URL + version/revision/date where available; concrete negative/positive test; rollback/observability where relevant; confidence (VERIFIED / ASSUMPTION / OPEN); owner and approval gate. Missing evidence NEVER becomes a made-up guarantee. Escalate blocking domain requirements to the owner. Cite short source pointers, not giant copied excerpts. Don't ingest secrets.
 
 ## Domain routing (activate only matched rows)
-| Trigger | Investigate | Primary reference |
+The files below are the canonical consultative library in this SDD bundle.
+Load only matched references. Each carries decision questions, failure cases,
+source pointers and owner boundaries; none establishes application facts.
+
+| Trigger | Investigate | Consultative reference |
 | --- | --- | --- |
-| Algorithm, refactor, APIs, abstraction | complexity, immutability, coupling/cohesion, DRY/KISS/SOLID applicability, maintainability, error semantics, version compatibility | language/framework official docs and source/tests |
-| Service boundaries or changing modules | domain boundaries, modular monolith vs services, ADR, failure isolation, observability, compatibility, migrations | existing ADRs and code, https://martinfowler.com/articles/microservices.html |
-| Persistence, inventory, checkout, payment | transactions, ACID, isolation level, atomic conditional updates, locks, idempotency, uniqueness, deadlocks, retries, reconciliation, data migrations | database official docs (e.g. https://www.postgresql.org/docs/current/transaction-iso.html) |
-| Auth, sessions, tokens, access | authentication vs authorization, OAuth/OIDC scopes, token lifetimes/rotation, secure cookie, race on refresh, CSRF, session invalidation, threat model, negative tests | https://www.rfc-editor.org/rfc/rfc6749 ; https://openid.net/developers/specs/ ; https://owasp.org/www-project-application-security-verification-standard/ |
-| Integration, API or webhook | HTTP semantics, schemas, pagination, timeouts, signatures, backoff+jitter, deduplication, idempotency, partial failures, compatibility | https://www.rfc-editor.org/rfc/rfc9110 ; integration vendor docs |
-| Queues, concurrent jobs, distributed state | at-least-once delivery, retries, ordering, poison messages, outbox, compensating actions, eventual consistency | selected queue/database official docs |
-| AppSec, sensitive data, dependency change | threat model, validation, access control, secrets, dependency advisories, versioned ASVS controls, OSV and security-standard gating | https://owasp.org/www-project-application-security-verification-standard/ ; https://osv.dev/ ; security-standard |
-| Testing or bug fixing | reproducible failure, risk-based unit/integration/e2e, regression, property/negative test, flaky tests, evidence and independent QA | project test framework docs and qa-testing-standard |
-| CI/CD, infrastructure, production release | least privilege, artifacts, rollout, rollback, backups, DR, logging, SLO, alerting, supply chain | https://csrc.nist.gov/projects/ssdf ; devops-standard |
-| Fiscal/legal regulated business logic | jurisdiction, product classification, tax parameters, official schemas, signature/certificates, rejection flows, homologation, audit trail | current official regulator documents, accountant/product owner approval; never infer tax rules from examples |
+| Algorithm, refactor, APIs, abstraction | complexity, immutability, coupling/cohesion, DRY/KISS/SOLID applicability, maintainability, error semantics, version compatibility | [Architecture](technical-architecture.md) |
+| Service boundaries or changing modules | domain boundaries, modular monolith vs services, ADR, failure isolation, observability, compatibility, migrations | [Architecture](technical-architecture.md) |
+| Persistence, inventory, checkout, payment | transactions, ACID, isolation level, atomic conditional updates, locks, idempotency, uniqueness, deadlocks, retries, reconciliation, data migrations | [Data and concurrency](technical-data-concurrency.md) |
+| Auth, sessions, tokens, access | authentication vs authorization, OAuth/OIDC scopes, token lifetimes/rotation, secure cookie, race on refresh, CSRF, session invalidation, threat model, negative tests | [Auth and sessions](technical-auth-sessions.md) |
+| Integration, API or webhook | HTTP semantics, schemas, pagination, timeouts, signatures, backoff+jitter, deduplication, idempotency, partial failures, compatibility | [APIs and jobs](technical-apis-jobs.md) |
+| Queues, concurrent jobs, distributed state | at-least-once delivery, retries, ordering, poison messages, outbox, compensating actions, eventual consistency | [APIs and jobs](technical-apis-jobs.md) |
+| AppSec, sensitive data, dependency change | threat model, validation, access control, secrets, dependency advisories, versioned ASVS controls, OSV and security-standard gating | [Quality and operations](technical-quality-operations.md) |
+| Testing or bug fixing | reproducible failure, risk-based unit/integration/e2e, regression, property/negative test, flaky tests, evidence and independent QA | [Quality and operations](technical-quality-operations.md) |
+| CI/CD, infrastructure, production release | least privilege, artifacts, rollout, rollback, backups, DR, logging, SLO, alerting, supply chain | [Quality and operations](technical-quality-operations.md) |
+| Fiscal/legal regulated business logic | jurisdiction, product classification, tax parameters, official schemas, signature/certificates, rejection flows, homologation, audit trail | [Fiscal](technical-fiscal.md) |
+
+## Integration with existing execution contracts
+Resolve the active SDD bundle by runtime discovery or this explicit canonical
+checkout. Harness routes to this single index; do not clone the library into
+Harness, QA, Security or DevOps. A source path in this monorepo is not proof that
+an installed host resolves it. Missing mandatory references stop the checkpoint.
+
+SDD selects topics while specifying, then records project-specific, validated
+sources under the existing `docs/biblioteca-referencias/` or module research
+record. Use existing `references` IDs with `project_path`, `section`, `purpose`
+and `applies_to`; route them through microtask `references`, sector
+`required_sources`/`conditional_sources` and `execution_lists`. Do not add a
+knowledge schema, registry, receipt type or installer. Preserve v1 compatibility.
+Harness reads the complete Human Task and canonical v2 JSON; specialists read
+their selected list, required canonical context and sources. Maintain normative
+equivalence and contract_revision; mutable evidence stays in existing receipts
+and Issue comments. Consult the active context-routing reference for transport.
+
+Apply existing spec-consistency analysis to requirement -> microtask -> acceptance
+-> verification/owner. A reference or test plan is not execution evidence.
+In Review, Harness checks the Engineering Explanation against executed receipts,
+current source revisions and each REQUIRED owner's result before human acceptance.
 
 ## Minimum impact-oriented contract
 For each affected sector of the existing Human Task and equivalent JSON: link discovered source, identify applicable controls, acceptance criteria and explicitly executable positive/negative tests. Keep N/A with reason. Map requirement -> implementation microtask -> verification evidence. For the PR, include a concise human-readable Engineering Explanation: why this approach; what alternatives were considered; what might fail; what was actually tested; known limitations and pending human decisions. This is a report section, not a new mandatory competing Task/schema.
+
+## Knowledge gaps and durable library updates
+When a selected topic lacks a relevant pattern, has stale version evidence or
+does not answer the current question, research and update the owning reference
+as part of the authorized task. Do not repeatedly rediscover the same verified
+information, or invent a pattern to finish a spec.
+
+1. Search the existing project library and these conditional references first.
+   State the unanswered question, affected version/boundary and why current
+   evidence is insufficient. Check freshness against actual stack/API version,
+   effective regulatory date or conflicting new evidence, not a made-up TTL.
+2. Follow the existing Harness capability-registry research routing: discover
+   suitable available documentation/code/extraction tools, then use the bounded
+   official-source fallback when unavailable or insufficient. Record actual
+   invocation and fallback reason. No tool installation is implied by research.
+3. Read the original version-matched documentation/spec/source, not search
+   snippets alone. Compare current code/contracts and alternatives. Classify
+   established source behavior, LOCAL DECISION and ASSUMPTION separately. A
+   researched example is not an approved architecture or proven runtime result.
+4. Extend the existing topic record in `docs/biblioteca-referencias/` or module
+   research file, avoiding duplicate entries. Include question/trigger, source
+   URL and section, revision/version, checked date, purpose, applicability,
+   supported claim, limitations and planned/executed validation distinction.
+   Save bounded summaries, not copied manuals, secrets or customer data.
+5. Link the exact updated record through the existing Task/JSON reference fields
+   and revision rules. On subsequent tasks, reuse compatible evidence after a
+   freshness/applicability check and load only that topic/section. Changed
+   normative requirements need the existing approval/equivalence gate; a factual
+   reference refresh does not itself expand scope or create another task.
+6. For reusable cross-project learning, update/propose the owning plugin source
+   under its existing review/release process. Reuse the active Harness
+   `references/continuous-improvement.md` ownership/promotion rules; do not modify
+   installed caches, export client-specific rules, or install new capabilities
+   as a side effect. Pure factual research uses the reference library, not a new
+   skill/registry/evaluation ceremony. Human merge gates remain intact.
+
+If evidence conflicts, preserve the old provenance and record the conflict;
+stop the affected decision rather than silently replacing approved rules. If
+sources are unavailable, save the gap as NOT VERIFIED and block only decisions
+whose correctness depends on it. A pending search is never learned knowledge.
 
 ## Stop conditions
 - Unverified regulatory/business logic, critical authorization gap, destructive migration without rollback, or unresolved architecture conflict: BLOCKED until decision.

@@ -638,6 +638,17 @@ agent-executed protocol, not an autonomous self-modifying runtime.
 
 ## Reference Routing
 
+- Consultative technical decisions in NORMAL/COMPLEX SDD: resolve the active
+  SDD bundle's `references/technical-knowledge-router.md`; this checkout's
+  canonical source is
+  `plugins/sdd-spec-factory/skills/sdd-spec-factory/references/technical-knowledge-router.md`.
+  Select only triggered topics. Require project source/version/purpose in existing
+  Task/JSON reference fields and reconcile the PR Engineering Explanation with
+  current owner receipts. Preserve specialist ownership and human gates;
+  do not load the whole library or treat proposed tests as validation PASS.
+  Missing/stale knowledge triggers the router's bounded official research and
+  durable reference update; reuse compatible learned evidence and route generic
+  plugin-source improvements through existing continuous-improvement review.
 - Sector matrix, source purposes, phase dependencies and compatibility:
   `references/context-routing.md`
 - Harness execution state, invocation evidence, retry/replan and completion:

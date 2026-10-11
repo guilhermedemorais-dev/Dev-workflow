@@ -131,6 +131,20 @@ collapse them into one prose blob; if a dimension does not apply, write
 
 For NORMAL/COMPLEX modules, before finalizing technical specs, read [Technical Knowledge Router](references/technical-knowledge-router.md). Select only the domains triggered by the changed surfaces and risk; inspect current code, tests, architecture, version-matched official sources and existing specialist references. Record decision alternatives, provenance, negative/positive tests and unresolved blocking decisions in the existing specs, Human Task and equivalent JSON fields. Never infer project behavior or tax/regulatory rules. The resulting PR must carry a concise Engineering Explanation linked to evidence. This is not a new schema or a reason to load every technical reference.
 
+Conditional topic references, load only those selected by the router:
+[architecture](references/technical-architecture.md),
+[data/concurrency](references/technical-data-concurrency.md),
+[auth/sessions](references/technical-auth-sessions.md),
+[APIs/jobs](references/technical-apis-jobs.md),
+[quality/operations](references/technical-quality-operations.md),
+[fiscal](references/technical-fiscal.md).
+
+If the selected knowledge is missing, stale or insufficient, follow the router's
+knowledge-gap research/update procedure. Persist verified findings in the owning
+reference library and reuse them by source/version/purpose; never invent patterns
+or treat a saved reference as executed validation. Use existing continuous
+improvement ownership rules for cross-project plugin updates.
+
 ## Phases
 
 ### Studio PRD handoff
