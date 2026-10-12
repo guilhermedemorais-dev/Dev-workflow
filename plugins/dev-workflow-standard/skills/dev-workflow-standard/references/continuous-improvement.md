@@ -59,6 +59,37 @@ source URL and revision, and preserve provenance and the adaptation diff when
 creating a project-local variant. Reading a candidate does not authorize running
 its code, installing it, or activating it.
 
+#### Skill discovery source pointers
+
+Use these bounded discovery leads when their scope matches a verified gap;
+continue discovering other suitable sources dynamically. They are not an
+approved dependency list, bundled skills, or evidence of runtime availability.
+
+| Source | URL | Scope and authority |
+| --- | --- | --- |
+| Google Agent Skills | https://github.com/google/skills | Google products/technologies; official repository confirmed by the Google Cloud announcement below |
+| Google Labs Stitch Skills | https://github.com/google-labs-code/stitch-skills | Stitch design workflows; upstream documents a Stitch MCP dependency, which must be verified separately |
+| Antigravity skills documentation | https://antigravity.google/docs/skills | Official host skill format/discovery guidance, not a generic engineering skill catalog |
+| Agentic Awesome Skills | https://github.com/sickn33/agentic-awesome-skills | Community discovery catalog; formerly antigravity-awesome-skills, not an official Google library |
+
+Upstream pages and authority/scope checked 2026-10-11. The former
+`https://github.com/sickn33/antigravity-awesome-skills` URL redirected to the
+community source above. [Google's announcement](https://cloud.google.com/blog/topics/developers-practitioners/level-up-your-agents-announcing-googles-official-skills-repository)
+confirms google/skills as its official repository. Recheck identity, current
+revision and license when selecting a candidate; catalog counts/stars are not
+quality evidence. No individual candidate's scripts or runtime were validated
+by recording these pointers.
+
+Search metadata/index for the missing capability first, then inspect only the
+selected candidate's full SKILL.md, required references, scripts, license and
+permissions at a pinned source revision. Compare it with the current Harness
+and specialist ownership before adopting it. Record findings/rejected candidates
+in existing project references/evaluations and reuse compatible evidence.
+Do not bulk download/import/activate the catalog, run its installer or replace
+the Harness with a catalog's own control plane. Research can inform a reference
+without adopting the skill; installation/activation/promotion retain the Human
+Approval Gate below. Save facts in the owning library; no new discovery registry.
+
 #### Example: WordPress capability gap
 
 A WordPress project needs block development, but the current capabilities do not
