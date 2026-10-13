@@ -1,0 +1,367 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "LOCAL-platform-tools",
+  "human_task": {
+    "representation": "local_authorized_exception",
+    "issue_url": null,
+    "local_mirror": "docs/tasks/LOCAL-platform-tools.md",
+    "normative_equivalence": "Local task scope and this contract, revision 1, are equivalent. Remote linkage is pending under user's explicit 2026-10-12 exception; no GitHub equivalence claimed."
+  },
+  "summary": "Platform tool catalogs and persistent environment routing",
+  "goal": "Select OS-appropriate tools once, reuse compatible environment state and document accurate support/version history",
+  "current_state": "Linux suite passes; native Windows baseline has 24 failures and 13 errors; environment/tool caches and contextual retrieval already exist",
+  "expected_result": "Three packaged platform catalogs, persisted selection, truthful compatibility README and CHANGELOG, portable regression tests",
+  "scope": [
+    "Implement all seven numbered scope requirements and acceptance checks in docs/tasks/LOCAL-platform-tools.md"
+  ],
+  "out_of_scope": [
+    "Native Windows10/macOS porting",
+    "Updater/webhook",
+    "CI changes",
+    "Publish/push/merge/install",
+    "Duplicate or move canonical scripts",
+    "External tool registry ownership changes"
+  ],
+  "allowed_paths": [
+    "plugins/dev-environment-standard/**",
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+    "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/skill-owned-tools.md",
+    "README.md",
+    "CHANGELOG.md",
+    "docs/platform-tools.md",
+    "docs/tasks/LOCAL-platform-tools.md",
+    "docs/execution/LOCAL-platform-tools.json",
+    "docs/receipts/LOCAL-platform-tools*.md",
+    "tests/test_platform_tool_routing.py"
+  ],
+  "protected_paths": [
+    "**/plugin.json",
+    "**/marketplace.json",
+    ".github/**",
+    "plugins/*/runtime/**",
+    "plugins/dev-workflow-standard/scripts/**",
+    "plugins/devops-standard/**",
+    "plugins/studio-prd/**",
+    "tests/test_environment_bootstrap.py"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-01",
+      "description": "Full approved scope and acceptance in local normative task",
+      "source": "docs/tasks/LOCAL-platform-tools.md",
+      "priority": "MUST"
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "RULE-01",
+      "description": "A named platform folder is not validation evidence; reject unsupported paths and persist no secrets",
+      "source": "docs/tasks/LOCAL-platform-tools.md"
+    }
+  ],
+  "specs": [
+    "docs/tasks/LOCAL-platform-tools.md"
+  ],
+  "docs": [
+    "README.md",
+    "docs/workflow-pipeline.md",
+    "AGENTS.md"
+  ],
+  "references": [
+    {
+      "id": "REF-01",
+      "title": "Approved local task, reuse inventory and limits",
+      "source_url": null,
+      "project_path": "docs/tasks/LOCAL-platform-tools.md",
+      "section": "Approved scope and specification",
+      "purpose": "Normative requirements and acceptance",
+      "applies_to": [
+        "MT-01"
+      ]
+    }
+  ],
+  "design": {
+    "applicability": "N/A",
+    "guide": "N/A",
+    "tokens": "N/A",
+    "visual_references": [],
+    "component_library": "N/A",
+    "mockup": "N/A",
+    "reason_if_na": "No graphical user interface"
+  },
+  "microtasks": [
+    {
+      "id": "MT-01",
+      "title": "Platform compatibility routing",
+      "summary": "Package catalogs, reuse state, document support and verify",
+      "owner_skill": "dev-implementation-standard",
+      "owner_plugin": "dev-implementation-standard",
+      "capability": "implementation",
+      "preferred_tool": "repository-native-tooling",
+      "depends_on": [],
+      "references": [
+        "REF-01"
+      ],
+      "allowed_paths": [
+        "plugins/dev-environment-standard/**",
+        "README.md",
+        "CHANGELOG.md",
+        "docs/platform-tools.md",
+        "tests/test_platform_tool_routing.py"
+      ],
+      "checklist": [
+        "Create meaningful portability/cache tests",
+        "Implement bounded routing",
+        "Run tests and provide receipt"
+      ],
+      "deliverables": [
+        "Catalogs and cache integration",
+        "Compatibility/version documentation",
+        "Tests and reviewable local patch"
+      ],
+      "completion_condition": "Local task acceptance with explicit remote and platform validation limits",
+      "validator": "qa-testing-standard"
+    }
+  ],
+  "execution_lists": [
+    {
+      "list_id": "platform-tools",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "objective": "Implement explicitly authorized local task revision 1",
+      "microtask_ids": [
+        "MT-01"
+      ],
+      "depends_on": [],
+      "references": [
+        "REF-01"
+      ],
+      "allowed_paths": [
+        "plugins/dev-environment-standard/**",
+        "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+        "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/skill-owned-tools.md",
+        "README.md",
+        "CHANGELOG.md",
+        "docs/platform-tools.md",
+        "docs/receipts/LOCAL-platform-tools*.md",
+        "tests/test_platform_tool_routing.py"
+      ],
+      "protected_paths": [
+        "**/plugin.json",
+        "**/marketplace.json",
+        ".github/**",
+        "plugins/*/runtime/**",
+        "plugins/dev-workflow-standard/scripts/**"
+      ],
+      "deliverables": [
+        "Catalogs/cache/docs/tests",
+        "Execution receipt"
+      ],
+      "completion_condition": "Tests pass in scope and full-suite regression evidence is explicit",
+      "required_tests": [
+        "TEST-01",
+        "TEST-02"
+      ],
+      "acceptance_criteria": [
+        "AC-01"
+      ],
+      "stop_conditions": [
+        "scope_expansion_required",
+        "source_of_truth_conflict"
+      ],
+      "checklist": [
+        {
+          "instruction": "Read local task completely and canonical implementation skill"
+        },
+        {
+          "instruction": "Implement approved scope with portable tests"
+        },
+        {
+          "instruction": "Return exact diff and execution evidence; no publication"
+        }
+      ]
+    }
+  ],
+  "sectors": {
+    "database": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "No database",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "backend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "reason": "Environment CLI/cache",
+      "depends_on": [],
+      "microtasks": [
+        "MT-01"
+      ],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "TEST-01"
+      ]
+    },
+    "frontend": {
+      "owner": "dev-implementation-standard",
+      "applicability": "N/A",
+      "reason": "No UI",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "ui_ux": {
+      "owner": "ui-ux-standard",
+      "applicability": "N/A",
+      "reason": "No UI",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "qa": {
+      "owner": "qa-testing-standard",
+      "applicability": "REQUIRED",
+      "reason": "Independent cache/routing verification",
+      "depends_on": [
+        "backend",
+        "documentation"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "functional-qa"
+      ]
+    },
+    "security": {
+      "owner": "security-standard",
+      "applicability": "REQUIRED",
+      "reason": "Catalog containment and sanitized cache",
+      "depends_on": [
+        "backend"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "bounded-security-review"
+      ]
+    },
+    "devops": {
+      "owner": "devops-standard",
+      "applicability": "N/A",
+      "reason": "No infrastructure/CI",
+      "depends_on": [],
+      "microtasks": [],
+      "required_sources": [],
+      "required_validations": []
+    },
+    "observability": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "reason": "Sanitized platform/cache status",
+      "depends_on": [
+        "backend"
+      ],
+      "microtasks": [
+        "MT-01"
+      ],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "TEST-01"
+      ]
+    },
+    "documentation": {
+      "owner": "dev-implementation-standard",
+      "applicability": "REQUIRED",
+      "reason": "Compatibility and release history",
+      "depends_on": [],
+      "microtasks": [
+        "MT-01"
+      ],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "documentation-review"
+      ]
+    },
+    "harness": {
+      "owner": "dev-workflow-standard",
+      "applicability": "REQUIRED",
+      "reason": "Final reconciliation",
+      "depends_on": [
+        "qa",
+        "security",
+        "documentation"
+      ],
+      "microtasks": [],
+      "required_sources": [
+        "REF-01"
+      ],
+      "required_validations": [
+        "sector-reconciliation"
+      ]
+    }
+  },
+  "pipeline": [
+    "approved-local-contract",
+    "implementation",
+    "executor_tests",
+    "independent_functional_qa",
+    "bounded_security_review",
+    "harness_reconciliation"
+  ],
+  "required_tests": [
+    {
+      "id": "TEST-01",
+      "type": "unit",
+      "command": "python -m unittest discover -s tests -p test_platform_tool_routing.py -v",
+      "expected": "exit 0 on available native runtimes; simulated OS tests do not certify native OS"
+    },
+    {
+      "id": "TEST-02",
+      "type": "regression",
+      "command": "python3 -m unittest discover -s tests -v on native Linux filesystem; git diff --check",
+      "expected": "no new Linux failures; Windows baseline failures retained until future port"
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-01",
+      "description": "All acceptance bullets in local task pass or are explicitly pending remote/native validation",
+      "validation": "TEST-01, TEST-02 and independent review"
+    }
+  ],
+  "stop_conditions": [
+    "scope_expansion_required",
+    "source_of_truth_conflict",
+    "human_task_json_divergence"
+  ],
+  "branch": "feat/platform-tool-routing",
+  "authorization": {
+    "status": "APPROVED_LOCAL_ONLY",
+    "evidence": "User answered Sim, preparar e testar localmente on 2026-10-12; remote linkage exception applies only to this task"
+  },
+  "execution_result": {
+    "status": "LOCAL_CODE_REVIEWED_VALIDATED",
+    "remote_governance": "PENDING_CONNECTION",
+    "evidence": [
+      "docs/receipts/LOCAL-platform-tools-implementation.md",
+      "docs/receipts/LOCAL-platform-tools-review.md",
+      "docs/receipts/LOCAL-platform-tools-harness-final.md"
+    ]
+  }
+}

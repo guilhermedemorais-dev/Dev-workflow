@@ -61,8 +61,8 @@ class TestExecutionContract(unittest.TestCase):
         self.assertNotIn("prompt-base as the operational contract", content)
 
     def test_sector_router_supports_v2_and_legacy_v1(self):
-        template = json.loads(TEMPLATE.read_text())
-        legacy = json.loads(CONTRACT.read_text())
+        template = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        legacy = json.loads(CONTRACT.read_text(encoding="utf-8"))
         self.assertEqual(template["schema_version"], 2)
         self.assertEqual(legacy["schema_version"], 1)
         self.assertIn("sectors", template)

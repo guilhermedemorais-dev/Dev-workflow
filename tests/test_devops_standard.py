@@ -24,14 +24,14 @@ DOMAINS = (
 class DevOpsPackageTests(unittest.TestCase):
     def test_three_manifests_resolve_same_skill(self):
         for relative in ("plugin.json", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json"):
-            data = json.loads((PLUGIN / relative).read_text())
+            data = json.loads((PLUGIN / relative).read_text(encoding="utf-8"))
             self.assertEqual(data["name"], "devops-standard")
             self.assertEqual(data["version"], "0.1.0")
             self.assertTrue((PLUGIN / data["skills"] / "devops-standard/SKILL.md").is_file())
 
     def test_marketplaces_have_unique_resolving_entry(self):
         for relative in (".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json"):
-            data = json.loads((ROOT / relative).read_text())
+            data = json.loads((ROOT / relative).read_text(encoding="utf-8"))
             entries = [item for item in data["plugins"] if item["name"] == "devops-standard"]
             self.assertEqual(len(entries), 1)
             source = entries[0]["source"]
@@ -42,20 +42,20 @@ class DevOpsPackageTests(unittest.TestCase):
                 self.assertEqual(entries[0]["policy"], {"installation": "AVAILABLE", "authentication": "ON_INSTALL"})
 
     def test_frontmatter_and_compact_canonical_skill(self):
-        text = (SKILL / "SKILL.md").read_text()
+        text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
         self.assertTrue(text.startswith("---\nname: devops-standard\n"))
         self.assertIn("description:", text.split("---", 2)[1])
         self.assertLess(len(text.splitlines()), 500)
         self.assertEqual(len(list(PLUGIN.rglob("SKILL.md"))), 1)
 
     def test_agent_metadata_invokes_exact_skill(self):
-        text = (SKILL / "agents/openai.yaml").read_text()
+        text = (SKILL / "agents/openai.yaml").read_text(encoding="utf-8")
         self.assertIn("$devops-standard", text)
         self.assertIn("display_name:", text)
         self.assertIn("short_description:", text)
 
     def test_required_domains_are_discoverable(self):
-        text = (SKILL / "SKILL.md").read_text()
+        text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
         for domain in DOMAINS:
             with self.subTest(domain=domain):
                 self.assertTrue((SKILL / "references" / (domain + ".md")).is_file())
@@ -63,7 +63,7 @@ class DevOpsPackageTests(unittest.TestCase):
 
     def test_local_markdown_resource_links_resolve(self):
         for path in PLUGIN.rglob("*.md"):
-            for target in re.findall(r"\]\(([^)]+)\)", path.read_text()):
+            for target in re.findall(r"\]\(([^)]+)\)", path.read_text(encoding="utf-8")):
                 if "://" in target or target.startswith("#"):
                     continue
                 destination = target.split("#", 1)[0]
@@ -73,7 +73,7 @@ class DevOpsPackageTests(unittest.TestCase):
                     self.assertTrue((path.parent / destination).exists())
 
     def test_pinned_provenance_and_restricted_exclusion(self):
-        origin = (SKILL / "references/ORIGIN.md").read_text()
+        origin = (SKILL / "references/ORIGIN.md").read_text(encoding="utf-8")
         for revision in ("9ba44de0d197c52eb94ecd0c12c8bb394c97d242",
                          "8dc5de47c1db00f8ba01806f5dddd798fc78cf22",
                          "d78be9481b889e11186ec4578b4f5e9301396e25"):
@@ -83,13 +83,13 @@ class DevOpsPackageTests(unittest.TestCase):
         self.assertFalse(any(path.name == "devops-review" for path in PLUGIN.rglob("*")))
 
     def test_full_mit_notices_preserved(self):
-        notice = (PLUGIN / "THIRD_PARTY_NOTICES.md").read_text()
+        notice = (PLUGIN / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
         for term in ("Vasiliy Uvarov", "Permission is hereby granted, free of charge",
                      'THE SOFTWARE IS PROVIDED "AS IS"', "AUTHORS OR COPYRIGHT HOLDERS"):
             self.assertIn(term, notice)
 
     def test_selected_templates_are_real_and_traced(self):
-        origin = (SKILL / "references/ORIGIN.md").read_text()
+        origin = (SKILL / "references/ORIGIN.md").read_text(encoding="utf-8")
         for name in ("ci-cd-plan.md", "backup-restore-plan.md"):
             self.assertTrue((SKILL / "templates" / name).is_file())
             self.assertIn(name, origin)
@@ -105,7 +105,7 @@ class DevOpsPackageTests(unittest.TestCase):
                    if path.is_file()}
         self.assertEqual(scripts, {"github_governance.py"})
         for manifest in (PLUGIN / ".codex-plugin/plugin.json", PLUGIN / ".claude-plugin/plugin.json"):
-            self.assertFalse({"hooks", "mcpServers", "apps"} & json.loads(manifest.read_text()).keys())
+            self.assertFalse({"hooks", "mcpServers", "apps"} & json.loads(manifest.read_text(encoding="utf-8")).keys())
 
     def test_runtime_state_is_ignored_not_tracked(self):
         target = "plugins/devops-standard/skills/devops-standard/runtime-state/tool-state.json"
@@ -118,7 +118,7 @@ class DevOpsPackageTests(unittest.TestCase):
 class DevOpsIntegrationTests(unittest.TestCase):
     def test_execution_contract_is_lean_and_references_existing_sources(self):
         path = ROOT / "docs/execution/TASK-006.json"
-        contract = json.loads(path.read_text())
+        contract = json.loads(path.read_text(encoding="utf-8"))
         self.assertLess(path.stat().st_size, 5000)
         self.assertEqual(contract["task_id"], "TASK-006")
         for reference in [contract["task_path"], *contract["specs"], *contract["docs"], *contract["required_skills"]]:
@@ -127,8 +127,8 @@ class DevOpsIntegrationTests(unittest.TestCase):
             self.assertLessEqual(validation.keys(), {"owner", "capability", "preferred_tool"})
 
     def test_sdd_example_validation_pairs_exist_in_owner_catalog(self):
-        tools = {item["id"]: item for item in json.loads((SKILL / "references/tool-registry.json").read_text())["tools"]}
-        text = (SDD / "references/devops-planning.md").read_text()
+        tools = {item["id"]: item for item in json.loads((SKILL / "references/tool-registry.json").read_text(encoding="utf-8"))["tools"]}
+        text = (SDD / "references/devops-planning.md").read_text(encoding="utf-8")
         rows = re.findall(r"\| [^|\n]+ \| devops-standard \| ([^|]+) \| ([^|]+) \|", text)
         self.assertGreaterEqual(len(rows), 7)
         for capability, tool in rows:
@@ -137,36 +137,36 @@ class DevOpsIntegrationTests(unittest.TestCase):
         self.assertIn(example["capability"], tools[example["preferred_tool"]]["capabilities"])
 
     def test_sdd_conditional_reference_is_resolvable(self):
-        skill = (SDD / "SKILL.md").read_text()
+        skill = (SDD / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("references/devops-planning.md", skill)
         self.assertIn("Do not add", skill)
-        reference = (SDD / "references/devops-planning.md").read_text()
+        reference = (SDD / "references/devops-planning.md").read_text(encoding="utf-8")
         self.assertIn("DevOps N/A", reference)
 
     def test_existing_receipt_and_execution_states_are_reused(self):
-        skill = (SKILL / "SKILL.md").read_text()
+        skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("EXECUTION_RECEIPT", skill)
         self.assertIn("SKILL_RECEIPT", skill)
         self.assertFalse(any(path.name.startswith("DEVOPS_RECEIPT") for path in PLUGIN.rglob("*")))
-        self.assertIn("devops-standard", (ROOT / "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md").read_text())
+        self.assertIn("devops-standard", (ROOT / "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md").read_text(encoding="utf-8"))
 
     def test_readme_and_agent_map_expose_real_skill(self):
         for name in ("README.md", "AGENTS.md", "docs/workflow-pipeline.md"):
-            text = (ROOT / name).read_text()
+            text = (ROOT / name).read_text(encoding="utf-8")
             self.assertIn("devops-standard", text)
             self.assertIn("NOT VALIDATED", text)
 
     def test_environment_not_duplicated_on_absent_base(self):
         self.assertFalse((PLUGIN / "skills/dev-environment-standard").exists())
         self.assertFalse(list(PLUGIN.rglob("mcp-library.json")))
-        self.assertIn("NOT VALIDATED", (SKILL / "SKILL.md").read_text())
-        self.assertIn("dev-environment-standard", (SKILL / "SKILL.md").read_text())
+        self.assertIn("NOT VALIDATED", (SKILL / "SKILL.md").read_text(encoding="utf-8"))
+        self.assertIn("dev-environment-standard", (SKILL / "SKILL.md").read_text(encoding="utf-8"))
 
     def test_security_owner_and_no_parallel_review_gate(self):
-        text = (ROOT / "plugins/security-standard/skills/security-standard/SKILL.md").read_text()
+        text = (ROOT / "plugins/security-standard/skills/security-standard/SKILL.md").read_text(encoding="utf-8")
         self.assertIn("devops-standard", text)
         self.assertIn("publication gate", text)
-        self.assertIn("security-standard", (SKILL / "SKILL.md").read_text())
+        self.assertIn("security-standard", (SKILL / "SKILL.md").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

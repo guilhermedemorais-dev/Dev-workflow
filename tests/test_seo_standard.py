@@ -12,16 +12,16 @@ def test_seo_standard_structure():
     assert (base / "vendor" / "beyondseo" / "LICENSE").stat().st_size > 0
 
 def test_seo_standard_lock_and_registries():
-    lock = json.loads((ROOT / "plugins" / "seo-standard" / "runtime" / "runtime.lock.json").read_text())
+    lock = json.loads((ROOT / "plugins" / "seo-standard" / "runtime" / "runtime.lock.json").read_text(encoding="utf-8"))
     assert lock["version"] == "2.9.1"
     assert lock["sha256"] == "e9ab0e9e3a2ef46a9e3b3b3e4699b988fa256dcac91ef5e3539b49b850ac5010"
 
-    codex = json.loads((ROOT / ".agents" / "plugins" / "marketplace.json").read_text())
-    claude = json.loads((ROOT / ".claude-plugin" / "marketplace.json").read_text())
+    codex = json.loads((ROOT / ".agents" / "plugins" / "marketplace.json").read_text(encoding="utf-8"))
+    claude = json.loads((ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
     assert any(p["name"] == "seo-standard" for p in codex["plugins"])
     assert any(p["name"] == "seo-standard" for p in claude["plugins"])
 
-    registry = (ROOT / "plugins" / "dev-workflow-standard" / "skills" / "dev-workflow-standard" / "references" / "capability-registry.md").read_text()
+    registry = (ROOT / "plugins" / "dev-workflow-standard" / "skills" / "dev-workflow-standard" / "references" / "capability-registry.md").read_text(encoding="utf-8")
     assert "seo-standard" in registry
 
 def test_selected_beyondseo_playbooks_present():

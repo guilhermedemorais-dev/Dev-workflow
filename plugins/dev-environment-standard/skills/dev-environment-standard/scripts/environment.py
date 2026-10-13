@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[5]
 TIERS = {'CORE', 'RECOMMENDED', 'OPTIONAL', 'PROJECT_SPECIFIC', 'COMMUNITY', 'RUNTIME_PROVIDED'}
 ORIGINS = {'OFFICIAL', 'VERIFIED_THIRD_PARTY', 'COMMUNITY', 'UNKNOWN'}
 POLICIES = {'AUTO_SAFE', 'PROJECT_SCOPED', 'USER_SCOPED', 'AUTH_REQUIRED', 'PRIVILEGED', 'MANUAL_ONLY', 'RUNTIME_PROVIDED'}
+GENERATED_DIRECTORIES = {'runtime-state', '__pycache__', '.git', 'node_modules', '.venv', 'venv', '.runtime', '.cache'}
 ID = re.compile(r'^[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}$')
 SECRET = re.compile(r'(?i)(?:(?:bearer|basic)\s+|gh[pousr]_[A-Za-z0-9]|github_pat_|sk-[A-Za-z0-9]|--[\w-]*(?:token|password|secret|cookie|api[_-]?key)(?:[=\s]|$)|(?:password|api[_-]?key|access[_-]?token|secret|cookie|authorization)\s*[:=])')
 
@@ -35,7 +36,7 @@ def digest(path):
     try:
         path = Path(path)
         if path.is_dir():
-            content = '\n'.join(sorted(p.name for p in path.iterdir() if p.name not in ('runtime-state', '__pycache__', '.git'))).encode()
+            content = '\n'.join(sorted(p.name for p in path.iterdir() if p.name not in GENERATED_DIRECTORIES)).encode()
         else:
             content = path.read_bytes()
         return hashlib.sha256(content).hexdigest()
@@ -78,6 +79,12 @@ def atomic(path, text):
     fd, temporary = tempfile.mkstemp(prefix='.environment-', dir=path.parent)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as stream:
+            if os.name == 'nt':
+                helper_path = ROOT / 'plugins/dev-workflow-standard/scripts/tool-state.py'
+                spec = importlib.util.spec_from_file_location('environment_private_state', helper_path)
+                helper = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(helper)
+                helper.restrict_private_fd(stream.fileno())
             stream.write(text)
             stream.flush()
             os.fsync(stream.fileno())
@@ -195,6 +202,71 @@ class Environment:
             entries[entry['id']] = dict(entry, tier='PROJECT_SPECIFIC', preparation={'policy': 'MANUAL_ONLY', 'method': 'host_handoff', 'scope': 'host'}, auth={'required': entry['authentication'] != 'none'}, provenance={'source': entry['repository'], 'verification': 'local metadata; host runtime evidence required'})
         return entries
 
+    def platform_tools(self, previous=None):
+        """Read platform metadata only; never execute a catalog or install a tool."""
+        system = {'linux': 'Linux', 'win32': 'Windows', 'darwin': 'macOS'}.get(sys.platform)
+        folder = self.skill.parents[1] / ('Tools (' + system + ')') if system else None
+        catalog = folder / 'catalog.json' if folder else None
+        binding = {'system': system or 'UNKNOWN', 'execution_platform': sys.platform,
+                   'os_release': platform.release(), 'python': sys.version,
+                   'executable': sys.executable, 'prefix': sys.prefix,
+                   'runtime_id': os.environ.get('TOOL_RUNTIME_ID', 'host'),
+                   'catalog_digest': digest(catalog) if catalog else 'missing'}
+        interpreters = {}
+        for name in ('node', 'bash'):
+            executable = shutil.which(name)
+            try:
+                info = Path(executable).stat() if executable else None
+                interpreters[name] = {'path': executable, 'size': info.st_size, 'mtime_ns': info.st_mtime_ns} if info else None
+            except OSError:
+                interpreters[name] = None
+        binding['interpreters'] = interpreters
+        result = {'binding': binding, 'selected_folder': str(folder.relative_to(self.root)) if folder else None,
+                  'validation': 'NOT VALIDATED', 'reused': False, 'tools': [],
+                  'reason': 'unsupported execution platform' if not system else 'platform catalog missing'}
+        if not catalog or not catalog.is_file():
+            return result
+        try:
+            plugins_root = (self.root / 'plugins').resolve()
+            if not plugins_root.is_relative_to(self.root) or not self.skill.parents[1].resolve().is_relative_to(plugins_root) or not catalog.resolve().is_relative_to(self.skill.parents[1].resolve()):
+                raise ValueError('catalog escapes owner plugin')
+            data = safe(read_json(catalog))
+            if data.get('schema_version') != 1 or data.get('system') != system or data.get('validation') not in ('LINUX_SUITE', 'WINDOWS_SUITE', 'NOT VALIDATED') or not isinstance(data.get('tools'), list) or not data['tools']:
+                raise ValueError('invalid platform catalog')
+            tools, identifiers = [], set()
+            for entry in data['tools']:
+                if not isinstance(entry, dict) or not ID.fullmatch(entry.get('id', '')) or entry['id'] in identifiers:
+                    raise ValueError('invalid or duplicate platform tool')
+                identifiers.add(entry['id'])
+                owner, relative = entry.get('owner'), entry.get('path')
+                if not isinstance(owner, str) or not ID.fullmatch(owner) or not isinstance(relative, str) or '\\' in relative:
+                    raise ValueError('invalid platform tool path')
+                path = Path(relative)
+                if path.is_absolute() or '..' in path.parts or path.parts[:2] != ('plugins', owner):
+                    raise ValueError('platform tool escapes owner plugin')
+                target = (self.root / path).resolve()
+                owner_root = (self.root / 'plugins' / owner).resolve()
+                if not owner_root.is_relative_to(plugins_root) or not target.is_relative_to(owner_root) or not target.is_file():
+                    raise ValueError('platform tool missing or escapes owner plugin')
+                status = entry.get('validation')
+                if status not in ('LINUX_SUITE', 'WINDOWS_SUITE', 'NOT VALIDATED', 'UNSUPPORTED') or entry.get('runtime') not in ('Python', 'Node', 'Bash') or not isinstance(entry.get('reason'), str) or not entry['reason']:
+                    raise ValueError('invalid platform validation')
+                minimum = entry.get('minimum_python')
+                if minimum is not None and (not isinstance(minimum, list) or len(minimum) != 2 or any(type(n) is not int or n < 0 for n in minimum)):
+                    raise ValueError('invalid Python requirement')
+                eligible = status == {'Linux': 'LINUX_SUITE', 'Windows': 'WINDOWS_SUITE'}.get(system)
+                reason = entry['reason']
+                if minimum and tuple(sys.version_info[:2]) < tuple(minimum):
+                    eligible, reason = False, 'Python runtime below required minimum'
+                tools.append(dict(entry, eligible=eligible, reason=reason))
+            binding['source_digest'] = hashlib.sha256(json.dumps([(t['path'], digest(self.root / t['path'])) for t in tools]).encode()).hexdigest()
+            result.update(tools=tools, validation=data.get('validation', 'NOT VALIDATED'), reason='catalog selected; eligibility is per tool')
+            # Reuse the binding, not previously trusted tool paths or validation claims.
+            result['reused'] = bool(previous and previous.get('binding') == binding and previous.get('selected_folder') == result['selected_folder'])
+        except (OSError, ValueError, TypeError, AttributeError):
+            result.update(tools=[], validation='NOT VALIDATED', reason='invalid platform catalog')
+        return result
+
     def source_paths(self):
         result = [self.root / name for name in ('README.md', 'AGENTS.md', '.gitignore')]
         for directory in ('plugins', 'tests', '.agents', '.claude-plugin', 'docs'):
@@ -202,7 +274,7 @@ class Environment:
             if not start.exists():
                 continue
             for current, directories, files in os.walk(start):
-                directories[:] = [d for d in directories if d not in ('runtime-state', '__pycache__', '.git') and not (Path(current) / d).is_symlink()]
+                directories[:] = [d for d in directories if d not in GENERATED_DIRECTORIES and not (Path(current) / d).is_symlink()]
                 result.append(Path(current))
                 result.extend(Path(current) / f for f in files if not f.endswith('.pyc'))
         return result
@@ -367,7 +439,7 @@ class Environment:
                 commands[name] = name
         result = {}
         for name, command in commands.items():
-            executable = shutil.which(command)
+            executable = sys.executable if name == 'python' else shutil.which(command)
             version = None
             if executable:
                 try:
@@ -444,17 +516,22 @@ class Environment:
         core_missing = any(mcps[k]['status'] not in ('CONNECTED', 'AVAILABLE') or (e.get('auth', {}).get('required') and not mcps[k]['authenticated']) for k, e in entries.items() if e['tier'] == 'CORE')
         report = {'schema_version': 1, 'operation': 'doctor', 'observed_at': now(), 'fingerprint': self.fingerprint(), 'plugin_health': 'BLOCKED' if blockers else 'DEGRADED' if evidence != 'PASS' or core_missing else 'HEALTHY', 'checks': checks, 'runtimes': runtimes, 'mcps': mcps, 'skills': found, 'blockers': blockers, 'watched': {str(p.relative_to(self.root)): digest(p) for p in watched if p.is_relative_to(self.root)}, 'required': list(required)}
         report.update(self.project_environment())
+        report['platform_tools'] = self.platform_tools(self.state().get('platform_tools'))
         report['validation_observed_at'] = validation_observed_at
         report['verified_components'] = verified_components
         return report
 
     def status(self, required=()):
         state = self.state()
+        routing = self.platform_tools(state.get('platform_tools'))
         report = state.get('snapshot', {})
         if not report or not fresh(report.get('observed_at'), 86400) or not report.get('watched') or state.get('fingerprint') != self.fingerprint(report['watched']) or any(digest(self.root / p) != d for p, d in report.get('watched', {}).items()):
-            return {'schema_version': 1, 'operation': 'status', 'plugin_health': 'DEGRADED', 'ready': False, 'refresh_required': True, 'reason': 'missing, invalid or incompatible snapshot; run doctor/prepare'}
+            return {'schema_version': 1, 'operation': 'status', 'plugin_health': 'DEGRADED', 'ready': False, 'refresh_required': True, 'platform_tools': routing, 'reason': 'missing, invalid or incompatible snapshot; run doctor/prepare'}
         report = json.loads(json.dumps(report))
         report.update(operation='status', checked_at=now(), refresh_required=False)
+        report['platform_tools'] = routing
+        if state.get('platform_tools', {}).get('tools') and not routing['reused']:
+            report['refresh_required'] = True
         if any(c.get('check') == 'tests-and-validators' and c.get('result') == 'PASS' for c in report.get('checks', [])) and not fresh(report.get('validation_observed_at'), 86400):
             report['refresh_required'] = True
             for check in report['checks']:
@@ -692,6 +769,7 @@ class Environment:
             report['mcps'], _ = self.mcp_status(entries)
             report['fingerprint'] = self.fingerprint()
             state = {'schema_version': 1, 'fingerprint': report['fingerprint'], 'snapshot': report, 'mcp_preferences': prefs, 'custom_mcps': custom if custom is not None else previous.get('custom_mcps', []), 'custom_prompt_answered': custom is not None or previous.get('custom_prompt_answered', False), 'custom_prompt_shown': True, 'last_prepare': now()}
+            state['platform_tools'] = report['platform_tools']
             safe(state)
             atomic(self.state_path, json.dumps(state, indent=2) + '\n')
         return report
@@ -728,6 +806,11 @@ def main(argv=None):
             print(json.dumps(report, sort_keys=True))
         else:
             print('PLUGIN HEALTH: ' + report['plugin_health'])
+            routing = report.get('platform_tools', {})
+            if routing:
+                print(f'PLATFORM TOOLS: {routing.get("selected_folder")}; validation={routing.get("validation")}; reused={routing.get("reused")}')
+                for entry in routing.get('tools', []):
+                    print(f'TOOL {entry["id"]}: eligible={entry["eligible"]}; validation={entry["validation"]}; reason={entry["reason"]}')
             for key, value in report.get('mcps', {}).items():
                 print(f'MCP {key}: {value["status"]}; authentication={value["authentication"]}')
             for receipt in report.get('receipts', []):

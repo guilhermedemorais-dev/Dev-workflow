@@ -13,20 +13,20 @@ SKILL = BUNDLE / "skills/qa-testing-standard"
 class QATestingStandardTests(unittest.TestCase):
     def text(self, name="SKILL.md"):
         self.assertTrue((SKILL / name).is_file(), "Required QA protocol missing: " + name)
-        return (SKILL / name).read_text()
+        return (SKILL / name).read_text(encoding="utf-8")
 
     def test_23_bundle_and_platforms(self):
         for name in ("plugin.json", ".codex-plugin/plugin.json", ".claude-plugin/plugin.json"):
             with self.subTest(manifest=name):
                 self.assertTrue((BUNDLE / name).is_file(), "Required platform manifest missing")
-                manifest = json.loads((BUNDLE / name).read_text())
+                manifest = json.loads((BUNDLE / name).read_text(encoding="utf-8"))
                 self.assertEqual(manifest["name"], "qa-testing-standard")
                 self.assertTrue((BUNDLE / manifest["skills"]).is_dir())
         for name in ("qa-standard", "testing-standard", "quality-standard"):
             self.assertFalse((ROOT / "plugins" / name).exists())
 
     def test_24_capability_registry(self):
-        registry = (ROOT / "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md").read_text()
+        registry = (ROOT / "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md").read_text(encoding="utf-8")
         self.assertIn("qa-testing-standard", registry)
         self.assertIn("QA_STATUS", registry)
 
@@ -97,7 +97,7 @@ class QATestingStandardTests(unittest.TestCase):
 
     def test_marketplaces_append_discoverable_qa_once(self):
         for marketplace in (".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json"):
-            data = json.loads((ROOT / marketplace).read_text())
+            data = json.loads((ROOT / marketplace).read_text(encoding="utf-8"))
             matches = [p for p in data["plugins"] if p["name"] == "qa-testing-standard"]
             self.assertEqual(len(matches), 1)
             source = matches[0]["source"]
@@ -107,7 +107,7 @@ class QATestingStandardTests(unittest.TestCase):
         self.assertFalse((SKILL / "references/tool-registry.json").exists())
         owners = {}
         for registry in (ROOT / "plugins").glob("*/skills/*/references/tool-registry.json"):
-            data = json.loads(registry.read_text())
+            data = json.loads(registry.read_text(encoding="utf-8"))
             for tool in data["tools"]:
                 if tool["id"] in ("pytest", "hypothesis", "playwright"):
                     self.assertNotIn(tool["id"], owners)
@@ -130,7 +130,7 @@ class QATestingStandardTests(unittest.TestCase):
     def test_environment_agent_metadata(self):
         metadata = SKILL / "agents/openai.yaml"
         self.assertTrue(metadata.is_file(), "Environment health requires skill agent metadata")
-        lines = metadata.read_text().splitlines()
+        lines = metadata.read_text(encoding="utf-8").splitlines()
         self.assertEqual(lines[0], "interface:")
         fields = {}
         for line in lines[1:]:

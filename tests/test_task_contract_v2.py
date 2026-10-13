@@ -155,8 +155,8 @@ class TestTaskContractV2(unittest.TestCase):
         self.assertIn("changed_surface_fields", reporting)
 
     def test_delivery_card_covers_every_normative_json_value(self):
-        contract = json.loads((ROOT / "docs/execution/TASK-011.json").read_text())
-        card = (ROOT / contract["human_task"]["local_mirror"]).read_text()
+        contract = json.loads((ROOT / "docs/execution/TASK-011.json").read_text(encoding="utf-8"))
+        card = (ROOT / contract["human_task"]["local_mirror"]).read_text(encoding="utf-8")
         def leaves(value):
             if isinstance(value, dict):
                 for child in value.values():
@@ -181,7 +181,7 @@ class TestTaskContractV2(unittest.TestCase):
         self.assertIn(contract["human_task"]["issue_url"], card)
 
     def test_delivery_references_and_microtasks_resolve(self):
-        contract = json.loads((ROOT / "docs/execution/TASK-011.json").read_text())
+        contract = json.loads((ROOT / "docs/execution/TASK-011.json").read_text(encoding="utf-8"))
         refs = {ref["id"] for ref in contract["references"]}
         tasks = {task["id"] for task in contract["microtasks"]}
         for ref in contract["references"]:

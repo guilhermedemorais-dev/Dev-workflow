@@ -632,11 +632,118 @@ def make_proposal(root, d, snapshot, evidence):
             'actions': actions, 'limits': limits, 'summary': 'CHANGES PROPOSED' if actions else 'NO CHANGE REQUIRED'})
 
 
+def secure_local_write_available():
+    if os.name == 'nt':
+        import ctypes
+        return hasattr(ctypes, 'WinDLL')
+    return (all(hasattr(os, flag) for flag in ('O_DIRECTORY', 'O_NOFOLLOW'))
+            and os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd)
+
+
+def windows_local_write(root, action):
+    """Pin directory handles, reject reparse points, and write an exclusive file handle.
+
+    Every child opens relative to its checked parent HANDLE with no reparse
+    processing; directory creation is atomic. No absolute child-path traversal.
+    """
+    import ctypes
+    from ctypes import wintypes
+    import msvcrt
+    class FileInformation(ctypes.Structure):
+        _fields_ = [('attributes', wintypes.DWORD), ('created', wintypes.FILETIME),
+                    ('accessed', wintypes.FILETIME), ('written', wintypes.FILETIME),
+                    ('volume', wintypes.DWORD), ('size_high', wintypes.DWORD),
+                    ('size_low', wintypes.DWORD), ('links', wintypes.DWORD),
+                    ('index_high', wintypes.DWORD), ('index_low', wintypes.DWORD)]
+    class UnicodeString(ctypes.Structure):
+        _fields_ = [('length', wintypes.USHORT), ('maximum_length', wintypes.USHORT), ('buffer', wintypes.LPWSTR)]
+    class ObjectAttributes(ctypes.Structure):
+        _fields_ = [('length', wintypes.ULONG), ('root', wintypes.HANDLE),
+                    ('name', ctypes.POINTER(UnicodeString)), ('attributes', wintypes.ULONG),
+                    ('security', ctypes.c_void_p), ('qos', ctypes.c_void_p)]
+    class IoStatus(ctypes.Structure):
+        _fields_ = [('status_or_pointer', ctypes.c_void_p), ('information', ctypes.c_size_t)]
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    native = ctypes.WinDLL('ntdll')
+    nt_create = native.NtCreateFile
+    nt_create.argtypes = [ctypes.POINTER(wintypes.HANDLE), wintypes.DWORD, ctypes.POINTER(ObjectAttributes),
+                         ctypes.POINTER(IoStatus), ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD,
+                         wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD]
+    nt_create.restype = ctypes.c_long
+    dos_error = native.RtlNtStatusToDosError
+    dos_error.argtypes = [ctypes.c_long]
+    dos_error.restype = wintypes.ULONG
+    create = kernel.CreateFileW
+    create.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p,
+                       wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
+    create.restype = wintypes.HANDLE
+    close = kernel.CloseHandle
+    close.argtypes = [wintypes.HANDLE]
+    close.restype = wintypes.BOOL
+    information = kernel.GetFileInformationByHandle
+    information.argtypes = [wintypes.HANDLE, ctypes.POINTER(FileInformation)]
+    information.restype = wintypes.BOOL
+    handles = []
+    def opened(name, directory=False, new=False, parent=None, create_directory=False):
+        if parent is None:
+            handle = create(str(name), 0x100080, 3, None, 3, 0x02200000, None)
+            if handle == ctypes.c_void_p(-1).value:
+                raise ctypes.WinError(ctypes.get_last_error())
+        else:
+            text = ctypes.create_unicode_buffer(str(name))
+            byte_length = len(str(name).encode('utf-16-le'))
+            unicode_name = UnicodeString(byte_length, byte_length + 2, ctypes.cast(text, wintypes.LPWSTR))
+            attrs = ObjectAttributes(ctypes.sizeof(ObjectAttributes), parent, ctypes.pointer(unicode_name), 0x1040, None, None)
+            output, io_status = wintypes.HANDLE(), IoStatus()
+            result = nt_create(ctypes.byref(output), 0x100080 if directory else 0xC0100000,
+                               ctypes.byref(attrs), ctypes.byref(io_status), None, 0,
+                               3 if directory else 0, 3 if create_directory else 2 if new else 1,
+                               0x00200020 | (1 if directory else 0x40), None, 0)
+            if result < 0:
+                raise ctypes.WinError(dos_error(result))
+            handle = output.value
+        handles.append(handle)
+        facts = FileInformation()
+        if not information(handle, ctypes.byref(facts)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        if facts.attributes & 0x400 or bool(facts.attributes & 0x10) != directory:
+            fail('LOCAL_CONFLICT', 'Reparse or unexpected filesystem object rejected.')
+        if not directory and facts.links != 1:
+            fail('LOCAL_CONFLICT', 'Hard-linked governed files require manual reconciliation.')
+        return handle
+    root = Path(root).absolute()
+    try:
+        parent = opened(root.anchor, directory=True)
+        for part in root.parts[1:]:
+            parent = opened(part, directory=True, parent=parent)
+        parts = Path(action['path']).parts
+        for part in parts[:-1]:
+            parent = opened(part, directory=True, parent=parent, create_directory=True)
+        handle = opened(parts[-1], new=action['before_sha256'] is None, parent=parent)
+        fd = msvcrt.open_osfhandle(handle, os.O_RDWR | os.O_BINARY)
+        handles.pop()  # fd now owns the handle, including error-path closure.
+        with os.fdopen(fd, 'r+b') as stream:
+            before = hashlib.sha256(stream.read()).hexdigest()
+            if action['before_sha256'] is not None and before != action['before_sha256']:
+                fail('LOCAL_CONFLICT', 'Local file changed after approval; no overwrite performed.')
+            stream.seek(0)
+            stream.write(action['content'].encode('utf-8'))
+            stream.truncate()
+            stream.flush()
+            os.fsync(stream.fileno())
+    finally:
+        for handle in reversed(handles):
+            close(handle)
+
+
 def execute_action(client, root, d, action, created):
     r = d['repository']; base = f"repos/{r['owner']}/{r['name']}"
     kind = action['kind']
     if kind == 'local_file':
         safe_path(root, action['path'])
+        if os.name == 'nt':
+            windows_local_write(root, action)
+            return
         parts = Path(action['path']).parts
         parent_fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         try:
@@ -700,9 +807,8 @@ def apply_proposal(client, root, d, proposal, evidence, confirm):
     if blocking:
         fail('INSUFFICIENT_PERMISSION', 'Resolve missing capabilities before applying this proposal.')
     if any(action['kind'] == 'local_file' for action in expected['actions']):
-        if (not all(hasattr(os, flag) for flag in ('O_DIRECTORY', 'O_NOFOLLOW'))
-                or os.open not in os.supports_dir_fd or os.mkdir not in os.supports_dir_fd):
-            fail('LOCAL_CONFLICT', 'Secure local writes require POSIX directory-descriptor/no-follow primitives; no mutations were attempted. Windows is not validated.')
+        if not secure_local_write_available():
+            fail('LOCAL_CONFLICT', 'Secure local-write primitives unavailable; no mutations were attempted.')
     completed, created = [], {}
     client.writable = True
     try:

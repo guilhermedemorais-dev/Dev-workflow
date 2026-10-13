@@ -1,0 +1,109 @@
+{
+  "schema_version": 2,
+  "contract_revision": "5",
+  "task_id": "LOCAL-windows-port",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/49",
+    "local_mirror": "docs/tasks/LOCAL-windows-port.md",
+    "normative_equivalence": "Issue49 and Human Task carry equivalent approved revision5 lists and publication checkpoint; prior revision4 evidence preserved. Git connector publication approved, no merge/release."
+  },
+  "summary": "Fix native Windows tools and verify reverse runtime",
+  "specs": [
+    "docs/tasks/LOCAL-windows-port.md"
+  ],
+  "execution_lists": [
+    {
+      "list_id": "windows-tools",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        "docs/tasks/LOCAL-windows-port.md"
+      ],
+      "allowed_paths": [
+        "plugins/dev-workflow-standard/scripts/tool-state.py",
+        "plugins/devops-standard/skills/devops-standard/scripts/github_governance.py",
+        "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py",
+        "tests/**",
+        "docs/receipts/LOCAL-windows-port*",
+        "plugins/seo-standard/runtime/**"
+      ],
+      "protected_paths": [
+        "plugins/reverse-engineering-standard/**"
+      ],
+      "acceptance_criteria": [
+        "Native Windows zero failures/errors without disabling security/tests",
+        "Linux no new failures"
+      ],
+      "stop_conditions": [
+        "security_invariant_cannot_be_preserved",
+        "scope_expansion_required"
+      ]
+    },
+    {
+      "list_id": "reverse-runtime",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        "docs/tasks/LOCAL-windows-port.md",
+        "plugins/reverse-engineering-standard/skills/reverse-engineering-standard/SKILL.md"
+      ],
+      "allowed_paths": [
+        "plugins/reverse-engineering-standard/**",
+        "tests/test_reverse_runtime*.py",
+        "docs/receipts/LOCAL-windows-port-reverse*"
+      ],
+      "protected_paths": [
+        "plugins/devops-standard/**",
+        "plugins/dev-workflow-standard/scripts/tool-state.py"
+      ],
+      "acceptance_criteria": [
+        "Native bootstrap/probe and harmless real runtime analysis evidence",
+        "Exact supported targets and optional dependencies recorded"
+      ],
+      "stop_conditions": [
+        "target_authorization_missing",
+        "scope_expansion_required"
+      ]
+    }
+  ],
+  "authorization": {
+    "status": "APPROVED_COMMIT_PUSH_PR",
+    "source": "User direct request 2026-10-13 and reiterated approval"
+  },
+  "execution_result": {
+    "status": "LOCAL_VALIDATED_AND_INSTALLED",
+    "remote_governance": "ISSUE49_LINKED_PUBLICATION_RUNNING",
+    "windows_tests": 626,
+    "windows_failures": 0,
+    "windows_errors": 0,
+    "linux_tests": 626,
+    "linux_skipped": 16,
+    "installed_plugins_updated": 5,
+    "publication": "NOT_PUBLISHED",
+    "seo": "HTTP_ONLY_READY_OPTIONAL_BROWSER_WARN",
+    "windows_default_encoding": "UTF8mode0 cp1252",
+    "cutter": "2.5.0-HEAD-a6f6ad7",
+    "rizin": "0.9.1",
+    "linux_revision4_scoped_tests": 25,
+    "linux_full_suite_revision": "4",
+    "reverse_supplemental_gui": "NOT_VALIDATED"
+  },
+  "publication_checkpoint": {
+    "approved_scope": "Publish tested platform tools and Windows updates via authenticated connector; no new product implementation",
+    "locked_paths": [
+      "main",
+      "desktop marketplace settings",
+      "secrets",
+      "runtime-state",
+      "provider binaries"
+    ],
+    "required_sources": [
+      "docs/tasks/LOCAL-windows-port.md",
+      "docs/receipts/LOCAL-windows-port-review-revision4.md",
+      "docs/receipts/LOCAL-windows-port-harness-revision4.md"
+    ],
+    "validation": "Windows626PASSdefaultencoding; Linux626PASS16skips; boundedQA/securityPASS",
+    "merge_release": "NOT_AUTHORIZED"
+  }
+}

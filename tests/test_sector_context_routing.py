@@ -20,9 +20,9 @@ class TestSectorContextRouting(unittest.TestCase):
     """Assertions validate published shapes and deliberately malformed fixtures."""
 
     def setUp(self):
-        self.contract = json.loads(EXAMPLE.read_text())
-        self.rules = (HARNESS / "references/context-routing.md").read_text()
-        self.template = (SDD / "templates/task-template.md").read_text()
+        self.contract = json.loads(EXAMPLE.read_text(encoding="utf-8"))
+        self.rules = (HARNESS / "references/context-routing.md").read_text(encoding="utf-8")
+        self.template = (SDD / "templates/task-template.md").read_text(encoding="utf-8")
 
     def assert_reference(self, reference, contract):
         path, _, anchor = reference.partition("#")
@@ -31,7 +31,7 @@ class TestSectorContextRouting(unittest.TestCase):
         source = ROOT / path
         self.assertTrue(source.is_file(), f"mandatory_reference_missing: {reference}")
         if anchor:
-            self.assertIn(f'<a id="{anchor}"></a>', source.read_text(), reference)
+            self.assertIn(f'<a id="{anchor}"></a>', source.read_text(encoding="utf-8"), reference)
 
     def assert_routed_shape(self, contract):
         """Test-only fixture assertions. No CLI, invocation or state transitions."""
@@ -47,7 +47,7 @@ class TestSectorContextRouting(unittest.TestCase):
             owner = sector["owner"]
             self.assertTrue((ROOT / f"plugins/{owner}/skills/{owner}/SKILL.md").is_file(), owner)
             if name not in STANDARD:
-                self.assertIn(name, (ROOT / contract["task_path"]).read_text())
+                self.assertIn(name, (ROOT / contract["task_path"]).read_text(encoding="utf-8"))
             if sector["applicability"] == "N/A":
                 self.assertTrue(sector.get("reason", "").strip(), name)
                 self.assertFalse(sector["depends_on"], name)
@@ -95,15 +95,15 @@ class TestSectorContextRouting(unittest.TestCase):
 
     def test_t05_t07_example_and_actual_task_sources_resolve(self):
         self.assert_routed_shape(self.contract)
-        self.assert_routed_shape(json.loads((ROOT / "docs/execution/TASK-009.json").read_text()))
+        self.assert_routed_shape(json.loads((ROOT / "docs/execution/TASK-009.json").read_text(encoding="utf-8")))
 
     def test_t08_t09_router_contains_no_mutable_state_or_bodies(self):
         allowed = FIELDS | {"reason", "planning_depends_on", "optional_sources"}
         for sector in self.contract["sectors"].values():
             self.assertTrue(set(sector) <= allowed)
-        self.assertLess(len(EXAMPLE.read_text()), 9000)
-        self.assertNotIn("steps_to_reproduce", EXAMPLE.read_text())
-        self.assertNotIn("commands_and_results", EXAMPLE.read_text())
+        self.assertLess(len(EXAMPLE.read_text(encoding="utf-8")), 9000)
+        self.assertNotIn("steps_to_reproduce", EXAMPLE.read_text(encoding="utf-8"))
+        self.assertNotIn("commands_and_results", EXAMPLE.read_text(encoding="utf-8"))
 
     def test_t10_t13_harness_full_task_specialist_slice_and_sources(self):
         normalized = " ".join(self.rules.split())
@@ -156,7 +156,7 @@ class TestSectorContextRouting(unittest.TestCase):
         self.assertNotRegex(self.rules, r"(?:QA|SECTOR|TEST)_RECEIPT")
 
     def test_t22_public_docs_explain_sector_routing(self):
-        readme = (ROOT / "README.md").read_text()
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         for term in ("qa-testing-standard", "Context Routing", "Sector Validation Matrix"):
             self.assertIn(term, readme)
 
@@ -241,20 +241,20 @@ class TestSectorContextRouting(unittest.TestCase):
         self.assertIn("An active conditional source becomes mandatory", self.rules)
 
     def test_legacy_v1_remains_valid_without_sectors(self):
-        legacy = json.loads((ROOT / "docs/execution/TASK-002.json").read_text())
+        legacy = json.loads((ROOT / "docs/execution/TASK-002.json").read_text(encoding="utf-8"))
         self.assertEqual(legacy["schema_version"], 1)
         self.assertNotIn("sectors", legacy)
         self.assertIn("Without `sectors`, v1 is valid legacy input", self.rules)
 
     def test_example_is_not_fabricated_execution(self):
-        task = (ROOT / self.contract["task_path"]).read_text()
+        task = (ROOT / self.contract["task_path"]).read_text(encoding="utf-8")
         self.assertIn("NÃO EXECUTADO", task)
         self.assertIn("nenhum SKILL_RECEIPT ou EXECUTION_RECEIPT fictício", task)
         self.assertNotRegex(task, r"Status:?\s*PASS")
 
     def test_installed_host_and_checkpoint_completion_boundaries(self):
         self.assertIn("not assumptions about sibling versioned plugin caches", self.rules)
-        execution = (HARNESS / "references/harness-execution.md").read_text()
+        execution = (HARNESS / "references/harness-execution.md").read_text(encoding="utf-8")
         self.assertIn("checkpoint gate applies to its own scope", execution)
         self.assertIn("For final Task completion", execution)
 

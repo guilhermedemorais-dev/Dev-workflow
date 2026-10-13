@@ -4,6 +4,13 @@ The Harness maps a required capability to its specialist owner. Each owner
 selects, prepares, runs, interprets, fixes, and revalidates its domain tools.
 The Harness checks receipts and scope; it does not own installation commands.
 
+The Environment `platform_tools` route selects packaged catalogs for authored
+Harness entrypoints. Reuse the persisted OS/runtime selection on `status`, and
+route only eligible entries after owner/prerequisite gates. Shared scripts retain
+their canonical paths. Windows/macOS pending validation is not permission to use
+an unverified route, nor a blanket prohibition on separately compatible external
+tools. RAG/context retrieval is supplemental context, not this runtime cache.
+
 `dev-environment-standard` may discover every owner registry and prepare only
 the capabilities a task needs through this same helper. It never copies registry
 entries or takes over tool interpretation. Owners are discovered dynamically.

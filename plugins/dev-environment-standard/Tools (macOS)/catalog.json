@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "system": "macOS",
+  "validation": "NOT VALIDATED",
+  "evidence_revision": "43685daa26c39e56c948ee5d7a759e8b6c2aa21e",
+  "tools": [
+    {
+      "id": "environment",
+      "owner": "dev-environment-standard",
+      "path": "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    },
+    {
+      "id": "claude-visible-delegate",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/claude-visible-delegate.sh",
+      "runtime": "Bash",
+      "validation": "UNSUPPORTED",
+      "reason": "Requires Bash and gnome-terminal; visible launch not covered by unittest"
+    },
+    {
+      "id": "context-retriever",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/context-retriever.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    },
+    {
+      "id": "provider-resolver",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/provider-resolver.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    },
+    {
+      "id": "tool-state",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/tool-state.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    },
+    {
+      "id": "github_governance",
+      "owner": "devops-standard",
+      "path": "plugins/devops-standard/skills/devops-standard/scripts/github_governance.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    },
+    {
+      "id": "install-local-runtime",
+      "owner": "reverse-engineering-standard",
+      "path": "plugins/reverse-engineering-standard/runtime/install-local-runtime.mjs",
+      "runtime": "Node",
+      "validation": "NOT VALIDATED",
+      "reason": "Bundled runtime installation and live invocation require separate verification"
+    },
+    {
+      "id": "reverse-context-gateway",
+      "owner": "reverse-engineering-standard",
+      "path": "plugins/reverse-engineering-standard/runtime/reverse-context-gateway.mjs",
+      "runtime": "Node",
+      "validation": "NOT VALIDATED",
+      "reason": "Bundled runtime installation and live invocation require separate verification"
+    },
+    {
+      "id": "bootstrap",
+      "owner": "seo-standard",
+      "path": "plugins/seo-standard/runtime/bootstrap.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Bundled runtime installation and live invocation require separate verification"
+    },
+    {
+      "id": "seo-gateway",
+      "owner": "seo-standard",
+      "path": "plugins/seo-standard/runtime/seo-gateway.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Bundled runtime installation and live invocation require separate verification"
+    },
+    {
+      "id": "plan",
+      "owner": "studio-prd",
+      "path": "plugins/studio-prd/skills/studio-prd/scripts/plan.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Native platform execution not validated; no approved adapter yet"
+    }
+  ]
+}

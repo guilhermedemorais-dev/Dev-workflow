@@ -18,6 +18,96 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def restrict_private_fd(fd):
+    """Apply owner-only state access; Windows uses a protected DACL, not chmod."""
+    if os.name != 'nt':
+        os.fchmod(fd, 0o600)
+        return
+    import ctypes
+    from ctypes import wintypes
+    import msvcrt
+    advapi = ctypes.WinDLL('advapi32', use_last_error=True)
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    convert = advapi.ConvertStringSecurityDescriptorToSecurityDescriptorW
+    convert.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, ctypes.POINTER(ctypes.c_void_p), ctypes.POINTER(wintypes.ULONG)]
+    convert.restype = wintypes.BOOL
+    setter = advapi.SetKernelObjectSecurity
+    setter.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.c_void_p]
+    setter.restype = wintypes.BOOL
+    final_name = kernel.GetFinalPathNameByHandleW
+    final_name.argtypes = [wintypes.HANDLE, wintypes.LPWSTR, wintypes.DWORD, wintypes.DWORD]
+    final_name.restype = wintypes.DWORD
+    create = kernel.CreateFileW
+    create.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
+    create.restype = wintypes.HANDLE
+    info = kernel.GetFileInformationByHandleEx
+    info.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD]
+    info.restype = wintypes.BOOL
+    close = kernel.CloseHandle
+    close.argtypes = [wintypes.HANDLE]
+    close.restype = wintypes.BOOL
+    kernel.LocalFree.argtypes = [ctypes.c_void_p]
+    descriptor = ctypes.c_void_p()
+    if not convert('D:P(A;;FA;;;OW)(A;;FA;;;SY)', 1, ctypes.byref(descriptor), None):
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        handle = msvcrt.get_osfhandle(fd)
+        size = final_name(handle, None, 0, 0)
+        if not size:
+            raise ctypes.WinError(ctypes.get_last_error())
+        name = ctypes.create_unicode_buffer(size + 1)
+        if not final_name(handle, name, len(name), 0):
+            raise ctypes.WinError(ctypes.get_last_error())
+        private_handle = create(name.value, 0x60000, 7, None, 3, 0x00200000, None)
+        if private_handle == ctypes.c_void_p(-1).value:
+            raise ctypes.WinError(ctypes.get_last_error())
+        try:
+            original_id, reopened_id = ctypes.create_string_buffer(24), ctypes.create_string_buffer(24)
+            attributes = ctypes.create_string_buffer(8)
+            if not info(handle, 18, original_id, 24) or not info(private_handle, 18, reopened_id, 24) or not info(private_handle, 9, attributes, 8):
+                raise ctypes.WinError(ctypes.get_last_error())
+            if original_id.raw != reopened_id.raw or int.from_bytes(attributes.raw[:4], 'little') & 0x400:
+                raise ValueError('state file changed or is a reparse point')
+            if not setter(private_handle, 0x4 | 0x80000000, descriptor):
+                raise ctypes.WinError(ctypes.get_last_error())
+        finally:
+            close(private_handle)
+    finally:
+        kernel.LocalFree(descriptor)
+
+
+def private_state_permissions(path):
+    """Inspect state access policy for platform-appropriate security assertions."""
+    if os.name != 'nt':
+        return Path(path).stat().st_mode & 0o777 == 0o600
+    import ctypes
+    from ctypes import wintypes
+    advapi = ctypes.WinDLL('advapi32', use_last_error=True)
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    getter = advapi.GetFileSecurityW
+    getter.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
+    getter.restype = wintypes.BOOL
+    converter = advapi.ConvertSecurityDescriptorToStringSecurityDescriptorW
+    converter.argtypes = [ctypes.c_void_p, wintypes.DWORD, wintypes.DWORD, ctypes.POINTER(wintypes.LPWSTR), ctypes.POINTER(wintypes.ULONG)]
+    converter.restype = wintypes.BOOL
+    kernel.LocalFree.argtypes = [ctypes.c_void_p]
+    size = wintypes.DWORD()
+    getter(str(path), 4, None, 0, ctypes.byref(size))
+    if not size.value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    descriptor = ctypes.create_string_buffer(size.value)
+    if not getter(str(path), 4, descriptor, size, ctypes.byref(size)):
+        raise ctypes.WinError(ctypes.get_last_error())
+    output = wintypes.LPWSTR()
+    if not converter(descriptor, 1, 4, ctypes.byref(output), None):
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        sddl = output.value
+        return sddl.startswith('D:P') and set(re.findall(r'\([^)]*\)', sddl)) == {'(A;;FA;;;OW)', '(A;;FA;;;SY)'}
+    finally:
+        kernel.LocalFree(output)
+
+
 def paths(owner):
     if not isinstance(owner, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]*", owner):
         raise ValueError("invalid owner")
@@ -95,6 +185,7 @@ def save_state(owner, data):
     temporary = Path(name)
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            restrict_private_fd(stream.fileno())
             json.dump(data, stream, indent=2, sort_keys=True)
             stream.write("\n")
         temporary.replace(state_path)
@@ -135,9 +226,9 @@ def resolve_executable(command, workspace):
     for directory in (".venv/bin", ".venv/Scripts", "venv/bin", "venv/Scripts", "node_modules/.bin"):
         candidate = shutil.which(command, path=str(base / directory))
         if candidate:
-            return str(Path(candidate).absolute())
+            return str(Path(candidate).resolve())
     found = shutil.which(command)
-    return str(Path(found).absolute()) if found else None
+    return str(Path(found).resolve()) if found else None
 
 
 def probe(owner, tool_id, workspace, install_method="preexisting"):
@@ -171,8 +262,10 @@ def probe(owner, tool_id, workspace, install_method="preexisting"):
             return None
         version = result.stdout or result.stderr
     # Store the version token only, never arbitrary verification logs or secrets.
-    match = re.search(r"(?<![\w.-])v?(\d+\.\d+(?:\.[0-9]+)*(?:[a-z][0-9]+)?)(?![\w.-])", version)
-    if match is None:
+    identifier = r"[A-Za-z0-9-]{1,32}(?:\.[A-Za-z0-9-]{1,32}){0,4}"
+    match = re.search(r"(?<![\w.-])v?(\d+\.\d+(?:\.[0-9]+)*(?:[a-z][0-9]+)?"
+                      r"(?:-" + identifier + r")?(?:\+" + identifier + r")?)(?![\w.+-])", version)
+    if match is None or len(match.group(1)) > 80:
         return None
     return {"status": "installed", "version": match.group(1), "executable": str(Path(executable).absolute()),
              "source": tool["repository"], "install_method": install_method, "last_verified": now()}

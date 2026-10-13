@@ -9,6 +9,7 @@ import subprocess
 import sys
 import unittest
 from unittest.mock import patch
+from portable_executable import write_executable, executable_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,9 +26,7 @@ class ToolStateTests(unittest.TestCase):
         self.base = Path(self.temp.name)
         self.registry = self.base / "registry.json"
         self.state = self.base / "state.json"
-        self.executable = self.base / "fake-tool"
-        self.executable.write_text("#!/bin/sh\necho 1.0\n", encoding="utf-8")
-        self.executable.chmod(0o755)
+        self.executable = write_executable(self.base / "fake-tool", "print('1.0')\n")
         environment = patch.dict(os.environ, {"PATH": str(self.base) + os.pathsep + os.environ.get("PATH", "")})
         environment.start()
         self.addCleanup(environment.stop)
@@ -43,7 +42,7 @@ class ToolStateTests(unittest.TestCase):
         self.assertEqual(entry["version"], "1.0")
         self.assertEqual(entry["executable"], str(self.executable))
         self.assertEqual(entry["install_method"], "preexisting")
-        self.assertEqual(json.loads(self.state.read_text())["tools"]["fake"], entry)
+        self.assertEqual(json.loads(self.state.read_text(encoding="utf-8"))["tools"]["fake"], entry)
 
     def test_post_install_detection_records_actual_method(self):
         with patch.object(tool_state.shutil, "which", return_value=str(self.executable)):
@@ -53,9 +52,7 @@ class ToolStateTests(unittest.TestCase):
     def test_python_plugin_verification_uses_environment_interpreter(self):
         self.registry.write_text(json.dumps({"tools": [{"id": "fake", "command": "fake-tool",
             "repository": "https://github.com/example/fake", "verify_distribution": "fake-plugin"}]}), encoding="utf-8")
-        interpreter = self.base / "python"
-        interpreter.write_text("#!/bin/sh\necho 2.1\n", encoding="utf-8")
-        interpreter.chmod(0o755)
+        interpreter = write_executable(self.base / "python", "print('2.1')\n")
         with patch.object(tool_state.shutil, "which", return_value=str(self.executable)):
             entry = tool_state.detect("security-standard", "fake", self.base)
         self.assertEqual(entry["version"], "2.1")
@@ -108,15 +105,15 @@ class ToolStateTests(unittest.TestCase):
     def test_install_verifies_and_persists_or_records_failure_without_loop(self):
         with patch.object(tool_state.shutil, "which", return_value=str(self.executable)):
             result = tool_state.install("security-standard", "fake", self.base,
-                                        ["/bin/true"], "official-release")
+                                        [sys.executable, "-c", "raise SystemExit(0)"], "official-release")
         self.assertEqual(result["status"], "installed")
         self.assertEqual(tool_state.cached("security-standard", "fake", self.base)["install_method"], "official-release")
         failure = tool_state.install("security-standard", "fake", self.base,
-                                     ["/bin/false"], "official-release")
+                                     [sys.executable, "-c", "raise SystemExit(1)"], "official-release")
         self.assertEqual(failure["status"], "install_failed")
         with patch.object(tool_state.subprocess, "run", side_effect=AssertionError("repeat install")):
             deferred = tool_state.install("security-standard", "fake", self.base,
-                                          ["/bin/true"], "official-release")
+                                          [sys.executable, "-c", "raise SystemExit(0)"], "official-release")
         self.assertEqual(deferred["status"], "retry_deferred")
 
     def test_registries_are_owned_and_contain_only_official_source_knowledge(self):
@@ -133,13 +130,13 @@ class ToolStateTests(unittest.TestCase):
                     self.assertNotIn("executable", item)
 
     def test_contract_and_task_do_not_include_local_state(self):
-        contract = (ROOT / "plugins/sdd-spec-factory/templates/execution-contract-template.json").read_text()
-        task = (ROOT / "plugins/sdd-spec-factory/templates/task-template.md").read_text()
+        contract = (ROOT / "plugins/sdd-spec-factory/templates/execution-contract-template.json").read_text(encoding="utf-8")
+        task = (ROOT / "plugins/sdd-spec-factory/templates/task-template.md").read_text(encoding="utf-8")
         self.assertIn("required_validations", contract)
         self.assertNotIn("tool-state", contract)
         self.assertIn("Validação e tools previstas", task)
         self.assertNotIn("tool-state.json", task)
-        self.assertIn("plugins/*/skills/*/runtime-state/", (ROOT / ".gitignore").read_text())
+        self.assertIn("plugins/*/skills/*/runtime-state/", (ROOT / ".gitignore").read_text(encoding="utf-8"))
 
     def test_separately_installed_skill_can_use_writable_state_override(self):
         self.path_patch.stop()
@@ -159,10 +156,9 @@ class ToolStateTests(unittest.TestCase):
         self.assertEqual(before, self.state.read_bytes())
 
     def test_local_executable_and_project_cwd(self):
-        local = self.base / ".venv/bin/fake-tool"
+        local = executable_path(self.base / ".venv/bin/fake-tool")
         local.parent.mkdir(parents=True)
-        local.write_text("#!/bin/sh\ntest -f workspace-marker || exit 8\necho 3.1\n")
-        local.chmod(0o755)
+        write_executable(local, "from pathlib import Path\nassert Path('workspace-marker').is_file()\nprint('3.1')\n")
         (self.base / "workspace-marker").touch()
         entry = tool_state.probe("security-standard", "fake", self.base)
         self.assertEqual(entry["executable"], str(local))
@@ -179,7 +175,7 @@ class ToolStateTests(unittest.TestCase):
         self.path_patch.stop()
         registry = self.base / "plugins/bundle/skills/new-specialist/references/tool-registry.json"
         registry.parent.mkdir(parents=True)
-        registry.write_text(json.dumps({"owner": "new-specialist", "tools": []}))
+        registry.write_text(json.dumps({"owner": "new-specialist", "tools": []}), encoding="utf-8")
         with patch.object(tool_state, "ROOT", self.base), patch.dict(os.environ, {}, clear=True):
             self.assertEqual(tool_state.paths("new-specialist")[0], registry)
             for owner in ("../new-specialist", "/tmp/owner", "x/y", ".."):
@@ -188,14 +184,14 @@ class ToolStateTests(unittest.TestCase):
 
     def test_malformed_state_is_conservative_and_state_private(self):
         for value in ([], {"environment_id": tool_state.fingerprint(self.base), "tools": []}):
-            self.state.write_text(json.dumps(value))
+            self.state.write_text(json.dumps(value), encoding="utf-8")
             self.assertIsNone(tool_state.cached("security-standard", "fake", self.base, read_only=True))
         with patch.object(tool_state.shutil, "which", return_value=str(self.executable)):
             tool_state.detect("security-standard", "fake", self.base)
-        self.assertEqual(self.state.stat().st_mode & 0o777, 0o600)
+        self.assertTrue(tool_state.private_state_permissions(self.state))
 
     def test_cli_streams_findings_unless_quiet_and_preserves_failure_exit(self):
-        self.executable.write_text('#!/bin/sh\nif [ "$1" = "--version" ]; then echo 1.0; else echo synthetic-finding; echo synthetic-diagnostic >&2; exit 7; fi\n')
+        write_executable(self.executable, "import sys\nif sys.argv[1:]==['--version']: print('1.0')\nelse:\n print('synthetic-finding'); print('synthetic-diagnostic',file=sys.stderr); sys.exit(7)\n")
         for quiet in (False, True):
             with self.subTest(quiet=quiet):
                 result = subprocess.run([sys.executable, str(SCRIPT), "security-standard", "fake", "run",
@@ -207,16 +203,15 @@ class ToolStateTests(unittest.TestCase):
                 self.assertEqual("synthetic-finding" in result.stdout, not quiet)
                 self.assertEqual("synthetic-diagnostic" in result.stderr, not quiet)
                 self.assertEqual(json.loads(result.stdout.splitlines()[-1])["exit_code"], 7)
-                self.assertNotIn("synthetic-finding", self.state.read_text())
-                self.assertNotIn("synthetic-diagnostic", self.state.read_text())
+                self.assertNotIn("synthetic-finding", self.state.read_text(encoding="utf-8"))
+                self.assertNotIn("synthetic-diagnostic", self.state.read_text(encoding="utf-8"))
 
     def test_resolution_supports_node_modules_and_venv_scripts(self):
         for directory in ("node_modules/.bin", "venv/Scripts", ".venv/Scripts"):
             with self.subTest(directory=directory):
-                local = self.base / directory / "fake-tool"
+                local = executable_path(self.base / directory / "fake-tool")
                 local.parent.mkdir(parents=True, exist_ok=True)
-                local.write_text("#!/bin/sh\necho 4.2\n")
-                local.chmod(0o755)
+                write_executable(local, "print('4.2')\n")
                 self.assertEqual(tool_state.resolve_executable("fake-tool", self.base), str(local))
                 local.unlink()
 
@@ -225,31 +220,39 @@ class ToolStateTests(unittest.TestCase):
         with patch.dict(os.environ, {"TOOL_REGISTRY_PATH": str(self.registry)}, clear=True):
             with self.assertRaises(ValueError):
                 tool_state.paths("specialist")
-        self.registry.write_text('{"owner":"different-owner","tools":[]}')
+        self.registry.write_text('{"owner":"different-owner","tools":[]}', encoding="utf-8")
         with patch.dict(os.environ, {"TOOL_REGISTRY_PATH": str(self.registry), "TOOL_STATE_PATH": str(self.state)}):
             with self.assertRaises(ValueError):
                 tool_state.registry_tool("specialist", "fake")
 
     def test_empty_verification_output_is_not_verified(self):
-        self.executable.write_text("#!/bin/sh\nexit 0\n")
+        write_executable(self.executable, "raise SystemExit(0)\n")
         self.assertIsNone(tool_state.probe("security-standard", "fake", self.base))
         self.assertFalse(self.state.exists())
 
     def test_version_and_failure_state_never_store_arbitrary_output(self):
-        self.executable.write_text("#!/bin/sh\necho 'fake-tool 1.2.3 token=synthetic-secret'\n")
+        write_executable(self.executable, "print('fake-tool 1.2.3 token=synthetic-secret')\n")
         entry = tool_state.detect("security-standard", "fake", self.base)
         self.assertEqual(entry["version"], "1.2.3")
         tool_state.record_failure("security-standard", "fake", self.base, "token=synthetic-secret")
-        self.assertNotIn("synthetic-secret", self.state.read_text())
+        self.assertNotIn("synthetic-secret", self.state.read_text(encoding="utf-8"))
 
     def test_cached_executable_cannot_redirect_execution(self):
         tool_state.detect("security-standard", "fake", self.base)
-        state = json.loads(self.state.read_text())
+        state = json.loads(self.state.read_text(encoding="utf-8"))
         state["tools"]["fake"]["executable"] = sys.executable
-        self.state.write_text(json.dumps(state))
+        self.state.write_text(json.dumps(state), encoding="utf-8")
         before = self.state.read_bytes()
         self.assertIsNone(tool_state.cached("security-standard", "fake", self.base, read_only=True))
         self.assertEqual(before, self.state.read_bytes())
+
+    def test_prerelease_build_version_token_keeps_official_suffix_without_logs(self):
+        for version in ('2.5.0-HEAD-a6f6ad7', '2.5.0-rc.1+build.7'):
+            with self.subTest(version=version):
+                write_executable(self.executable, "print('cutter " + version + " token=synthetic-secret')\n")
+                entry = tool_state.detect('security-standard', 'fake', self.base)
+                self.assertEqual(entry['version'], version)
+                self.assertNotIn('synthetic-secret', self.state.read_text(encoding='utf-8'))
 
 
 if __name__ == "__main__":
