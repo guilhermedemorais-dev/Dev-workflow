@@ -7,6 +7,14 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- Skills condicionais Frappe UI (Vue) e React Bits (React) sob `ui-ux-standard`.
+  Skills independentes do SO; selecao por SO somente nas tools executaveis.
+  Frappe skill oficial fixada com MIT/proveniencia; React Bits adaptador proprio
+  de docs/registry, sem redistribuir componentes e com MIT+CommonsClause explicito.
+  Dependencias por projeto, sem migracao da stack nem instalacao Pro/globalMCP.
+  TASK-051 registra validacao representativa e ambientes nao executados.
+
+
 - Cutter2.5.0 e Rizin0.9.1 portateis preparados no Windows, SHA256 oficial
   verificado. Disassembly e rz-ghidra recuperaram retorno42 de PE proprio.
   Registro suplementar e reutilizacao pelo tool-state; sem providerREA inventado.

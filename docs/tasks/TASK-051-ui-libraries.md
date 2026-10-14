@@ -1,0 +1,13 @@
+# TASK-051: Conditional UI library integration
+
+Revision1, linked Issue51. User approved2026-10-13 Frappe UI conditional skill integration with a small validation example, and React Bits. Latest user steering explicitly requires portable Windows/Linux/macOS integration. Preserve project-native UI and canonical ui-ux-standard ownership.
+
+Implementation list: pinned official Frappe skill from d39298ec2155a1c4cda57a4be656568217506982 with MIT provenance; selection only compatible Vue/Frappe and no existing-stack migration. ReactBits pinned496968c4117e21278f13917201b7d615bc5e7450 has no official standaloneSKILL in tree; authored narrow React-only adapter based on originaldocs and registry. Preserve exact MIT+CommonsClause restriction; no componentcode redistribution in Harness. No Pro/purchases/globalMCP/blanketdependencies. Sources ui-ux-standard, component-selection/sources, skill-installer, skill-creator, official SKILL/CORE/DATA/SETUP/license/registry. Allowed UIplugin, relatedtests, TASK051docs, README/CHANGELOG. Otherplugins and PR50 code protected.
+
+Validation list: isolated Windows/Linux Vueform and React component proof builds/render/meaningfulinteraction whereavailable. OS-neutral skill/doc/config paths and shell-neutral commands. Actual dependency versions recorded. Use browser whenavailable; state build-only if no browser. macOS/Windows11 unavailable means NOT_VALIDATED. No claiming allcomponent/allOS testPASS. Proof/source/dependencydirs remain localwork not Harnessdistribution. Full structural suite no newfailure and independent QA/license/routing review.
+
+Local installedUIplugin refresh authorized after review/test, preserve allotherplugins/settings. Draft stackedPR targets feat/platform-tool-routing basedb19463b while PR50mergepending. Humanacceptance and merge/release remain pending. No automaticlibraryinstall in everyproject. Issue andJSON equivalent revision1 with latestOSsteering included.
+
+User clarification: OS selection applies only to executable tools with differing compatibility. UI skills remain discoverable on Windows/Linux/macOS without OS gates. Frappe UI vs React Bits selection is based on frontend framework, preserving the existing project stack.
+
+2026-10-14 factual discovery requested: locate original React Native Web and listed UI libraries; record checked candidate references in existing component-sources only, no new library installs/skills/runtime certification. Cuicui points Control UI, Origin UI redirects coss with mixedMIT(apps/origin,apps/ui)/AGPLv3(otherdirs) licensing. Aceternity docs used while current canonical public component repo is unconfirmed. Frappe/ReactBits runtime proof scope and acceptance unchanged.

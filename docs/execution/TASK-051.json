@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-051",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
+    "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
+    "normative_equivalence": "Issue51, HumanTask and execution lists equivalent revision1 including latest portable Windows/Linux/macOS steering"
+  },
+  "summary": "Optional stack-based Frappe UI and React Bits integration",
+  "authorization": {
+    "status": "APPROVED_IMPLEMENTATION",
+    "source": "User direct request and allOS steering2026-10-13"
+  },
+  "execution_lists": [
+    {
+      "list_id": "ui-routing",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        "docs/tasks/TASK-051-ui-libraries.md",
+        "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md"
+      ],
+      "allowed_paths": [
+        "plugins/ui-ux-standard/**",
+        "tests/test_ui_library_routing.py"
+      ],
+      "protected_paths": [
+        "plugins/dev-workflow-standard/**",
+        "plugins/devops-standard/**"
+      ],
+      "acceptance_criteria": [
+        "Framework-conditional OS-neutral routing",
+        "Pinned licensed Frappe skill",
+        "ReactBits only references/adapter no redistributedcomponents"
+      ]
+    },
+    {
+      "list_id": "ui-runtime",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        "docs/tasks/TASK-051-ui-libraries.md"
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-051*"
+      ],
+      "acceptance_criteria": [
+        "Windows/Linux representative build/runtime evidence",
+        "Unavailable OS explicitly NOT_VALIDATED",
+        "Source license/provenance retained"
+      ]
+    }
+  ],
+  "locked_paths": [
+    "main",
+    "PR50 implementation",
+    "global MCP config",
+    "credentials"
+  ],
+  "execution_result": {
+    "status": "VALIDATED_PENDING_REVIEW",
+    "macos": "NOT_VALIDATED",
+    "windows11": "NOT_VALIDATED",
+    "structural_tests": "631 PASS, final independent run 47.597s",
+    "representative_runtime": "Windows10 Edge and Linux Kali/WSL Chromium PASS: Vue form and React BlurText, 1280/390 widths",
+    "local_ui_refresh": "24 source/cache files match; 12 plugins enabled; next-turn discovery"
+  },
+  "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",
+  "source_discovery_checkpoint": {
+    "date": "2026-10-14",
+    "user_request": "Locate original RNWeb and nine UI library repositories",
+    "allowed_change": "Existing UI component-source references only",
+    "no_new_dependencies": true,
+    "validation_scope_unchanged": true,
+    "license_notes": "Coss mixedMIT apps/origin+apps/ui andAGPLv3others; Aceternitycanonicalpubliccomponentrepositoryunconfirmed; candidatesnotruntimevalidated"
+  }
+}

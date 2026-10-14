@@ -44,6 +44,30 @@ como ferramentas suplementares. Rizin recuperou o mesmo retorno42 via rz-ghidra.
 A GUI Cutter nao foi homologada. Hopper nao tem buildWindows; IDAFree nao
 permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
 
+## Skills opcionais de UI por tecnologia
+
+O plugin `ui-ux-standard` inclui suporte condicional a Frappe UI em projetos Vue
+compativeis e a React Bits em projetos React. As skills sao independentes do SO;
+a selecao Windows/Linux/macOS continua exclusiva das tools executaveis que
+precisam dela. A tecnologia e o design system do projeto determinam a biblioteca.
+
+A skill oficial Frappe UI e preservada com revisao e licenca MIT, com gatilho
+restrito a Vue e contratos de componentes consultados sob demanda. Verifique os
+requisitos Vue/Node/Tailwind da revisao instalada. O backend Frappe e opcional
+para a UI; composables de dados Frappe nao sao uma API REST generica.
+
+A skill React Bits e um adaptador nosso para documentacao e registry oficiais,
+sem alegar skill oficial inexistente na revisao consultada. Use componentes por
+necessidade, variante JS/TS e CSS/Tailwind, verificando dependencias, fronteira
+client/server, acessibilidade, reduced motion e custo. MIT+CommonsClause permite
+uso em aplicacoes, mas restringe redistribuir componentes isolados/bundles/ports;
+nenhum componente React Bits e distribuido dentro deste plugin. Recursos Pro
+continuam fora do escopo. Dependencias sao instaladas no projeto escolhido.
+
+A disponibilidade da skill nao e homologacao de toda biblioteca em cada SO.
+Evidencias representativas e limites: `docs/receipts/TASK-051-runtime.md` e
+`docs/receipts/TASK-051-qa.md`. MacOS/Windows11 exigem execucao quando disponiveis.
+
 ## Instale com sua LLM
 
 **Copie o prompt abaixo e cole no agente que voce usa para desenvolver.**

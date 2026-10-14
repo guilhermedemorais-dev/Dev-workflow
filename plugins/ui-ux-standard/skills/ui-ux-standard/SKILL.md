@@ -97,6 +97,15 @@ Use this priority:
 Consult `references/component-sources.md` when external components, blocks, or
 templates could materially improve the result.
 
+For library-specific work, select by the project's framework and approved design:
+compatible Vue 3/Frappe UI work may load [frappe-ui](../frappe-ui/SKILL.md);
+selected React patterns may load [react-bits](../react-bits/SKILL.md).
+Project-native components and tokens remain first; these skills do not authorize
+framework migration, visual-identity replacement, blanket dependencies or global
+MCP changes. Consult their provenance and license before adoption. Both instruction
+skills remain available on Windows, Linux and macOS; only executable tools are
+selected by OS. Markdown/framework routing is not proof of native tool validation.
+
 Consult `references/component-selection.md` when choosing among several
 components, libraries, templates, or interaction patterns.
 

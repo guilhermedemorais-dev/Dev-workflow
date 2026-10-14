@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frappe UI"
+  short_description: "Frappe UI components for compatible Vue projects"
+  default_prompt: "Use $frappe-ui for this approved Vue interface, preserving project design rules."

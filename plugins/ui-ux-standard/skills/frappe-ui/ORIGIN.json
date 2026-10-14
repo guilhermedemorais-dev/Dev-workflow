@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/frappe/frappe-ui",
+  "revision": "d39298ec2155a1c4cda57a4be656568217506982",
+  "upstream_path": "skills/frappe-ui",
+  "source_package_version": "1.0.2",
+  "license": "MIT",
+  "license_source": "https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/license.md",
+  "files": {
+    "SKILL.md": {
+      "upstream_sha256": "4d7c6575f6cf0d622d0909684c64bbb799778ead19ca67dace269b4c40c36b43",
+      "source": "https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/skills/frappe-ui/SKILL.md",
+      "packaged_sha256": "dc402c3af2c81519dc0756c6e0bb86ac178173aee1689a202fd2a50d4f73b081"
+    },
+    "CORE.md": {
+      "upstream_sha256": "2e1c45127f5579e3353ddcd5b2de8a7dc3278ba343237fd7f3bdd11cefbc6829",
+      "source": "https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/skills/frappe-ui/CORE.md",
+      "packaged_sha256": "2e1c45127f5579e3353ddcd5b2de8a7dc3278ba343237fd7f3bdd11cefbc6829"
+    },
+    "DATA.md": {
+      "upstream_sha256": "7b3a381fa6e57ba9df1bf6d2d1c372a345b81dcf14b6ecc2725b51365483024b",
+      "source": "https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/skills/frappe-ui/DATA.md",
+      "packaged_sha256": "7b3a381fa6e57ba9df1bf6d2d1c372a345b81dcf14b6ecc2725b51365483024b"
+    },
+    "SETUP.md": {
+      "upstream_sha256": "eadf847d842ddcd7c774453f2c8b27cbc53725fc9e73ebfb375e9c111a81a02b",
+      "source": "https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/skills/frappe-ui/SETUP.md",
+      "packaged_sha256": "eadf847d842ddcd7c774453f2c8b27cbc53725fc9e73ebfb375e9c111a81a02b"
+    },
+    "LICENSE.md": {
+      "packaged_sha256": "9a588e5ac898c236fe8b76507401f0c98736d31a6e8b2a7125975406c4c8e16d"
+    }
+  },
+  "omitted": [
+    {
+      "path": "evals/cases-full-24.json",
+      "sha256": "6e9a66616cccd455818b2fbae195e9341c236b415791758645623a7a631b6474"
+    },
+    {
+      "path": "evals/cases.json",
+      "sha256": "23fa6fae4c1ec4b6b9400fbd7cba255483fcb9651a3b10ec1712904f9df6dc93"
+    },
+    {
+      "path": "evals/findings-2026-08.md",
+      "sha256": "fa405ecf064a683a438f6e89f112c579b5ebcc1241637061cc292e73d124be38"
+    },
+    {
+      "path": "evals/observed-failures-2026-08.md",
+      "sha256": "3680546db887582ef8883a6195dedbe46e7f4dd1c29579900975a626fe5cd7d9"
+    },
+    {
+      "path": "evals/README.md",
+      "sha256": "0840b4e1b3ee9292dff55b3c54f2d632feefc0803a2a5e153ce092aafb7017c8"
+    },
+    {
+      "path": "evals/run.workflow.js",
+      "sha256": "329db40a452a82ab43c1ac148a2c396438e31f9338285c51b576202c75f8e17b"
+    },
+    {
+      "path": "evals/score_invocation.py",
+      "sha256": "eb7e84ce64dc9d6601fcea353d4073ea42632b8451abf2c3e652b52ed7c01d03"
+    }
+  ],
+  "modifications": [
+    "SKILL description narrowed to Vue3 and approved Frappe adoption; Harness ownership boundary prepended. Upstream body and CORE/DATA/SETUP preserved.",
+    "Local agents metadata/provenance added; evaluation tooling omitted from instruction subset."
+  ],
+  "upstream_body_sha256": "8e0d0df849b6158806daf725ad6c17449f29b5b54d48d8a02c634cb93edac3d7"
+}
