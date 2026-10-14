@@ -1,5 +1,17 @@
 # Component Sources
 
+## Declared-preference Next.js/NestJS reference
+
+When the user/project declares this pair and no stack is approved, assess Next.js
+for React presentation/rendering with NestJS-owned domain/API boundaries.
+Official Next.js: [repo](https://github.com/vercel/next.js), [docs](https://nextjs.org/docs),
+[MIT source license](https://github.com/vercel/next.js/blob/179eba81e0572197a55ac83415d4e91d7cfdea62/license.md).
+Source pin 179eba81e0572197a55ac83415d4e91d7cfdea62 was checked 2026-10-14 on canary,
+not a selected production package version. Resolve active SDD backend-component-sources.md
+for the existing `nextjs`/`nestjs` IDs and API/auth boundaries. Preserve approved
+stacks and other users' choices; no universal migration or Vercel hosting required.
+
+
 For relevant wallet/chain UI, resolve the active sdd-spec-factory owner and its
 references/web3-component-sources.md metadata. Hooks/connectors are not authorization
 or approved wallet actions. Preserve free-edition and source-ID rules; do not infer

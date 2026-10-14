@@ -31,6 +31,11 @@ Select eligible free editions only, preserving license obligations and separate
 provider/infrastructure costs. Preserve the PRD consultation/selection record; missing or stale evidence remains
 NOT_VALIDATED. Do not assume sibling cache paths or select architecture/install packages.
 
+When the user/project declares a Next.js/NestJS preference and stack is undecided,
+assess that reference pair through existing catalog IDs, then confirm the PRD.
+Preserve approved stacks; do not apply this preference to undeclared projects. Next server/BFF adapters may call
+Nest-owned domain APIs; do not duplicate business rules or assume Next cannot run backend code.
+
 Ask at most three useful questions per round. Research what can be discovered
 from authorized sources before asking. Separate APPROVED, PROPOSED, UNKNOWN
 and EXCLUDED requirements with source and rationale. Reference functionality

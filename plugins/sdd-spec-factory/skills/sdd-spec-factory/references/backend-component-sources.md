@@ -85,7 +85,7 @@ No historical release is silently substituted or selected.
 | `medusa` | `@medusajs/medusa`: Modular Node commerce platform | [Repo](https://github.com/medusajs/medusa), [docs](https://docs.medusajs.com/) | MIT free core only; Enterprise excluded |
 | `vendure` | `@vendure/core`: TypeScript/NestJS/GraphQL headless commerce | [Repo](https://github.com/vendurehq/vendure), [docs](https://docs.vendure.io/) | GPL-3.0-or-later free core only; commercial VCL not selected; plugin exception |
 
-## JavaScript server frameworks and data access (5)
+## JavaScript server frameworks and data access (6)
 
 JavaScript and Java are different language/runtime families. Express/Fastify are
 Node JavaScript server frameworks with TypeScript support; Nest is TypeScript-first
@@ -93,6 +93,7 @@ Node application architecture. Prisma/Drizzle are database tools, not HTTP serve
 
 | Stable library ID | Package and purpose | Official repository / documentation | License |
 | --- | --- | --- | --- |
+| `nextjs` | `next`: React application framework with rendering and optional server/BFF adapters | [Repo](https://github.com/vercel/next.js), [docs](https://nextjs.org/docs) | MIT |
 | `express` | `express`: Node HTTP server framework | [Repo](https://github.com/expressjs/express), [docs](https://expressjs.com/) | MIT |
 | `fastify` | `fastify`: Node HTTP server framework with schema hooks | [Repo](https://github.com/fastify/fastify), [docs](https://fastify.dev/docs/latest/) | MIT |
 | `nestjs` | `@nestjs/core`: TypeScript-first Node application framework | [Repo](https://github.com/nestjs/nest), [docs](https://docs.nestjs.com/) | MIT |
@@ -116,6 +117,22 @@ toolchains/development HEAD do not certify release runtime support.
 | `jasperreports` | `net.sf.jasperreports:jasperreports`: Report generation engine | [Repo](https://github.com/Jaspersoft/jasperreports), [docs](https://jasperreports.sourceforge.net/) | LGPL-3.0 (confirm exact selected artifact expression) |
 | `quartz` | `org.quartz-scheduler:quartz`: Persistent JVM job scheduling | [Repo](https://github.com/quartz-scheduler/quartz), [docs](https://www.quartz-scheduler.org/) | Apache-2.0 |
 | `resilience4j` | `io.github.resilience4j:resilience4j-circuitbreaker`: Circuit breakers/retries/bulkheads and rate limiting | [Repo](https://github.com/resilience4j/resilience4j), [docs](https://resilience4j.readme.io/) | Apache-2.0 |
+
+## Declared-preference reference pair: Next.js and NestJS
+
+When the user/project declares this pair and stack is undecided, assess Next.js
+(`nextjs`) with existing NestJS (`nestjs`), then confirm in the project's PRD.
+Catalog presence does not make this pair a global plugin default.
+Preserve an already approved stack; other users/frameworks remain valid alternatives.
+Next handles presentation/rendering/SSR and optional server/BFF adaptation; it can
+run backend code. In this selected pair, domain/API business rules and persistence
+belong to the Nest-owned boundary. Next adapters call that API rather than copy
+domain rules. Auth/session, module and deployment boundaries remain project decisions.
+No migration, dependency version or deployment is selected by this preference.
+
+Next.js MIT code does not require Vercel hosting; hosting/provider costs are
+separate optional choices. Inspected canary source package is 16.5.0-canary.10,
+not an adopted stable release or cross-OS runtime certification.
 
 ## Adoption boundaries
 
@@ -190,6 +207,7 @@ of requirements, not an executed compatibility test.
 
 | Library ID | Observed branch | Full commit | Pinned package/license evidence |
 | --- | --- | --- | --- |
+| `nextjs` | `canary` | `179eba81e0572197a55ac83415d4e91d7cfdea62` | [package](https://github.com/vercel/next.js/blob/179eba81e0572197a55ac83415d4e91d7cfdea62/packages/next/package.json), [license](https://github.com/vercel/next.js/blob/179eba81e0572197a55ac83415d4e91d7cfdea62/license.md) |
 | `laravel-fortify` | `1.x` | `f7c3fd787a64ada544353c0423e4589b1626ec75` | [package](https://raw.githubusercontent.com/laravel/fortify/f7c3fd787a64ada544353c0423e4589b1626ec75/composer.json), [license](https://raw.githubusercontent.com/laravel/fortify/f7c3fd787a64ada544353c0423e4589b1626ec75/LICENSE.md) |
 | `spatie-permission` | `main` | `6615eefac655efcd652fe394a20cbdf4f72c609f` | [package](https://raw.githubusercontent.com/spatie/laravel-permission/6615eefac655efcd652fe394a20cbdf4f72c609f/composer.json), [license](https://raw.githubusercontent.com/spatie/laravel-permission/6615eefac655efcd652fe394a20cbdf4f72c609f/LICENSE.md) |
 | `spatie-activitylog` | `main` | `c37c43b32ea1ff15dc00491c07dafdfb8fd57340` | [package](https://raw.githubusercontent.com/spatie/laravel-activitylog/c37c43b32ea1ff15dc00491c07dafdfb8fd57340/composer.json), [license](https://raw.githubusercontent.com/spatie/laravel-activitylog/c37c43b32ea1ff15dc00491c07dafdfb8fd57340/LICENSE.md) |

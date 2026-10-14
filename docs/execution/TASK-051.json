@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "contract_revision": "8",
+  "contract_revision": "9",
   "task_id": "TASK-051",
   "human_task": {
     "representation": "github_issue",
     "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
     "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
-    "normative_equivalence": "Issue51 and HumanTask revision8 including11Web3identitysourcecatalog/freeeligibility"
+    "normative_equivalence": "Issue51 and HumanTask revision9 Next/Nest preferreduserreference pair preserving approvedstacks"
   },
   "summary": "Curated UI catalog and PRD/spec/task library provenance; no standalone library skills",
   "authorization": {
@@ -43,7 +43,8 @@
         "Backend source catalog covers supplied list with verified origin/license/pin and adoptionbounds; no installs or architecture selection",
         "Java10 and JSserver-framework/data5 candidate sources verified; retain existing27; no runtime/architecture selection",
         "Usable no-cost edition/item with compatible verified terms only; exclude paid editions/currentLiquibase byrestrictivefilter; retain zero-cost ReactBits appuse restriction; SDKcodefree differsservicefees;41backendIDs/pins",
-        "Web3 all11identitiesverified withpins/licenses, activefreeeditiononly, restrictedunknownexcluded; toolchain separate source-only/noexec registry/RPC/walletactions"
+        "Web3 all11identitiesverified withpins/licenses, activefreeeditiononly, restrictedunknownexcluded; toolchain separate source-only/noexec registry/RPC/walletactions",
+        "Next.js explicitverifiedMITcandidate; Nestexistingnotduplicate; preferredNext/Nest userreference notuniversalforcedstack; nohostpurchase/install"
       ]
     },
     {
@@ -74,11 +75,12 @@
     "revision1_evidence": "Historical; superseded standalone skill scope",
     "macos": "NOT_VALIDATED",
     "windows11": "NOT_VALIDATED",
-    "structural_tests": "revision8:631PASS43.892s;14focusedchecks35links3validatorsPASS",
-    "local_catalog_refresh": "revision8:55UI/Studio/SDD source/cache files match; UI/SDDonly refreshed; config unchanged;12plugins enabled",
+    "structural_tests": "revision9:631PASS44.293s;14focusedchecks35links3validatorsPASS",
+    "local_catalog_refresh": "revision9:55UI/Studio/SDD source/cache files match;config unchanged;12plugins enabled",
     "apibrasil": "Catalog only NOT_CONNECTED NOT_VALIDATED",
     "research_validation": "Source/license metadata reviewed; no projectcompatibility/security/runtime certification",
-    "web3": "11identified10eligiblefreecodesources;Reownexcludeddefault;NOT_INSTALLED/NOT_RUNTIME_VALIDATED"
+    "web3": "11identified10eligiblefreecodesources;Reownexcludeddefault;NOT_INSTALLED/NOT_RUNTIME_VALIDATED",
+    "next_nest": "NextexplicitMITcandidate/42backendIDs;existingNestnotduplicated;user-declaredreferencepaironly;no install/version/migration"
   },
   "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",
   "source_discovery_checkpoint": {

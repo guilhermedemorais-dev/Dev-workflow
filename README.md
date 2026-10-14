@@ -71,10 +71,14 @@ para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
 
 O SDD inclui um [catalogo candidato de backend/pagamentos/fiscal/commerce](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/backend-component-sources.md),
 com fontes oficiais, revisoes e limites de adocao. Nao instala dependencias nem escolhe a arquitetura.
+Next.js e NestJS formam o par de referencia preferido deste usuario para propostas
+novas sem stack aprovada; stacks existentes continuam preservadas. Next possui
+renderizacao e backend/BFF opcional; regras de dominio ficam no limite definido no PRD.
+Next MIT nao obriga hospedagem Vercel nem escolhe versao de dependencia.
 Um [catalogo Web3 de fontes](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/web3-component-sources.md)
 distingue clientes/hooks, contratos, bibliotecas PHP e toolchains. Licenca gratuita
 nao implica RPC/gas gratuitos nem autoriza carteira, assinatura ou deploy.
-O catalogo backend oferece41 candidatos com core/edicao gratuita elegivel;
+O catalogo backend oferece42 candidatos com core/edicao gratuita elegivel;
 Liquibase FSL excluido, Medusa Enterprise e Vendure comercial nao selecionados.
 Biblioteca gratuita nao significa servicos/infraestrutura gratuitos.
 O catalogo inclui tambem Java e frameworks/data access JavaScript, distinguindo

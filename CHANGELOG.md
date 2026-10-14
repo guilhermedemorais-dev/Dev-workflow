@@ -7,6 +7,8 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-051 revisao9: Next.js MIT explicito e par Next/Nest preferido para novas
+  propostas deste usuario, preservando stacks aprovadas;42 candidatos backend.
 - TASK-051 revisao8: fontes Web3 verificadas e elegibilidade gratuita por item,
   com custos de RPC/rede separados e toolchains somente como referencias.
 - TASK-051 revisao7: filtra41 candidatos backend de core/edicao gratuita OSI;

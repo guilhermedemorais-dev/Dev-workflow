@@ -109,6 +109,11 @@ until verified. Zero license cost and OSI open-source status are distinct: retai
 applicable source-available/copy/redistribution restrictions and subtree terms.
 No catalog proves every repository item free or all infrastructure/services free.
 
+When the user/project declares a Next.js/NestJS preference and stack is undecided,
+assess that reference pair through existing catalog IDs, then confirm the PRD.
+Preserve approved stacks; do not apply this preference to undeclared projects. Next server/BFF adapters may call
+Nest-owned domain APIs; do not duplicate business rules or assume Next cannot run backend code.
+
 Use project-native UI first, then the curated catalog matching the actual stack.
 If a concrete gap remains, use targeted Context7 documentation or GitHub official
 source search; record unavailable capabilities and verified fallbacks. Libraries

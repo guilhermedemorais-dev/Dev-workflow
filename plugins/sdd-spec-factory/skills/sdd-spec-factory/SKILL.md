@@ -21,6 +21,11 @@ before targeted new research. Select eligible free editions only, preserving
 license obligations and separate provider/infrastructure costs. This adds
 candidates, not dependencies or a stack decision.
 
+When the user/project declares a Next.js/NestJS preference and stack is undecided,
+assess that reference pair through existing catalog IDs, then confirm the PRD.
+Preserve approved stacks; do not apply this preference to undeclared projects. Next server/BFF adapters may call
+Nest-owned domain APIs; do not duplicate business rules or assume Next cannot run backend code.
+
 ## Mission
 
 Transform NORMAL work with unspecified behavior and COMPLEX work into, when
