@@ -7,6 +7,37 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-053: upgrade aditivo do Minimal Code Gate inspirado em Ponytail, com
+  limpeza comprovada, biblioteca padrao/plataforma/dependencias, correcao na
+  origem e consumidores completos. Preserva regras anteriores, escopo aprovado
+  e protecoes; integra execucao e QA sem hooks, instalacao ou modo global.
+
+- TASK-051 revisao9: Next.js MIT explicito e par Next/Nest preferido para novas
+  propostas deste usuario, preservando stacks aprovadas;42 candidatos backend.
+- TASK-051 revisao8: fontes Web3 verificadas e elegibilidade gratuita por item,
+  com custos de RPC/rede separados e toolchains somente como referencias.
+- TASK-051 revisao7: filtra41 candidatos backend de core/edicao gratuita OSI;
+  exclui Liquibase FSL e recursos pagos, preservando obrigacoes e custos de servico.
+- TASK-051 revisao6: acrescenta10 candidatos Java e5 frameworks/data tools
+  JavaScript, com revisoes/licencas e limites; preserva as27 entradas anteriores
+  e a matriz original de dominios tecnicos.
+- TASK-051 revisao5: catalogo candidato backend, pagamentos/fiscal e commerce,
+  com origem/revisao/licenca e limites; sem instalacao ou escolha de arquitetura.
+- TASK-051 revisao4: explicita registro compacto de consulta e escolha de fontes
+  em cada PRD/spec, com reuso nativo/N/A justificado e evidencia indisponivel
+  NOT_VALIDATED; preserva consulta global, sem instalar ou carregar todo catalogo.
+- TASK-051 revisao3: APIBrasil adicionado somente ao catalogo de pesquisa API do
+  SDD, com fonte/pin/MIT do cliente e termos comerciais dos servicos separados;
+  NOT_CONNECTED/NOT_VALIDATED, sem instalacao, chamadas ou pagamentos.
+
+- TASK-051 revisao2: Frappe UI e React Bits passam a referencias do catalogo curado;
+  removidas as skills standalone empacotadas. Reuso nativo primeiro, catalogo
+  por stack depois, Context7/GitHub oficial para lacunas. ID de fonte/proveniencia
+  preservado em PRD, spec e Task; fontes REQUIRED apenas para dependencias escolhidas.
+  Sem componentes/dependencias distribuidos ou instalacao global; licencas e pins
+  verificados mantidos como referencias. Instrucoes sem restricao por SO.
+
+
 - Cutter2.5.0 e Rizin0.9.1 portateis preparados no Windows, SHA256 oficial
   verificado. Disassembly e rz-ghidra recuperaram retorno42 de PE proprio.
   Registro suplementar e reutilizacao pelo tool-state; sem providerREA inventado.

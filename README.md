@@ -44,6 +44,50 @@ como ferramentas suplementares. Rizin recuperou o mesmo retorno42 via rz-ghidra.
 A GUI Cutter nao foi homologada. Hopper nao tem buildWindows; IDAFree nao
 permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
 
+## Catalogo de bibliotecas UI por tecnologia
+
+Cada PRD/spec registra os indices/metadados aplicaveis consultados, revisao e
+fonte escolhida/reuso nativo, ou N/A justificado. Evidencia indisponivel ou
+desatualizada fica NOT_VALIDATED. Consulta de metadados nao exige carregar todos
+os corpos de fontes; a consulta global do inventario pelo Harness permanece.
+
+Todas as bibliotecas sao candidatas no catalogo curado de ui-ux-standard, nao
+skills standalone instaladas. Reuso nativo do projeto primeiro; catalogo compativel
+com Vue/React e design aprovado depois. Para lacunas concretas, pesquisar docs via
+Context7 ou fontes oficiais no GitHub, com proveniencia e limites explicitos.
+
+Frappe UI e candidato Vue, com commit oficial verificado e licenca MIT; sua skill
+upstream e somente uma fonte opcional de documentacao. React Bits e candidato
+React, com docs/registry oficiais e MIT+CommonsClause, que restringe redistribuir
+componentes isolados/bundles/ports. Nenhum componente, dependencia ou skill dessas
+bibliotecas e distribuido dentro do Harness. Adocao nao migra a stack existente.
+
+PRD, spec/frontend e Task preservam o mesmo ID da fonte, repo/docs, versao/commit
+ou UNKNOWN, componente/variante, proposito/modulo, licenca, dependencias, adaptacoes
+e estado da decisao. Somente fontes de dependencias selecionadas entram como
+REQUIRED no JSON existente; nao carregar todo o catalogo. Instalar dependencias
+somente no projeto escolhido. Instrucoes independem do SO; selecao por SO e apenas
+para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
+
+O SDD inclui um [catalogo candidato de backend/pagamentos/fiscal/commerce](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/backend-component-sources.md),
+com fontes oficiais, revisoes e limites de adocao. Nao instala dependencias nem escolhe a arquitetura.
+Next.js e NestJS formam o par de referencia preferido deste usuario para propostas
+novas sem stack aprovada; stacks existentes continuam preservadas. Next possui
+renderizacao e backend/BFF opcional; regras de dominio ficam no limite definido no PRD.
+Next MIT nao obriga hospedagem Vercel nem escolhe versao de dependencia.
+Um [catalogo Web3 de fontes](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/web3-component-sources.md)
+distingue clientes/hooks, contratos, bibliotecas PHP e toolchains. Licenca gratuita
+nao implica RPC/gas gratuitos nem autoriza carteira, assinatura ou deploy.
+O catalogo backend oferece42 candidatos com core/edicao gratuita elegivel;
+Liquibase FSL excluido, Medusa Enterprise e Vendure comercial nao selecionados.
+Biblioteca gratuita nao significa servicos/infraestrutura gratuitos.
+O catalogo inclui tambem Java e frameworks/data access JavaScript, distinguindo
+linguagens, runtimes e licencas por fonte. Fonte verificada nao significa release escolhido.
+
+APIBrasil tambem consta como candidato na biblioteca de pesquisa de APIs do SDD,
+com fonte oficial/pin/licenca e custos dependentes do servico. E referencia de
+pesquisa, nao MCP instalado/conectado nem promessa de APIs gratuitas ilimitadas.
+
 ## Instale com sua LLM
 
 **Copie o prompt abaixo e cole no agente que voce usa para desenvolver.**

@@ -39,6 +39,12 @@ Endpoints consumidos, contratos e erros tratados. `N/A` + motivo se não houver.
 ## Frontend/UI
 Comportamento de UI, responsividade e acessibilidade (detalhar com ui-ux-standard).
 
+Bibliotecas selecionadas: preservar ID biblioteca/ID fonte do PRD, repo/docs
+oficial, versão/commit ou UNKNOWN, componente/variante, propósito/módulo, licença,
+dependências, adaptações e estado da decisão. Reuso nativo e catálogo compatível
+primeiro; pesquisa oficial dirigida apenas para lacunas. Encaminhar o mesmo ID
+à Task e às referências JSON necessárias, sem carregar candidatas não escolhidas.
+
 ## Segurança
 Permissões necessárias, dados sensíveis exibidos, limites de acesso.
 
@@ -53,3 +59,11 @@ O que esta tela explicitamente não cobre.
 
 ## Decisões pendentes
 Decisões abertas aguardando humano (numeradas).
+
+## Referências e decisão de fontes
+
+Registro de consulta: índices/metadados dos catálogos aplicáveis e revisão
+consultados; ID da fonte escolhida ou reuso nativo; ou N/A com justificativa.
+Evidência indisponível/desatualizada: NOT_VALIDATED, sem inventar consulta.
+Consultar metadados não exige ler todas as fontes; somente fontes selecionadas
+necessárias seguem como REQUIRED, preservando a consulta global do Harness.

@@ -59,3 +59,11 @@ Critérios objetivos e testáveis do módulo.
 
 ## Hipóteses
 Liste explicitamente cada suposição (`HIPÓTESE:`).
+
+## Referências e decisão de fontes
+
+Registro de consulta: índices/metadados dos catálogos aplicáveis e revisão
+consultados; ID da fonte escolhida ou reuso nativo; ou N/A com justificativa.
+Evidência indisponível/desatualizada: NOT_VALIDATED, sem inventar consulta.
+Consultar metadados não exige ler todas as fontes; somente fontes selecionadas
+necessárias seguem como REQUIRED, preservando a consulta global do Harness.

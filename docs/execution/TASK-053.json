@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-053",
+  "human_task": {
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/53",
+    "local_mirror": "docs/tasks/TASK-053-minimal-code.md",
+    "normative_equivalence": "Harness attests revision1 MD/JSON scope and acceptance equivalence to Issue53 observed creation 2026-10-14T06:53:17Z"
+  },
+  "authorization": {"status": "APPROVED_IMPLEMENTATION_AND_PUBLICATION", "source": "Direct user instruction 2026-10-14"},
+  "summary": "Add Ponytail-inspired scoped simplification without replacing existing Minimal Code Gate",
+  "execution_lists": [
+    {
+      "list_id": "minimal-upgrade",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        {"path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/minimal-code-gate.md", "purpose": "Preserve existing policy and evidence"},
+        {"path": "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md", "purpose": "Integrate execution routing"},
+        {"path": "plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md", "purpose": "Integrate independent review routing"},
+        {"path": "https://github.com/DietrichGebert/ponytail/tree/2961b52fc1fe6a5a87c7a959a79512e5c2f3ffe5/skills", "purpose": "MIT upstream core/review principles, not historical lineage"}
+      ],
+      "allowed_paths": ["plugins/dev-workflow-standard/skills/dev-workflow-standard/references/minimal-code-gate.md", "plugins/dev-implementation-standard/skills/dev-implementation-standard/SKILL.md", "plugins/qa-testing-standard/skills/qa-testing-standard/SKILL.md", "CHANGELOG.md", "docs/tasks/TASK-053-minimal-code.md", "docs/execution/TASK-053.json", "docs/receipts/TASK-053*"],
+      "acceptance_criteria": ["Preserve all existing gate rules/fields", "Scoped cleanup verified including dynamic references", "Platform/stdlib/dependency ladder after project reuse", "Shared-root fix and affected consumer closure", "Readable simplification preserves full approved scope and safeguards", "Meaningful validation and intentional-limit evidence with justified N/A", "Owner boundaries and no third-party global hooks"]
+    },
+    {
+      "list_id": "minimal-validation",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [{"path": "docs/execution/TASK-053.json", "purpose": "Current acceptance and allowed paths"}],
+      "allowed_paths": ["docs/receipts/TASK-053*"],
+      "acceptance_criteria": ["Independent semantic review", "Full python unittest discovery PASS", "git diff --check PASS", "No unsupported runtime portability claim"]
+    }
+  ],
+  "locked_paths": ["main", "TASK-051 contract", "other plugin files", "global MCP/settings", "credentials"],
+  "execution_result": {"status": "VALIDATED_PENDING_PUBLICATION", "publication": "PENDING", "structural_tests": "631 tests PASS, 53.529s, native Python 3.12.14", "diff_check": "PASS", "independent_qa": "docs/receipts/TASK-053-qa.md", "runtime_behavior": "NOT_VALIDATED"}
+}
