@@ -38,6 +38,33 @@ sources outside the environment MCP Library and specialist tool registries.
 Only a separately reviewed MCP candidate may enter that library; configuration
 and installation remain subject to the environment consent/policy gates.
 
+## APIBrasil candidate, checked 2026-10-14
+
+Status: catalog candidate, **NOT_CONNECTED / NOT_VALIDATED** for runtime/service
+execution. This entry adds research knowledge only, not an installed MCP or an
+environment-library registration.
+
+- Official client: [APIBrasil/apibrasil-mcp-client](https://github.com/APIBrasil/apibrasil-mcp-client),
+  verified revision `f030daeb4c47df65380bb0f07eccfdec3561aa03`.
+- [Pinned README](https://github.com/APIBrasil/apibrasil-mcp-client/blob/f030daeb4c47df65380bb0f07eccfdec3561aa03/README.md)
+  and [MIT code license](https://github.com/APIBrasil/apibrasil-mcp-client/blob/f030daeb4c47df65380bb0f07eccfdec3561aa03/LICENSE).
+- Provider: https://www.apibrasil.io/ ; API docs: https://doc.apibrasil.io/ .
+  Documented API gateway: `https://gateway.apibrasil.io/api/v2`.
+  Documented Streamable HTTP MCP endpoint: `https://mcp.apibrasil.cloud/mcp`.
+- [Credential concepts](https://github.com/APIBrasil/apibrasil-mcp-client/blob/f030daeb4c47df65380bb0f07eccfdec3561aa03/conceitos/credenciais/README.md)
+  and [catalog discovery](https://github.com/APIBrasil/apibrasil-mcp-client/blob/f030daeb4c47df65380bb0f07eccfdec3561aa03/conceitos/descoberta/README.md).
+  Authentication depends on the requested service and documented credentials;
+  inspect the exact API contract before implementation, never collect tokens here.
+
+The provider documents per-query credits/subscriptions. Client code under MIT does
+not make all services free or unlimited; API commercial terms, permissions and
+service-specific prices/limits are separate. The documented `apibrasil_catalog`
+can expose price metadata when separately authorized and available; it was not
+called for this entry. No pricing numbers or unverified free-tier guarantees.
+No installation, connection, account, payment or service/tool call was performed.
+When selected for a project, apply the candidate evidence/authorization procedure
+below and retain exact service, data/privacy, cost and runtime validation limits.
+
 ## Planning/spec procedure
 
 1. State the requirement and acceptance criterion: what needs validating or

@@ -113,6 +113,11 @@ não houver impacto visual, marcar N/A com motivo verificado.
 - Design Guide:
 - Design tokens:
 - Biblioteca de componentes:
+- Fontes de bibliotecas selecionadas: manter ID biblioteca/ID fonte do PRD/spec,
+  repo/docs oficial, versão/commit ou UNKNOWN, componente/variante, propósito/módulo,
+  licença, dependências, adaptações e estado da decisão. Usar o mesmo ID em
+  `references[].id` e fontes REQUIRED somente para dependências selecionadas e
+  necessárias; candidatas não escolhidas não obrigam carregar todo o catálogo.
 - Referências visuais:
 - Mockup/frame aprovado:
 - Aplicabilidade ou motivo N/A:

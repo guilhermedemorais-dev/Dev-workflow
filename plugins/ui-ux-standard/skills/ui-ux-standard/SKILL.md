@@ -97,14 +97,17 @@ Use this priority:
 Consult `references/component-sources.md` when external components, blocks, or
 templates could materially improve the result.
 
-For library-specific work, select by the project's framework and approved design:
-compatible Vue 3/Frappe UI work may load [frappe-ui](../frappe-ui/SKILL.md);
-selected React patterns may load [react-bits](../react-bits/SKILL.md).
-Project-native components and tokens remain first; these skills do not authorize
-framework migration, visual-identity replacement, blanket dependencies or global
-MCP changes. Consult their provenance and license before adoption. Both instruction
-skills remain available on Windows, Linux and macOS; only executable tools are
-selected by OS. Markdown/framework routing is not proof of native tool validation.
+Use project-native UI first, then the curated catalog matching the actual stack.
+If a concrete gap remains, use targeted Context7 documentation or GitHub official
+source search; record unavailable capabilities and verified fallbacks. Libraries
+are catalog candidates, not standalone installed skills or compulsory dependencies.
+Do not migrate frameworks, replace approved design rules, install every candidate
+or modify global MCP settings. Install only selected dependencies in the approved
+project. Instructions remain OS-neutral; only executable tools use OS catalogs.
+
+For selected or proposed library sources, read [Library source handoff](references/library-source-handoff.md).
+Preserve the same project source ID from PRD to spec and Task; load only the selected
+dependency's purpose-qualified references, not the whole catalog on every task.
 
 Consult `references/component-selection.md` when choosing among several
 components, libraries, templates, or interaction patterns.
@@ -122,6 +125,10 @@ COMPONENT_SOURCE_INVENTORY
 - project-native candidates:
 - external candidates searched:
 - selected source/component:
+- stable library ID and project source ID:
+- official repository/docs URL and exact version/commit or UNKNOWN:
+- component path/variant and purpose/module:
+- decision state (PROPOSED/APPROVED/UNKNOWN/EXCLUDED):
 - why selected:
 - adaptation required:
 - license/dependency status:

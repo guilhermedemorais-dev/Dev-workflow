@@ -41,6 +41,14 @@ manter/completar/corrigir/refatorar/substituir/descontinuar, sem exclusão impl�
 Biblioteca de referências com origem/revisão. Quando houver UI, links ao Design
 Guide MD, tokens e catálogo HTML vivo do projeto, mantidos durante cada SDD.
 
+Somente bibliotecas/componentes relevantes: manter o mesmo ID da fonte do PRD
+até spec e Task. Reuso nativo primeiro, catálogo compatível depois, pesquisa
+Context7/GitHub oficial apenas para lacunas. PROPOSED/UNKNOWN são válidos antes
+da decisão; não inventar versões nem instalar todas as candidatas.
+
+| ID biblioteca / ID fonte | Repo/docs oficial | Versão/commit ou UNKNOWN | Componente/variante | Propósito/módulo | Licença | Dependências | Adaptações | Estado/decisão |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
 ## Rastreabilidade, riscos e decisões pendentes
 
 Ator → cenário → regra → referência/decisão → aceite → módulo/task.

@@ -189,7 +189,7 @@ When planning/spec discovery requires an API, external integration or validation
 endpoint, read [API Research Library](references/api-research-library.md).
 Prioritize free APIs or a suitable free tier to validate application features
 and test the application when relevant, with verified limits and synthetic data.
-Use its two discovery sources only when relevant, verify candidates against
+Use its relevant discovery sources or curated provider candidates, verify them against
 official documentation and record the decision plus validation plan/evidence.
 An API listing is neither an approved dependency nor an available MCP. Do not
 install or send real customer data during research; untested claims remain
@@ -225,6 +225,18 @@ IDs/revisions, catalogue anchors, rules, fixtures and limitations through the
 existing design/references fields of the Human Task and equivalent JSON.
 Missing catalogue/approval blocks frontend readiness, never becomes a fictitious
 PASS or a separate frontend Task. Backend-only work records UI N/A.
+
+For selected UI libraries, preserve the PRD's stable library/source ID in the
+frontend/component spec and Human Task. Retain official repository/docs, exact
+version/commit or UNKNOWN, component path/variant, purpose/module, license,
+dependencies, adaptations and decision state. Reuse native UI first, curated
+matching-stack candidates second, targeted Context7/official GitHub research for
+gaps. Resolve active ui-ux-standard references/library-source-handoff.md only when
+needed; no assumed cross-plugin paths or global catalog loading. Map the same
+source ID into existing JSON references and REQUIRED sources only for selected,
+necessary dependencies. Resolve material UNKNOWN choices before execution;
+nonselected candidates do not become mandatory references. No new schema/gate,
+standalone library skill or automatic per-project dependency installation.
 
 When the requested surface includes CI/CD, containers, IaC, servers, deployment,
 cloud, GitOps, observability, backup/DR, incidents or advanced release strategy,

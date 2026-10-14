@@ -44,29 +44,29 @@ como ferramentas suplementares. Rizin recuperou o mesmo retorno42 via rz-ghidra.
 A GUI Cutter nao foi homologada. Hopper nao tem buildWindows; IDAFree nao
 permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
 
-## Skills opcionais de UI por tecnologia
+## Catalogo de bibliotecas UI por tecnologia
 
-O plugin `ui-ux-standard` inclui suporte condicional a Frappe UI em projetos Vue
-compativeis e a React Bits em projetos React. As skills sao independentes do SO;
-a selecao Windows/Linux/macOS continua exclusiva das tools executaveis que
-precisam dela. A tecnologia e o design system do projeto determinam a biblioteca.
+Todas as bibliotecas sao candidatas no catalogo curado de ui-ux-standard, nao
+skills standalone instaladas. Reuso nativo do projeto primeiro; catalogo compativel
+com Vue/React e design aprovado depois. Para lacunas concretas, pesquisar docs via
+Context7 ou fontes oficiais no GitHub, com proveniencia e limites explicitos.
 
-A skill oficial Frappe UI e preservada com revisao e licenca MIT, com gatilho
-restrito a Vue e contratos de componentes consultados sob demanda. Verifique os
-requisitos Vue/Node/Tailwind da revisao instalada. O backend Frappe e opcional
-para a UI; composables de dados Frappe nao sao uma API REST generica.
+Frappe UI e candidato Vue, com commit oficial verificado e licenca MIT; sua skill
+upstream e somente uma fonte opcional de documentacao. React Bits e candidato
+React, com docs/registry oficiais e MIT+CommonsClause, que restringe redistribuir
+componentes isolados/bundles/ports. Nenhum componente, dependencia ou skill dessas
+bibliotecas e distribuido dentro do Harness. Adocao nao migra a stack existente.
 
-A skill React Bits e um adaptador nosso para documentacao e registry oficiais,
-sem alegar skill oficial inexistente na revisao consultada. Use componentes por
-necessidade, variante JS/TS e CSS/Tailwind, verificando dependencias, fronteira
-client/server, acessibilidade, reduced motion e custo. MIT+CommonsClause permite
-uso em aplicacoes, mas restringe redistribuir componentes isolados/bundles/ports;
-nenhum componente React Bits e distribuido dentro deste plugin. Recursos Pro
-continuam fora do escopo. Dependencias sao instaladas no projeto escolhido.
+PRD, spec/frontend e Task preservam o mesmo ID da fonte, repo/docs, versao/commit
+ou UNKNOWN, componente/variante, proposito/modulo, licenca, dependencias, adaptacoes
+e estado da decisao. Somente fontes de dependencias selecionadas entram como
+REQUIRED no JSON existente; nao carregar todo o catalogo. Instalar dependencias
+somente no projeto escolhido. Instrucoes independem do SO; selecao por SO e apenas
+para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
 
-A disponibilidade da skill nao e homologacao de toda biblioteca em cada SO.
-Evidencias representativas e limites: `docs/receipts/TASK-051-runtime.md` e
-`docs/receipts/TASK-051-qa.md`. MacOS/Windows11 exigem execucao quando disponiveis.
+APIBrasil tambem consta como candidato na biblioteca de pesquisa de APIs do SDD,
+com fonte oficial/pin/licenca e custos dependentes do servico. E referencia de
+pesquisa, nao MCP instalado/conectado nem promessa de APIs gratuitas ilimitadas.
 
 ## Instale com sua LLM
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "React Bits"
-  short_description: "Selected React Bits patterns with license checks"
-  default_prompt: "Use $react-bits to assess this selected pattern for our existing React interface."

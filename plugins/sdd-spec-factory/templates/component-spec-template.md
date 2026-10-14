@@ -9,6 +9,13 @@ O que este componente faz e por que existe.
 ## Onde é usado
 Telas/contextos que consomem este componente.
 
+## Origem e decisão de reuso
+Para origem relevante, preservar ID biblioteca/ID fonte do PRD: repo/docs oficial,
+versão/commit ou UNKNOWN, caminho/variante do componente, propósito/módulo, licença,
+dependências, adaptações e estado da decisão. Reuso nativo primeiro, catálogo
+compatível depois, pesquisa Context7/GitHub oficial apenas para lacunas. A Task
+reutiliza o mesmo ID; somente dependências selecionadas exigem fontes REQUIRED.
+
 ## Props/entradas
 Nome, tipo, obrigatório/opcional, valor padrão e descrição de cada entrada.
 

@@ -39,6 +39,12 @@ Endpoints consumidos, contratos e erros tratados. `N/A` + motivo se não houver.
 ## Frontend/UI
 Comportamento de UI, responsividade e acessibilidade (detalhar com ui-ux-standard).
 
+Bibliotecas selecionadas: preservar ID biblioteca/ID fonte do PRD, repo/docs
+oficial, versão/commit ou UNKNOWN, componente/variante, propósito/módulo, licença,
+dependências, adaptações e estado da decisão. Reuso nativo e catálogo compatível
+primeiro; pesquisa oficial dirigida apenas para lacunas. Encaminhar o mesmo ID
+à Task e às referências JSON necessárias, sem carregar candidatas não escolhidas.
+
 ## Segurança
 Permissões necessárias, dados sensíveis exibidos, limites de acesso.
 

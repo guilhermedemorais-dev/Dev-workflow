@@ -33,25 +33,32 @@ Use these as candidate sources, not as a mandate to mix them all in one project.
 Always verify current license, component source, dependency footprint, and stack
 compatibility before adoption.
 
-- Frappe UI: conditional foundation candidate for compatible Vue 3/Frappe UI
-  projects, not React projects. Use the pinned [official instruction subset](../../frappe-ui/SKILL.md)
-  only when already adopted or explicitly selected; [provenance](../../frappe-ui/ORIGIN.md)
-  preserves MIT source and exact component/data/setup contracts. Existing project
-  UI ownership remains authoritative, including non-Frappe backend boundaries.
+- `frappe-ui`: foundation candidate for compatible Vue 3 projects, not React.
+  Verified source revision `d39298ec2155a1c4cda57a4be656568217506982` declares
+  package 1.0.2; verify the actual project package/API before adoption. MIT notice:
+  https://github.com/frappe/frappe-ui/blob/d39298ec2155a1c4cda57a4be656568217506982/license.md
+  The [upstream official skill](https://github.com/frappe/frappe-ui/tree/d39298ec2155a1c4cda57a4be656568217506982/skills/frappe-ui)
+  is an optional documentation source, not installed in this Harness. Consult
+  only the component/data/setup contract needed; setup changes require project
+  scope. No automatic Vue/Tailwind migration or Frappe backend requirement.
   - https://ui.frappe.io/
   - https://github.com/frappe/frappe-ui
-- React Bits: selected motion/visual patterns for compatible React projects,
-  not a compulsory UI foundation. Read the [local adapter](../../react-bits/SKILL.md)
-  and [official sources](../../react-bits/references/sources.md). License is
-  MIT + Commons Clause, with restrictions on component redistribution/bundles/ports;
-  inspect the exact terms before project adoption. No component code is bundled
-  in this Harness. Existing project registry/tools suffice when available.
+- `react-bits`: selected React motion/visual patterns, not a compulsory foundation.
+  Verified source revision `496968c4117e21278f13917201b7d615bc5e7450` has no official
+  standalone SKILL. [Exact license](https://github.com/DavidHDev/react-bits/blob/496968c4117e21278f13917201b7d615bc5e7450/LICENSE.md)
+  is MIT + Commons Clause, restricting component redistribution/bundles/ports.
+  This Harness ships no components, dependencies or separate library skill.
+  Select the exact JS/TS and CSS/Tailwind variant from official installation docs;
+  use the project's existing registry/tool setup when appropriate. The official
+  registry namespace is `@react-bits`, URL template `https://reactbits.dev/r/{name}.json`.
   - https://reactbits.dev/
   - https://github.com/DavidHDev/react-bits
+  - https://reactbits.dev/get-started/installation
+  - https://reactbits.dev/get-started/mcp
 
-Both libraries' instruction skills are OS-neutral and remain available on all
-operating systems. Vue/React selection is framework routing. Executable tools
-alone use OS-specific catalogs; adopting a library never installs every tool.
+All library selection is catalog-first and framework-based, independent of OS.
+Only executable tools use OS-specific catalogs. Consult
+[Library source handoff](library-source-handoff.md) for PRD/spec/Task provenance.
 
 - 21st.dev: broad marketplace/catalog for modern components and blocks. Useful
   for discovery when a polished pattern is needed quickly.
@@ -116,6 +123,11 @@ repository redirect to coss UI; its README/LICENSING define MIT for apps/origin 
 No candidate above was installed, bundled or OS-homologated by this discovery.
 
 ## Search strategy
+
+Search project-native components first and curated matching-stack candidates
+second. Only when a material gap remains, use targeted Context7 documentation
+or GitHub official-source search. Verify exact source/license/dependencies and
+record unavailable tools honestly; do not load every library or install it globally.
 
 Search by the actual interface requirement, not by vague style words.
 

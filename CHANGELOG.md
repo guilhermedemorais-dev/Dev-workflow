@@ -7,12 +7,16 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
-- Skills condicionais Frappe UI (Vue) e React Bits (React) sob `ui-ux-standard`.
-  Skills independentes do SO; selecao por SO somente nas tools executaveis.
-  Frappe skill oficial fixada com MIT/proveniencia; React Bits adaptador proprio
-  de docs/registry, sem redistribuir componentes e com MIT+CommonsClause explicito.
-  Dependencias por projeto, sem migracao da stack nem instalacao Pro/globalMCP.
-  TASK-051 registra validacao representativa e ambientes nao executados.
+- TASK-051 revisao3: APIBrasil adicionado somente ao catalogo de pesquisa API do
+  SDD, com fonte/pin/MIT do cliente e termos comerciais dos servicos separados;
+  NOT_CONNECTED/NOT_VALIDATED, sem instalacao, chamadas ou pagamentos.
+
+- TASK-051 revisao2: Frappe UI e React Bits passam a referencias do catalogo curado;
+  removidas as skills standalone empacotadas. Reuso nativo primeiro, catalogo
+  por stack depois, Context7/GitHub oficial para lacunas. ID de fonte/proveniencia
+  preservado em PRD, spec e Task; fontes REQUIRED apenas para dependencias escolhidas.
+  Sem componentes/dependencias distribuidos ou instalacao global; licencas e pins
+  verificados mantidos como referencias. Instrucoes sem restricao por SO.
 
 
 - Cutter2.5.0 e Rizin0.9.1 portateis preparados no Windows, SHA256 oficial

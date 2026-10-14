@@ -1,17 +1,17 @@
 {
   "schema_version": 2,
-  "contract_revision": "1",
+  "contract_revision": "3",
   "task_id": "TASK-051",
   "human_task": {
     "representation": "github_issue",
     "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
     "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
-    "normative_equivalence": "Issue51, HumanTask and execution lists equivalent revision1 including latest portable Windows/Linux/macOS steering"
+    "normative_equivalence": "Issue51 and HumanTask revision3: catalog correction plus user APIBrasil catalog addition"
   },
-  "summary": "Optional stack-based Frappe UI and React Bits integration",
+  "summary": "Curated UI catalog and PRD/spec/task library provenance; no standalone library skills",
   "authorization": {
     "status": "APPROVED_IMPLEMENTATION",
-    "source": "User direct request and allOS steering2026-10-13"
+    "source": "Direct user correction2026-10-14"
   },
   "execution_lists": [
     {
@@ -20,10 +20,13 @@
       "phase": "implementation",
       "required_sources": [
         "docs/tasks/TASK-051-ui-libraries.md",
-        "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md"
+        "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md",
+        "plugins/sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md"
       ],
       "allowed_paths": [
         "plugins/ui-ux-standard/**",
+        "plugins/studio-prd/**",
+        "plugins/sdd-spec-factory/**",
         "tests/test_ui_library_routing.py"
       ],
       "protected_paths": [
@@ -31,13 +34,15 @@
         "plugins/devops-standard/**"
       ],
       "acceptance_criteria": [
-        "Framework-conditional OS-neutral routing",
-        "Pinned licensed Frappe skill",
-        "ReactBits only references/adapter no redistributedcomponents"
+        "Catalog-first; targeted source discovery for gaps",
+        "No bundled standalone Frappe/ReactBits skills",
+        "Selected source IDs/provenance routed through PRD/spec/Task required_sources",
+        "Dependencies in client project; OS selection tools only",
+        "APIBrasil catalog reference only, no whole-gateway free claim or runtime connection"
       ]
     },
     {
-      "list_id": "ui-runtime",
+      "list_id": "catalog-validation",
       "owner_skill": "qa-testing-standard",
       "phase": "validation",
       "required_sources": [
@@ -47,9 +52,9 @@
         "docs/receipts/TASK-051*"
       ],
       "acceptance_criteria": [
-        "Windows/Linux representative build/runtime evidence",
-        "Unavailable OS explicitly NOT_VALIDATED",
-        "Source license/provenance retained"
+        "Packageboundary/sourceclosure and provenance handoff checks",
+        "IndependentQA and appropriate structural tests",
+        "Historical runtime distinguished from revision2 scope"
       ]
     }
   ],
@@ -61,11 +66,12 @@
   ],
   "execution_result": {
     "status": "VALIDATED_PENDING_REVIEW",
+    "revision1_evidence": "Historical; superseded standalone skill scope",
     "macos": "NOT_VALIDATED",
     "windows11": "NOT_VALIDATED",
-    "structural_tests": "631 PASS, final independent run 47.597s",
-    "representative_runtime": "Windows10 Edge and Linux Kali/WSL Chromium PASS: Vue form and React BlurText, 1280/390 widths",
-    "local_ui_refresh": "24 source/cache files match; 12 plugins enabled; next-turn discovery"
+    "structural_tests": "631 PASS43.669s, focused5PASS",
+    "local_catalog_refresh": "UI12+Studio13+SDD28 source/cache files match; standalone skills absent; config unchanged; 12plugins enabled",
+    "apibrasil": "Catalog only NOT_CONNECTED NOT_VALIDATED"
   },
   "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",
   "source_discovery_checkpoint": {

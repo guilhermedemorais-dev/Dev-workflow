@@ -95,6 +95,17 @@ behavior and labelled fixtures. Prefer the real shared project components.
 Visual examples do not prove backend behavior. Reuse sources instead of
 repeating the same reverse engineering for every frontend task.
 
+When UI libraries are relevant, keep catalog-first selection with UI/UX ownership:
+project-native first, curated matching-stack candidates second, targeted Context7
+or official GitHub research only for gaps. Record the stable library/source ID,
+official repo/docs URL, observed version/commit or UNKNOWN, component path/variant,
+purpose/module, license, dependencies, adaptations and decision state in the PRD's
+existing reference/design section. PROPOSED/UNKNOWN is valid during briefing; never
+invent pins. Carry the same source ID into module SDD and its Task. Resolve the
+active ui-ux-standard references/library-source-handoff.md when needed, without
+assuming sibling cache paths or loading the whole catalog. No standalone library
+skills or blanket dependency installation follow from the catalog.
+
 Portal requests go to the active Harness `references/client-portal.md` and
 DevOps: external template into client `docs/portal/`, not a portal bundled here.
 An unavailable future template is a recorded dependency, not permission to
