@@ -120,6 +120,18 @@ destructive fuzz/concurrency workloads as a routine validation shortcut.
 
 ## Evidence gate
 
+For implementation changes or cleanup, resolve the active `dev-workflow-standard`
+owner's `references/minimal-code-gate.md` from its installed bundle or explicit
+canonical checkout, never an assumed sibling cache. Independently check its
+additive evidence against connected callers, exports/configuration, applicable
+dynamic references and executed behavior checks. Confirm full approved scope,
+safe deletions, preserved safeguards and recorded intentional limits; lack of
+text-search hits alone cannot prove code unused. Report concrete cases and
+uncertainty in the existing receipt, with justified N/A for inapplicable checks.
+Missing material evidence requires REWORK or BLOCKED, not final PASS. Route
+product fixes to Implementation and security/accessibility findings to their
+required owners; this check does not substitute for their approval.
+
 For UI workflows, use the contract's component IDs/revisions and the project
 Design Guide/catalogue as scoped behavior sources. Plan applicable widget
 transitions, validation, retries, permissions and error paths against their

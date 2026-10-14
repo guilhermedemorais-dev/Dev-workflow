@@ -7,6 +7,11 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-053: upgrade aditivo do Minimal Code Gate inspirado em Ponytail, com
+  limpeza comprovada, biblioteca padrao/plataforma/dependencias, correcao na
+  origem e consumidores completos. Preserva regras anteriores, escopo aprovado
+  e protecoes; integra execucao e QA sem hooks, instalacao ou modo global.
+
 - TASK-051 revisao9: Next.js MIT explicito e par Next/Nest preferido para novas
   propostas deste usuario, preservando stacks aprovadas;42 candidatos backend.
 - TASK-051 revisao8: fontes Web3 verificadas e elegibilidade gratuita por item,
