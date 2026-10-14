@@ -7,6 +7,8 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-051 revisao8: fontes Web3 verificadas e elegibilidade gratuita por item,
+  com custos de RPC/rede separados e toolchains somente como referencias.
 - TASK-051 revisao7: filtra41 candidatos backend de core/edicao gratuita OSI;
   exclui Liquibase FSL e recursos pagos, preservando obrigacoes e custos de servico.
 - TASK-051 revisao6: acrescenta10 candidatos Java e5 frameworks/data tools

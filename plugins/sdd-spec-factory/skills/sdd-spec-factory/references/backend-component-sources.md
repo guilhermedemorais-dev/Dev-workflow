@@ -15,6 +15,10 @@ license/subtree and actual tests before approved project-local adoption. No
 installation, framework migration, architecture selection, OS certification or
 security audit follows from catalog membership. Skills remain OS-neutral.
 
+For applicable blockchain/client/contract-development choices, consult
+[Web3 component sources](web3-component-sources.md) metadata; no blockchain
+execution or installed runtime is implied.
+
 ## Free-edition eligibility
 
 Eligible entries use a zero-license-fee OSI-licensed core/edition. Select only that

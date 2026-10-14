@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "contract_revision": "7",
+  "contract_revision": "8",
   "task_id": "TASK-051",
   "human_task": {
     "representation": "github_issue",
     "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
     "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
-    "normative_equivalence": "Issue51 and HumanTask revision7: no licensepurchase eligibleedition/items only;41backendcandidates; SDKservicefees and OSI status distinct"
+    "normative_equivalence": "Issue51 and HumanTask revision8 including11Web3identitysourcecatalog/freeeligibility"
   },
   "summary": "Curated UI catalog and PRD/spec/task library provenance; no standalone library skills",
   "authorization": {
@@ -42,7 +42,8 @@
         "EveryPRD/spec records applicablecatalog consult/source/native reuse or justified N/A, without weakening whole-inventory rules or requiring unrelated content",
         "Backend source catalog covers supplied list with verified origin/license/pin and adoptionbounds; no installs or architecture selection",
         "Java10 and JSserver-framework/data5 candidate sources verified; retain existing27; no runtime/architecture selection",
-        "Usable no-cost edition/item with compatible verified terms only; exclude paid editions/currentLiquibase byrestrictivefilter; retain zero-cost ReactBits appuse restriction; SDKcodefree differsservicefees;41backendIDs/pins"
+        "Usable no-cost edition/item with compatible verified terms only; exclude paid editions/currentLiquibase byrestrictivefilter; retain zero-cost ReactBits appuse restriction; SDKcodefree differsservicefees;41backendIDs/pins",
+        "Web3 all11identitiesverified withpins/licenses, activefreeeditiononly, restrictedunknownexcluded; toolchain separate source-only/noexec registry/RPC/walletactions"
       ]
     },
     {
@@ -73,10 +74,11 @@
     "revision1_evidence": "Historical; superseded standalone skill scope",
     "macos": "NOT_VALIDATED",
     "windows11": "NOT_VALIDATED",
-    "structural_tests": "revision7: 631 PASS43.189s;14focusedchecksPASS;3validatorsPASS",
-    "local_catalog_refresh": "revision7:54 UI/Studio/SDD source/cache files match; config unchanged;12plugins enabled;41backendcandidates",
+    "structural_tests": "revision8:631PASS43.892s;14focusedchecks35links3validatorsPASS",
+    "local_catalog_refresh": "revision8:55UI/Studio/SDD source/cache files match; UI/SDDonly refreshed; config unchanged;12plugins enabled",
     "apibrasil": "Catalog only NOT_CONNECTED NOT_VALIDATED",
-    "research_validation": "Source/license metadata reviewed; no projectcompatibility/security/runtime certification"
+    "research_validation": "Source/license metadata reviewed; no projectcompatibility/security/runtime certification",
+    "web3": "11identified10eligiblefreecodesources;Reownexcludeddefault;NOT_INSTALLED/NOT_RUNTIME_VALIDATED"
   },
   "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",
   "source_discovery_checkpoint": {

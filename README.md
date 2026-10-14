@@ -71,6 +71,9 @@ para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
 
 O SDD inclui um [catalogo candidato de backend/pagamentos/fiscal/commerce](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/backend-component-sources.md),
 com fontes oficiais, revisoes e limites de adocao. Nao instala dependencias nem escolhe a arquitetura.
+Um [catalogo Web3 de fontes](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/web3-component-sources.md)
+distingue clientes/hooks, contratos, bibliotecas PHP e toolchains. Licenca gratuita
+nao implica RPC/gas gratuitos nem autoriza carteira, assinatura ou deploy.
 O catalogo backend oferece41 candidatos com core/edicao gratuita elegivel;
 Liquibase FSL excluido, Medusa Enterprise e Vendure comercial nao selecionados.
 Biblioteca gratuita nao significa servicos/infraestrutura gratuitos.

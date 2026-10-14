@@ -7,6 +7,10 @@ For applicable backend/library, payments/fiscal or commerce choices, consult
 [Backend component sources](backend-component-sources.md) candidate metadata.
 This supplements source selection; it is not another technical domain/topic.
 
+For applicable blockchain/client/contract-development choices, consult
+[Web3 component sources](web3-component-sources.md) candidate metadata.
+This is source selection outside the unchanged technical-domain table.
+
 ## Evidence precedence
 1. Existing application source, deployed behavior and explicit accepted project contracts (note conflict between code and docs).
 2. Official version-matched specs and vendor documentation, official standards and maintained implementations.

@@ -1,5 +1,10 @@
 # Component Sources
 
+For relevant wallet/chain UI, resolve the active sdd-spec-factory owner and its
+references/web3-component-sources.md metadata. Hooks/connectors are not authorization
+or approved wallet actions. Preserve free-edition and source-ID rules; do not infer
+sibling versioned cache paths or install every source.
+
 Select only an edition/item usable for the approved project without buying a
 license; exclude paid Pro/Enterprise assets. Unknown cost/license is not eligible
 until verified. Zero license cost and OSI open-source status are distinct: retain
