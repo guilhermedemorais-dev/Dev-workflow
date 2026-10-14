@@ -46,6 +46,11 @@ permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
 
 ## Catalogo de bibliotecas UI por tecnologia
 
+Cada PRD/spec registra os indices/metadados aplicaveis consultados, revisao e
+fonte escolhida/reuso nativo, ou N/A justificado. Evidencia indisponivel ou
+desatualizada fica NOT_VALIDATED. Consulta de metadados nao exige carregar todos
+os corpos de fontes; a consulta global do inventario pelo Harness permanece.
+
 Todas as bibliotecas sao candidatas no catalogo curado de ui-ux-standard, nao
 skills standalone instaladas. Reuso nativo do projeto primeiro; catalogo compativel
 com Vue/React e design aprovado depois. Para lacunas concretas, pesquisar docs via

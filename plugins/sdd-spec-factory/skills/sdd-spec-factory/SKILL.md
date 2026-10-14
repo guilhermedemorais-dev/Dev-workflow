@@ -238,6 +238,12 @@ necessary dependencies. Resolve material UNKNOWN choices before execution;
 nonselected candidates do not become mandatory references. No new schema/gate,
 standalone library skill or automatic per-project dependency installation.
 
+For every PRD/spec, retain a compact record in its existing references section:
+applicable catalog indexes/metadata consulted and revision, selected source ID or
+project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALIDATED,
+never an invented consultation. Metadata review does not load every source body;
+only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
+
 When the requested surface includes CI/CD, containers, IaC, servers, deployment,
 cloud, GitOps, observability, backup/DR, incidents or advanced release strategy,
 load [DevOps planning](references/devops-planning.md) and add

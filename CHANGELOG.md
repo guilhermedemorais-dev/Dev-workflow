@@ -7,6 +7,9 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-051 revisao4: explicita registro compacto de consulta e escolha de fontes
+  em cada PRD/spec, com reuso nativo/N/A justificado e evidencia indisponivel
+  NOT_VALIDATED; preserva consulta global, sem instalar ou carregar todo catalogo.
 - TASK-051 revisao3: APIBrasil adicionado somente ao catalogo de pesquisa API do
   SDD, com fonte/pin/MIT do cliente e termos comerciais dos servicos separados;
   NOT_CONNECTED/NOT_VALIDATED, sem instalacao, chamadas ou pagamentos.

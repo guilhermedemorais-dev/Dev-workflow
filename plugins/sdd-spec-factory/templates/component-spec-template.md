@@ -10,6 +10,12 @@ O que este componente faz e por que existe.
 Telas/contextos que consomem este componente.
 
 ## Origem e decisão de reuso
+Registro de consulta: índices/metadados dos catálogos aplicáveis e revisão
+consultados; ID da fonte escolhida ou reuso nativo; ou N/A com justificativa.
+Evidência indisponível/desatualizada: NOT_VALIDATED, sem inventar consulta.
+Consultar metadados não exige ler todas as fontes; somente fontes selecionadas
+necessárias seguem como REQUIRED, preservando a consulta global do Harness.
+
 Para origem relevante, preservar ID biblioteca/ID fonte do PRD: repo/docs oficial,
 versão/commit ou UNKNOWN, caminho/variante do componente, propósito/módulo, licença,
 dependências, adaptações e estado da decisão. Reuso nativo primeiro, catálogo

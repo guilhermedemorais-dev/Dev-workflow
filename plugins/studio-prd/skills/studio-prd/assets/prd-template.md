@@ -36,6 +36,12 @@ Classificar aprovado/proposto/desconhecido/excluído com fonte e justificativa.
 
 ## Reuso, referências e direção visual
 
+Registro de consulta: índices/metadados dos catálogos aplicáveis e revisão
+consultados; ID da fonte escolhida ou reuso nativo; ou N/A com justificativa.
+Evidência indisponível/desatualizada: NOT_VALIDATED, sem inventar consulta.
+Consultar metadados não exige ler todas as fontes; somente fontes selecionadas
+necessárias seguem como REQUIRED, preservando a consulta global do Harness.
+
 Inventário de sistema existente quando aplicável; evidências e limites, decisões
 manter/completar/corrigir/refatorar/substituir/descontinuar, sem exclusão implícita.
 Biblioteca de referências com origem/revisão. Quando houver UI, links ao Design

@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "contract_revision": "3",
+  "contract_revision": "4",
   "task_id": "TASK-051",
   "human_task": {
     "representation": "github_issue",
     "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
     "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
-    "normative_equivalence": "Issue51 and HumanTask revision3: catalog correction plus user APIBrasil catalog addition"
+    "normative_equivalence": "Issue51 and HumanTask revision4 including mandatory compact catalog applicability/selection record for everyPRD/spec"
   },
   "summary": "Curated UI catalog and PRD/spec/task library provenance; no standalone library skills",
   "authorization": {
@@ -38,7 +38,8 @@
         "No bundled standalone Frappe/ReactBits skills",
         "Selected source IDs/provenance routed through PRD/spec/Task required_sources",
         "Dependencies in client project; OS selection tools only",
-        "APIBrasil catalog reference only, no whole-gateway free claim or runtime connection"
+        "APIBrasil catalog reference only, no whole-gateway free claim or runtime connection",
+        "EveryPRD/spec records applicablecatalog consult/source/native reuse or justified N/A, without weakening whole-inventory rules or requiring unrelated content"
       ]
     },
     {
@@ -69,8 +70,8 @@
     "revision1_evidence": "Historical; superseded standalone skill scope",
     "macos": "NOT_VALIDATED",
     "windows11": "NOT_VALIDATED",
-    "structural_tests": "631 PASS43.669s, focused5PASS",
-    "local_catalog_refresh": "UI12+Studio13+SDD28 source/cache files match; standalone skills absent; config unchanged; 12plugins enabled",
+    "structural_tests": "revision4: 631 PASS47.953s, focused5PASS",
+    "local_catalog_refresh": "revision4: 53 UI/Studio/SDD source/cache files match; config unchanged; 12plugins enabled",
     "apibrasil": "Catalog only NOT_CONNECTED NOT_VALIDATED"
   },
   "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",

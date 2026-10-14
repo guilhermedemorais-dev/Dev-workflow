@@ -97,6 +97,12 @@ Use this priority:
 Consult `references/component-sources.md` when external components, blocks, or
 templates could materially improve the result.
 
+For every PRD/spec, retain a compact record in its existing references section:
+applicable catalog indexes/metadata consulted and revision, selected source ID or
+project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALIDATED,
+never an invented consultation. Metadata review does not load every source body;
+only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
+
 Use project-native UI first, then the curated catalog matching the actual stack.
 If a concrete gap remains, use targeted Context7 documentation or GitHub official
 source search; record unavailable capabilities and verified fallbacks. Libraries

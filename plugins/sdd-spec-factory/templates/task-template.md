@@ -96,6 +96,9 @@ PRD, arquitetura, mockups aprovados e demais documentos a seguir.
 
 ## Biblioteca de referências do projeto
 
+Preservar o registro de consulta/seleção do PRD/spec com seus IDs e justificativas,
+sem repetir pesquisas válidas nem converter candidatas em fontes REQUIRED.
+
 Guardar fontes validadas em `docs/biblioteca-referencias/`. Cada item deve
 informar URL/origem, propósito, data de consulta e decisão sustentada. A task
 deve apontar o arquivo e a seção exatos que cada microtarefa deve consultar.

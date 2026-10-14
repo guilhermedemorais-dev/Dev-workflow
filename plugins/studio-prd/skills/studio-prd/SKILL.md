@@ -95,6 +95,12 @@ behavior and labelled fixtures. Prefer the real shared project components.
 Visual examples do not prove backend behavior. Reuse sources instead of
 repeating the same reverse engineering for every frontend task.
 
+For every PRD/spec, retain a compact record in its existing references section:
+applicable catalog indexes/metadata consulted and revision, selected source ID or
+project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALIDATED,
+never an invented consultation. Metadata review does not load every source body;
+only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
+
 When UI libraries are relevant, keep catalog-first selection with UI/UX ownership:
 project-native first, curated matching-stack candidates second, targeted Context7
 or official GitHub research only for gaps. Record the stable library/source ID,
