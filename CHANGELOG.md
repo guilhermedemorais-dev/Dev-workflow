@@ -7,6 +7,13 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Nao publicado
 
+- TASK-051 revisao7: filtra41 candidatos backend de core/edicao gratuita OSI;
+  exclui Liquibase FSL e recursos pagos, preservando obrigacoes e custos de servico.
+- TASK-051 revisao6: acrescenta10 candidatos Java e5 frameworks/data tools
+  JavaScript, com revisoes/licencas e limites; preserva as27 entradas anteriores
+  e a matriz original de dominios tecnicos.
+- TASK-051 revisao5: catalogo candidato backend, pagamentos/fiscal e commerce,
+  com origem/revisao/licenca e limites; sem instalacao ou escolha de arquitetura.
 - TASK-051 revisao4: explicita registro compacto de consulta e escolha de fontes
   em cada PRD/spec, com reuso nativo/N/A justificado e evidencia indisponivel
   NOT_VALIDATED; preserva consulta global, sem instalar ou carregar todo catalogo.

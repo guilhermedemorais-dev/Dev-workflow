@@ -1,5 +1,12 @@
 # Library source handoff
 
+Select only an edition/item usable for the approved project without buying a
+license; exclude paid Pro/Enterprise assets. Unknown cost/license is not eligible
+until verified. Zero license cost and OSI open-source status are distinct: retain
+applicable source-available/copy/redistribution restrictions and subtree terms.
+No catalog proves every repository item free or all infrastructure/services free.
+
+
 This is provenance in existing project artifacts, not a new runtime/schema/gate.
 Resolve project-native components first, curated matching-stack sources second,
 then targeted Context7 or official GitHub research when a concrete gap remains.

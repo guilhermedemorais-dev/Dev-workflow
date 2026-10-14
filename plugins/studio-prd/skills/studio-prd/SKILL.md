@@ -25,6 +25,12 @@ availability; prefer suitable documentation/code/extraction/search capabilities
 and record justified fallbacks in research evidence. Reuse existing records,
 never install the whole catalog or claim an unavailable MCP was invoked.
 
+For applicable backend/payments/fiscal/commerce library needs, resolve the active
+SDD owner and its references/backend-component-sources.md catalog metadata.
+Select eligible free editions only, preserving license obligations and separate
+provider/infrastructure costs. Preserve the PRD consultation/selection record; missing or stale evidence remains
+NOT_VALIDATED. Do not assume sibling cache paths or select architecture/install packages.
+
 Ask at most three useful questions per round. Research what can be discovered
 from authorized sources before asking. Separate APPROVED, PROPOSED, UNKNOWN
 and EXCLUDED requirements with source and rationale. Reference functionality
@@ -94,6 +100,10 @@ during SDD. Record component IDs/revisions, variants, responsive/keyboard
 behavior and labelled fixtures. Prefer the real shared project components.
 Visual examples do not prove backend behavior. Reuse sources instead of
 repeating the same reverse engineering for every frontend task.
+
+For any selected library edition/item, require usable zero-license-cost rights;
+paid Pro/Enterprise assets are excluded and unknown cost/license is not eligible
+until verified. Preserve item/subtree restrictions, not a whole-repository guarantee.
 
 For every PRD/spec, retain a compact record in its existing references section:
 applicable catalog indexes/metadata consulted and revision, selected source ID or

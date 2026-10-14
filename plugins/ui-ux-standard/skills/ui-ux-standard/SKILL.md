@@ -103,6 +103,12 @@ project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALI
 never an invented consultation. Metadata review does not load every source body;
 only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
 
+Select only an edition/item usable for the approved project without buying a
+license; exclude paid Pro/Enterprise assets. Unknown cost/license is not eligible
+until verified. Zero license cost and OSI open-source status are distinct: retain
+applicable source-available/copy/redistribution restrictions and subtree terms.
+No catalog proves every repository item free or all infrastructure/services free.
+
 Use project-native UI first, then the curated catalog matching the actual stack.
 If a concrete gap remains, use targeted Context7 documentation or GitHub official
 source search; record unavailable capabilities and verified fallbacks. Libraries

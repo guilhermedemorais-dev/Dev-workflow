@@ -15,6 +15,12 @@ The LLM using this skill acts as the requirements LLM. Before producing specs,
 it must read this `SKILL.md` completely and return a `SKILL_RECEIPT`. Naming the
 skill in a prompt is not evidence of activation.
 
+For applicable backend/library, payments, fiscal or commerce needs, consult
+[Backend component sources](references/backend-component-sources.md) metadata
+before targeted new research. Select eligible free editions only, preserving
+license obligations and separate provider/infrastructure costs. This adds
+candidates, not dependencies or a stack decision.
+
 ## Mission
 
 Transform NORMAL work with unspecified behavior and COMPLEX work into, when
@@ -237,6 +243,10 @@ source ID into existing JSON references and REQUIRED sources only for selected,
 necessary dependencies. Resolve material UNKNOWN choices before execution;
 nonselected candidates do not become mandatory references. No new schema/gate,
 standalone library skill or automatic per-project dependency installation.
+
+For any selected library edition/item, require usable zero-license-cost rights;
+paid Pro/Enterprise assets are excluded and unknown cost/license is not eligible
+until verified. Preserve item/subtree restrictions, not a whole-repository guarantee.
 
 For every PRD/spec, retain a compact record in its existing references section:
 applicable catalog indexes/metadata consulted and revision, selected source ID or

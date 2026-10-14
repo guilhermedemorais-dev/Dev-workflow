@@ -69,6 +69,14 @@ REQUIRED no JSON existente; nao carregar todo o catalogo. Instalar dependencias
 somente no projeto escolhido. Instrucoes independem do SO; selecao por SO e apenas
 para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
 
+O SDD inclui um [catalogo candidato de backend/pagamentos/fiscal/commerce](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/backend-component-sources.md),
+com fontes oficiais, revisoes e limites de adocao. Nao instala dependencias nem escolhe a arquitetura.
+O catalogo backend oferece41 candidatos com core/edicao gratuita elegivel;
+Liquibase FSL excluido, Medusa Enterprise e Vendure comercial nao selecionados.
+Biblioteca gratuita nao significa servicos/infraestrutura gratuitos.
+O catalogo inclui tambem Java e frameworks/data access JavaScript, distinguindo
+linguagens, runtimes e licencas por fonte. Fonte verificada nao significa release escolhido.
+
 APIBrasil tambem consta como candidato na biblioteca de pesquisa de APIs do SDD,
 com fonte oficial/pin/licenca e custos dependentes do servico. E referencia de
 pesquisa, nao MCP instalado/conectado nem promessa de APIs gratuitas ilimitadas.
