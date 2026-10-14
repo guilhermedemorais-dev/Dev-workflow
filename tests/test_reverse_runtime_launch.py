@@ -94,3 +94,100 @@ class ReverseRuntimeLaunchTests(unittest.TestCase):
         result = self.call('cli', 'analyze', target.as_posix())
         expected = str(target.resolve()) if os.name == 'nt' else target.as_posix()
         self.assertEqual(json.loads(result.stdout), ['analyze', expected])
+
+
+class ReverseRuntimeBootstrapTests(unittest.TestCase):
+    def setUp(self):
+        self.node = shutil.which('node')
+        if not self.node:
+            self.skipTest('Node runtime not installed')
+        self.temp = tempfile.TemporaryDirectory(prefix='rea bootstrap & ')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.runtime = self.root / 'runtime'
+        self.runtime.mkdir()
+        for name in ('process-launch.mjs', 'install-local-runtime.mjs'):
+            shutil.copyfile(RUNTIME / name, self.runtime / name)
+        vendor = self.root / 'vendor/rea-runtime'
+        vendor.mkdir(parents=True)
+        for name in ('rea-agents-4.1.0.tgz', 'rea-agents-4.1.0.tgz.sha256'):
+            shutil.copyfile(RUNTIME.parent / 'vendor/rea-runtime' / name, vendor / name)
+        self.env = dict(os.environ)
+        self.env.pop('DEV_WORKFLOW_PACKAGE_MANAGER_JS', None)
+
+    def manager(self, kind, status=0):
+        entry = self.root / ('pnpm.cjs' if kind == 'pnpm' else 'npm-cli.js')
+        entry.write_text(
+            'const fs = require("node:fs");'
+            'fs.writeFileSync("invoked.json", JSON.stringify(process.argv.slice(2)));'
+            f'if ({status}) process.exit({status});'
+            'fs.mkdirSync("node_modules/rea-agents/scripts", {recursive:true});'
+            'fs.writeFileSync("node_modules/rea-agents/scripts/rea.mjs", "");',
+            encoding='utf-8')
+        return entry
+
+    def bootstrap(self):
+        return subprocess.run([self.node, str(self.runtime / 'install-local-runtime.mjs')],
+                              cwd=self.runtime, env=self.env, capture_output=True, text=True)
+
+    def lock(self, kind):
+        name = 'pnpm-lock.yaml' if kind == 'pnpm' else 'package-lock.json'
+        (self.runtime / name).write_text('fixture', encoding='utf-8')
+
+    def test_npm_bootstrap_environment_uses_pnpm_lock_and_discovery(self):
+        self.lock('pnpm')
+        manager = self.manager('pnpm')
+        self.env['PATH'] = str(manager.parent)
+        self.env['npm_execpath'] = str(self.manager('npm'))
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads((self.runtime / 'invoked.json').read_text()),
+                         ['install', '--ignore-scripts', '--frozen-lockfile'])
+        self.assertFalse((self.runtime / 'package-lock.json').exists())
+
+    def test_explicit_pnpm_uses_frozen_install(self):
+        self.lock('pnpm')
+        self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager('pnpm'))
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('--frozen-lockfile', json.loads((self.runtime / 'invoked.json').read_text()))
+
+    def test_npm_requires_its_lock_and_uses_ci(self):
+        self.lock('npm')
+        self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager('npm'))
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads((self.runtime / 'invoked.json').read_text()),
+                         ['ci', '--ignore-scripts', '--no-audit', '--no-fund'])
+
+    def test_missing_lock_fails_before_manager_execution(self):
+        self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager('npm'))
+        result = self.bootstrap()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('lock.json is required', result.stderr)
+        self.assertFalse((self.runtime / 'invoked.json').exists())
+
+    def test_explicit_manager_mismatch_fails_before_install(self):
+        for lock_kind, manager_kind in [('pnpm', 'npm'), ('npm', 'pnpm')]:
+            with self.subTest(lock=lock_kind):
+                for name in ('pnpm-lock.yaml', 'package-lock.json'):
+                    (self.runtime / name).unlink(missing_ok=True)
+                self.lock(lock_kind)
+                self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager(manager_kind))
+                result = self.bootstrap()
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('Committed lockfile requires', result.stderr)
+                self.assertFalse((self.runtime / 'invoked.json').exists())
+
+    def test_pnpm_lock_takes_precedence_when_both_exist(self):
+        self.lock('pnpm')
+        self.lock('npm')
+        self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager('pnpm'))
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('--frozen-lockfile', json.loads((self.runtime / 'invoked.json').read_text()))
+
+    def test_install_failure_is_propagated(self):
+        self.lock('pnpm')
+        self.env['DEV_WORKFLOW_PACKAGE_MANAGER_JS'] = str(self.manager('pnpm', status=17))
+        self.assertEqual(self.bootstrap().returncode, 17)

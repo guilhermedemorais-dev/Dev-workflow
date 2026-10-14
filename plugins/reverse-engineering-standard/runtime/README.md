@@ -14,6 +14,13 @@ npm run bootstrap
 node reverse-context-gateway.mjs probe
 ```
 
+The bootstrap selects pnpm when `pnpm-lock.yaml` exists and uses
+`pnpm install --frozen-lockfile --ignore-scripts`, even when launched through
+`npm run bootstrap`. Otherwise it requires `package-lock.json` and uses
+`npm ci --ignore-scripts`. A missing lockfile or an explicit manager that
+conflicts with the selected lockfile fails before installation. Install the
+required package manager beforehand; bootstrap never installs it globally.
+
 The bootstrap verifies the committed tarball SHA-256 before installation. It does
 not fetch `rea-agents` from npm or GitHub. Transitive Node dependencies and
 optional external analysis engines remain normal environment dependencies.
@@ -33,7 +40,7 @@ executable with `shell: false`. Windows `.cmd` wrappers are not executed.
 Install a supported Node/npm distribution, then run `node install-local-runtime.mjs`.
 With an existing trusted pnpm installation, set `DEV_WORKFLOW_PACKAGE_MANAGER_JS`
 to its absolute `pnpm.cjs` entrypoint before bootstrap. This selects an existing
-package manager; it does not install a global package manager or modify Codex MCP
+package manager matching the committed lockfile; it does not install a global package manager or modify Codex MCP
 configuration. Dependency lifecycle scripts remain disabled.
 
 REA is not Windows-only. Analysis availability depends on target and installed

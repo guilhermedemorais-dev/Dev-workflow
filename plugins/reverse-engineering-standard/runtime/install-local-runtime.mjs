@@ -25,10 +25,13 @@ const actual = createHash("sha256").update(readFileSync(tarball)).digest("hex");
 if (actual !== expected) fail("vendored REA runtime checksum mismatch");
 
 let manager;
-try { manager = packageManagerInvocation(); } catch (error) { fail(error.message); }
-const installArgs = manager.kind === "pnpm"
-  ? ["install", "--ignore-scripts", existsSync(resolve(here, "pnpm-lock.yaml")) ? "--frozen-lockfile" : "--no-frozen-lockfile"]
-  : ["install", "--ignore-scripts", "--no-audit", "--no-fund"];
+const requiredKind = existsSync(resolve(here, "pnpm-lock.yaml")) ? "pnpm"
+  : existsSync(resolve(here, "package-lock.json")) ? "npm" : null;
+if (!requiredKind) fail("committed pnpm-lock.yaml or package-lock.json is required for bootstrap");
+try { manager = packageManagerInvocation(process.env, requiredKind); } catch (error) { fail(error.message); }
+const installArgs = requiredKind === "pnpm"
+  ? ["install", "--ignore-scripts", "--frozen-lockfile"]
+  : ["ci", "--ignore-scripts", "--no-audit", "--no-fund"];
 const result = spawnSync(manager.executable, [...manager.args, ...installArgs], { cwd: here, stdio: "inherit", shell: false });
 
 if (result.error) fail("package manager bootstrap failed to start: " + result.error.message);
