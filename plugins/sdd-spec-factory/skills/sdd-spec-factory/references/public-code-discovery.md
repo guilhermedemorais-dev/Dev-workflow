@@ -5,6 +5,10 @@ from an external implementation example. Reuse project sources and recorded
 research first. Ordinary source search does not require reverse-engineering
 runtime tools. SDD owns interpretation; implementation and QA retain validation.
 
+Consult applicable [backend candidates](backend-component-sources.md) metadata
+after native sources and before new implementation searches; retain the same
+project source ID and provenance. Nonselected candidates do not become REQUIRED.
+
 ## Search and availability
 
 The [official Grep documentation](https://vercel.com/blog/grep-a-million-github-repositories-via-mcp)

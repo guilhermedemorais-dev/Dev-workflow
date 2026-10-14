@@ -96,6 +96,9 @@ PRD, arquitetura, mockups aprovados e demais documentos a seguir.
 
 ## Biblioteca de referências do projeto
 
+Preservar o registro de consulta/seleção do PRD/spec com seus IDs e justificativas,
+sem repetir pesquisas válidas nem converter candidatas em fontes REQUIRED.
+
 Guardar fontes validadas em `docs/biblioteca-referencias/`. Cada item deve
 informar URL/origem, propósito, data de consulta e decisão sustentada. A task
 deve apontar o arquivo e a seção exatos que cada microtarefa deve consultar.
@@ -113,6 +116,11 @@ não houver impacto visual, marcar N/A com motivo verificado.
 - Design Guide:
 - Design tokens:
 - Biblioteca de componentes:
+- Fontes de bibliotecas selecionadas: manter ID biblioteca/ID fonte do PRD/spec,
+  repo/docs oficial, versão/commit ou UNKNOWN, componente/variante, propósito/módulo,
+  licença, dependências, adaptações e estado da decisão. Usar o mesmo ID em
+  `references[].id` e fontes REQUIRED somente para dependências selecionadas e
+  necessárias; candidatas não escolhidas não obrigam carregar todo o catálogo.
 - Referências visuais:
 - Mockup/frame aprovado:
 - Aplicabilidade ou motivo N/A:

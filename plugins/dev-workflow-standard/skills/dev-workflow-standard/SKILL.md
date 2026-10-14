@@ -538,6 +538,10 @@ LLM to read it completely, and require a `SKILL_RECEIPT` before work begins.
   `prepare`/`repair`, then retry the original owner skill. Do not run full doctor
   for every task, infer connection from configuration, or install all tools.
   This capability does not own product implementation or DevOps.
+  Use its persisted `platform_tools.selected_folder` and per-entry `eligible`
+  routes; never infer native Windows support from WSL or repeat OS-choice
+  questions on each task. Unvalidated entries require verification or an approved
+  adapter. Context retrieval does not replace the ignored environment state.
 
 - `devops-standard`: CI/CD, Docker/Compose, IaC, Kubernetes, GitOps, deploy,
   servers, cloud, observability, backup/restore, incidents and advanced

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import hashlib
+import argparse
+import stat
 import json
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,9 @@ LOCK = json.loads((HERE / "runtime.lock.json").read_text(encoding="utf-8"))
 ZIP = (HERE / LOCK["vendored_zip"]).resolve()
 EXPECTED = LOCK["sha256"]
 RUNTIME = HERE / ".runtime"
+parser = argparse.ArgumentParser(description='Prepare the pinned local BeyondSEO runtime.')
+parser.add_argument('--http-only', action='store_true', help='Prepare HTTP/report dependencies without optional browser installation.')
+args = parser.parse_args()
 
 def fail(message, code=1):
     print(message, file=sys.stderr)
@@ -43,8 +47,12 @@ with tempfile.TemporaryDirectory(prefix="seo-standard-") as tmp:
     if project is None:
         fail("BeyondSEO setup.py not found in vendored runtime")
 
-    if RUNTIME.exists():
-        shutil.rmtree(RUNTIME)
+    try:
+        runtime_attributes = getattr(RUNTIME.lstat(), 'st_file_attributes', 0)
+    except FileNotFoundError:
+        runtime_attributes = 0
+    if RUNTIME.is_symlink() or runtime_attributes & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0x400):
+        fail('runtime reparse point is not an approved installation target')
 
     command = [
         sys.executable,
@@ -52,6 +60,8 @@ with tempfile.TemporaryDirectory(prefix="seo-standard-") as tmp:
         "--venv",
         str(RUNTIME),
     ]
+    if args.http_only:
+        command.append('--http-only')
     result = subprocess.run(command)
     if result.returncode != 0:
         raise SystemExit(result.returncode)

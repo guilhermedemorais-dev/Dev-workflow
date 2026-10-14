@@ -4,6 +4,90 @@ Conjunto de plugins e skills para orquestrar engenharia de software como um **En
 
 O repositorio continua chamado `Dev-workflow` por compatibilidade, mas o papel central do `dev-workflow-standard` mudou. Ele nao e mais apenas um organizador/distribuidor de tasks; agora funciona como o **harness de engenharia**, responsavel por transformar planejamento em execucao verificavel sem substituir as regras locais, o PRD, a arquitetura existente ou a aprovacao humana.
 
+## Compatibilidade e atualizacoes
+
+O ambiente de uso original e **Linux Mint**, com funcionamento relatado pelo
+mantenedor. A versao do Mint nao foi registrada nesta verificacao. No commit
+`43685da`, a suite foi repetida em Ubuntu 24.04.5 no WSL2, em filesystem Linux:
+595 testes, resultado OK, 1 ignorado. Isso valida a suite nesse runtime Linux,
+nao todas as integracoes externas nem uma instalacao nativa no Mint.
+
+| Sistema de execucao | Situacao atual |
+| --- | --- |
+| Linux Mint | Ambiente original com uso relatado; versao e nova homologacao pendentes |
+| Ubuntu 24.04.5 / WSL2 | Regressao local: 626 testes, OK, 16 ignorados (7 Windows e 9 dependentes de Node ausente) |
+| Windows 10 nativo, build 19045 x64 | Port local verificado: 626 testes passaram com codificacao padrao Windows, zero falhas/erros; publicacao pendente |
+| Windows 11 nativo | Nao homologado; nao executado nesta verificacao |
+| macOS | Nao homologado; nao executado nesta verificacao |
+
+WSL e uma alternativa de execucao **Linux no Windows**; nao equivale a suporte
+nativo Windows e nao e um requisito universal do plugin.
+
+**Alteracao ainda nao publicada nesta branch:** os catalogos
+`Tools (Linux)`, `Tools (Windows)` e `Tools (macOS)` organizam os entrypoints por
+compatibilidade. A preparacao persiste a selecao no estado local existente;
+as tarefas seguintes reutilizam a selecao compativel. Os scripts compartilhados
+continuam nos caminhos canonicos, sem tres copias do mesmo codigo. Uma pasta
+macOS nao significa que o adaptador ja existe ou foi homologado. O catalogo
+Windows agora seleciona os helpers com evidencia nativa; o launcher Bash
+visivel continua especifico de Linux e nao e requisito do fluxo Windows.
+
+Veja [roteamento e limites das tools](docs/platform-tools.md) e
+[historico de atualizacoes e versoes](CHANGELOG.md). A adaptacao Windows10 foi
+executada localmente, com fixtures nativas, DACL e escrita relativa a handles;
+nao foi publicada na main nesta etapa. A REA4.1.0 executou analises proprias
+JavaScript, managed.NET e PE x64 via Ghidra12.1.4/Java21. O caso nativo recuperou
+`return 0x2a` (42), sem executar o alvo. O provider REA Windows permanece
+restrito aos formatos/caminhos admitidos por ele; nao certifica todos os tipos
+de sistema. Ghidra e open source; Cutter2.5.0/Rizin0.9.1 foram preparados e testados
+como ferramentas suplementares. Rizin recuperou o mesmo retorno42 via rz-ghidra.
+A GUI Cutter nao foi homologada. Hopper nao tem buildWindows; IDAFree nao
+permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
+
+## Catalogo de bibliotecas UI por tecnologia
+
+Cada PRD/spec registra os indices/metadados aplicaveis consultados, revisao e
+fonte escolhida/reuso nativo, ou N/A justificado. Evidencia indisponivel ou
+desatualizada fica NOT_VALIDATED. Consulta de metadados nao exige carregar todos
+os corpos de fontes; a consulta global do inventario pelo Harness permanece.
+
+Todas as bibliotecas sao candidatas no catalogo curado de ui-ux-standard, nao
+skills standalone instaladas. Reuso nativo do projeto primeiro; catalogo compativel
+com Vue/React e design aprovado depois. Para lacunas concretas, pesquisar docs via
+Context7 ou fontes oficiais no GitHub, com proveniencia e limites explicitos.
+
+Frappe UI e candidato Vue, com commit oficial verificado e licenca MIT; sua skill
+upstream e somente uma fonte opcional de documentacao. React Bits e candidato
+React, com docs/registry oficiais e MIT+CommonsClause, que restringe redistribuir
+componentes isolados/bundles/ports. Nenhum componente, dependencia ou skill dessas
+bibliotecas e distribuido dentro do Harness. Adocao nao migra a stack existente.
+
+PRD, spec/frontend e Task preservam o mesmo ID da fonte, repo/docs, versao/commit
+ou UNKNOWN, componente/variante, proposito/modulo, licenca, dependencias, adaptacoes
+e estado da decisao. Somente fontes de dependencias selecionadas entram como
+REQUIRED no JSON existente; nao carregar todo o catalogo. Instalar dependencias
+somente no projeto escolhido. Instrucoes independem do SO; selecao por SO e apenas
+para tools executaveis. Catalogo nao certifica toda biblioteca em cada ambiente.
+
+O SDD inclui um [catalogo candidato de backend/pagamentos/fiscal/commerce](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/backend-component-sources.md),
+com fontes oficiais, revisoes e limites de adocao. Nao instala dependencias nem escolhe a arquitetura.
+Next.js e NestJS formam o par de referencia preferido deste usuario para propostas
+novas sem stack aprovada; stacks existentes continuam preservadas. Next possui
+renderizacao e backend/BFF opcional; regras de dominio ficam no limite definido no PRD.
+Next MIT nao obriga hospedagem Vercel nem escolhe versao de dependencia.
+Um [catalogo Web3 de fontes](plugins/sdd-spec-factory/skills/sdd-spec-factory/references/web3-component-sources.md)
+distingue clientes/hooks, contratos, bibliotecas PHP e toolchains. Licenca gratuita
+nao implica RPC/gas gratuitos nem autoriza carteira, assinatura ou deploy.
+O catalogo backend oferece42 candidatos com core/edicao gratuita elegivel;
+Liquibase FSL excluido, Medusa Enterprise e Vendure comercial nao selecionados.
+Biblioteca gratuita nao significa servicos/infraestrutura gratuitos.
+O catalogo inclui tambem Java e frameworks/data access JavaScript, distinguindo
+linguagens, runtimes e licencas por fonte. Fonte verificada nao significa release escolhido.
+
+APIBrasil tambem consta como candidato na biblioteca de pesquisa de APIs do SDD,
+com fonte oficial/pin/licenca e custos dependentes do servico. E referencia de
+pesquisa, nao MCP instalado/conectado nem promessa de APIs gratuitas ilimitadas.
+
 ## Instale com sua LLM
 
 **Copie o prompt abaixo e cole no agente que voce usa para desenvolver.**
@@ -21,6 +105,11 @@ Quero que voce execute a instalacao assistida, nao apenas me entregue um tutoria
 1. Identifique meu sistema operacional, o host de agentes que estou usando e
    as instalacoes existentes. Se nao conseguir identificar o host ou o destino,
    pergunte. Nao presuma caminhos, comandos ou suporte a plugins.
+   Nas revisoes que incluem os catalogos de plataforma, use a preparacao do
+   dev-environment-standard para persistir o catalogo do runtime real e informe
+   as tools elegiveis e as nao homologadas. Em uso posterior, reutilize o estado
+   compativel; nao repita a instalacao nem pergunte meu sistema a cada tarefa.
+   Nao altere manifests publicados para guardar escolhas locais da maquina.
 2. Consulte a branch main atual do repositorio. Leia README.md, AGENTS.md e as
    skills canonicas dev-workflow-standard e dev-environment-standard, incluindo
    as referencias exigidas para instalacao. Confira manifests e marketplaces.
@@ -2111,6 +2200,13 @@ O uso via marketplace e preferivel porque oferece descoberta e atualizacao
 versionada. A copia manual e util para desenvolvimento e testes locais.
 
 ## Compatibilidade
+
+### Sistemas operacionais e ferramentas
+
+Consulte o [aviso de suporte atual](#compatibilidade-e-atualizacoes),
+[roteamento de ferramentas](docs/platform-tools.md) e
+[historico de atualizacoes](CHANGELOG.md). Compatibilidade do manifesto com um
+host de agentes nao equivale a homologacao de todas as tools no sistema.
 
 | Plataforma | Manifesto/catalogo | Skill compartilhada |
 | --- | --- | --- |

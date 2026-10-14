@@ -18,7 +18,7 @@ SPEC.loader.exec_module(PLAN)
 
 class StudioPlanTests(unittest.TestCase):
     def setUp(self):
-        self.plan = json.loads((SKILL / "assets/plan-template.json").read_text())
+        self.plan = json.loads((SKILL / "assets/plan-template.json").read_text(encoding="utf-8"))
 
     def two_modules(self):
         second = copy.deepcopy(self.plan["modules"][0])
@@ -118,7 +118,7 @@ class StudioPlanTests(unittest.TestCase):
                     PLAN.validate(self.plan)
 
     def test_bundled_md_matches_json_template(self):
-        self.assertEqual((SKILL / "assets/plan-template.md").read_text(), PLAN.render(self.plan))
+        self.assertEqual((SKILL / "assets/plan-template.md").read_text(encoding="utf-8"), PLAN.render(self.plan))
 
     def test_dependent_parallelism_rejected(self):
         self.two_modules()
@@ -147,12 +147,12 @@ class StudioPlanTests(unittest.TestCase):
     def test_cli_check_detects_md_and_revision_drift(self):
         with tempfile.TemporaryDirectory() as temp:
             source, target = Path(temp) / "plan.json", Path(temp) / "plan.md"
-            source.write_text(json.dumps(self.plan))
-            target.write_text(PLAN.render(self.plan))
+            source.write_text(json.dumps(self.plan), encoding="utf-8")
+            target.write_text(PLAN.render(self.plan), encoding="utf-8")
             command = [sys.executable, str(SCRIPT), "check", str(source), str(target)]
             self.assertEqual(subprocess.run(command, capture_output=True).returncode, 0)
             self.plan["revision"] = 2
-            source.write_text(json.dumps(self.plan))
+            source.write_text(json.dumps(self.plan), encoding="utf-8")
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(result.returncode, 1)
             self.assertIn("divergence", result.stderr)
@@ -160,7 +160,7 @@ class StudioPlanTests(unittest.TestCase):
     def test_cli_invalid_input_fails_without_traceback(self):
         with tempfile.TemporaryDirectory() as temp:
             source = Path(temp) / "bad.json"
-            source.write_text('{"schema_version":')
+            source.write_text('{"schema_version":', encoding="utf-8")
             result = subprocess.run([sys.executable, str(SCRIPT), "validate", str(source)], capture_output=True, text=True)
             self.assertEqual(result.returncode, 1)
             self.assertNotIn("Traceback", result.stderr)

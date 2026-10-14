@@ -5,3 +5,8 @@ runtime-state/
 # Python verification generates bytecode, not delivery artifacts.
 __pycache__/
 *.pyc
+# Scoped Node runtime dependencies are restored, never committed as source.
+node_modules/
+# Prepared Python runtimes remain local environment state.
+.runtime/
+.venv/

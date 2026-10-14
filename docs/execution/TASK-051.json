@@ -1,0 +1,94 @@
+{
+  "schema_version": 2,
+  "contract_revision": "9",
+  "task_id": "TASK-051",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/51",
+    "local_mirror": "docs/tasks/TASK-051-ui-libraries.md",
+    "normative_equivalence": "Issue51 and HumanTask revision9 Next/Nest preferreduserreference pair preserving approvedstacks"
+  },
+  "summary": "Curated UI catalog and PRD/spec/task library provenance; no standalone library skills",
+  "authorization": {
+    "status": "APPROVED_IMPLEMENTATION",
+    "source": "Direct user correction2026-10-14"
+  },
+  "execution_lists": [
+    {
+      "list_id": "ui-routing",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        "docs/tasks/TASK-051-ui-libraries.md",
+        "plugins/ui-ux-standard/skills/ui-ux-standard/SKILL.md",
+        "plugins/sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md"
+      ],
+      "allowed_paths": [
+        "plugins/ui-ux-standard/**",
+        "plugins/studio-prd/**",
+        "plugins/sdd-spec-factory/**",
+        "tests/test_ui_library_routing.py"
+      ],
+      "protected_paths": [
+        "plugins/dev-workflow-standard/**",
+        "plugins/devops-standard/**"
+      ],
+      "acceptance_criteria": [
+        "Catalog-first; targeted source discovery for gaps",
+        "No bundled standalone Frappe/ReactBits skills",
+        "Selected source IDs/provenance routed through PRD/spec/Task required_sources",
+        "Dependencies in client project; OS selection tools only",
+        "APIBrasil catalog reference only, no whole-gateway free claim or runtime connection",
+        "EveryPRD/spec records applicablecatalog consult/source/native reuse or justified N/A, without weakening whole-inventory rules or requiring unrelated content",
+        "Backend source catalog covers supplied list with verified origin/license/pin and adoptionbounds; no installs or architecture selection",
+        "Java10 and JSserver-framework/data5 candidate sources verified; retain existing27; no runtime/architecture selection",
+        "Usable no-cost edition/item with compatible verified terms only; exclude paid editions/currentLiquibase byrestrictivefilter; retain zero-cost ReactBits appuse restriction; SDKcodefree differsservicefees;41backendIDs/pins",
+        "Web3 all11identitiesverified withpins/licenses, activefreeeditiononly, restrictedunknownexcluded; toolchain separate source-only/noexec registry/RPC/walletactions",
+        "Next.js explicitverifiedMITcandidate; Nestexistingnotduplicate; preferredNext/Nest userreference notuniversalforcedstack; nohostpurchase/install"
+      ]
+    },
+    {
+      "list_id": "catalog-validation",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        "docs/tasks/TASK-051-ui-libraries.md"
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-051*"
+      ],
+      "acceptance_criteria": [
+        "Packageboundary/sourceclosure and provenance handoff checks",
+        "IndependentQA and appropriate structural tests",
+        "Historical runtime distinguished from revision2 scope"
+      ]
+    }
+  ],
+  "locked_paths": [
+    "main",
+    "PR50 implementation",
+    "global MCP config",
+    "credentials"
+  ],
+  "execution_result": {
+    "status": "VALIDATED_PENDING_REVIEW",
+    "revision1_evidence": "Historical; superseded standalone skill scope",
+    "macos": "NOT_VALIDATED",
+    "windows11": "NOT_VALIDATED",
+    "structural_tests": "revision9:631PASS44.293s;14focusedchecks35links3validatorsPASS",
+    "local_catalog_refresh": "revision9:55UI/Studio/SDD source/cache files match;config unchanged;12plugins enabled",
+    "apibrasil": "Catalog only NOT_CONNECTED NOT_VALIDATED",
+    "research_validation": "Source/license metadata reviewed; no projectcompatibility/security/runtime certification",
+    "web3": "11identified10eligiblefreecodesources;Reownexcludeddefault;NOT_INSTALLED/NOT_RUNTIME_VALIDATED",
+    "next_nest": "NextexplicitMITcandidate/42backendIDs;existingNestnotduplicated;user-declaredreferencepaironly;no install/version/migration"
+  },
+  "routing_rule": "OS selection only executable tools; skills OS-neutral; UI library selection based on project Vue/React framework",
+  "source_discovery_checkpoint": {
+    "date": "2026-10-14",
+    "user_request": "Locate original RNWeb and nine UI library repositories",
+    "allowed_change": "Existing UI component-source references only",
+    "no_new_dependencies": true,
+    "validation_scope_unchanged": true,
+    "license_notes": "Coss mixedMIT apps/origin+apps/ui andAGPLv3others; Aceternitycanonicalpubliccomponentrepositoryunconfirmed; candidatesnotruntimevalidated"
+  }
+}

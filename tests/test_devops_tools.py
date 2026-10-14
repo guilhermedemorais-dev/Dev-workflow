@@ -29,7 +29,7 @@ EXPECTED_REPOS = {
 class DevOpsRegistryTests(unittest.TestCase):
     def catalog(self):
         self.assertTrue(REGISTRY.is_file(), "DevOps tool registry is missing")
-        data = json.loads(REGISTRY.read_text())
+        data = json.loads(REGISTRY.read_text(encoding="utf-8"))
         self.assertEqual(data["schema_version"], 1)
         self.assertEqual(data["owner"], "devops-standard")
         tools = {item["id"]: item for item in data["tools"]}
@@ -56,7 +56,7 @@ class DevOpsRegistryTests(unittest.TestCase):
                 self.assertNotIn("installed", item)
 
     def test_security_tools_have_single_owner(self):
-        security = json.loads((ROOT / "plugins/security-standard/skills/security-standard/references/tool-registry.json").read_text())
+        security = json.loads((ROOT / "plugins/security-standard/skills/security-standard/references/tool-registry.json").read_text(encoding="utf-8"))
         self.assertFalse(set(self.catalog()) & {tool["id"] for tool in security["tools"]})
 
     def test_compose_is_a_docker_subcommand(self):
@@ -84,6 +84,9 @@ class DevOpsRegistryTests(unittest.TestCase):
         self.assertEqual(tools["helm"]["verify_args"], ["version", "--short"])
 
 
+from portable_executable import write_executable
+
+
 class DevOpsHelperProcessTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -93,19 +96,16 @@ class DevOpsHelperProcessTests(unittest.TestCase):
         self.workspace.mkdir()
         self.bin = self.base / "bin"
         self.bin.mkdir()
-        self.tool = self.bin / "fixture-tool"
-        self.tool.write_text(
-            "#!/bin/sh\n"
-            'if [ "$1" = "--version" ]; then echo 1.0; exit 0; fi\n'
-            'if [ "$1" = "fail" ]; then exit 7; fi\n'
-            'if [ "$1" = "check" ]; then test -f accepted; exit $?; fi\n'
-            'if [ "$1" = "literal" ]; then printf "%s\\n" "$2"; exit 0; fi\n'
-            "exit 9\n"
-        )
-        self.tool.chmod(0o755)
+        self.tool = write_executable(self.bin / "fixture-tool",
+            "import sys\nfrom pathlib import Path\na=sys.argv[1:]\n"
+            "if a[0]=='--version': print('1.0'); sys.exit(0)\n"
+            "if a[0]=='fail': sys.exit(7)\n"
+            "if a[0]=='check': sys.exit(0 if Path('accepted').is_file() else 1)\n"
+            "if a[0]=='literal': print(a[1]); sys.exit(0)\n"
+            "sys.exit(9)\n")
         self.registry = self.base / "registry.json"
         self.registry.write_text(json.dumps({"tools": [{"id": "fixture", "command": "fixture-tool",
-            "verify_args": ["--version"], "repository": "https://github.com/example/fixture"}]}))
+            "verify_args": ["--version"], "repository": "https://github.com/example/fixture"}]}), encoding="utf-8")
         self.state = self.base / "state.json"
         self.env = {**os.environ, "PATH": str(self.bin), "PYTHONDONTWRITEBYTECODE": "1",
                     "TOOL_REGISTRY_PATH": str(self.registry), "TOOL_STATE_PATH": str(self.state)}
@@ -123,7 +123,7 @@ class DevOpsHelperProcessTests(unittest.TestCase):
         process = self.invoke("detect", owner="devops-standard")
         self.assertEqual(process.returncode, 0, process.stderr)
         self.assertEqual(self.receipt(process)["status"], "installed")
-        self.assertEqual(json.loads(self.state.read_text())["tools"]["fixture"]["version"], "1.0")
+        self.assertEqual(json.loads(self.state.read_text(encoding="utf-8"))["tools"]["fixture"]["version"], "1.0")
 
     def test_run_uses_requested_workspace(self):
         (self.workspace / "accepted").touch()
@@ -156,7 +156,7 @@ class DevOpsHelperProcessTests(unittest.TestCase):
     def test_cached_execution_does_not_repeat_version_probe(self):
         first = self.invoke("detect")
         self.assertEqual(first.returncode, 0)
-        self.tool.write_text("#!/bin/sh\n[ \"$1\" = \"--version\" ] && exit 8\nexit 0\n")
+        write_executable(self.tool, "import sys\nsys.exit(8 if sys.argv[1:]==['--version'] else 0)\n")
         second = self.invoke("run", "check")
         self.assertEqual(second.returncode, 0)
         self.assertEqual(self.receipt(second)["tool_state_source"], "cached-installed")
@@ -175,7 +175,7 @@ class DevOpsHelperProcessTests(unittest.TestCase):
         process = self.invoke("run", "check")
         self.assertEqual(process.returncode, 2)
         self.assertEqual(self.receipt(process)["status"], "missing")
-        self.assertEqual(json.loads(self.state.read_text())["tools"]["fixture"]["status"], "stale")
+        self.assertEqual(json.loads(self.state.read_text(encoding="utf-8"))["tools"]["fixture"]["status"], "stale")
 
     def test_missing_workspace_returns_structured_error_without_state_writes(self):
         process = self.invoke("run", "check", workspace=self.base / "missing-project")
@@ -200,12 +200,12 @@ class DevOpsHelperProcessTests(unittest.TestCase):
         self.assertFalse((self.workspace / "unsafe-marker").exists())
 
     def test_compose_detection_and_execution_use_explicit_subcommand(self):
-        self.tool.write_text("#!/bin/sh\n"
-            '[ "$1" = "compose" ] || exit 8\n'
-            '[ "$2" = "version" ] && { echo 2.0; exit 0; }\n'
-            '[ "$2" = "config" ] && exit 0\nexit 9\n')
+        write_executable(self.tool, "import sys\na=sys.argv[1:]\n"
+            "if not a or a[0]!='compose': sys.exit(8)\n"
+            "if a[1]=='version': print('2.0'); sys.exit(0)\n"
+            "sys.exit(0 if a[1]=='config' else 9)\n")
         self.registry.write_text(json.dumps({"tools": [{"id": "fixture", "command": "fixture-tool",
-            "verify_args": ["compose", "version"], "repository": "https://github.com/docker/compose"}]}))
+            "verify_args": ["compose", "version"], "repository": "https://github.com/docker/compose"}]}), encoding="utf-8")
         process = self.invoke("run", "compose", "config")
         self.assertEqual(process.returncode, 0)
         self.assertEqual(self.receipt(process)["tool_version"], "2.0")

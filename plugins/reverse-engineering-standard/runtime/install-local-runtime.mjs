@@ -5,6 +5,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
+import { packageManagerInvocation, reaInvocation } from "./process-launch.mjs";
+
 const here = dirname(fileURLToPath(import.meta.url));
 const vendorDir = resolve(here, "../vendor/rea-runtime");
 const tarball = resolve(vendorDir, "rea-agents-4.1.0.tgz");
@@ -22,16 +24,20 @@ const expected = readFileSync(checksumFile, "utf8").trim().split(/\s+/)[0];
 const actual = createHash("sha256").update(readFileSync(tarball)).digest("hex");
 if (actual !== expected) fail("vendored REA runtime checksum mismatch");
 
-const result = spawnSync(
-  process.platform === "win32" ? "npm.cmd" : "npm",
-  ["install", "--ignore-scripts", "--no-audit", "--no-fund"],
-  { cwd: here, stdio: "inherit" }
-);
+let manager;
+const requiredKind = existsSync(resolve(here, "pnpm-lock.yaml")) ? "pnpm"
+  : existsSync(resolve(here, "package-lock.json")) ? "npm" : null;
+if (!requiredKind) fail("committed pnpm-lock.yaml or package-lock.json is required for bootstrap");
+try { manager = packageManagerInvocation(process.env, requiredKind); } catch (error) { fail(error.message); }
+const installArgs = requiredKind === "pnpm"
+  ? ["install", "--ignore-scripts", "--frozen-lockfile"]
+  : ["ci", "--ignore-scripts", "--no-audit", "--no-fund"];
+const result = spawnSync(manager.executable, [...manager.args, ...installArgs], { cwd: here, stdio: "inherit", shell: false });
 
-if (result.error) fail("npm bootstrap failed to start");
+if (result.error) fail("package manager bootstrap failed to start: " + result.error.message);
 if (result.status !== 0) process.exit(result.status ?? 1);
 
-const reaBin = resolve(here, "node_modules", ".bin", process.platform === "win32" ? "rea.cmd" : "rea");
+const reaBin = reaInvocation(here).args[0];
 if (!existsSync(reaBin)) fail("vendored REA runtime did not expose the rea CLI");
 
 process.stdout.write(JSON.stringify({

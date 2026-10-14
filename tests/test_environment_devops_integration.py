@@ -8,6 +8,7 @@ import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
+from portable_executable import write_executable, executable_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +27,7 @@ class EnvironmentDevOpsIntegration(unittest.TestCase):
         self.workspace = self.base / 'project'
         self.workspace.mkdir()
         shutil.copytree(ROOT / 'plugins', self.root / 'plugins',
-                        ignore=shutil.ignore_patterns('runtime-state', '__pycache__'))
+                        ignore=shutil.ignore_patterns('runtime-state', '__pycache__', 'node_modules', '.runtime', '.venv'))
         for relative in ('README.md', '.gitignore', 'docs/workflow-pipeline.md', '.agents/plugins/marketplace.json',
                          '.claude-plugin/marketplace.json'):
             target = self.root / relative
@@ -54,9 +55,7 @@ class EnvironmentDevOpsIntegration(unittest.TestCase):
     def fixture(self, command, directory=None):
         target = (directory or self.bin) / command
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text('#!/bin/sh\necho 1.2.3\n')
-        target.chmod(0o755)
-        return target
+        return write_executable(target, "print('1.2.3')\n")
 
     def snapshot(self):
         return {str(path.relative_to(self.base)): path.read_bytes()
@@ -98,7 +97,7 @@ class EnvironmentDevOpsIntegration(unittest.TestCase):
         self.assertEqual(tool['executable'], str(local))
         self.assertNotIn('required-capability:github-actions-validation', report['blockers'])
         local.unlink()
-        (self.bin / 'actionlint').unlink()
+        executable_path(self.bin / 'actionlint').unlink()
         missing = self.env.doctor(required=['github-actions-validation'])
         self.assertIn('required-capability:github-actions-validation', missing['blockers'])
         self.assertEqual(missing['skills']['devops-standard']['tools']['actionlint']['status'], 'MISSING')
@@ -108,9 +107,9 @@ class EnvironmentDevOpsIntegration(unittest.TestCase):
         self.assertIsNotNone(self.tools.detect('devops-standard', 'actionlint', self.workspace))
         registry, state = self.tools.paths('devops-standard')
         before = state.read_bytes()
-        catalog = json.loads(registry.read_text())
+        catalog = json.loads(registry.read_text(encoding="utf-8"))
         next(t for t in catalog['tools'] if t['id'] == 'actionlint')['repository'] = 'https://example.org/changed'
-        registry.write_text(json.dumps(catalog))
+        registry.write_text(json.dumps(catalog), encoding="utf-8")
         self.assertIsNone(self.tools.cached('devops-standard', 'actionlint', self.workspace, read_only=True))
         self.assertEqual(state.read_bytes(), before)
 

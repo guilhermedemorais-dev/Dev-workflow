@@ -79,6 +79,24 @@ project being prepared. They can be different.
 11. Persist sanitized local observations and return HEALTH_REPORT plus human
    summary, installations actually performed, blockers and next action.
 
+## Platform routing
+
+During assisted installation invoke `prepare` once with the actual execution
+runtime and writable local state. `platform_tools` selects the packaged
+`Tools (Linux)`, `Tools (Windows)` or `Tools (macOS)` catalog and persists the
+binding in the existing environment state. This is not an automatic host hook
+and never rewrites manifests. Before later tasks reuse `status`; do not ask
+which OS to use on every request. WSL selects Linux, not native Windows.
+Runtime, catalog or source drift requires preparation again. Interpreter file
+checks are cheap cache invalidation, not certification of runtime support.
+
+Catalogs reference canonical owner scripts without duplicates. Route only
+`eligible: true` entries, subject to owner gates and prerequisites.
+`NOT VALIDATED` needs verification or an approved adapter; `UNSUPPORTED` has
+no approved platform route. This does not block unrelated external tools with
+their own compatible registry/runtime evidence. Context retrieval via Potpie
+or lexical fallback supplements Task sources; environment state owns OS selection.
+
 ## Library, ownership and local state
 
 | Artifact | Responsibility |

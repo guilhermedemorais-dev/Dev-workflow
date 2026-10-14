@@ -81,9 +81,9 @@ class GovernanceBehaviorTests(unittest.TestCase):
             self.g.safe_path(self.root, '.github/CODEOWNERS')
 
     def test_09_ci_only_uses_existing_node_scripts(self):
-        (self.root / 'package.json').write_text(json.dumps({'scripts': {'test': 'node test.js'}}))
-        (self.root / 'package-lock.json').write_text('{}')
-        (self.root / '.nvmrc').write_text('22.14.0')
+        (self.root / 'package.json').write_text(json.dumps({'scripts': {'test': 'node test.js'}}), encoding="utf-8")
+        (self.root / 'package-lock.json').write_text('{}', encoding="utf-8")
+        (self.root / '.nvmrc').write_text('22.14.0', encoding="utf-8")
         artifacts, limitations = self.g.local_artifacts(self.root, config())
         workflow = artifacts['.github/workflows/quality.yml']
         self.assertIn('npm ci', workflow)
@@ -230,14 +230,14 @@ class GovernanceBehaviorTests(unittest.TestCase):
         self.assertEqual(len(Fake('github.com').connection('query {}', {}, ['node', 'items'])), 2)
 
     def test_28_node_missing_runtime_version_requires_manual_decision(self):
-        (self.root / 'package.json').write_text(json.dumps({'scripts': {'test': 'node test.js'}}))
-        (self.root / 'package-lock.json').write_text('{}')
+        (self.root / 'package.json').write_text(json.dumps({'scripts': {'test': 'node test.js'}}), encoding="utf-8")
+        (self.root / 'package-lock.json').write_text('{}', encoding="utf-8")
         artifacts, limits = self.g.local_artifacts(self.root, config())
         self.assertNotIn('.github/workflows/quality.yml', artifacts)
         self.assertTrue(limits)
 
     def test_29_generated_actions_are_full_sha_pinned(self):
-        (self.root / 'go.mod').write_text('module example.com/example\n\ngo 1.24.0\n')
+        (self.root / 'go.mod').write_text('module example.com/example\n\ngo 1.24.0\n', encoding="utf-8")
         artifacts, _ = self.g.local_artifacts(self.root, config())
         import re
         uses = re.findall(r'uses: (\S+)', artifacts['.github/workflows/quality.yml'])
@@ -269,7 +269,7 @@ class GovernanceBehaviorTests(unittest.TestCase):
         for name, content in artifacts.items():
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content)
+            path.write_text(content, encoding="utf-8")
         return desired, snapshot
 
     def test_31_ready_only_fresh_complete_observations(self):
@@ -292,7 +292,7 @@ class GovernanceBehaviorTests(unittest.TestCase):
             self.assertEqual(self.g.verify(None, self.root, desired, {})['readiness'], 'BLOCKED')
 
     def test_34_diff_never_emits_secret_from_existing_files(self):
-        (self.root / 'CONTRIBUTING.md').write_text('credential: ghp_SYNTHETIC_SECRET_DO_NOT_PRINT\n')
+        (self.root / 'CONTRIBUTING.md').write_text('credential: ghp_SYNTHETIC_SECRET_DO_NOT_PRINT\n', encoding="utf-8")
         with self.assertRaises(self.g.GovernanceError) as caught:
             self.g.make_proposal(self.root, config(), self.snapshot(), {})
         self.assertNotIn('SYNTHETIC', str(caught.exception))
@@ -300,7 +300,7 @@ class GovernanceBehaviorTests(unittest.TestCase):
     def test_35_existing_workflow_preserved_and_no_unknown_stack_blocker(self):
         folder = self.root / '.github/workflows'
         folder.mkdir(parents=True)
-        (folder / 'custom.yaml').write_text('name: Custom\njobs: {}\n')
+        (folder / 'custom.yaml').write_text('name: Custom\njobs: {}\n', encoding="utf-8")
         artifacts, limits = self.g.local_artifacts(self.root, config())
         self.assertNotIn('.github/workflows/quality.yml', artifacts)
         self.assertNotIn('ci_stack', [x['capability'] for x in limits])
@@ -349,7 +349,7 @@ class GovernanceBehaviorTests(unittest.TestCase):
             self.g.validate_config(desired)
 
     def test_40_removed_file_lines_not_reflected_even_unknown_secret_format(self):
-        (self.root / 'CONTRIBUTING.md').write_text('confidential arbitrary CANARY-no-standard-prefix\n')
+        (self.root / 'CONTRIBUTING.md').write_text('confidential arbitrary CANARY-no-standard-prefix\n', encoding="utf-8")
         plan = self.g.make_proposal(self.root, config(), self.snapshot(), {})
         self.assertNotIn('CANARY', json.dumps(plan))
         change = next(x for x in plan['actions'] if x.get('path') == 'CONTRIBUTING.md')
@@ -366,13 +366,13 @@ class GovernanceBehaviorTests(unittest.TestCase):
 
     def test_42_write_time_precondition_preserves_concurrent_local_edit(self):
         path = self.root / 'CONTRIBUTING.md'
-        path.write_text('approved original')
+        path.write_text('approved original', encoding="utf-8")
         action = {'kind': 'local_file', 'path': 'CONTRIBUTING.md', 'content': 'replacement',
                   'before_sha256': self.g.hashlib.sha256(path.read_bytes()).hexdigest()}
-        path.write_text('concurrent user edit')
+        path.write_text('concurrent user edit', encoding="utf-8")
         with self.assertRaises(self.g.GovernanceError):
             self.g.execute_action(None, self.root, config(), action, {})
-        self.assertEqual(path.read_text(), 'concurrent user edit')
+        self.assertEqual(path.read_text(encoding="utf-8"), 'concurrent user edit')
 
     def test_43_real_cli_fake_gh_readonly_apply_and_idempotency(self):
         workspace = self.root / 'repo'
@@ -380,14 +380,14 @@ class GovernanceBehaviorTests(unittest.TestCase):
         fakebin = self.root / 'bin'
         fakebin.mkdir()
         statefile, logfile = self.root / 'state.json', self.root / 'calls.jsonl'
-        statefile.write_text(json.dumps({'labels': [], 'malformed': False}))
-        fake = fakebin / 'gh'
-        fake.write_text('''#!/usr/bin/env python3
+        statefile.write_text(json.dumps({'labels': [], 'malformed': False}), encoding="utf-8")
+        from portable_executable import write_executable
+        fake = write_executable(fakebin / 'gh', '''
 import json, os, sys
 from pathlib import Path
 a=sys.argv[1:]
 statepath=Path(os.environ['FAKE_STATE'])
-state=json.loads(statepath.read_text())
+state=json.loads(statepath.read_text(encoding="utf-8"))
 with open(os.environ['FAKE_LOG'], 'a') as log: log.write(json.dumps(a)+'\\n')
 if a==['--version']: print('gh version 2.80.0 (fixture)'); sys.exit()
 if a[:2]==['auth','status']: sys.exit()
@@ -411,12 +411,11 @@ elif '/labels' in endpoint:
 else: sys.stderr.write('unexpected call'); sys.exit(3)
 print(json.dumps(out))
 ''')
-        fake.chmod(0o755)
         desired = config()
         for key in ('project', 'rules', 'ci'):
             desired[key].update(enabled=False, reason='Approved isolated fixture')
         (workspace / '.github').mkdir()
-        (workspace / '.github/governance.json').write_text(json.dumps(desired))
+        (workspace / '.github/governance.json').write_text(json.dumps(desired), encoding="utf-8")
         for command in (['git', 'init', '-b', 'main', str(workspace)],
                         ['git', '-C', str(workspace), 'add', '.'],
                         ['git', '-C', str(workspace), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-m', 'fixture']):
@@ -435,24 +434,24 @@ print(json.dumps(out))
             self.assertEqual(before, after)
             if operation == 'propose':
                 plan = output
-        calls = [json.loads(x) for x in logfile.read_text().splitlines()]
+        calls = [json.loads(x) for x in logfile.read_text(encoding="utf-8").splitlines()]
         self.assertTrue(all('--method' not in x or x[x.index('--method')+1]=='GET' for x in calls))
         proposal = self.root / 'proposal.json'
-        proposal.write_text(json.dumps(plan))
+        proposal.write_text(json.dumps(plan), encoding="utf-8")
         result, output = call('apply', '--proposal', str(proposal))
         self.assertEqual(result.returncode, 1)
         result, output = call('apply', '--proposal', str(proposal), '--confirm')
         self.assertEqual(result.returncode, 0, output)
         self.assertEqual(output['status'], 'APPLIED')
         self.assertEqual(output['readiness'], 'NOT_VALIDATED')
-        self.assertEqual(len(json.loads(statefile.read_text())['labels']), 3)
+        self.assertEqual(len(json.loads(statefile.read_text(encoding="utf-8"))['labels']), 3)
         result, plan = call('propose')
         self.assertEqual(plan['actions'], [])
-        proposal.write_text(json.dumps(plan))
+        proposal.write_text(json.dumps(plan), encoding="utf-8")
         result, output = call('apply', '--proposal', str(proposal), '--confirm')
         self.assertEqual(output['status'], 'NO CHANGE REQUIRED')
-        state = json.loads(statefile.read_text()); state['malformed'] = True
-        statefile.write_text(json.dumps(state))
+        state = json.loads(statefile.read_text(encoding="utf-8")); state['malformed'] = True
+        statefile.write_text(json.dumps(state), encoding="utf-8")
         result, output = call('diagnose')
         self.assertEqual(result.returncode, 1)
         self.assertEqual(output['error'], 'API_UNAVAILABLE')
@@ -479,17 +478,17 @@ print(json.dumps(out))
         for name, content in artifacts.items():
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(content)
+            path.write_text(content, encoding="utf-8")
         desired['local']['generate'] = False
-        (self.root / '.github/governance.json').write_text(json.dumps(desired))
-        (self.root / '.gitignore').write_text('CONTRIBUTING.md\n')
+        (self.root / '.github/governance.json').write_text(json.dumps(desired), encoding="utf-8")
+        (self.root / '.gitignore').write_text('CONTRIBUTING.md\n', encoding="utf-8")
         for command in (['git', 'init', '-b', 'main', str(self.root)],
                         ['git', '-C', str(self.root), 'add', '.'],
                         ['git', '-C', str(self.root), '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.test', 'commit', '-m', 'fixture']):
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stderr)
         sha = subprocess.check_output(['git', '-C', str(self.root), 'rev-parse', 'HEAD'], text=True).strip()
-        (self.root / 'CONTRIBUTING.md').write_text('Ignored content absent from the checked revision')
+        (self.root / 'CONTRIBUTING.md').write_text('Ignored content absent from the checked revision', encoding="utf-8")
         repo = self.snapshot()['repository']
         class Fake:
             version = '2.80.0'
@@ -518,7 +517,7 @@ print(json.dumps(out))
                 inner.calls += 1
                 return {}
         client = Fake()
-        with patch.object(self.g, 'observe', return_value=snapshot), patch.object(self.g.os, 'supports_dir_fd', set()):
+        with patch.object(self.g, 'observe', return_value=snapshot), patch.object(self.g, 'secure_local_write_available', return_value=False):
             with self.assertRaises(self.g.GovernanceError):
                 self.g.apply_proposal(client, self.root, desired, proposal, {}, True)
         self.assertEqual(client.calls, 0)
@@ -535,7 +534,7 @@ class GovernanceBootstrapTests(unittest.TestCase):
     def test_02_template_has_no_runtime_identifiers(self):
         path = HELPER.parent.parent / 'templates/github-governance.json'
         self.assertTrue(path.is_file(), 'desired-state template is missing')
-        desired = json.loads(path.read_text())
+        desired = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(desired['schema_version'], 1)
         self.assertEqual(len(desired['project']['statuses']), 8)
         self.assertFalse(desired['automation']['auto_merge'])

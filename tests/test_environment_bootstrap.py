@@ -23,7 +23,7 @@ SPEC.loader.exec_module(envmod)
 
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value) if not isinstance(value, str) else value)
+    path.write_text(json.dumps(value) if not isinstance(value, str) else value, encoding="utf-8")
 
 
 def mcp(identifier='core', tier='CORE', origin='OFFICIAL'):
@@ -113,9 +113,10 @@ class EnvironmentBootstrap(unittest.TestCase):
     def test_05_prepare_configures_only_selected_and_approved(self):
         approval = self.approval('optional')
         report = self.env.prepare(selected=['optional'], approvals=[approval])
-        self.assertEqual(set(json.loads(self.config.read_text())['mcpServers']), {'optional'})
+        self.assertEqual(set(json.loads(self.config.read_text(encoding="utf-8"))['mcpServers']), {'optional'})
         self.assertEqual([r['component'] for r in report['receipts'] if r['executed']], ['optional'])
-        self.assertEqual(stat.S_IMODE(self.env.state_path.stat().st_mode), 0o600)
+        real_tools = envmod.Environment().tools()
+        self.assertTrue(real_tools.private_state_permissions(self.env.state_path))
 
     def test_06_repair_limits_to_observed_broken_component(self):
         self.evidence({'optional': {'installed': True, 'connected': True}, 'recommended': {'connected': True}})
@@ -216,7 +217,7 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.assertFalse(self.config.exists())
         approval['community_confirmed'] = True
         self.env.prepare(selected=['community'], approvals=[approval])
-        self.assertIn('community', json.loads(self.config.read_text())['mcpServers'])
+        self.assertIn('community', json.loads(self.config.read_text(encoding="utf-8"))['mcpServers'])
 
     def test_20_installed_does_not_imply_connected(self):
         self.evidence({'core': {'installed': True}})
@@ -271,13 +272,13 @@ class EnvironmentBootstrap(unittest.TestCase):
 
     def test_29_missing_reference_blocks_health(self):
         path = self.root / 'plugins/future-specialist/skills/future-specialist/SKILL.md'
-        path.write_text(path.read_text() + '\n[missing](references/missing.md)\n')
+        path.write_text(path.read_text(encoding="utf-8") + '\n[missing](references/missing.md)\n', encoding="utf-8")
         self.assertTrue(any(b.startswith('reference:') for b in self.env.doctor()['blockers']))
 
     def test_30_readme_gate_remains_enforced(self):
         write(self.root / 'README.md', 'stale README')
         self.assertIn('readme-architecture', self.env.doctor()['blockers'])
-        self.assertIn('NOT READY TO COMMIT', (ROOT / 'README.md').read_text())
+        self.assertIn('NOT READY TO COMMIT', (ROOT / 'README.md').read_text(encoding="utf-8"))
 
     def test_stale_runtime_evidence_is_not_reused(self):
         self.evidence({'core': {'connected': True, 'authenticated': True}}, '2000-01-01T00:00:00+00:00')
@@ -340,10 +341,10 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.env.host = 'codex'
         self.env.config = self.workspace / 'config.toml'
         write(self.env.config, 'model = "example"\n[mcp_servers.existing]\nurl = "https://example.org"\n')
-        before = self.env.config.read_text()
+        before = self.env.config.read_text(encoding="utf-8")
         self.env.prepare(selected=['optional'], approvals=[self.approval('optional')])
-        self.assertTrue(self.env.config.read_text().startswith(before))
-        self.assertIn('[mcp_servers.optional]', self.env.config.read_text())
+        self.assertTrue(self.env.config.read_text(encoding="utf-8").startswith(before))
+        self.assertIn('[mcp_servers.optional]', self.env.config.read_text(encoding="utf-8"))
 
     def test_absent_test_evidence_never_healthy(self):
         self.assertEqual(self.env.doctor()['plugin_health'], 'DEGRADED')
@@ -364,7 +365,7 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.env.state_path.symlink_to(target)
         with self.assertRaises(ValueError):
             self.env.prepare()
-        self.assertEqual(target.read_text(), 'preserve')
+        self.assertEqual(target.read_text(encoding="utf-8"), 'preserve')
 
     def test_cli_error_does_not_echo_secret(self):
         path = self.workspace / 'preferences.json'
@@ -377,7 +378,7 @@ class EnvironmentBootstrap(unittest.TestCase):
 
     def test_expired_snapshot_cannot_be_ready_or_rejuvenated(self):
         self.env.prepare()
-        state = json.loads(self.env.state_path.read_text())
+        state = json.loads(self.env.state_path.read_text(encoding="utf-8"))
         state['snapshot']['observed_at'] = '2000-01-01T00:00:00+00:00'
         write(self.env.state_path, state)
         report = self.env.status()
@@ -400,7 +401,7 @@ class EnvironmentBootstrap(unittest.TestCase):
 
     def test_owner_policy_cannot_be_replaced_by_project_policy(self):
         path = self.registry()
-        data = json.loads(path.read_text())
+        data = json.loads(path.read_text(encoding="utf-8"))
         data['tools'][0]['install_policy'] = 'PRIVILEGED'
         write(path, data)
         write(self.workspace / 'package-lock.json', '{}')
@@ -485,7 +486,7 @@ class EnvironmentBootstrap(unittest.TestCase):
 
     def test_expired_validation_evidence_invalidates_status(self):
         self.env.prepare()
-        state = json.loads(self.env.state_path.read_text())
+        state = json.loads(self.env.state_path.read_text(encoding="utf-8"))
         state['snapshot']['validation_observed_at'] = '2000-01-01T00:00:00+00:00'
         next(c for c in state['snapshot']['checks'] if c['check'] == 'tests-and-validators')['result'] = 'PASS'
         write(self.env.state_path, state)

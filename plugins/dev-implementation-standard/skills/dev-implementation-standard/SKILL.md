@@ -121,6 +121,14 @@ initial and final results. Escalate persistent or out-of-scope failures.
    implementations. Every new abstraction needs at least two current concrete
    consumers or an explicit approved architectural requirement. Record the
    decision in `MINIMAL_CODE_GATE`.
+   Resolve the active `dev-workflow-standard` owner's
+   `references/minimal-code-gate.md` from its installed bundle or explicit
+   canonical checkout, never an assumed sibling cache, and apply its scoped
+   cleanup, platform/dependency ladder, shared-root correction, affected-consumer
+   closure and additive evidence. Preserve full approved scope and safeguards;
+   record meaningful validation and intentional limits in the existing Task.
+   Missing required gate context returns to Harness; no extra global mode or
+   third-party installation is implied.
 7. **Set status** to `🟡 Em andamento` in the Human Task when starting your sector;
    preserve other owners' results and let Harness reconcile global status.
 8. **Implementação**: implement only the approved scope, by layer when relevant:

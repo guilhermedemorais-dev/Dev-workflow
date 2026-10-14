@@ -25,6 +25,17 @@ availability; prefer suitable documentation/code/extraction/search capabilities
 and record justified fallbacks in research evidence. Reuse existing records,
 never install the whole catalog or claim an unavailable MCP was invoked.
 
+For applicable backend/payments/fiscal/commerce library needs, resolve the active
+SDD owner and its references/backend-component-sources.md catalog metadata.
+Select eligible free editions only, preserving license obligations and separate
+provider/infrastructure costs. Preserve the PRD consultation/selection record; missing or stale evidence remains
+NOT_VALIDATED. Do not assume sibling cache paths or select architecture/install packages.
+
+When the user/project declares a Next.js/NestJS preference and stack is undecided,
+assess that reference pair through existing catalog IDs, then confirm the PRD.
+Preserve approved stacks; do not apply this preference to undeclared projects. Next server/BFF adapters may call
+Nest-owned domain APIs; do not duplicate business rules or assume Next cannot run backend code.
+
 Ask at most three useful questions per round. Research what can be discovered
 from authorized sources before asking. Separate APPROVED, PROPOSED, UNKNOWN
 and EXCLUDED requirements with source and rationale. Reference functionality
@@ -94,6 +105,27 @@ during SDD. Record component IDs/revisions, variants, responsive/keyboard
 behavior and labelled fixtures. Prefer the real shared project components.
 Visual examples do not prove backend behavior. Reuse sources instead of
 repeating the same reverse engineering for every frontend task.
+
+For any selected library edition/item, require usable zero-license-cost rights;
+paid Pro/Enterprise assets are excluded and unknown cost/license is not eligible
+until verified. Preserve item/subtree restrictions, not a whole-repository guarantee.
+
+For every PRD/spec, retain a compact record in its existing references section:
+applicable catalog indexes/metadata consulted and revision, selected source ID or
+project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALIDATED,
+never an invented consultation. Metadata review does not load every source body;
+only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
+
+When UI libraries are relevant, keep catalog-first selection with UI/UX ownership:
+project-native first, curated matching-stack candidates second, targeted Context7
+or official GitHub research only for gaps. Record the stable library/source ID,
+official repo/docs URL, observed version/commit or UNKNOWN, component path/variant,
+purpose/module, license, dependencies, adaptations and decision state in the PRD's
+existing reference/design section. PROPOSED/UNKNOWN is valid during briefing; never
+invent pins. Carry the same source ID into module SDD and its Task. Resolve the
+active ui-ux-standard references/library-source-handoff.md when needed, without
+assuming sibling cache paths or loading the whole catalog. No standalone library
+skills or blanket dependency installation follow from the catalog.
 
 Portal requests go to the active Harness `references/client-portal.md` and
 DevOps: external template into client `docs/portal/`, not a portal bundled here.

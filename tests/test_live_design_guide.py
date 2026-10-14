@@ -24,7 +24,7 @@ class CatalogueParser(HTMLParser):
 
 class LiveDesignGuideTests(unittest.TestCase):
     def setUp(self):
-        self.source = (SKILL / 'assets/live-design-guide/index.html').read_text()
+        self.source = (SKILL / 'assets/live-design-guide/index.html').read_text(encoding="utf-8")
         self.parser = CatalogueParser()
         self.parser.feed(self.source)
 
