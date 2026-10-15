@@ -94,6 +94,17 @@ class DerivedContextTests(unittest.TestCase):
         self.assertIn("source changed", message)
         self.assertEqual(fallback, self.source.read_text(encoding="utf-8"))
 
+    def test_source_change_with_possible_secret_suppresses_fallback(self):
+        artifact, _ = derive_context.build_artifact(self.plan)
+        artifact["plan_reference"] = self.plan.name
+        artifact_path = self.root / "derived.json"
+        artifact_path.write_text(json.dumps(artifact), encoding="utf-8")
+        self.source.write_text("token = 'ghp_abcdefghijklmnopqrstuvwxyz1234567890'\n", encoding="utf-8")
+        valid, message, fallback = derive_context.verify_artifact(artifact_path)
+        self.assertFalse(valid)
+        self.assertIn("source changed", message)
+        self.assertEqual(fallback, "")
+
     def test_plan_change_invalidates_artifact(self):
         artifact, _ = derive_context.build_artifact(self.plan)
         artifact["plan_reference"] = self.plan.name
@@ -102,9 +113,10 @@ class DerivedContextTests(unittest.TestCase):
         plan = json.loads(self.plan.read_text(encoding="utf-8"))
         plan["cases"][0]["query"] = "pergunta alterada"
         self.plan.write_text(json.dumps(plan), encoding="utf-8")
-        valid, message, _ = derive_context.verify_artifact(artifact_path)
+        valid, message, fallback = derive_context.verify_artifact(artifact_path)
         self.assertFalse(valid)
         self.assertIn("plan changed", message)
+        self.assertEqual(fallback, self.source.read_text(encoding="utf-8"))
 
     def test_plan_requires_exception_and_negation_controls(self):
         plan = json.loads(self.plan.read_text(encoding="utf-8"))
@@ -116,6 +128,13 @@ class DerivedContextTests(unittest.TestCase):
     def test_possible_secret_source_is_blocked(self):
         self.source.write_text("api_key = 'abcdefghijklmnop123456'\n", encoding="utf-8")
         with self.assertRaisesRegex(derive_context.ContextError, "possible secret"):
+            derive_context.build_artifact(self.plan)
+
+    def test_possible_secret_in_plan_purpose_is_blocked_before_artifact_return(self):
+        plan = json.loads(self.plan.read_text(encoding="utf-8"))
+        plan["sources"][0]["selections"][0]["purpose"] = "owner token ghp_abcdefghijklmnopqrstuvwxyz1234567890"
+        self.plan.write_text(json.dumps(plan), encoding="utf-8")
+        with self.assertRaisesRegex(derive_context.ContextError, "possible secret detected in derived artifact"):
             derive_context.build_artifact(self.plan)
 
     def test_evaluation_failure_returns_canonical_source_fallback(self):

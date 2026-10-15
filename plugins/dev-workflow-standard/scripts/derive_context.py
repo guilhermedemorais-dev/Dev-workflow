@@ -36,6 +36,10 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _contains_possible_secret(text: str) -> bool:
+    return any(pattern.search(text) for pattern in SECRET_PATTERNS)
+
+
 def _within_root(path: Path, root: Path, label: str) -> Path:
     resolved_root = root.resolve()
     resolved = path.resolve()
@@ -82,7 +86,7 @@ def _excerpt_source(item: dict[str, Any], root: Path) -> dict[str, Any]:
         text = raw.decode("utf-8")
     except (OSError, UnicodeError) as exc:
         raise ContextError(f"cannot read UTF-8 source {item.get('path')!r}: {exc}") from exc
-    if any(pattern.search(text) for pattern in SECRET_PATTERNS):
+    if _contains_possible_secret(text):
         raise ContextError(f"possible secret detected in source {item['path']!r}")
     lines = text.splitlines(keepends=True)
     selections = item.get("selections")
@@ -227,7 +231,19 @@ def build_artifact(plan_path: Path, root: Path | None = None) -> tuple[dict[str,
         "sources": clean_sources,
         "derived_context": text,
     }
+    serialized = json.dumps(artifact, ensure_ascii=False, indent=2)
+    if _contains_possible_secret(serialized):
+        raise ContextError("possible secret detected in derived artifact metadata or content")
     return artifact, text
+
+
+def _canonical_fallback(plan_path: Path, root: Path) -> str:
+    try:
+        plan = _read_plan(plan_path)
+        sources = [_excerpt_source(item, root) for item in plan["sources"]]
+        return "\n".join(source["_full_text"] for source in sources)
+    except (OSError, UnicodeError, ContextError):
+        return ""
 
 
 def _atomic_write(destination: Path, data: bytes) -> None:
@@ -269,7 +285,8 @@ def verify_artifact(artifact_path: Path, root: Path | None = None) -> tuple[bool
         plan_path = _within_root(root / plan_reference, root, "artifact plan reference")
         plan_bytes = plan_path.read_bytes()
         if sha256(plan_bytes) != artifact["plan_sha256"]:
-            return False, "curated plan changed; regenerate and review derived context", ""
+            fallback = _canonical_fallback(plan_path, root)
+            return False, "curated plan changed; regenerate and review derived context", fallback
         for item in artifact["sources"]:
             reference = Path(item["reference"])
             if reference.is_absolute():
@@ -277,7 +294,13 @@ def verify_artifact(artifact_path: Path, root: Path | None = None) -> tuple[bool
             path = _within_root(root / reference, root, "artifact source reference")
             raw = path.read_bytes()
             if sha256(raw) != item["sha256"]:
-                return False, "source changed; use canonical source", raw.decode("utf-8", errors="replace")
+                try:
+                    fallback = raw.decode("utf-8")
+                except UnicodeError:
+                    fallback = ""
+                if _contains_possible_secret(fallback):
+                    fallback = ""
+                return False, "source changed; use canonical source", fallback
         current_artifact, _ = build_artifact(plan_path, root)
         current_artifact["plan_reference"] = artifact["plan_reference"]
         if current_artifact != artifact:
