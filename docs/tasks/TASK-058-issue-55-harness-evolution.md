@@ -1,6 +1,6 @@
 # TASK-058: Issue #55, evolução verificável do Engineering Harness
 
-Status: QA e Segurança independentes passaram nos escopos locais documentados; aguardando review humano da PR. Windows nativo, WSL e macOS permanecem não validados. A PR draft #56 foi fechada; nova PR será vinculada após os recibos. Branch `codex/issue-55-harness-evolution`, base `ef0dce3a123e192cac8330161ea8c0c2e3317051` (`feat/ui-library-routing`). Issue humana: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55.
+Status: QA e Segurança independentes passaram nos escopos locais documentados; PR #57 aberta para review humano. Windows nativo, WSL e macOS permanecem não validados. A PR draft #56 foi fechada antes dos gates. Branch `codex/issue-55-harness-evolution`, base `ef0dce3a123e192cac8330161ea8c0c2e3317051` (`feat/ui-library-routing`). Issue humana: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55.
 
 ## Objetivo e autorização
 

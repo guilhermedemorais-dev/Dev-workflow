@@ -27,7 +27,7 @@ Status: implementação local em revisão. Não representa aceite de QA, Seguran
 - Branch: `codex/issue-55-harness-evolution`
 - Base: `feat/ui-library-routing` em `ef0dce3a123e192cac8330161ea8c0c2e3317051`
 - Commit de implementação: `20ff8e9`
-- PR draft: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/56
+- PR draft #56 closed before QA/Security; final PR #57: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/57
 - Worktree isolada: `Dev workflow-issue-55`
 
 ## Validação executada
