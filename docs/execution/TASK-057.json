@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-057",
+  "human_task": {
+    "representation": "github_issue_with_local_mirror",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/54",
+    "local_mirror": "docs/tasks/TASK-057-platform-install-gate.md",
+    "normative_equivalence": "Harness attests revision1 matches explicit user platform selection and commit/push authorization",
+    "observed_issue_updated_at": "2026-10-15T00:27:52Z"
+  },
+  "authorization": {
+    "status": "APPROVED_IMPLEMENT_TEST_COMMIT_PUSH",
+    "source": "User approval in current conversation",
+    "merge": "NOT_AUTHORIZED",
+    "active_config_changes": "OUT_OF_SCOPE_THIS_TURN"
+  },
+  "execution_lists": [
+    {
+      "list_id": "platform-install-implementation",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py",
+          "purpose": "Platform catalog and tool preparation source"
+        },
+        {
+          "path": "docs/platform-tools.md",
+          "purpose": "Existing compatibility and state contract"
+        }
+      ],
+      "allowed_paths": [
+        "plugins/dev-environment-standard/**",
+        "tests/test_platform_tool_routing.py",
+        "tests/test_environment_bootstrap.py",
+        "docs/platform-tools.md",
+        "docs/receipts/TASK-057*"
+      ],
+      "acceptance_criteria": [
+        "No incompatible authored probe or install",
+        "Missing or unvalidated authored catalog fails closed with reason",
+        "Compatible selected path and external locked dependency semantics preserved",
+        "Windows native vs WSL/Linux/macOS correctly distinguished",
+        "No active notebook mutation"
+      ]
+    },
+    {
+      "list_id": "platform-install-qa",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-057.json",
+          "purpose": "Current approved criteria"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-057*"
+      ],
+      "acceptance_criteria": [
+        "Independent platform negative/positive checks",
+        "Full suite and diff check on final source"
+      ]
+    },
+    {
+      "list_id": "platform-install-security",
+      "owner_skill": "security-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-057.json",
+          "purpose": "Compatibility controls and publication boundary"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-057*"
+      ],
+      "acceptance_criteria": [
+        "No unsupported execution or approval bypass",
+        "No credentials or private notebook configuration published"
+      ]
+    }
+  ],
+  "locked_paths": [
+    "active notebook",
+    "installed runtime/cache",
+    "credentials",
+    "private backups"
+  ],
+  "execution_result": {
+    "status": "TECHNICALLY_ACCEPTED_PUBLICATION_AUTHORIZED",
+    "publication": "AUTHORIZED_PENDING_REMOTE_SHA_VERIFICATION",
+    "qa": "PASS_693_EXACT_PUBLICATION_CANDIDATE_TESTS",
+    "security": "PASS_BOUNDED_PLATFORM_AND_PUBLICATION_PRIVACY",
+    "tested_tree": "f072018bc84c9456a295a508259785cdea4fc5da",
+    "receipt": "docs/receipts/TASK-057-harness.md",
+    "publication_excludes": [
+      "TASK-054",
+      "notebook_configuration",
+      "credentials",
+      "private_backups_and_caches"
+    ]
+  }
+}

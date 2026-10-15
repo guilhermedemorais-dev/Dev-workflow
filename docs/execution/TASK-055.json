@@ -1,0 +1,130 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-055",
+  "human_task": {
+    "representation": "local_draft",
+    "issue_url": null,
+    "local_mirror": "docs/tasks/TASK-055-windows-native-mcp.md",
+    "normative_equivalence": "Harness attests revision1 local scope/criteria; user forbids active notebook config migration"
+  },
+  "authorization": {
+    "status": "APPROVED_LOCAL_IMPLEMENTATION_AND_ISOLATED_VALIDATION",
+    "source": "Direct user request2026-10-14",
+    "active_migration": "FORBIDDEN",
+    "publication": "FORBIDDEN"
+  },
+  "execution_lists": [
+    {
+      "list_id": "native-implementation",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md",
+          "purpose": "Bootstrap ownership and consent"
+        },
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py",
+          "purpose": "Existing config/install lifecycle"
+        },
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/references/mcp-library.json",
+          "purpose": "Verified provider/package identities"
+        }
+      ],
+      "allowed_paths": [
+        "plugins/dev-environment-standard/skills/dev-environment-standard/**",
+        "tests/test_windows_native_mcp.py",
+        "tests/test_environment_bootstrap.py",
+        "tests/test_environment_devops_integration.py",
+        "docs/windows-native-mcp-migration.md",
+        "CHANGELOG.md",
+        "docs/receipts/TASK-055*"
+      ],
+      "acceptance_criteria": [
+        "Windows-native discovery/install/config/proof lifecycle",
+        "Stable runtime/browser reuse and official requirements",
+        "Explicitselection/dedup and no silentWSLfallback",
+        "Credential/preference preservation and backuprollback",
+        "No activeconfig or unrelatedtask mutation"
+      ]
+    },
+    {
+      "list_id": "native-runtime",
+      "owner_skill": "dev-environment-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/tasks/TASK-055-windows-native-mcp.md",
+          "purpose": "Isolated validation authorization"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-055*",
+        "outputs outside repository",
+        "persistent user-scoped isolated validation assets"
+      ],
+      "acceptance_criteria": [
+        "Real Windows10 edition/build/runtime versions",
+        "Handshake and representative owned/public operation per tool",
+        "No ownedlaunchwsl.exe and process/memory evidence",
+        "Activeconfig hash unchanged; no otherLinux process attribution"
+      ]
+    },
+    {
+      "list_id": "native-qa",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-055.json",
+          "purpose": "Current acceptance and scope"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-055*"
+      ],
+      "acceptance_criteria": [
+        "Behavioral/regression tests and fullsuite",
+        "Independent nativeadapter/config migration review",
+        "Runtime evidence bounds explicit"
+      ]
+    },
+    {
+      "list_id": "native-security",
+      "owner_skill": "security-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py",
+          "purpose": "Configwriter consent and secrets boundary"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-055*"
+      ],
+      "acceptance_criteria": [
+        "Preserve secrets and permissions",
+        "No arbitrary unreviewed commands",
+        "Fingerprint/backup/rollback safety"
+      ]
+    }
+  ],
+  "locked_paths": [
+    "active notebook config",
+    "credentials",
+    "installed plugin caches",
+    "TASK054 work",
+    "Linux distributions/data",
+    "remote repositories"
+  ],
+  "execution_result": {
+    "status": "VALIDATED_LOCAL_ONLY",
+    "active_migration": "NOT_PERFORMED",
+    "remote": "NOT_PUBLISHED_USER_SCOPE",
+    "validation": "28 focused / 683 full PASS43.263s; QA and Security independent PASS; four generated native MCP proofs PASS",
+    "receipt": "docs/receipts/TASK-055-harness.md",
+    "memory_savings": "NOT_VALIDATED"
+  }
+}

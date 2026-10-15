@@ -1,0 +1,490 @@
+{
+  "task": "TASK-056",
+  "scope": "Local Windows10 isolated selected native stdio lifecycle proof; active notebook config untouched",
+  "os": {
+    "edition": "Windows 10 Home Single Language",
+    "edition_id": "CoreSingleLanguage",
+    "release": "22H2",
+    "build": "19045.6466"
+  },
+  "runtimes": {
+    "python": "3.12.14 QA-only bundled interpreter, prohibited in generated production defaults",
+    "node": "24.22.0",
+    "edge": "155.0.4283.45",
+    "playwright_mcp": "0.0.83",
+    "chrome_devtools_mcp": "1.10.1",
+    "n8n_mcp": "2.93.0",
+    "claude_code": "2.1.300"
+  },
+  "raw_proof_sha256": "0164ccdc8e690bbaaf05282fb7f74e4125a9583eeff47b97a1cb8ccf09b705dc",
+  "source_hashes_before": {
+    "mcp_lifecycle.py": "244707ee30eb3178daf821b7446b2c98426a1ae452a8e744214e18de3dec501b",
+    "native_mcp.py": "0f73bb2cb2c5bd52690d85fd4739101d45f295455eb664db1470f822ca66841f",
+    "environment.py": "a32df9c365f3c64831975b093cdd1a872f0ffe7a154222266a19f009e3b5f1f0"
+  },
+  "source_hashes_after": {
+    "mcp_lifecycle.py": "244707ee30eb3178daf821b7446b2c98426a1ae452a8e744214e18de3dec501b",
+    "native_mcp.py": "0f73bb2cb2c5bd52690d85fd4739101d45f295455eb664db1470f822ca66841f",
+    "environment.py": "a32df9c365f3c64831975b093cdd1a872f0ffe7a154222266a19f009e3b5f1f0"
+  },
+  "source_unchanged_during_proof": true,
+  "active_config_sha256_before": "3a2c503b50d5b423c7b50d3f4c823c2e713d14a9c84caf85fe3773d248c6e362",
+  "active_config_sha256_after": "3a2c503b50d5b423c7b50d3f4c823c2e713d14a9c84caf85fe3773d248c6e362",
+  "active_config_unchanged": true,
+  "results": [
+    {
+      "integration": "playwright",
+      "result": "PASS",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "harness-lifecycle",
+          "version": "1"
+        }
+      },
+      "operation": {
+        "calls": [
+          "browser_navigate",
+          "browser_snapshot"
+        ],
+        "fixture_content_verified": true
+      },
+      "lifecycle": {
+        "prime": "PRIMED_STOPPED",
+        "metadata_zero_heavy_child": true,
+        "same_pid": true,
+        "owned_wsl_processes": [],
+        "owned_processes": [
+          {
+            "ProcessId": 7428,
+            "ParentProcessId": 1636,
+            "Name": "node.exe",
+            "WorkingSetSize": 119812096
+          },
+          {
+            "ProcessId": 8404,
+            "ParentProcessId": 7428,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11464704
+          },
+          {
+            "ProcessId": 6516,
+            "ParentProcessId": 7428,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 141815808
+          },
+          {
+            "ProcessId": 5972,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 8298496
+          },
+          {
+            "ProcessId": 1644,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 117555200
+          },
+          {
+            "ProcessId": 11664,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 37888000
+          },
+          {
+            "ProcessId": 14920,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 18984960
+          },
+          {
+            "ProcessId": 16460,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 30281728
+          },
+          {
+            "ProcessId": 12936,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 55791616
+          },
+          {
+            "ProcessId": 16512,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 18980864
+          },
+          {
+            "ProcessId": 1664,
+            "ParentProcessId": 6516,
+            "Name": "identity_helper.exe",
+            "WorkingSetSize": 36417536
+          },
+          {
+            "ProcessId": 15988,
+            "ParentProcessId": 6516,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 17141760
+          }
+        ],
+        "initial_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "startup_processes": [
+          {
+            "ProcessId": 1636,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22319104
+          },
+          {
+            "ProcessId": 13332,
+            "ParentProcessId": 1636,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11431936
+          }
+        ],
+        "startup_working_set_bytes": 33751040,
+        "running_heavy_working_set_bytes": 614432768,
+        "final_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "owned_pids_remaining_after_finish": [],
+        "after_finish_processes": [
+          {
+            "ProcessId": 1636,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22745088
+          },
+          {
+            "ProcessId": 13332,
+            "ParentProcessId": 1636,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11431936
+          }
+        ],
+        "after_finish_working_set_bytes": 34177024
+      }
+    },
+    {
+      "integration": "chrome-devtools",
+      "result": "PASS",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "harness-lifecycle",
+          "version": "1"
+        }
+      },
+      "operation": {
+        "calls": [
+          "new_page",
+          "take_snapshot"
+        ],
+        "fixture_content_verified": true,
+        "browser": "existing Edge, locally proven CDP compatibility only"
+      },
+      "lifecycle": {
+        "prime": "PRIMED_STOPPED",
+        "metadata_zero_heavy_child": true,
+        "same_pid": true,
+        "owned_wsl_processes": [],
+        "owned_processes": [
+          {
+            "ProcessId": 7208,
+            "ParentProcessId": 16532,
+            "Name": "node.exe",
+            "WorkingSetSize": 149237760
+          },
+          {
+            "ProcessId": 15928,
+            "ParentProcessId": 7208,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11452416
+          },
+          {
+            "ProcessId": 8224,
+            "ParentProcessId": 7208,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 130584576
+          },
+          {
+            "ProcessId": 4036,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 8306688
+          },
+          {
+            "ProcessId": 6824,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 142553088
+          },
+          {
+            "ProcessId": 17124,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 36372480
+          },
+          {
+            "ProcessId": 10680,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 18489344
+          },
+          {
+            "ProcessId": 16480,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 53854208
+          },
+          {
+            "ProcessId": 16516,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 46403584
+          },
+          {
+            "ProcessId": 13564,
+            "ParentProcessId": 8224,
+            "Name": "msedge.exe",
+            "WorkingSetSize": 33726464
+          }
+        ],
+        "initial_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "startup_processes": [
+          {
+            "ProcessId": 16532,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22298624
+          },
+          {
+            "ProcessId": 16768,
+            "ParentProcessId": 16532,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11431936
+          }
+        ],
+        "startup_working_set_bytes": 33730560,
+        "running_heavy_working_set_bytes": 630980608,
+        "final_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "owned_pids_remaining_after_finish": [],
+        "after_finish_processes": [
+          {
+            "ProcessId": 16532,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22777856
+          },
+          {
+            "ProcessId": 16768,
+            "ParentProcessId": 16532,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11431936
+          }
+        ],
+        "after_finish_working_set_bytes": 34209792
+      }
+    },
+    {
+      "integration": "n8n",
+      "result": "PASS",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "harness-lifecycle",
+          "version": "1"
+        }
+      },
+      "operation": {
+        "calls": [
+          "tools_documentation",
+          "search_nodes"
+        ],
+        "public_docs_only": true,
+        "instance_auth": "NOT_VALIDATED"
+      },
+      "lifecycle": {
+        "prime": "PRIMED_STOPPED",
+        "metadata_zero_heavy_child": true,
+        "same_pid": true,
+        "owned_wsl_processes": [],
+        "owned_processes": [
+          {
+            "ProcessId": 7016,
+            "ParentProcessId": 8180,
+            "Name": "node.exe",
+            "WorkingSetSize": 256040960
+          },
+          {
+            "ProcessId": 9040,
+            "ParentProcessId": 7016,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11464704
+          }
+        ],
+        "initial_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "startup_processes": [
+          {
+            "ProcessId": 8180,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22237184
+          },
+          {
+            "ProcessId": 6272,
+            "ParentProcessId": 8180,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11440128
+          }
+        ],
+        "startup_working_set_bytes": 33677312,
+        "running_heavy_working_set_bytes": 267505664,
+        "final_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "owned_pids_remaining_after_finish": [],
+        "after_finish_processes": [
+          {
+            "ProcessId": 8180,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22687744
+          },
+          {
+            "ProcessId": 6272,
+            "ParentProcessId": 8180,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11440128
+          }
+        ],
+        "after_finish_working_set_bytes": 34127872
+      }
+    },
+    {
+      "integration": "claude-code",
+      "result": "PASS",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "harness-lifecycle",
+          "version": "1"
+        }
+      },
+      "operation": {
+        "calls": [
+          "Read"
+        ],
+        "owned_file_verified": true,
+        "llm_auth": "NOT_VALIDATED",
+        "llm_requests": 0
+      },
+      "lifecycle": {
+        "prime": "PRIMED_STOPPED",
+        "metadata_zero_heavy_child": true,
+        "same_pid": true,
+        "owned_wsl_processes": [],
+        "owned_processes": [
+          {
+            "ProcessId": 10672,
+            "ParentProcessId": 12368,
+            "Name": "claude.exe",
+            "WorkingSetSize": 147374080
+          },
+          {
+            "ProcessId": 3916,
+            "ParentProcessId": 10672,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 12357632
+          }
+        ],
+        "initial_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "startup_processes": [
+          {
+            "ProcessId": 12368,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 22503424
+          },
+          {
+            "ProcessId": 16556,
+            "ParentProcessId": 12368,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11427840
+          }
+        ],
+        "startup_working_set_bytes": 33931264,
+        "running_heavy_working_set_bytes": 159731712,
+        "final_status": {
+          "state": "STOPPED",
+          "owned_pid": null,
+          "active_calls": 0,
+          "sessions": 0,
+          "idle_seconds": 60
+        },
+        "owned_pids_remaining_after_finish": [],
+        "after_finish_processes": [
+          {
+            "ProcessId": 12368,
+            "ParentProcessId": 10780,
+            "Name": "python.exe",
+            "WorkingSetSize": 23015424
+          },
+          {
+            "ProcessId": 16556,
+            "ParentProcessId": 12368,
+            "Name": "conhost.exe",
+            "WorkingSetSize": 11427840
+          }
+        ],
+        "after_finish_working_set_bytes": 34443264
+      }
+    }
+  ],
+  "not_validated": [
+    "Active Codex notebook migration and desktop client permission UI",
+    "Production machine total RAM savings or attribution of vmmem",
+    "Authenticated n8n instance or Claude model/API calls",
+    "Actual Linux/WSL/macOS lifecycle execution",
+    "Official blanket Windows10 support for conditional browser/runtime combinations"
+  ]
+}

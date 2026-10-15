@@ -180,6 +180,50 @@ class PlatformRouting(unittest.TestCase):
             data = json.loads((ROOT / 'plugins/dev-environment-standard' / f'Tools ({system})' / 'catalog.json').read_text(encoding='utf-8'))
             self.assertEqual({t['path'] for t in data['tools']}, expected)
 
+    def plan_tool(self, key='context-retriever', command=None, verify_args=()):
+        owner = 'dev-workflow-standard'
+        tool = {'status': 'MISSING', 'capabilities': ['fixture'], 'repository': 'https://example.org/tool', 'install_policy': 'project-approved-dependency', 'command': command or str(self.root / 'plugins/dev-workflow-standard/scripts' / (key + '.py')), 'verify_args': list(verify_args)}
+        report = {'skills': {owner: {'tools': {key: tool}}}, 'mcps': {}, 'runtimes': {}}
+        with patch.object(self.env, 'catalog', return_value={}), patch.object(self.env, 'declared_tool', return_value=True), patch.object(self.env, 'dependency_plan', return_value={'command': ['npm', 'ci']}):
+            return self.env.plan(report, [f'tool:{owner}:{key}'])[0]
+
+    def test_install_gate_windows_linux_wsl_macos_and_no_automatic_wsl(self):
+        for execution, release, runtime, permitted in [('win32', '10', 'WINDOWS_NATIVE', True), ('linux', 'generic', 'LINUX', True), ('linux', 'microsoft-standard-WSL2', 'WSL', True), ('darwin', 'Darwin', 'MACOS_NATIVE', False)]:
+            with self.subTest(runtime=runtime), patch.object(sys, 'platform', execution), patch.object(envmod.platform, 'release', return_value=release), patch.dict('os.environ', {'WSL_DISTRO_NAME': ''}):
+                action = self.plan_tool()
+                self.assertEqual(action['action'], 'INSTALL' if permitted else 'USER_ACTION_REQUIRED')
+                self.assertEqual(self.env.platform_tools()['binding']['execution_runtime'], runtime)
+                self.assertNotIn('wsl.exe', json.dumps(action))
+
+    def test_install_gate_blocks_missing_invalid_unvalidated_catalog_and_bash(self):
+        with patch.object(sys, 'platform', 'win32'):
+            bash = self.plan_tool('claude-visible-delegate', str(self.root / 'plugins/dev-workflow-standard/scripts/claude-visible-delegate.sh'))
+            self.assertEqual(bash['action'], 'USER_ACTION_REQUIRED')
+            self.assertEqual(bash['platform_route']['validation'], 'UNSUPPORTED')
+            original = self.catalog('Windows').read_text()
+            for contents in (None, '{invalid', original.replace('WINDOWS_SUITE', 'NOT VALIDATED')):
+                if contents is None: self.catalog('Windows').unlink()
+                else: self.catalog('Windows').write_text(contents)
+                action = self.plan_tool()
+                self.assertEqual(action['action'], 'USER_ACTION_REQUIRED'); self.assertEqual(action['command'], [])
+
+    def test_registry_command_and_interpreter_arguments_must_match_catalog(self):
+        with patch.object(sys, 'platform', 'win32'):
+            correct = self.root / 'plugins/dev-workflow-standard/scripts/context-retriever.py'
+            allowed = self.plan_tool(command='python3', verify_args=[str(correct), '--version'])
+            self.assertEqual(allowed['action'], 'INSTALL')
+            wrong = self.root / 'plugins/dev-workflow-standard/scripts/claude-visible-delegate.sh'
+            blocked = self.plan_tool(command='bash', verify_args=[str(wrong), '--version'])
+            self.assertEqual(blocked['action'], 'USER_ACTION_REQUIRED')
+            self.assertIn('canonical', blocked['platform_route']['reason'])
+            wrong_interpreter = self.plan_tool(command='bash', verify_args=[str(correct), '--version'])
+            self.assertEqual(wrong_interpreter['action'], 'USER_ACTION_REQUIRED')
+
+    def test_external_declared_tool_keeps_locked_dependency_route(self):
+        with patch.object(sys, 'platform', 'darwin'):
+            action = self.plan_tool('pytest', 'pytest', ['--version'])
+            self.assertEqual(action['action'], 'INSTALL'); self.assertEqual(action['command'], ['npm', 'ci'])
+
 
 if __name__ == '__main__':
     unittest.main()

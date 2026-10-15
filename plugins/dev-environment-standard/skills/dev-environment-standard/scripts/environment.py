@@ -78,14 +78,14 @@ def atomic(path, text):
     path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     fd, temporary = tempfile.mkstemp(prefix='.environment-', dir=path.parent)
     try:
-        with os.fdopen(fd, 'w', encoding='utf-8') as stream:
+        with os.fdopen(fd, 'wb') as stream:
             if os.name == 'nt':
                 helper_path = ROOT / 'plugins/dev-workflow-standard/scripts/tool-state.py'
                 spec = importlib.util.spec_from_file_location('environment_private_state', helper_path)
                 helper = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(helper)
                 helper.restrict_private_fd(stream.fileno())
-            stream.write(text)
+            stream.write(text if isinstance(text, bytes) else text.encode('utf-8'))
             stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, path)
@@ -212,6 +212,7 @@ class Environment:
                    'executable': sys.executable, 'prefix': sys.prefix,
                    'runtime_id': os.environ.get('TOOL_RUNTIME_ID', 'host'),
                    'catalog_digest': digest(catalog) if catalog else 'missing'}
+        binding['execution_runtime'] = 'WINDOWS_NATIVE' if system == 'Windows' else 'WSL' if system == 'Linux' and ('microsoft' in platform.release().lower() or os.environ.get('WSL_DISTRO_NAME')) else 'LINUX' if system == 'Linux' else 'MACOS_NATIVE' if system == 'macOS' else 'UNKNOWN'
         interpreters = {}
         for name in ('node', 'bash'):
             executable = shutil.which(name)
@@ -266,6 +267,43 @@ class Environment:
         except (OSError, ValueError, TypeError, AttributeError):
             result.update(tools=[], validation='NOT VALIDATED', reason='invalid platform catalog')
         return result
+
+    def authored_tool_route(self, owner, key, command=None, routing=None, verify_args=()):
+        """Fail closed for packaged entrypoints; external registries keep their owner policy."""
+        routing = routing if routing is not None else self.platform_tools()
+        references = []
+        for value in [str(command or ''), *verify_args]:
+            if not isinstance(value, str) or value.startswith('-'): continue
+            path = Path(value.replace('\\', '/'))
+            target = (path if path.is_absolute() else self.workspace / path).resolve()
+            if target.is_relative_to((self.root / 'plugins').resolve()) or value.replace('\\', '/').startswith('plugins/'):
+                references.append(target)
+        matches = [item for item in routing['tools'] if item['owner'] == owner and item['id'] == key]
+        if matches:
+            item = matches[0]
+            executable = Path(str(command or '').replace('\\', '/')).name.lower()
+            direct = Path(str(command or '').replace('\\', '/'))
+            direct = (direct if direct.is_absolute() else self.workspace / direct).resolve()
+            canonical = (self.root / item['path']).resolve()
+            interpreter = bool(re.fullmatch(r'python(?:3(?:\.\d+)?)?(?:\.exe)?', executable)) if item['runtime'] == 'Python' else executable in ('node', 'node.exe') if item['runtime'] == 'Node' else executable in ('bash', 'bash.exe', 'sh')
+            aligned = references == [canonical] and (interpreter or direct == canonical)
+            return {'eligible': item['eligible'] and aligned, 'validation': item['validation'] if aligned else 'NOT VALIDATED', 'reason': item['reason'] if aligned else 'registry probe does not select the canonical catalog entrypoint',
+                    'platform': routing['binding']['execution_runtime']}
+        command = str(command or '').replace('\\', '/')
+        path = Path(command)
+        authored = bool(references)
+        # A missing/corrupt catalog must not turn an authored script into an external dependency.
+        owner_root = self.root / 'plugins' / owner
+        stems = {key, Path(command).stem}
+        for current, directories, files in os.walk(owner_root):
+            directories[:] = [name for name in directories if name not in GENERATED_DIRECTORIES | {'vendor'} and not (Path(current) / name).is_symlink()]
+            if any(Path(name).suffix in ('.py', '.sh', '.js', '.mjs') and Path(name).stem in stems for name in files):
+                authored = True
+                break
+        if authored:
+            return {'eligible': False, 'validation': 'NOT VALIDATED', 'reason': 'authored tool has no valid entry in the selected platform catalog: ' + routing['reason'],
+                    'platform': routing['binding']['execution_runtime']}
+        return None
 
     def source_paths(self):
         result = [self.root / name for name in ('README.md', 'AGENTS.md', '.gitignore')]
@@ -340,6 +378,15 @@ class Environment:
         registered, error = self.registered()
         evidence = self.evidence()
         result = {}
+        transports = {}
+        try:
+            if self.host == 'codex' and self.config and self.config.exists():
+                data = tomllib.loads(self.config.read_bytes().decode('utf-8')).get('mcp_servers', {})
+                for name, definition in data.items():
+                    command = str(definition.get('command', '')).replace('\\', '/').rsplit('/', 1)[-1].lower()
+                    transports[name] = 'WSL' if command in ('wsl', 'wsl.exe') else 'HTTP' if 'url' in definition else 'STDIO'
+        except (OSError, ValueError, TypeError, AttributeError):
+            pass
         for key, entry in entries.items():
             facts = evidence.get(key, {})
             status = 'MISSING'
@@ -356,7 +403,7 @@ class Environment:
                 status = 'CONNECTED'
             elif facts.get('installed'):
                 status = 'INSTALLED'
-            result[key] = {'status': status, 'registered': registered.get(key, False), 'installed': facts.get('installed', False), 'connected': facts.get('connected', False), 'authenticated': facts.get('authenticated', False), 'authentication': 'AUTH_REQUIRED' if facts.get('auth_required') else 'AUTHENTICATED' if facts.get('authenticated') else 'NOT_OBSERVED', 'tier': entry['tier'], 'origin': entry['origin']}
+            result[key] = {'status': status, 'registered': registered.get(key, False), 'installed': facts.get('installed', False), 'connected': facts.get('connected', False), 'authenticated': facts.get('authenticated', False), 'authentication': 'AUTH_REQUIRED' if facts.get('auth_required') else 'AUTHENTICATED' if facts.get('authenticated') else 'NOT_OBSERVED', 'tier': entry['tier'], 'origin': entry['origin'], 'configured_transport': transports.get(key, 'NOT_OBSERVED'), 'native_windows_readiness': 'NOT_VALIDATED' if os.name == 'nt' else 'NOT_APPLICABLE'}
         return result, error
 
     def discover(self):
@@ -468,6 +515,7 @@ class Environment:
         skills = self.discover()
         checks, blockers, watched = self.health(skills)
         found = {}
+        routing = self.platform_tools(self.state().get('platform_tools'))
         for path in skills:
             registry = path.parent / 'references/tool-registry.json'
             if not registry.exists():
@@ -482,8 +530,15 @@ class Environment:
                 for tool in data['tools']:
                     if not ID.fullmatch(tool.get('id', '')) or not all(tool.get(k) for k in ('capabilities', 'repository', 'command', 'install_policy')) or not (tool.get('verify_args') or tool.get('verify_distribution')):
                         raise ValueError('invalid registry tool')
-                    entry = self.tools().probe(path.parent.name, tool['id'], self.workspace)
-                    observed[tool['id']] = {'status': 'INSTALLED' if entry else 'MISSING', 'executable': entry.get('executable') if entry else None, 'capabilities': tool['capabilities'], 'repository': tool['repository'], 'install_policy': tool['install_policy']}
+                    route = self.authored_tool_route(path.parent.name, tool['id'], tool['command'], routing, tool.get('verify_args', ()))
+                    if route is not None and route['eligible']:
+                        effective = self.tools().registry_tool(path.parent.name, tool['id'])
+                        if any(effective.get(field) != tool.get(field) for field in ('command', 'verify_args', 'verify_distribution', 'install_policy')):
+                            route = dict(route, eligible=False, validation='NOT VALIDATED', reason='effective owner registry differs from the canonical entrypoint definition')
+                    entry = self.tools().probe(path.parent.name, tool['id'], self.workspace) if route is None or route['eligible'] else None
+                    status = 'INSTALLED' if entry else 'MISSING' if route is None or route['eligible'] else 'UNSUPPORTED' if route['validation'] == 'UNSUPPORTED' else 'NOT VALIDATED'
+                    observed[tool['id']] = {'status': status, 'executable': entry.get('executable') if entry else None, 'capabilities': tool['capabilities'], 'repository': tool['repository'], 'install_policy': tool['install_policy'], 'command': tool['command'], 'verify_args': tool.get('verify_args', []), 'verify_distribution': tool.get('verify_distribution'), 'registry_path': str(registry)}
+                    if route is not None: observed[tool['id']]['platform_route'] = route
                 found[path.parent.name] = {'status': 'INSPECTED', 'tools': observed, 'missing_tools': [k for k, v in observed.items() if v['status'] == 'MISSING']}
                 checks.append({'check': f'registry:{path.parent.name}', 'result': 'PASS'})
             except (OSError, ValueError, KeyError, TypeError, StopIteration):
@@ -516,7 +571,7 @@ class Environment:
         core_missing = any(mcps[k]['status'] not in ('CONNECTED', 'AVAILABLE') or (e.get('auth', {}).get('required') and not mcps[k]['authenticated']) for k, e in entries.items() if e['tier'] == 'CORE')
         report = {'schema_version': 1, 'operation': 'doctor', 'observed_at': now(), 'fingerprint': self.fingerprint(), 'plugin_health': 'BLOCKED' if blockers else 'DEGRADED' if evidence != 'PASS' or core_missing else 'HEALTHY', 'checks': checks, 'runtimes': runtimes, 'mcps': mcps, 'skills': found, 'blockers': blockers, 'watched': {str(p.relative_to(self.root)): digest(p) for p in watched if p.is_relative_to(self.root)}, 'required': list(required)}
         report.update(self.project_environment())
-        report['platform_tools'] = self.platform_tools(self.state().get('platform_tools'))
+        report['platform_tools'] = routing
         report['validation_observed_at'] = validation_observed_at
         report['verified_components'] = verified_components
         return report
@@ -604,6 +659,7 @@ class Environment:
         preferences = preferences or {}
         plan = []
         selected = set(selected)
+        routing = self.platform_tools(report.get('platform_tools'))
         for key, entry in entries.items():
             if not (entry['tier'] == 'CORE' or key in selected or preferences.get(key) == 'enabled' or set(required) & set(entry['capabilities'])):
                 continue
@@ -624,12 +680,21 @@ class Environment:
                 compatible = version >= (18, 0, 0) if required_node == '>=18' else (version >= (23, 0, 0) or (version[0] == 22 and version >= (22, 12, 0)) or (version[0] == 20 and version >= (20, 19, 0))) if required_node else True
                 if not compatible or not shutil.which('npx'):
                     action = 'USER_ACTION_REQUIRED'
+            if os.name == 'nt' and key in {'playwright', 'chrome-devtools', 'n8n', 'n8n-mcp', 'claude-code'}:
+                action = 'USER_ACTION_REQUIRED'  # Fingerprint-bound native preparation.
+                command = ['environment:native-plan', self.host, key]
+                prep = dict(prep, method='native-plan')
             plan.append({'component': key, 'command': command, 'scope': str(self.config.resolve()) if self.config else 'host', 'policy': prep['policy'], 'method': prep['method'], 'source': entry['repository'], 'origin': entry['origin'], 'tier': entry['tier'], 'action': action})
         for owner, skill in report['skills'].items():
             for key, tool in skill['tools'].items():
                 component = f'tool:{owner}:{key}'
-                if tool['status'] == 'INSTALLED' or not (component in selected or set(required) & set(tool['capabilities'])):
+                if not (component in selected or set(required) & set(tool['capabilities'])):
                     continue
+                route = self.authored_tool_route(owner, key, tool.get('command'), routing, tool.get('verify_args', ()))
+                if route is not None and not route['eligible']:
+                    plan.append({'component': component, 'command': [], 'scope': str(self.workspace), 'policy': 'MANUAL_ONLY', 'method': 'owner-tool', 'source': tool['repository'], 'action': 'USER_ACTION_REQUIRED', 'platform_route': route})
+                    continue
+                if tool['status'] == 'INSTALLED': continue
                 # Owner-approved dependency declarations are the install source. Never map arbitrary tool IDs to packages.
                 action = {'component': component, 'command': [], 'scope': str(self.workspace), 'policy': 'PROJECT_SCOPED' if tool['install_policy'] == 'project-approved-dependency' else 'MANUAL_ONLY', 'owner_install_policy': tool['install_policy'], 'method': 'owner-tool', 'source': tool['repository'], 'action': 'OWNER_APPROVAL_REQUIRED'}
                 try:
@@ -730,8 +795,24 @@ class Environment:
                 receipt.update(executed=True, result='REGISTERED', exit_code=0)
             elif action['method'] == 'owner-tool':
                 _, owner, key = action['component'].split(':')
-                result = self.tools().install(owner, key, self.workspace, action['command'], 'project-locked-dependencies', force_retry=bool(component))
-                receipt.update(executed=True, result='VERIFIED' if result['status'] == 'installed' else 'FAILED', exit_code=result.get('exit_code', 0 if result['status'] == 'installed' else 2))
+                tool = report['skills'][owner]['tools'][key]
+                route = self.authored_tool_route(owner, key, tool.get('command'), verify_args=tool.get('verify_args', ()))
+                try:
+                    definitions = read_json(tool['registry_path'])['tools']
+                    definitions = [item for item in definitions if item.get('id') == key]
+                    unchanged = len(definitions) == 1 and all(definitions[0].get(field, [] if field == 'verify_args' else None) == tool.get(field) for field in ('command', 'verify_args', 'verify_distribution', 'install_policy'))
+                    if route is not None and unchanged:
+                        effective = self.tools().registry_tool(owner, key)
+                        unchanged = all(effective.get(field, [] if field == 'verify_args' else None) == tool.get(field) for field in ('command', 'verify_args', 'verify_distribution', 'install_policy'))
+                except (OSError, ValueError, KeyError, TypeError):
+                    unchanged = False
+                if not unchanged:
+                    receipt.update(result='USER_ACTION_REQUIRED', reason='owner registry changed since the approved plan; review again')
+                elif route is not None and not route['eligible']:
+                    receipt.update(result='USER_ACTION_REQUIRED', platform_route=route)
+                else:
+                    result = self.tools().install(owner, key, self.workspace, action['command'], 'project-locked-dependencies', force_retry=bool(component))
+                    receipt.update(executed=True, result='VERIFIED' if result['status'] == 'installed' else 'FAILED', exit_code=result.get('exit_code', 0 if result['status'] == 'installed' else 2))
             else:
                 try:
                     options = {'cwd': self.workspace, 'capture_output': True, 'timeout': 300, 'check': False}
@@ -777,7 +858,7 @@ class Environment:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation', choices=('doctor', 'prepare', 'repair', 'status'))
+    parser.add_argument('operation', choices=('doctor', 'prepare', 'repair', 'status', 'native-plan', 'native-install-plan', 'native-install', 'native-apply', 'native-rollback', 'native-lifecycle-prime', 'native-lifecycle-plan', 'native-lifecycle-apply'))
     parser.add_argument('--repo-root', '--harness-root', default=str(ROOT))
     parser.add_argument('--workspace', default='.')
     parser.add_argument('--state-dir')
@@ -788,9 +869,64 @@ def main(argv=None):
     parser.add_argument('--require', action='append', default=[])
     parser.add_argument('--dry-run', action='store_true')
     parser.add_argument('--json', action='store_true')
+    parser.add_argument('--native-prefix')
+    parser.add_argument('--native-node')
+    parser.add_argument('--native-claude')
+    parser.add_argument('--native-browser')
+    parser.add_argument('--lifecycle-cache')
+    parser.add_argument('--lifecycle-python')
+    parser.add_argument('--idle-seconds', type=int, default=60)
+    parser.add_argument('--plugin-config', action='append', default=[])
+    parser.add_argument('--approved-fingerprint')
+    parser.add_argument('--backup-dir')
+    parser.add_argument('--rollback-receipt')
+    parser.add_argument('--allow-conditional-windows10', action='store_true')
     args = parser.parse_args(argv)
     try:
         env = Environment(args.repo_root, args.workspace, args.state_dir, args.host, args.host_config, args.runtime_evidence, args.validation_evidence)
+        if args.operation.startswith('native-'):
+            if args.host != 'codex' or not args.host_config or not args.native_prefix:
+                raise ValueError('native operation needs explicit Codex config and stable install prefix')
+            spec = importlib.util.spec_from_file_location('environment_native_mcp', Path(__file__).with_name('native_mcp.py'))
+            native_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(native_module)
+            native = native_module.NativeMCP(args.host_config, args.native_prefix, atomic, args.plugin_config, native_module.discover(args.native_node, args.native_claude, args.native_browser))
+            if args.operation.startswith('native-lifecycle-'):
+                if not args.lifecycle_cache:
+                    raise ValueError('explicit private lifecycle cache required')
+                if args.operation == 'native-lifecycle-prime':
+                    if not args.approved_fingerprint or args.dry_run:
+                        raise ValueError('metadata prime launches selected upstream once; concrete approval required')
+                    report = native.lifecycle_prime(args.select, args.lifecycle_cache, args.approved_fingerprint, args.allow_conditional_windows10)
+                else:
+                    options = {'cache_dir': args.lifecycle_cache, 'python': args.lifecycle_python, 'idle': args.idle_seconds}
+                    if args.operation == 'native-lifecycle-apply' and not args.dry_run:
+                        if not args.approved_fingerprint or not args.backup_dir:
+                            raise ValueError('lifecycle migration approval and backup required')
+                        report = native.apply(args.select, args.approved_fingerprint, args.backup_dir, args.allow_conditional_windows10, options)
+                    else:
+                        report = native.lifecycle_prepare(args.select, conditional=args.allow_conditional_windows10, **options)
+                        report.pop('content', None)
+            elif args.operation == 'native-rollback':
+                if not args.rollback_receipt or args.dry_run:
+                    raise ValueError('explicit rollback receipt required')
+                report = native.rollback(args.rollback_receipt)
+            elif args.operation in ('native-install-plan', 'native-install'):
+                if args.operation == 'native-install' and not args.dry_run:
+                    if not args.approved_fingerprint:
+                        raise ValueError('reviewed installation fingerprint required')
+                    report = native.install(args.select, args.approved_fingerprint)
+                else:
+                    report = native.install_plan(args.select)
+            elif args.operation == 'native-apply' and not args.dry_run:
+                if not args.approved_fingerprint or not args.backup_dir:
+                    raise ValueError('native apply requires reviewed fingerprint and backup directory')
+                report = native.apply(args.select, args.approved_fingerprint, args.backup_dir, args.allow_conditional_windows10)
+            else:
+                report = native.prepare(args.select, args.allow_conditional_windows10)
+                report.pop('content', None)
+            print(json.dumps(report, sort_keys=True))
+            return 0
         if args.operation == 'doctor':
             report = env.doctor(args.require)
         elif args.operation == 'status':

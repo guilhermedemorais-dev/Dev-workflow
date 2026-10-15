@@ -52,6 +52,7 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.env.helper.cached.return_value = None
         self.env.helper.resolve_executable.side_effect = lambda cmd, workspace: shutil.which(cmd)
         self.env.helper.install.return_value = {'status': 'installed', 'installation_performed': True}
+        self.env.helper.registry_tool.side_effect = lambda owner, key: next(item for item in json.loads((self.root / 'plugins' / owner / 'skills' / owner / 'references/tool-registry.json').read_text())['tools'] if item['id'] == key)
         self.env.runtimes = Mock(return_value={k: {'status': 'AVAILABLE', 'executable': sys.executable, 'version': '24.0.0'} for k in ('git', 'python', 'node')})
 
     def add_skill(self, name):
@@ -412,6 +413,60 @@ class EnvironmentBootstrap(unittest.TestCase):
         self.assertEqual(item['owner_install_policy'], 'PRIVILEGED')
         self.assertEqual(item['action'], 'OWNER_APPROVAL_REQUIRED')
         self.env.helper.install.assert_not_called()
+
+    def platform_registry_fixture(self, validation):
+        path = self.registry(); data = json.loads(path.read_text())
+        script = self.root / 'plugins/future-specialist/lint.py'; write(script, '# fixture')
+        data['tools'][0]['command'] = str(script); write(path, data)
+        catalog = self.root / 'plugins/dev-environment-standard/Tools (Windows)/catalog.json'
+        write(catalog, {'schema_version': 1, 'system': 'Windows', 'validation': 'WINDOWS_SUITE', 'tools': [{'id': 'lint', 'owner': 'future-specialist', 'path': script.relative_to(self.root).as_posix(), 'runtime': 'Python', 'validation': validation, 'reason': 'fixture platform evidence'}]})
+        write(self.workspace / 'package-lock.json', '{}'); write(self.workspace / 'package.json', {'devDependencies': {'lint': '1.0.0'}})
+        return catalog
+
+    def test_incompatible_authored_tool_never_probed_or_installed_even_approved(self):
+        self.platform_registry_fixture('UNSUPPORTED'); component = 'tool:future-specialist:lint'
+        with patch.object(sys, 'platform', 'win32'):
+            approval = self.approval(component)
+            report = self.env.prepare(selected=[component], approvals=[approval])
+        self.env.helper.probe.assert_not_called(); self.env.helper.install.assert_not_called()
+        receipt = next(item for item in report['receipts'] if item['component'] == component)
+        self.assertEqual(receipt['result'], 'USER_ACTION_REQUIRED'); self.assertFalse(receipt['executed'])
+
+    def test_catalog_drift_rechecked_immediately_before_authored_install(self):
+        catalog = self.platform_registry_fixture('WINDOWS_SUITE'); component = 'tool:future-specialist:lint'
+        with patch.object(sys, 'platform', 'win32'):
+            approval = self.approval(component); original_plan = self.env.plan
+            def drift(*args, **kwargs):
+                plan = original_plan(*args, **kwargs)
+                data = json.loads(catalog.read_text()); data['tools'][0]['validation'] = 'UNSUPPORTED'; write(catalog, data)
+                return plan
+            with patch.object(self.env, 'plan', side_effect=drift):
+                report = self.env.prepare(selected=[component], approvals=[approval])
+        self.env.helper.install.assert_not_called()
+        receipt = next(item for item in report['receipts'] if item['component'] == component)
+        self.assertEqual(receipt['result'], 'USER_ACTION_REQUIRED'); self.assertFalse(receipt['executed'])
+    def test_registry_drift_rechecked_immediately_before_authored_install(self):
+        self.platform_registry_fixture('WINDOWS_SUITE'); component = 'tool:future-specialist:lint'
+        path = self.root / 'plugins/future-specialist/skills/future-specialist/references/tool-registry.json'
+        with patch.object(sys, 'platform', 'win32'):
+            approval = self.approval(component); original_plan = self.env.plan
+            def drift(*args, **kwargs):
+                plan = original_plan(*args, **kwargs)
+                data = json.loads(path.read_text()); data['tools'][0]['verify_args'] = ['--unsafe-new-probe']; write(path, data)
+                return plan
+            with patch.object(self.env, 'plan', side_effect=drift):
+                report = self.env.prepare(selected=[component], approvals=[approval])
+        self.env.helper.install.assert_not_called()
+        receipt = next(item for item in report['receipts'] if item['component'] == component)
+        self.assertEqual(receipt['result'], 'USER_ACTION_REQUIRED'); self.assertFalse(receipt['executed'])
+    def test_effective_registry_override_cannot_bypass_authored_probe(self):
+        self.platform_registry_fixture('WINDOWS_SUITE')
+        self.env.helper.registry_tool.side_effect = lambda owner, key: {'command': 'bash', 'verify_args': ['other.sh'], 'install_policy': 'project-approved-dependency'}
+        with patch.object(sys, 'platform', 'win32'):
+            report = self.env.doctor()
+        self.env.helper.probe.assert_not_called()
+        tool = report['skills']['future-specialist']['tools']['lint']
+        self.assertEqual(tool['status'], 'NOT VALIDATED'); self.assertIn('effective owner registry', tool['platform_route']['reason'])
 
     def test_tool_must_be_declared_before_locked_dependency_restore(self):
         self.registry()

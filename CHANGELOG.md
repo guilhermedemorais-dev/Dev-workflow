@@ -5,7 +5,23 @@ publicado. Merge na main, versao do manifest, instalacao no desktop e carregamen
 na sessao sao estados diferentes. O repositorio nao possui uma versao global
 unica estabelecida; cada plugin/host possui seu manifest.
 
-## Nao publicado
+## Ainda nao integrado na main
+
+- TASK-057: preparacao por sistema com bloqueio de execucao/instalacao de tools
+  proprias incompativeis ou nao validadas, aviso com motivo e escolha explicita
+  de alternativa. Separa Windows nativo de Linux/WSL e preserva permissoes e
+  dependencias bloqueadas do projeto. Publicacao vinculada a Issue54.
+
+- TASK-056: ciclo MCP sob demanda, com catalogo privado verificado, inicio na
+  primeira chamada, reutilizacao durante a tarefa, encerramento da arvore propria
+  e fallback por inatividade. Credenciais por provedor e deteccao de registros
+  redundantes. Quatro integracoes validadas no Windows10; configuracao ativa e
+  cache instalado preservados, sem publicacao.
+
+- TASK-055: ciclo MCP nativo Windows com selecao explicita, executaveis externos
+  persistentes, identidade global/plugin, migracao por fingerprint, backup privado
+  e rollback. Quatro transportes gerados validados no Windows10; Playwright/Edge
+  permanecem provas locais condicionais. Configuracao ativa nao migrada.
 
 - TASK-053: upgrade aditivo do Minimal Code Gate inspirado em Ponytail, com
   limpeza comprovada, biblioteca padrao/plataforma/dependencias, correcao na

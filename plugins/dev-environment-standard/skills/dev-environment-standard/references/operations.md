@@ -208,3 +208,12 @@ the legacy entry is explicit knowledge, not a recommendation to install it.
 - Browser and project dependency preparation is capability-driven and approved;
   missing system libraries/runtimes return a manual action instead of sudo.
 - No CI/CD, deployments or infrastructure services are created.
+
+## Native Windows adapters
+
+Use native-install-plan/native-install, native-plan/native-apply and native-rollback
+for the four reviewed native integrations. Explicit host-config, durable
+native-prefix and selection are required; apply/install require the returned
+approved-fingerprint. See [migration and rollback](windows-native-mcp-migration.md)
+for safeguards, conditional support and runtime proof. Legacy prepare on Windows
+hands these targets to this lifecycle rather than creating an npx/WSL definition.

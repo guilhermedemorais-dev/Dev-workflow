@@ -16,14 +16,14 @@ nao todas as integracoes externas nem uma instalacao nativa no Mint.
 | --- | --- |
 | Linux Mint | Ambiente original com uso relatado; versao e nova homologacao pendentes |
 | Ubuntu 24.04.5 / WSL2 | Regressao local: 626 testes, OK, 16 ignorados (7 Windows e 9 dependentes de Node ausente) |
-| Windows 10 nativo, build 19045 x64 | Port local verificado: 626 testes passaram com codificacao padrao Windows, zero falhas/erros; publicacao pendente |
+| Windows 10 nativo, build 19045 x64 | Port inicial: 626 testes; evolucao nativa/sob demanda e preparacao seletiva registradas nas TASK055/056/057. Ver recibos para a suite atual |
 | Windows 11 nativo | Nao homologado; nao executado nesta verificacao |
 | macOS | Nao homologado; nao executado nesta verificacao |
 
 WSL e uma alternativa de execucao **Linux no Windows**; nao equivale a suporte
 nativo Windows e nao e um requisito universal do plugin.
 
-**Alteracao ainda nao publicada nesta branch:** os catalogos
+**Roteamento distribuido com o plugin:** os catalogos
 `Tools (Linux)`, `Tools (Windows)` e `Tools (macOS)` organizam os entrypoints por
 compatibilidade. A preparacao persiste a selecao no estado local existente;
 as tarefas seguintes reutilizam a selecao compativel. Os scripts compartilhados
@@ -43,6 +43,33 @@ de sistema. Ghidra e open source; Cutter2.5.0/Rizin0.9.1 foram preparados e test
 como ferramentas suplementares. Rizin recuperou o mesmo retorno42 via rz-ghidra.
 A GUI Cutter nao foi homologada. Hopper nao tem buildWindows; IDAFree nao
 permite uso comercial nem inclui IDAPython/SDK. Nenhum dos dois foi instalado.
+
+### Preparacao seletiva e execucao sob demanda
+
+A instalacao assistida usa `environment.py prepare` para identificar o ambiente
+de execucao e selecionar o catalogo correspondente. Windows nativo prioriza
+executaveis Windows; WSL e identificado como Linux. Ferramentas proprias
+incompativeis, ausentes do catalogo ou sem validacao nao devem ser verificadas
+por execucao nem instaladas: a preparacao informa a razao e deixa a alternativa
+para o usuario. Nao instala WSL nem adapta ferramentas automaticamente.
+
+O catalogo nao baixa bibliotecas nem executaveis ao instalar o plugin. Preparacao
+de dependencias externas do projeto continua vinculada ao lockfile, ao gerenciador
+nativo e a aprovacao existente; isso nao certifica toda dependencia em todos os
+sistemas. Compatibilidade desconhecida requer verificacao pelo especialista.
+Selecao, preferencias e permissoes persistem no estado local ate mudanca relevante.
+
+Playwright MCP, Chrome DevTools MCP, n8n MCP e Claude Code possuem uma rota nativa
+Windows opt-in, com comandos verificados, backup e reversao. O lifecycle opcional
+responde ao catalogo por um front-end leve, inicia o servidor pesado na primeira
+chamada, reutiliza-o durante a tarefa e encerra a arvore propria ao finalizar ou
+por inatividade. Nao inicia todas as integracoes nem as instala sem selecao.
+As quatro rotas foram testadas no Windows10 build19045.6466; Playwright/Edge
+permanecem provas locais condicionais. Windows11/macOS nao foram homologados.
+
+Guias: [migracao nativa e reversao](docs/windows-native-mcp-migration.md),
+[ciclo sob demanda](docs/tool-lifecycle.md). Push na branch, merge na main e
+atualizacao de cada desktop continuam etapas distintas.
 
 ## Catalogo de bibliotecas UI por tecnologia
 

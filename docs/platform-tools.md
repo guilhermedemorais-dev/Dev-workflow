@@ -62,6 +62,16 @@ selecionado nao prova que MCP esta conectado ou autenticado. Capacidade ausente
 ou nao homologada requer alternativa compativel ou uma pendencia explicita;
 nao reescrever scripts ou instalar WSL sem autorizacao.
 
+O gate também é executado antes do probe de uma tool própria registrada, no
+plano e imediatamente antes de instalar. ID igual não basta: comando ou argumento
+do interpretador deve selecionar o entrypoint canônico. Catálogo ausente,
+inválido, NOT VALIDATED ou UNSUPPORTED impede execução/instalação e informa
+USER_ACTION_REQUIRED com motivo e runtime. Aprovar a instalação não dispensa
+compatibilidade. Windows nativo, Linux, WSL e macOS aparecem separadamente no
+binding; WSL continua usando o catálogo Linux, sem inicialização automática.
+Dependências externas declaradas e travadas conservam sua política especializada,
+sem promessa de homologação universal de pacotes externos.
+
 ## Contexto nao e estado do ambiente
 
 `context-retriever.py` oferece recuperacao complementar com Potpie quando

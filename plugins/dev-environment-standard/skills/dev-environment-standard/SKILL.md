@@ -92,6 +92,13 @@ checks are cheap cache invalidation, not certification of runtime support.
 
 Catalogs reference canonical owner scripts without duplicates. Route only
 `eligible: true` entries, subject to owner gates and prerequisites.
+Enforce this before an authored registry probe, its install plan and immediately
+before installation. A matching ID alone is insufficient: the actual command or
+interpreter script argument must select the canonical entrypoint. Missing,
+invalid, incompatible or unvalidated entries return USER_ACTION_REQUIRED with
+platform/reason; selection or installation approval cannot override compatibility.
+External project-declared locked dependencies retain their owner policy; this
+does not certify every external package on every OS. Never start WSL as fallback.
 `NOT VALIDATED` needs verification or an approved adapter; `UNSUPPORTED` has
 no approved platform route. This does not block unrelated external tools with
 their own compatible registry/runtime evidence. Context retrieval via Potpie
@@ -167,3 +174,34 @@ SSH/VPS/cloud, Kubernetes/Terraform/Ansible, reverse proxies/Nginx, production
 Docker and infrastructure observability belong to `devops-standard`.
 Git detection and GitHub collaboration remain in scope. Application debugging
 with Sentry is distinct from provisioning infrastructure.
+
+## Native Windows MCP lifecycle
+
+For Playwright, Chrome DevTools, n8n MCP and Claude Code on Windows, use the
+fingerprint-bound native operations of the existing environment CLI. Read
+[Windows migration and rollback](references/windows-native-mcp-migration.md)
+from the canonical checkout. Native-plan is read-only; native-install and
+native-apply require explicit selection and approved plan fingerprints.
+Never migrate an active notebook configuration without its separate authorization.
+Inspect both global and plugin definitions, preserve credentials/preferences,
+back up privately and verify MCP operations independently. Playwright Windows 10
+is conditional, not upstream-certified. Linux/WSL retain existing routes.
+
+## On-demand use and release
+
+For the separately authorized TASK-056 adapter, read
+[tool lifecycle](references/tool-lifecycle.md). The four heavy providers have no
+essential startup selection by default. Keep existing GitHub/Context7 and other
+client integrations unchanged; essential selections require an explicit local
+choice. Use `native-lifecycle-prime/plan/apply` through the existing CLI, never
+an invented host lazy-start setting. A lightweight metadata front-end remains
+alive; cached initialize/list do not launch the heavy provider. Actual calls
+start the owned transport and related calls retain its workflow state.
+
+Invoke `_harness_finish_session` when the workflow concludes, is cancelled or
+fails, including handoff cleanup. Independent shared consumers use explicit
+leases; only the final release after in-flight calls drains closes ownership.
+Idle expiry is fallback, not permission to leave processes indefinitely.
+Do not discard user approvals, upstream schemas or Security gates. Installation,
+metadata priming and active migration are distinct authorized actions. This
+update does not apply itself to the user's active notebook configuration.

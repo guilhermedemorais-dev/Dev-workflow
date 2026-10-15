@@ -1,0 +1,113 @@
+{
+  "schema_version": 2,
+  "contract_revision": "1",
+  "task_id": "TASK-056",
+  "human_task": {
+    "representation": "local_draft",
+    "issue_url": null,
+    "local_mirror": "docs/tasks/TASK-056-on-demand-tools.md",
+    "normative_equivalence": "Harness attests revision1 local scope and criteria; direct user approval; no active migration/publication"
+  },
+  "authorization": {
+    "status": "APPROVED_LOCAL_IMPLEMENTATION_AND_VALIDATION",
+    "source": "User sim2026-10-14 following lifecycle proposal",
+    "active_migration": "FORBIDDEN",
+    "publication": "FORBIDDEN"
+  },
+  "execution_lists": [
+    {
+      "list_id": "lifecycle-implementation",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/scripts/native_mcp.py",
+          "purpose": "Reuse approved native transports"
+        },
+        {
+          "path": "plugins/dev-environment-standard/skills/dev-environment-standard/SKILL.md",
+          "purpose": "Ownership and permission boundaries"
+        }
+      ],
+      "allowed_paths": [
+        "plugins/dev-environment-standard/**",
+        "tests/test_mcp_lifecycle.py",
+        "tests/test_platform_tool_routing.py",
+        "docs/tool-lifecycle.md",
+        "CHANGELOG.md",
+        "docs/receipts/TASK-056*"
+      ],
+      "acceptance_criteria": [
+        "Lightweight metadata startup without heavychild",
+        "Lazy call and workflow/sharedlease retention",
+        "Explicit release and idle safety/owned cleanup",
+        "Cache drift/permission/security boundaries",
+        "No active config or unrelated work mutation"
+      ]
+    },
+    {
+      "list_id": "lifecycle-qa",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-056.json",
+          "purpose": "Current acceptance and permitted scope"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-056*"
+      ],
+      "acceptance_criteria": [
+        "Behavioral process ownership/session/call/cache scenarios",
+        "Full structural suite and diffcheck",
+        "Actual native workflow and process cleanup evidence"
+      ]
+    },
+    {
+      "list_id": "lifecycle-security",
+      "owner_skill": "security-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-056.json",
+          "purpose": "Lifecycle control and no migration boundaries"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-056*"
+      ],
+      "acceptance_criteria": [
+        "No arbitrary command/PID takeover",
+        "No secret or approval bypass",
+        "Source/cache bound and race-safe cleanup"
+      ]
+    }
+  ],
+  "locked_paths": [
+    "active config",
+    "installed caches",
+    "credentials",
+    "existing servers",
+    "TASK054/TASK055 unrelated work",
+    "remote repositories"
+  ],
+  "execution_result": {
+    "status": "LOCAL_UPDATE_TECHNICALLY_ACCEPTED",
+    "remote": "NOT_PUBLISHED_USER_SCOPE",
+    "active_migration": "NOT_PERFORMED",
+    "acceptance_kind": "TECHNICAL_NOT_HUMAN",
+    "qa": "PASS_709_FULL_26_LIFECYCLE_28_NATIVE",
+    "security": "PASS_BOUNDED_LOCAL",
+    "runtime": "PASS_FOUR_WINDOWS10_NATIVE_LIFECYCLE_SOURCE_BOUND",
+    "installed_cache": "NOT_UPDATED",
+    "receipt": "docs/receipts/TASK-056-harness.md",
+    "not_validated": [
+      "Active Codex migration and approval UI",
+      "External stable production Python setup",
+      "POSIX/macOS real lifecycle",
+      "External n8n/Claude authentication",
+      "Whole-machine RAM savings"
+    ]
+  }
+}
