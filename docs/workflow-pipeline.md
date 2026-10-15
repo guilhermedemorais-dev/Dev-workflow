@@ -68,7 +68,7 @@ Idea / demand
   -> sdd-spec-factory: generate complete GitHub Issue + equivalent JSON v2 per module
   -> validate generated Task set: consolidate fragments; justify authorization/rollback exceptions
   -> microtasks: skill/plugin/capability/tool/references/paths/checklist/deliverables
-  -> Sector Validation Matrix: ten REQUIRED/N/A sectors, owners and dependencies
+  -> NORMAL/COMPLEX: ten-sector matrix; TRIVIAL: inline risk impact only, no matrix
   -> existing SDD coverage/equivalence check: requirement-to-microtask mapping, orphan actions, ambiguities and contradictions
   -> Context Routing: Harness reconciles Human Task/JSON; one prompt linking the single Task JSON file + list_id per execution list
   -> publish DISCOVERY_SDD_COMPLETED comment and capture returned identifier
@@ -209,11 +209,13 @@ The tiers control artifact depth, not validation quality:
 
 | Tier | Typical scope | Minimum contract |
 | --- | --- | --- |
-| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, compact sector matrix with N/A reasons, validation and evidence |
+| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, applicable risk gates, validation and evidence; no ten-sector matrix |
 | `NORMAL` | bounded behavior or multi-file change in known architecture | complete Issue/card plus equivalent v2 JSON; focused spec only for unspecified behavior |
 | `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | collaborative SDD, reference/design libraries, complete Issue, equivalent v2 JSON, traceability, specialists, review gates |
 
-Escalate when uncertain. Security and UI gates remain surface- and risk-based.
+Escalate when uncertain. Security, data, contract and UI gates remain
+surface- and risk-based regardless of tier; relabeling work as TRIVIAL never
+waives a triggered gate.
 
 ## Context compatibility
 

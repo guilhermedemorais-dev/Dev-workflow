@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "path": "docs/workflow-pipeline.md",
+      "selections": [
+        {
+          "start": 212,
+          "end": 218,
+          "purpose": "complexity tier and mandatory risk gates"
+        }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "risk-gates",
+      "query": "Can calling work trivial waive a triggered gate?",
+      "must_include": ["relabeling work as TRIVIAL never"]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "remove-exception",
+      "operation": "remove",
+      "target": "relabeling work as TRIVIAL never",
+      "must_fail_cases": ["risk-gates"]
+    },
+    {
+      "id": "invert-negation",
+      "operation": "replace",
+      "target": "never\nwaives a triggered gate",
+      "replacement": "always\nwaives a triggered gate",
+      "must_fail_cases": ["risk-gates"]
+    }
+  ]
+}

@@ -123,6 +123,30 @@
       ],
       "validation": "LINUX_SUITE",
       "reason": "Linux unittest coverage; external executors/auth/integration require per-task verification"
+    },
+    {
+      "id": "derive-context",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/derive_context.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Focused Linux unittest coverage passes, but the complete suite has seven errors in pre-existing Windows-platform simulation tests; full platform suite is not validated"
+    },
+    {
+      "id": "render-deterministic-template",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/render_deterministic_template.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Focused Linux unittest coverage passes, but the complete suite has seven errors in pre-existing Windows-platform simulation tests; full platform suite is not validated"
     }
   ]
 }

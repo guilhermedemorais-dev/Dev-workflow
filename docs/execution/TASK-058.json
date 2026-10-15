@@ -1,0 +1,209 @@
+{
+  "schema_version": 2,
+  "contract_revision": "2",
+  "task_id": "TASK-058",
+  "human_task": {
+    "representation": "github_issue",
+    "issue_url": "https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55",
+    "local_mirror": "docs/tasks/TASK-058-issue-55-harness-evolution.md",
+    "normative_equivalence": "Harness compared this contract and the cited implementation scope against the complete live Issue #55 body at observed_issue_updated_at; the current comparison and content hash are recorded in docs/receipts/TASK-058-harness.md. Issue #55 remains the normative Human Task; this contract is the routed execution supplement.",
+    "observed_issue_updated_at": "2026-10-15T18:39:03Z"
+  },
+  "authorization": {
+    "status": "APPROVED_LOCAL_IMPLEMENTATION",
+    "source": "Direct user instruction, 2026-10-15",
+    "publication": "No merge, deployment, release, automerge, active configuration migration, global installation, or recurring spend"
+  },
+  "scope": [
+    "Execution and delegated autonomy: reuse existing contracts, states and receipts; preserve approved scope, criteria, reviewers and user-reserved actions; technical evidence cannot be human acceptance; do not change acceptance or auto-pass a specialist; stale artifact evidence must be rerun.",
+    "GitHub recovery: bind writes to the exact target and expected head/revision; use leases/preconditions when actually available; re-read before writes/retries and read back after; ambiguous or inaccessible remote state preserves local work and never creates duplicate objects; no automerge/merge/deploy/release/spend.",
+    "Proportional governance: route specialists by surface and risk; TRIVIAL work uses an inline contract without the ten-sector matrix; mandatory security/data/contracts/UI checks remain non-waivable when triggered; preserve source/decision/plan separation and existing catalog provenance.",
+    "Register new executable utilities in Linux, Windows and macOS Environment catalogs with platform-specific validation status.",
+    "Implement opt-in derived context smaller than its canonical source set, from exact excerpts only; record source and plan references/SHA-256 and UTF-8 byte measurement; compare curated positive cases against original and derived content; test removal of an exception and inversion of a negation; source/plan change invalidates; absent or failed evidence falls back to the original; hashes/schema never prove semantic equality; secrets are excluded.",
+    "Implement deterministic rendering of the existing Task template; code controls static text and replaces only schema-allowlisted fields; validate type/size/enum/pattern/range; escape by destination; preserve protected decisions/criteria and static bytes; reject missing/extra/invalid fields with no partial output; values are data and one-pass only; atomic write/rollback on failure.",
+    "Validate byte-preservation, Unicode, special characters, repeated fill, missing/extra/invalid values, changed sources, removed exceptions and inverted negations.",
+    "Document limits, opt-in adoption, method for measuring context/artifacts/interventions and fallback; do not claim unmeasured savings.",
+    "Preserve Windows-native/WSL/Linux boundaries, compatibility gates, stored preferences, stable runtimes and lifecycle ownership; do not change active settings, installed caches, credentials, other repositories, or external data.",
+    "Do not install or incorporate Rig, Agentics, gh-aw, Evergreen, Goal, Autoloop, Crane, CAO or WikiKB; no benchmark was approved or run, and no recurring service/dependency is added."
+  ],
+  "execution_lists": [
+    {
+      "list_id": "implementation",
+      "owner_skill": "dev-implementation-standard",
+      "phase": "implementation",
+      "required_sources": [
+        {
+          "path": "docs/tasks/TASK-058-issue-55-harness-evolution.md",
+          "purpose": "Authorized scope, constraints and acceptance criteria"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/scripts/context-retriever.py",
+          "purpose": "Reuse analysis for existing context utilities"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md",
+          "purpose": "Existing checkpoint evidence plus safe remote mutation freshness/recovery rules"
+        },
+        {
+          "path": "plugins/sdd-spec-factory/templates/task-template.md",
+          "purpose": "Governed template fixture and deterministic renderer target"
+        },
+        {
+          "path": "plugins/dev-environment-standard/Tools (Linux)/catalog.json",
+          "purpose": "Linux authored-entrypoint inventory and validation status"
+        },
+        {
+          "path": "plugins/dev-environment-standard/Tools (Windows)/catalog.json",
+          "purpose": "Windows authored-entrypoint inventory and validation status"
+        },
+        {
+          "path": "plugins/dev-environment-standard/Tools (macOS)/catalog.json",
+          "purpose": "macOS authored-entrypoint inventory and validation status"
+        }
+      ],
+      "allowed_paths": [
+        "plugins/dev-workflow-standard/scripts/derive_context.py",
+        "plugins/dev-workflow-standard/scripts/render_deterministic_template.py",
+        "plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md",
+        "tests/test_agent_skill_contract.py",
+        "plugins/dev-environment-standard/Tools (Linux)/catalog.json",
+        "plugins/dev-environment-standard/Tools (Windows)/catalog.json",
+        "plugins/dev-environment-standard/Tools (macOS)/catalog.json",
+        "plugins/dev-workflow-standard/templates/**",
+        "tests/test_derived_context.py",
+        "tests/test_deterministic_template.py",
+        "docs/derived-context-and-template-pilot.md",
+        "docs/tasks/TASK-058-issue-55-harness-evolution.md",
+        "docs/execution/TASK-058.json",
+        "docs/receipts/TASK-058*",
+        "README.md",
+        "CHANGELOG.md"
+      ],
+      "acceptance_criteria": [
+        "Derived context retains exact selected source excerpts and source hash/revision, is opt-in, fails closed on stale sources, and provides the original source on failed retrieval evaluation.",
+        "Positive and negative retrieval controls detect missing exceptions and inverted negations; hash/schema checks are not presented as semantic evaluation.",
+        "Template rendering substitutes only allowlisted, validated fields in one pass, escapes destination content, preserves static bytes, and leaves no partial output on failure.",
+        "Atomic writes and repeated rendering are deterministic; invalid/missing/extra fields fail with clear errors.",
+        "No edits to active host config, installed caches, credentials, remote state, or unrelated TASK-055."
+      ]
+    },
+    {
+      "list_id": "validation",
+      "owner_skill": "dev-workflow-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "AGENTS.md",
+          "purpose": "Repository validation obligations"
+        },
+        {
+          "path": "docs/workflow-pipeline.md",
+          "purpose": "Local lifecycle gates"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-058*"
+      ],
+      "acceptance_criteria": [
+        "Run documented repository tests and diff check; record commands and exit codes.",
+        "Reconcile Issue #55 remote state after any remote mutation; make no remote mutation unless explicitly authorized by a separate action.",
+        "Keep independent QA/Security acceptance pending unless an actual independent reviewer supplies evidence."
+      ]
+    },
+    {
+      "list_id": "qa-change-validation",
+      "owner_skill": "qa-testing-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-058.json",
+          "purpose": "Revision 2 approved acceptance scope and QA handoff"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/scripts/derive_context.py",
+          "purpose": "Changed derived-context behavior under test"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/scripts/render_deterministic_template.py",
+          "purpose": "Changed deterministic rendering behavior under test"
+        },
+        {
+          "path": "tests/test_derived_context.py",
+          "purpose": "Existing developer regression cases to independently interpret"
+        },
+        {
+          "path": "tests/test_deterministic_template.py",
+          "purpose": "Existing developer regression cases to independently interpret"
+        },
+        {
+          "path": "docs/receipts/TASK-058-harness.md",
+          "purpose": "Current source/contract comparison, tested revision and prior validation evidence"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-058*"
+      ],
+      "acceptance_criteria": [
+        "Independently validate the current PR diff behavior and the derived-context source/plan freshness, path confinement, canonical fallback, positive retrieval and exception/negation mutation controls.",
+        "Independently validate deterministic template allowlist, validation, destination escaping, static preservation, repeatability and atomic failure behavior.",
+        "Run focused relevant tests and full repository suite against the exact current PR head; report commands, exit codes, skips, bugs and scope limits.",
+        "Return QA_STATUS for this bounded change-validation scope only; do not approve security, platform runtime, human acceptance, merge or release."
+      ]
+    },
+    {
+      "list_id": "security-change-review",
+      "owner_skill": "security-standard",
+      "phase": "validation",
+      "required_sources": [
+        {
+          "path": "docs/execution/TASK-058.json",
+          "purpose": "Revision 2 authorized change scope and security boundaries"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/scripts/derive_context.py",
+          "purpose": "Path, source selection, artifact verification and fallback security review"
+        },
+        {
+          "path": "plugins/dev-workflow-standard/scripts/render_deterministic_template.py",
+          "purpose": "Input validation, escaping, filesystem and atomic write security review"
+        },
+        {
+          "path": "plugins/sdd-spec-factory/templates/task-template.schema.json",
+          "purpose": "Field constraints and destination policy"
+        },
+        {
+          "path": "tests/test_derived_context.py",
+          "purpose": "Negative-path and regression evidence"
+        },
+        {
+          "path": "tests/test_deterministic_template.py",
+          "purpose": "Negative-path and regression evidence"
+        },
+        {
+          "path": "docs/receipts/TASK-058-harness.md",
+          "purpose": "Current source/contract comparison, tested revision and prior validation evidence"
+        }
+      ],
+      "allowed_paths": [
+        "docs/receipts/TASK-058*"
+      ],
+      "acceptance_criteria": [
+        "Review only the authorized PR diff and directly affected helpers/callers for reachable security-relevant paths.",
+        "Trace untrusted plan/schema/value/path inputs through validation to file reads, artifact verification, escaping and output writes; check negative paths and existing mitigations.",
+        "Record coverage, blind spots and evidence; confirm findings only when the Security Standard evidence and false-positive gates are satisfied.",
+        "Return SECURITY_STATUS for this bounded change review; do not mark QA, platform runtime, human acceptance, merge or release approved."
+      ]
+    }
+  ],
+  "locked_paths": [
+    "active Codex/plugin configuration and installed caches",
+    "credentials and secrets",
+    "other repositories and their worktrees",
+    "remote Issue/Project state until separately authorized"
+  ],
+  "execution_result": {
+    "status": "READY_FOR_HUMAN_REVIEW",
+    "validation": "QA_PASS_SECURITY_PASS_BOUNDED_PLATFORM_NOT_VALIDATED",
+    "receipt": "docs/receipts/TASK-058-harness.md"
+  }
+}

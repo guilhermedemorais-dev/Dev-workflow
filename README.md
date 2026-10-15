@@ -761,6 +761,7 @@ com consentimento e escopo, descritas na secao Environment.
 | --- | --- |
 | [AGENTS.md](AGENTS.md) | Mapa curto para agentes; aponta para regras canonicas, nao duplica o manual |
 | [docs/workflow-pipeline.md](docs/workflow-pipeline.md) | Ciclo, gates, responsabilidades e profundidade proporcional |
+| [docs/derived-context-and-template-pilot.md](docs/derived-context-and-template-pilot.md) | Pilotos opt-in para contexto derivado e preenchimento determinístico de templates, com avaliação e limites explícitos |
 | `plugins/<plugin>/skills/<skill>/SKILL.md` | Instrucoes canonicas do especialista; ponto de entrada de sua metodologia |
 | `plugins/<plugin>/skills/<skill>/references/` | Detalhes carregados por necessidade; registries apenas quando o owner os possui |
 | `plugins/<plugin>/skills/<skill>/agents/openai.yaml` | Metadata da skill para o host; nao substitui suas instrucoes |
@@ -1052,7 +1053,7 @@ Ideia / demanda
   -> sdd-spec-factory consolida specs, referencias e Design Guide
   -> GitHub Issue completa + Execution Contract v2 equivalente
   -> microtarefas com skill/plugin/capability/tool/fontes/paths/checklist
-  -> matriz dos dez setores e Context Routing
+  -> NORMAL/COMPLEX: matriz dos dez setores; TRIVIAL: impacto de risco inline; Context Routing quando aplicavel
   -> comentario DISCOVERY_SDD_COMPLETED publicado com URL/identificador
   -> aprovacao humana
   -> executor recebe task_id + execution_contract_path

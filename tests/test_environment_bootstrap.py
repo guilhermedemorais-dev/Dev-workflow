@@ -19,6 +19,15 @@ SCRIPT = ROOT / 'plugins/dev-environment-standard/skills/dev-environment-standar
 SPEC = importlib.util.spec_from_file_location('environment_bootstrap', SCRIPT)
 envmod = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(envmod)
+_NATIVE_WHICH = shutil.which
+
+
+def portable_which(command):
+    """Keep PATH lookup host-native when tests only simulate Windows routing."""
+    if sys.platform == 'win32' and os.name != 'nt':
+        with patch.object(sys, 'platform', 'linux'):
+            return _NATIVE_WHICH(command)
+    return _NATIVE_WHICH(command)
 
 
 def write(path, value):
@@ -32,6 +41,9 @@ def mcp(identifier='core', tier='CORE', origin='OFFICIAL'):
 
 class EnvironmentBootstrap(unittest.TestCase):
     def setUp(self):
+        self.which_patch = patch.object(envmod.shutil, 'which', portable_which)
+        self.which_patch.start()
+        self.addCleanup(self.which_patch.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / 'harness'

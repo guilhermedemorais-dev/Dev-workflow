@@ -47,6 +47,13 @@ class TestAgentSkillContract(unittest.TestCase):
         self.assertIn("Do not paste those bodies into", harness)
         self.assertIn("never treated as an implementation input", harness)
 
+    def test_remote_mutations_bind_head_and_read_back_before_retry(self):
+        harness = (ORCHESTRATOR / "references/harness-execution.md").read_text(encoding="utf-8")
+        self.assertIn("Remote Mutation Freshness", harness)
+        self.assertIn("expected commit head SHA", harness)
+        self.assertIn("read back the target before", harness)
+        self.assertIn("Do not imply a lease where none ran", harness)
+
     def test_human_report_does_not_replace_receipt(self):
         harness = (ORCHESTRATOR / "references/harness-execution.md").read_text(encoding="utf-8")
         self.assertIn("Issue comment without a completed receipt", harness)

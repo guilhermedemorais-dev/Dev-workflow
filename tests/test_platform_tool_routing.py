@@ -2,6 +2,7 @@
 import copy
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import sys
@@ -13,10 +14,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('platform_environment', ROOT / 'plugins/dev-environment-standard/skills/dev-environment-standard/scripts/environment.py')
 envmod = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(envmod)
+_NATIVE_WHICH = shutil.which
+
+
+def portable_which(command):
+    """Mocked Windows selection uses the host PATH without Windows-only APIs."""
+    if sys.platform == 'win32' and os.name != 'nt':
+        with patch.object(sys, 'platform', 'linux'):
+            return _NATIVE_WHICH(command)
+    return _NATIVE_WHICH(command)
 
 
 class PlatformRouting(unittest.TestCase):
     def setUp(self):
+        self.which_patch = patch.object(envmod.shutil, 'which', portable_which)
+        self.which_patch.start()
+        self.addCleanup(self.which_patch.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name) / 'harness'
@@ -43,7 +56,7 @@ class PlatformRouting(unittest.TestCase):
             with self.subTest(platform=platform), patch.object(sys, 'platform', platform), patch.object(envmod.shutil, 'which', return_value=None):
                 route = self.env.platform_tools()
                 self.assertTrue(route['selected_folder'].endswith(f'Tools ({folder})'))
-                self.assertEqual(len(route['tools']), 11)
+                self.assertEqual(len(route['tools']), 13)
                 if platform != 'linux':
                     self.assertFalse(any(t['eligible'] for t in route['tools'] if t['validation'] != 'WINDOWS_SUITE'))
         with patch.object(sys, 'platform', 'freebsd'):

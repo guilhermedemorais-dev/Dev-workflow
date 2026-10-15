@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "destination": "markdown",
+  "fields": {
+    "task_id": {
+      "type": "string",
+      "pattern": "TASK-[0-9]{3,}",
+      "max_length": 24,
+      "escape": "markdown_inline"
+    },
+    "task_title": {
+      "type": "string",
+      "max_length": 120,
+      "escape": "markdown_inline"
+    }
+  }
+}

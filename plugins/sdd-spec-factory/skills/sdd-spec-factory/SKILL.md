@@ -449,11 +449,12 @@ Produce one reviewable, complete GitHub Issue/card per module using
   TEST_SCENARIOS, REGRESSION_TARGETS and VALIDATION_REQUIREMENTS proportionally.
   Docs/metadata-only work may record QA N/A; pure visual changes still require UI.
 
-The Execution Contract must be valid JSON and include the v2 identity/revision,
+The full Execution Contract for NORMAL/COMPLEX work must be valid JSON and include the v2 identity/revision,
 human task link and equivalence declaration, summary/goal/discovery, current and
 expected state, scope, protected and allowed paths, requirements, business
 rules, references, design, microtasks, ten sectors, tests, acceptance criteria,
-stop conditions, ignition prompt and reporting contract. Keep structure concise;
+stop conditions, ignition prompt and reporting contract. TRIVIAL work keeps its
+inline intent contract and does not require this full structure. Keep structure concise;
 do not copy source bodies, conversation history, secrets or execution evidence.
 
 Before `DISCOVERY_SDD_COMPLETED`, publication/handoff or Ready for Dev, apply
