@@ -70,7 +70,9 @@ Tokens, phases and specialist changes do not justify splitting it. Corrections
 to meet existing acceptance remain in the same task. Independent/out-of-scope
 demands or separately authorized hazardous operations require an explicit
 boundary and user decision. Preserve the existing SDD template and equivalent
-JSON v2, including all ten sectors; do not invent a Studio task template.
+JSON v2, including all ten sectors for NORMAL/COMPLEX tasks; genuinely TRIVIAL
+work follows the Harness inline contract without a ten-sector matrix. Do not
+invent a Studio task template.
 
 The target is production quality within the agreed complete scope, **not an
 automatic MVP**. Delivery stages do not waive tests, negative states, security

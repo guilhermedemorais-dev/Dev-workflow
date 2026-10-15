@@ -7,6 +7,14 @@ unica estabelecida; cada plugin/host possui seu manifest.
 
 ## Ainda nao integrado na main
 
+- TASK-058, Issue55: pilotos opt-in de contexto derivado por trechos exatos
+  (hashes e casos literais de recuperacao/mutacao, sem alegacao de equivalencia
+  semantica) e renderer deterministico do template de Task com campos permitidos,
+  validacao, escape e escrita atomica. TRIVIAL deixa de exigir matriz de dez
+  setores; gates permanecem por superficie/risco. Suite Linux PASS com7 skips;
+  Windows/WSL/macOS reais continuam NOT_VALIDATED. Medicao do exemplo usa bytes,
+  sem alegacao de economia operacional ou aceite independente.
+
 - TASK-057: preparacao por sistema com bloqueio de execucao/instalacao de tools
   proprias incompativeis ou nao validadas, aviso com motivo e escolha explicita
   de alternativa. Separa Windows nativo de Linux/WSL e preserva permissoes e

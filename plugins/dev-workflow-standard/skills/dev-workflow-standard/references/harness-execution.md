@@ -57,6 +57,25 @@ For every executable checkpoint:
 13. If the capability fails or becomes unavailable, select an approved fallback or create an `EXECUTION_HANDOFF`.
 14. Mark `BLOCKED` only when no safe capable path remains, with an actionable report.
 
+## Remote Mutation Freshness
+
+For an authorized Issue, Project, branch or PR mutation, bind the action to the
+exact repository, target object, expected commit head SHA and observed remote
+revision (`updatedAt`, version, or API equivalent). Use the provider's lease or
+expected-head precondition when available. If no such precondition exists, re-read
+the target immediately before the single write, stop if its state/head changed,
+and state that concurrency was not isolated. Do not imply a lease where none ran.
+
+If the result is ambiguous or the connection drops, read back the target before
+retrying. Use an API idempotency key when supported; otherwise check whether the
+intended mutation already exists before issuing it again. After every mutation,
+re-read the Issue/card and linked commit or PR and record the returned identifier
+plus the observed state. A 404, permission/authentication gap, inaccessible
+browser session, changed head, or unresolved write result preserves local work
+and records a concrete pending action; it is not a reason to create a duplicate
+Issue, comment, card, or commit. Never enable automerge, merge, deploy, publish a
+release, or incur recurring spend as a side effect of this protocol.
+
 ## EXECUTION_RECEIPT
 
 Every invoked capability must return or be represented by this evidence. The

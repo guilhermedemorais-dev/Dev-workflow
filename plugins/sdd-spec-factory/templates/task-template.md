@@ -1,4 +1,4 @@
-# TASK-XXX: Nome da task
+# {{task_id}}: {{task_title}}
 
 > **Resumo:** resultado, usuário afetado e limite principal em uma frase que
 > permita reconhecer a task sem abrir specs ou comentários.
@@ -213,7 +213,7 @@ a Task humana como entrada de execução; contexto ausente ou divergente deve
 voltar ao Harness. Não aprove gates humanos, faça merge ou deploy.
 
 ## Matriz de Validação por Setor
-Sector Validation Matrix: preencher todos os dez setores, inclusive em TRIVIAL.
+Sector Validation Matrix: em NORMAL/COMPLEX, preencher os dez setores; TRIVIAL usa contrato inline e não requer a matriz.
 Setores N/A ficam apenas nesta matriz, com motivo; detalhar somente REQUIRED.
 Substitua owners genéricos por uma skill concreta. Extensões materiais têm ID,
 owner e justificativa explícitos, sem criar especialistas por cerimônia.

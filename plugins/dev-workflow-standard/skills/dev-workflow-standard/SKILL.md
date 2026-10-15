@@ -181,10 +181,12 @@ New executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
 not mass-migrate inactive historical tasks.
 
-Before sector delegation load `references/context-routing.md`. New contracts
-use v2 with references, design context, microtasks and all ten sectors. Legacy
-v1 remains readable. Every sector has REQUIRED/N/A, owner and dependencies,
-and every N/A has a verified reason.
+Before sector delegation load `references/context-routing.md`. New NORMAL and
+COMPLEX contracts use v2 with references, design context, microtasks and all ten
+sectors. TRIVIAL work uses the inline intent contract and does not require a
+ten-sector matrix, full SDD, or an Issue unless repository policy requires one.
+Legacy v1 remains readable. When a sector matrix applies, every sector has
+REQUIRED/N/A, owner and dependencies, and every N/A has a verified reason.
 Each source has a purpose; CONDITIONAL adds a condition and OPTIONAL never
 loads automatically. Separate planning prerequisites from final validation.
 CODE_COMPLETE != TASK_COMPLETE; NO_EVIDENCE != PASS;
@@ -203,7 +205,10 @@ depth, not the obligation to validate.
   security, data, dependency, or public-contract impact. Use an inline intent
   contract: scope, acceptance criterion, command/check, and evidence. A durable
   spec, task file, and Issue are optional unless repository policy requires one.
-  Keep the ten-sector matrix compact even inline; N/A rows need only a reason.
+  Do not create a ten-sector matrix for TRIVIAL work. Record only applicable
+  impact/gates and the short basis for excluding material risks. Mandatory
+  security, data, contract and UI checks still apply whenever their surface or
+  risk is present, regardless of the tier label.
 - `NORMAL`: bounded behavior or multi-file work with understood architecture.
   Use a concise Issue/task contract linked to the relevant existing docs; add a
   focused spec only for behavior that is not already specified.
@@ -236,7 +241,9 @@ Existing bounded tasks need not repeat an entire product briefing.
 For UI-bearing modules, require the project-owned Markdown guide and live HTML
 component catalogue from UI/UX during specification. Route exact component
 IDs/revisions to SDD, implementation and QA. A mock widget is not a tested backend.
-Reuse the existing task template, sector matrix and list prompts unchanged.
+Reuse the existing task template, sector matrix and list prompts for NORMAL and
+COMPLEX work. TRIVIAL work may use its inline intent contract without the full
+template or sector matrix; applicable gates remain risk-based.
 The short per-task prompt in the internal plan is a contextual tech-lead note,
 not a second execution contract or automatic permission to spawn chats.
 
@@ -471,7 +478,7 @@ so it can be mapped later without restructuring:
 Use `plugins/sdd-spec-factory/templates/task-template.md` and its matching
 `execution-contract-template.json`; do not maintain a second template here.
 Resolve the active SDD bundle in installed hosts, not a sibling cache path.
-The template keeps identity/status, ten sectors, scoped source purposes,
+  The template keeps identity/status, ten sectors for NORMAL/COMPLEX work, scoped source purposes,
 acceptance, execution order, evidence and human gates. Only REQUIRED sectors
 need detailed sections. See `references/context-routing.md` for compatibility.
 

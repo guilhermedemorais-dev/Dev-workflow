@@ -390,7 +390,7 @@ class TestDevWorkflowRecommendedTaskTemplate(unittest.TestCase):
 
     def test_template_starts_with_titulo(self):
         """Template must start with # Título."""
-        self.assertIn('# TASK-XXX: Nome da task', self.content)
+        self.assertIn('# {{task_id}}: {{task_title}}', self.content)
 
     def test_template_has_status_visual(self):
         """Template must include Status visual section."""
@@ -545,6 +545,10 @@ class TestDevWorkflowNegativeCases(unittest.TestCase):
         """Full SDD is mandatory for complex or unspecified behavior, not trivial work."""
         self.assertIn('required for COMPLEX work', self.content)
         self.assertIn('TRIVIAL work uses the inline intent', self.content)
+
+    def test_trivial_work_does_not_require_ten_sector_matrix(self):
+        self.assertIn('Do not create a ten-sector matrix for TRIVIAL work.', self.content)
+        self.assertIn('regardless of the tier label', self.content)
 
     def test_ui_ux_mandatory_when_ui_present(self):
         """ui-ux-standard is mandatory whenever there is UI."""

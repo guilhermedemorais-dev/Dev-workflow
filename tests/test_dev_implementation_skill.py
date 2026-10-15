@@ -275,7 +275,7 @@ class TestDevImplementationRecommendedTaskTemplate(unittest.TestCase):
 
     def test_template_contains_titulo(self):
         """Template must include a Título field."""
-        self.assertIn('# TASK-XXX:', self.content)
+        self.assertIn('# {{task_id}}:', self.content)
 
     def test_template_contains_status_visual(self):
         """Template must include Status visual section."""

@@ -123,6 +123,30 @@
       ],
       "validation": "WINDOWS_SUITE",
       "reason": "Native Windows10 build19045: full 626-test suite passed, including real native fixtures and secure file guards; external tools/auth still require per-task verification"
+    },
+    {
+      "id": "derive-context",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/derive_context.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Linux focused tests pass; Windows-native execution and filesystem behavior have not been run"
+    },
+    {
+      "id": "render-deterministic-template",
+      "owner": "dev-workflow-standard",
+      "path": "plugins/dev-workflow-standard/scripts/render_deterministic_template.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Linux focused tests pass; Windows-native execution and filesystem behavior have not been run"
     }
   ]
 }
