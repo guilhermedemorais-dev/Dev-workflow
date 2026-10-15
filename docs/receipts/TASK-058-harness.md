@@ -18,7 +18,7 @@ Status: implementação local em revisão. Não representa aceite de QA, Seguran
 - Rework validation: focused derived-context/template tests 27 PASS; full suite 722 PASS, 7 skipped; `git diff --check` PASS.
 - QA `qa-change-validation` plus `fix-verification`: **PASS**, bounded to code target `084602db93071e400ec94e74075946ae02cd1d00` on the local Linux runtime. Independent focused tests: 27 PASS; full repository suite: 722 PASS, 7 skipped; exit 0. Safe temporary-directory scenarios confirmed plan-purpose canary rejection, suppression of secret-shaped stale-source fallback, and canonical fallback after plan-only change.
 - Security `security-change-review` plus `fix-verification`: **PASS**, bounded to the reviewed code diff and local Linux runtime. `SEC-2026-001` is **FIXED** with the added artifact scan and regression. Security independently reran 27 focused tests and safe fallback canaries; no other confirmed finding remained. The regex patterns are heuristic and not a general-purpose secret detector.
-- Windows-native, WSL and macOS remain `NOT_VALIDATED`; these are operational/platform limits, not claims covered by the QA or AppSec receipts. The Task as a whole remains subject to human review and acceptance.
+- User confirmed Linux/WSL validation is complete and said they will test native Windows later. Our independent QA/AppSec evidence is from the local Linux runtime. Windows-native test evidence is pending; macOS remains `NOT_VALIDATED`. The Task as a whole remains subject to human review and acceptance.
 
 ## Proveniência
 
@@ -26,21 +26,22 @@ Status: implementação local em revisão. Não representa aceite de QA, Seguran
 - Issue: [#55](https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55), observada OPEN; nenhuma escrita foi feita na Issue.
 - Branch: `codex/issue-55-harness-evolution`
 - Base: `feat/ui-library-routing` em `ef0dce3a123e192cac8330161ea8c0c2e3317051`
-- Commit de implementação: `20ff8e9`
-- PR draft #56 closed before QA/Security; final PR #57: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/57
+- Commit de implementação: `084602db93071e400ec94e74075946ae02cd1d00`
+- PR draft #56 closed before QA/Security; PR #57 was later merged by the user. Follow-up PR #58 records the user's Linux/WSL validation report and Windows follow-up: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/58
 - Worktree isolada: `Dev workflow-issue-55`
 
 ## Validação executada
 
-- `python3 -m unittest tests.test_derived_context tests.test_deterministic_template tests.test_reverse_runtime_launch -v`: 33 testes, PASS.
-- `python3 -m unittest discover -s tests -v`: 720 testes, PASS, 7 skips.
+- `python3 -m unittest tests.test_derived_context tests.test_deterministic_template tests.test_reverse_runtime_launch -v`: 35 testes, PASS after rework.
+- `python3 -m unittest discover -s tests -v`: 722 testes, PASS, 7 skips.
 - `git diff --check`: PASS.
 - Amostra documentada do piloto: 14.881 bytes UTF-8 na fonte e 752 no recorte, proporção de redução 0,9495 nesta amostra somente. Não prova economia operacional ou equivalência semântica.
 
 ## Pendências e limites
 
-- QA e Segurança independentes: NOT_VALIDATED, requerem revisão separada.
-- Windows nativo, WSL e macOS reais: NOT_VALIDATED. Testes de roteamento com mocks não certificam esses ambientes.
+- QA e Segurança independentes: PASS nos limites registrados acima.
+- Linux/WSL: usuário confirmou validação. Evidência automatizada desta branch é do runtime Linux local; ela não descreve a distribuição nem build WSL usados pelo usuário.
+- Windows nativo: o usuário fará o teste depois; resultado ainda pendente. macOS não foi testado.
 - A Issue permanece aberta até aceitação e fechamento humano.
 - Revisões automatizadas anteriores encontraram achados de caminho, inventário, colisão de saída, escape por destino e artefato malformado; correções foram incluídas e cobertas pelos testes acima. A revisão automatizada final não foi repetida após as últimas correções.
 - Nenhuma configuração ativa, cache instalado, credencial, outro repositório ou estado remoto foi alterado. Sem merge, deploy, release ou automerge.

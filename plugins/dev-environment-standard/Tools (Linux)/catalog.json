@@ -133,8 +133,8 @@
         3,
         11
       ],
-      "validation": "NOT VALIDATED",
-      "reason": "Focused Linux unittest coverage passes, but the complete suite has seven errors in pre-existing Windows-platform simulation tests; full platform suite is not validated"
+      "validation": "LINUX_SUITE",
+      "reason": "Independent focused QA and full Linux suite passed after fix-verification (722 passed, 7 skipped); user also confirmed Linux/WSL validation"
     },
     {
       "id": "render-deterministic-template",
@@ -145,8 +145,8 @@
         3,
         11
       ],
-      "validation": "NOT VALIDATED",
-      "reason": "Focused Linux unittest coverage passes, but the complete suite has seven errors in pre-existing Windows-platform simulation tests; full platform suite is not validated"
+      "validation": "LINUX_SUITE",
+      "reason": "Independent focused QA and full Linux suite passed after fix-verification (722 passed, 7 skipped); user also confirmed Linux/WSL validation"
     }
   ]
 }
