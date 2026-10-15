@@ -1,6 +1,6 @@
 # TASK-058: Issue #55, evolução verificável do Engineering Harness
 
-Status: Implementação concluída, handoff de validação atualizado para contract_revision 2. QA e Segurança estão sendo executados independentemente sobre a PR #56. Branch `codex/issue-55-harness-evolution`, base `ef0dce3a123e192cac8330161ea8c0c2e3317051` (`feat/ui-library-routing`). Issue humana: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55.
+Status: Rework aplicado após achados independentes; QA e Segurança revalidam o commit corrigido antes de abrir uma nova PR. A PR draft #56 foi fechada. Branch `codex/issue-55-harness-evolution`, base `ef0dce3a123e192cac8330161ea8c0c2e3317051` (`feat/ui-library-routing`). Issue humana: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/55.
 
 ## Objetivo e autorização
 
