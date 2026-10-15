@@ -200,10 +200,5 @@
     "credentials and secrets",
     "other repositories and their worktrees",
     "remote Issue/Project state until separately authorized"
-  ],
-  "execution_result": {
-    "status": "READY_FOR_HUMAN_REVIEW",
-    "validation": "QA_PASS_SECURITY_PASS_BOUNDED_PLATFORM_NOT_VALIDATED",
-    "receipt": "docs/receipts/TASK-058-harness.md"
-  }
+  ]
 }
