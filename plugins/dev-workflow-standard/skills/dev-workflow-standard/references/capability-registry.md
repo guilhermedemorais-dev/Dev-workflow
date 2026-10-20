@@ -40,45 +40,33 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 
 ## Routing Rules
 
-### Whole-inventory consultation
+### Targeted inventory consultation
 
-Confirmed TRIVIAL work using compatible existing local tools follows the Harness
-inline path; do not load this inventory or discover providers solely for that
-path. Missing capability or expanded risk returns to classification first.
+Confirmed TRIVIAL work uses the Harness inline path without inventory discovery.
 
-Before choosing a capability or a fallback for any phase, inspect the complete
-active capability inventory: this routing registry, the Environment MCP
-Library, every discoverable active specialist `references/tool-registry.json`,
-and actual host tools/connectors. Include the existing context-retrieval and
-provider-routing mechanisms when selecting context or an executor. Discover
-registries through Environment's existing skill-owned-tools mechanism; do not
-duplicate its catalog here or restrict discovery to a fixed vendor list.
+Start with the Task's selected capability and valid Environment discovery/cache.
+Match the current need to its owner in this registry and inspect only relevant
+owner tool-registry metadata and actual host capabilities. Reuse a compatible
+existing tool; an ordinary code/doc edit does not require scanning every MCP,
+probing another provider or loading unrelated specialist registries.
 
-Consult all inventory metadata to match the task's needs to owners and candidate
-tools, including implementation, QA/browser, UI/UX, Security, DevOps and research.
-This does not require reading every specialist methodology or invoking every
-tool. Read the selected canonical skills and required references according to
-the execution contract. Newly installed active owner registries participate in
-the same discovery without adding a row for every product here.
+Expand discovery when the relevant owner is unknown, metadata is missing/stale,
+a selected capability fails or a new need appears. The full active inventory is
+available for those gaps, not a mandatory read for every phase or list. Discover
+registries through Environment's existing mechanism; do not hardcode vendors or
+create another catalog. Context/provider references apply only to those needs.
 
-Reuse Environment's current status/discovery evidence when its scope and
-freshness cover the active inventory. Refresh through its read-only status or
-doctor path when coverage is missing or stale; do not install, authenticate or
-probe unrelated services merely to enumerate them. A catalog entry is a
-candidate, not evidence that a tool is connected or usable.
-
-Record inventory coverage, selected capabilities and material exclusions or
-fallback reasons in the existing routing/report evidence. Distinguish not
-applicable, unavailable and failed; do not silently omit an unreadable registry
-or claim full coverage when discovery is incomplete. Keep this compact, with
-registry paths/revisions and host evidence rather than a new Task field or
-per-tool checklist. Invoke only relevant available capabilities under their
-owner's scope and permissions; route required preparation through Environment.
+Record selection, source revision, actual availability and material limitations
+in existing routing evidence. Do not claim complete inventory coverage after a
+partial scan. A catalog entry is not runtime evidence. Missing optional tools may
+use equivalent approved fallbacks; missing mandatory validation remains blocked.
+Prepare/install/authenticate only required tools through the existing owners and
+applicable authorization, never unrelated services merely to enumerate them.
 
 ### Research and reference routing
 
-Before external Discovery/SDD research, apply whole-inventory consultation
-above, including specialist tool registries and actual host tools. Resolve connected/available
+Before external Discovery/SDD research, apply targeted inventory consultation
+above to relevant specialist tool registries and actual host tools. Resolve connected/available
 capabilities, not merely names in a catalog. Prefer the narrowest suitable
 MCP/connector when it can satisfy the question; do not default to generic web
 search while a sufficient specialized capability is available.

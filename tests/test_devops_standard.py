@@ -99,11 +99,11 @@ class DevOpsPackageTests(unittest.TestCase):
     def test_no_automatic_execution_surface_or_duplicate_installer(self):
         for name in (".mcp.json", "hooks", "scripts", "mcpServers"):
             self.assertFalse((PLUGIN / name).exists())
-        # TASK-010 explicitly introduces one invoked helper, never startup hooks
+        # TASK-010 and Task #59 introduce explicitly invoked helpers, never startup hooks
         # or another installer. Keep this exception narrow and inspectable.
         scripts = {path.name for path in (SKILL / "scripts").iterdir()
                    if path.is_file()}
-        self.assertEqual(scripts, {"github_governance.py"})
+        self.assertEqual(scripts, {"github_governance.py", "compose-scope.py"})
         for manifest in (PLUGIN / ".codex-plugin/plugin.json", PLUGIN / ".claude-plugin/plugin.json"):
             self.assertFalse({"hooks", "mcpServers", "apps"} & json.loads(manifest.read_text(encoding="utf-8")).keys())
 

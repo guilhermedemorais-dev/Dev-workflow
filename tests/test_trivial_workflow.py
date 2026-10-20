@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import unittest
+from contract_sources import harness_contract
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,7 +24,7 @@ class TrivialWorkflowContract(unittest.TestCase):
         self.assertIn("takes precedence", entry)
         self.assertIn("existing approved full contract retains its gates", entry)
         self.assertLess(self.skill.index("## Select the execution path first"),
-                        self.skill.index("## Harness Contract"))
+                        self.skill.index("## Core execution contract"))
 
     def test_inline_path_retains_scope_validation_and_evidence(self):
         inline = section(self.skill, "### TRIVIAL inline execution")
@@ -60,7 +61,7 @@ class TrivialWorkflowContract(unittest.TestCase):
         for requirement in ("New NORMAL/COMPLEX executable tasks require a valid Execution Contract",
                             "Never silently substitute", "QA_STATUS", "contract_revision",
                             "Only each owner attests its own PASS"):
-            self.assertIn(requirement, self.skill)
+            self.assertIn(requirement, harness_contract())
 
 
 if __name__ == "__main__":

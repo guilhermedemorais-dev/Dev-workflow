@@ -25,8 +25,9 @@ SKILL_PATH = os.path.join(
 
 
 def read_skill():
-    with open(SKILL_PATH, 'r', encoding='utf-8') as f:
-        return f.read()
+    # Inspect the complete routed contract after modularization, not just its router.
+    from contract_sources import harness_contract
+    return harness_contract()
 
 
 class TestDevWorkflowMission(unittest.TestCase):

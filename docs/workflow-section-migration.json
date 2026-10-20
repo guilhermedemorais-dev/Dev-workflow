@@ -1,0 +1,160 @@
+{
+  "source_commit": "f850909df24eeb371195fe5ead29f80d373fbbd0",
+  "source_path": "plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md",
+  "sections": [
+    {
+      "heading": "Harness Contract",
+      "destination": "references/workflow-execution.md",
+      "source_sha256": "34b6ff357d763b00fe7164b458ba1cebc44a5c28650772736c3f569fd052c3dd",
+      "destination_sha256": "80499053bc7807fe186382dbdf6adb338b789519e9fbcca40a134e7631b6b375",
+      "status": "revised",
+      "reason": "Reuse current verified runtime and already-read context; discover capabilities only on a demonstrated gap. Availability evidence remains mandatory."
+    },
+    {
+      "heading": "Delegation Rules",
+      "destination": "references/workflow-execution.md",
+      "source_sha256": "5d1a5f4f0e073ac0e4b330d24d97c666fcfcc3d4330a5d685b624fb19b563065",
+      "destination_sha256": "2e49f2a99babc355df7ef1553a7aaf23971878d75735eb04cfaced973e805a9a",
+      "status": "revised",
+      "reason": "Targeted capability discovery, context reuse and authorized executor reuse."
+    },
+    {
+      "heading": "Task And Execution Context",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "e430b0b0aa1961ec9bed6d4ab2b03124873345173ea3259d6780106ad3487e86",
+      "destination_sha256": "e430b0b0aa1961ec9bed6d4ab2b03124873345173ea3259d6780106ad3487e86",
+      "status": "preserved"
+    },
+    {
+      "heading": "Mandatory Task Governance",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "5c276430aa230acdc6dea111dcd499725173845476ba3d7164f63d6594fd082f",
+      "destination_sha256": "5c276430aa230acdc6dea111dcd499725173845476ba3d7164f63d6594fd082f",
+      "status": "preserved"
+    },
+    {
+      "heading": "Official Kanban Method",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "af61027f827a3bfedf04d1209e539588570e87095c4b04f7fb155fc04086b6fc",
+      "destination_sha256": "af61027f827a3bfedf04d1209e539588570e87095c4b04f7fb155fc04086b6fc",
+      "status": "preserved"
+    },
+    {
+      "heading": "Definition of Entry / Exit",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "f158d16aa152c962bbc230feda6faa1c9558ef63f0119264b63fdbf8a8d0dd45",
+      "destination_sha256": "f158d16aa152c962bbc230feda6faa1c9558ef63f0119264b63fdbf8a8d0dd45",
+      "status": "preserved"
+    },
+    {
+      "heading": "GitHub-Ready Task Structure",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "43068d48a9eddfd81c33e2cf86026528ed80de81d0c5fca87683ce885ae6bd48",
+      "destination_sha256": "43068d48a9eddfd81c33e2cf86026528ed80de81d0c5fca87683ce885ae6bd48",
+      "status": "preserved"
+    },
+    {
+      "heading": "Recommended Task Template",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "4c8c7d8f519c7c599652640e85c2927f831ca810b901e00011c49e7d92fe603c",
+      "destination_sha256": "4c8c7d8f519c7c599652640e85c2927f831ca810b901e00011c49e7d92fe603c",
+      "status": "preserved"
+    },
+    {
+      "heading": "Review Rules",
+      "destination": "references/workflow-governance.md",
+      "source_sha256": "04aa859a59f5187a707d99e3e8f3959cf7a98d70505ac6567cc781d65fbc5746",
+      "destination_sha256": "04aa859a59f5187a707d99e3e8f3959cf7a98d70505ac6567cc781d65fbc5746",
+      "status": "preserved"
+    },
+    {
+      "heading": "Mandatory Flow",
+      "destination": "references/workflow-planning.md",
+      "source_sha256": "da6cb8b502581911d00bdaa9445b9c157487157edc2c61273306634b2b2d824f",
+      "destination_sha256": "6ce97549c302a7feaebf6b3af07939789ed45a425c1b1af7c316a9ca2a020dca",
+      "status": "revised",
+      "reason": "Relative Markdown links updated for the deeper reference directory."
+    },
+    {
+      "heading": "Repository Readiness Bootstrap",
+      "destination": "references/workflow-planning.md",
+      "source_sha256": "d6ca6c5fa85d2a0905dea6e6dcdaeb9e6ad692e33635226b49ebfde28056e2fd",
+      "destination_sha256": "3a719f8692609577f36c7f82eb3ff932cc1be71b07c3ed5b92684ff761895193",
+      "status": "revised",
+      "reason": "Relative Markdown links updated for the deeper reference directory."
+    },
+    {
+      "heading": "When to Trigger Each Specialist",
+      "destination": "references/workflow-planning.md",
+      "source_sha256": "860f514cd7e391873431c832d9467a82a870cb256611089431c44feea20ec119",
+      "destination_sha256": "b5d159175206a89f2a20f676d08efbb80776d5da445e2febb288ee019fb5ffc6",
+      "status": "revised",
+      "reason": "Relative Markdown links updated for the deeper reference directory."
+    },
+    {
+      "heading": "Context Budget Rules",
+      "destination": "references/workflow-context.md",
+      "source_sha256": "75ffccdee4dba6321b5dd759e2d7a1523a303d9fb1749212e50cbdbb4c0bcc4b",
+      "destination_sha256": "4ef858d8c56ff7642504716d725fdb693314d8cc83ab9b2f54c122787b290bfc",
+      "status": "revised",
+      "reason": "Relative Markdown links updated for the deeper reference directory."
+    },
+    {
+      "heading": "Reference Routing",
+      "destination": "references/workflow-context.md",
+      "source_sha256": "3ee91f55e4438520623226dfe4eae324e4682bee9d8c07d3992a74888c3989c3",
+      "destination_sha256": "3ee91f55e4438520623226dfe4eae324e4682bee9d8c07d3992a74888c3989c3",
+      "status": "preserved"
+    },
+    {
+      "heading": "Mission",
+      "destination": "references/workflow-responsibilities.md",
+      "source_sha256": "d5a5bf9c68ac9c64431489f28156899ed600ca7ca4894af7c426c92ff5df4cb8",
+      "destination_sha256": "d5a5bf9c68ac9c64431489f28156899ed600ca7ca4894af7c426c92ff5df4cb8",
+      "status": "preserved"
+    },
+    {
+      "heading": "Mandatory Entry Gate",
+      "destination": "references/workflow-responsibilities.md",
+      "source_sha256": "ccef933d2bda4f0bac175baf856792bcc69333cd02e76cd8d879c0c687323336",
+      "destination_sha256": "ccef933d2bda4f0bac175baf856792bcc69333cd02e76cd8d879c0c687323336",
+      "status": "preserved"
+    },
+    {
+      "heading": "Skill Roles (who does what)",
+      "destination": "references/workflow-responsibilities.md",
+      "source_sha256": "d3ce496434b4065b8446d736093335fb9afdf58593c3020e95d3ba5ec341552d",
+      "destination_sha256": "d3ce496434b4065b8446d736093335fb9afdf58593c3020e95d3ba5ec341552d",
+      "status": "preserved"
+    },
+    {
+      "heading": "Practice Provenance",
+      "destination": "references/workflow-responsibilities.md",
+      "source_sha256": "d4d2ee497a394445fac644ef4f8d0f22b6c2d61ea3261efe7a7740a72bdbfedf",
+      "destination_sha256": "d4d2ee497a394445fac644ef4f8d0f22b6c2d61ea3261efe7a7740a72bdbfedf",
+      "status": "preserved"
+    },
+    {
+      "heading": "Select the execution path first",
+      "destination": "SKILL.md",
+      "source_sha256": "e65e14f033183cc194909a5baf0bdd9acc3463385731e0cee3fddb3cd223f64c",
+      "destination_sha256": "e65e14f033183cc194909a5baf0bdd9acc3463385731e0cee3fddb3cd223f64c",
+      "status": "preserved"
+    },
+    {
+      "heading": "Hard Limits (non-negotiable)",
+      "destination": "SKILL.md",
+      "source_sha256": "cbc6d1f53b461a77fb0f8f50e3b878e936741f039e34fda82a423dbfc52aaf5c",
+      "destination_sha256": "cbc6d1f53b461a77fb0f8f50e3b878e936741f039e34fda82a423dbfc52aaf5c",
+      "status": "preserved"
+    },
+    {
+      "heading": "Change Complexity Gate",
+      "destination": "SKILL.md",
+      "source_sha256": "4395652d589576371b0b0b9c8de0bc72bfc928b3e074a6be5eb693c564049b40",
+      "destination_sha256": "4395652d589576371b0b0b9c8de0bc72bfc928b3e074a6be5eb693c564049b40",
+      "status": "preserved"
+    }
+  ],
+  "hash_normalization": "Trailing whitespace at section end stripped; one final LF."
+}

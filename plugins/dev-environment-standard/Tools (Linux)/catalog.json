@@ -123,6 +123,18 @@
       ],
       "validation": "LINUX_SUITE",
       "reason": "Linux unittest coverage; external executors/auth/integration require per-task verification"
+    },
+    {
+      "id": "devops-compose-scope",
+      "owner": "devops-standard",
+      "path": "plugins/devops-standard/skills/devops-standard/scripts/compose-scope.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "LINUX_SUITE",
+      "reason": "Task #59: static CLI fixture tests executed on Linux/Python 3.12; no Docker runtime certification"
     }
   ]
 }

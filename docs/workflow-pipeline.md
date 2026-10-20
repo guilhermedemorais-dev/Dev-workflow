@@ -11,6 +11,12 @@ relevant validation and actual evidence, in the same agent when possible. The
 full pipeline below applies to NORMAL/COMPLEX work. Repository-specific stricter
 rules and specialist triggers remain binding.
 
+The Harness SKILL.md routes the complete procedures by phase rather than loading
+all governance on entry. Reuse current compatible capability and tool evidence;
+expand inventory only for missing, stale or insufficient selection. Existing
+approved specs, including Spec Kit artifacts, are referenced by revision instead
+of rewritten. JSON v2 equivalence and mandatory specialist gates remain intact.
+
 ## Skills and roles
 
 | Skill | Role |

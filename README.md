@@ -1154,6 +1154,12 @@ Engineering.
 
 ### Profundidade proporcional
 
+O contrato permanente do Harness agora roteia procedimentos por fase. Leia o
+`SKILL.md` inteiro e somente as referencias acionadas pelo trabalho atual;
+nao carregue todas as fases de uma vez. As secoes anteriores continuam mapeadas
+em `docs/workflow-section-migration.json`. Capacidades e evidencias compativeis
+sao reutilizadas, com nova descoberta apenas quando houver lacuna ou mudanca.
+
 - `TRIVIAL`: mudanca localizada e de baixo risco; contrato inline com escopo,
   caminhos permitidos, criterio de aceite, validacao e evidencia. Pode executar
   no mesmo agente, sem JSON v2, matriz de dez setores, SDD ou receipts separados.

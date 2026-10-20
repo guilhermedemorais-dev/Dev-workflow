@@ -123,6 +123,18 @@
       ],
       "validation": "WINDOWS_SUITE",
       "reason": "Native Windows10 build19045: full 626-test suite passed, including real native fixtures and secure file guards; external tools/auth still require per-task verification"
+    },
+    {
+      "id": "devops-compose-scope",
+      "owner": "devops-standard",
+      "path": "plugins/devops-standard/skills/devops-standard/scripts/compose-scope.py",
+      "runtime": "Python",
+      "minimum_python": [
+        3,
+        11
+      ],
+      "validation": "NOT VALIDATED",
+      "reason": "Task #59: native platform execution not performed; static Python implementation only"
     }
   ]
 }
