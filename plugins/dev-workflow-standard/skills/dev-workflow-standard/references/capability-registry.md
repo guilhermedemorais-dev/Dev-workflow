@@ -42,6 +42,10 @@ see `skill-owned-tools.md`. Do not centralize vendor installation here.
 
 ### Whole-inventory consultation
 
+Confirmed TRIVIAL work using compatible existing local tools follows the Harness
+inline path; do not load this inventory or discover providers solely for that
+path. Missing capability or expanded risk returns to classification first.
+
 Before choosing a capability or a fallback for any phase, inspect the complete
 active capability inventory: this routing registry, the Environment MCP
 Library, every discoverable active specialist `references/tool-registry.json`,

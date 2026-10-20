@@ -5,9 +5,19 @@ description: "Use as the engineering harness for Guilherme's software delivery: 
 
 # Dev Workflow Standard (Engineering Harness)
 
+## Select the execution path first
+
+Classify against the Change Complexity Gate before loading execution references.
+For confirmed `TRIVIAL` work, use its inline path below; it takes precedence over
+the full-contract, delegation, sector-matrix and reporting requirements in this
+skill and its references. Repository-specific stricter rules still apply.
+An existing approved full contract retains its gates; never downgrade it merely
+to avoid required validation or obtain the inline exception.
+All other work follows the full workflow. Uncertainty requires the higher tier.
+
 Primary engineering harness for Guilherme's software projects. The LLM using
 this skill becomes the **engineering orchestrator / final reviewer**. It does not
-write product code itself; it owns discovery, planning, capability routing,
+write product code itself outside the confirmed TRIVIAL path; it owns discovery, planning, capability routing,
 execution state, handoff, validation, recovery and approval. It must actively
 invoke the selected executor or specialist capability and cannot treat task
 assignment, naming a skill, or writing a prompt as completed delegation.
@@ -99,7 +109,7 @@ use a documentation-only or Git-only label to bypass this gate.
 
 ## Hard Limits (non-negotiable)
 
-- **Never write product code directly.** Implementation is executed through
+- **Never write product code directly outside confirmed TRIVIAL work.** Implementation is executed through
   `dev-implementation-standard` or another explicitly approved executor
   capability selected by the harness.
 - **Never confuse assignment with execution.** A task is not delegated until the
@@ -111,7 +121,7 @@ use a documentation-only or Git-only label to bypass this gate.
   only when the complexity tier below requires them.
 - **Never create a task without sufficient intent and acceptance criteria.**
   Link durable specs when the tier requires them.
-- **Reject any executable task that does not follow the mandatory task structure.**
+- **Reject any executable task that does not follow the mandatory task structure for its tier.**
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
 - If docs conflict with code, stop and ask for a decision.
 - Inspect the real repo, git status, scripts, and runtime before changing environment.
@@ -149,7 +159,7 @@ standard without a primary source.
   disclosure, real tool execution, inspectable output, feedback loops,
   mechanical validation, and recovery.
 - **Local architectural decisions:** the orchestrator agent does not write
-  product code; the specialist skills remain independent; the eight-column
+  product code outside confirmed TRIVIAL work; the specialist skills remain independent; the eight-column
   Kanban model and declared human gates remain project policy.
 - **Local extensions:** `EXECUTION_RECEIPT`, `EXECUTION_REPORT_COMMENT`,
   `SKILL_RECEIPT`, `REUSE_INVENTORY`, `MINIMAL_CODE_GATE`, `EXECUTION_HANDOFF`,
@@ -177,7 +187,7 @@ Keep five execution artifacts distinct:
   to the linked GitHub Issue at material checkpoints; it never replaces the
   task, receipt, validation, Project state, or PR.
 
-New executable tasks require a valid Execution Contract. A legacy task without
+New NORMAL/COMPLEX executable tasks require a valid Execution Contract. A legacy task without
 one remains readable, but must be normalized before it re-enters execution. Do
 not mass-migrate inactive historical tasks.
 
@@ -203,7 +213,8 @@ depth, not the obligation to validate.
   security, data, dependency, or public-contract impact. Use an inline intent
   contract: scope, acceptance criterion, command/check, and evidence. A durable
   spec, task file, and Issue are optional unless repository policy requires one.
-  Keep the ten-sector matrix compact even inline; N/A rows need only a reason.
+  Do not require a ten-sector matrix, JSON v2, SDD, execution lists, a separate
+  executor runtime, or separate receipt/report templates for this path.
 - `NORMAL`: bounded behavior or multi-file work with understood architecture.
   Use a concise Issue/task contract linked to the relevant existing docs; add a
   focused spec only for behavior that is not already specified.
@@ -215,7 +226,37 @@ depth, not the obligation to validate.
 When risk is uncertain, choose the higher tier. UI and security triggers are
 based on affected surface and risk, not on the tier label.
 
+### TRIVIAL inline execution
+
+1. Inspect the request, current files, branch and diff. Record the objective,
+   allowed paths, acceptance criterion and relevant validation in a short intent.
+   Examples: correcting prose or a comment without changing executable content.
+2. Check for behavior, architecture, infrastructure, security, data, dependencies,
+   public contracts and specialist triggers. If any applies or is uncertain,
+   reclassify before editing and use the full workflow. A visual/responsive change
+   still triggers UI/UX; a small bugfix still triggers independent functional QA.
+3. Execute in the same agent when available tools suffice. Load only a selected
+   skill and its applicable references when needed; an existing compatible tool
+   requires no whole-inventory discovery, provider probe or new agent. Search the
+   affected scope for reuse before adding content. Never install or mutate remote
+   infrastructure to make a trivial change possible.
+4. Validate the actual diff and run the relevant check. If impact expands, stop
+   this path, preserve the diff, and reclassify; do not silently expand scope.
+5. Return changed paths, the check and result, limitations and branch/commit when
+   present. This compact evidence replaces the separate SKILL_RECEIPT,
+   REUSE_INVENTORY, MINIMAL_CODE_GATE, EXECUTION_RECEIPT and report templates only
+   for this path. Never claim another agent ran or independent review occurred.
+
+An existing Issue may receive one consolidated outcome. Missing remote access
+does not block local TRIVIAL work unless repository policy requires it. Human
+approval, protected paths, no secrets, no destructive actions, and no automatic
+merge/deploy remain unchanged. These instructions are an agent protocol, not a
+runtime authorization firewall or proof of token savings.
+
 ## Mandatory Flow
+
+The remaining full workflow applies to NORMAL/COMPLEX work and delegated work,
+not to the confirmed inline path above.
 
 For product briefing, a new project or reassessment of an existing/low-code
 system, invoke the available `studio-prd` skill before detailed module specs.

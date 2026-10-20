@@ -5,6 +5,25 @@ description: "Implement an approved task within its routed sector and required s
 
 # Dev Implementation Standard (Executor Agent)
 
+## Entry path
+
+For confirmed `TRIVIAL` work, resolve the active Harness skill's Change Complexity
+Gate and TRIVIAL inline execution procedure (canonical checkout:
+`plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md`). Read it
+before editing; do not assume sibling plugin-cache paths. It governs this path
+instead of the full-contract preconditions, workflow, GitHub-ready fields and
+receipt/report templates below. If the procedure is unavailable or impact is
+uncertain, return to Harness; never invent an exemption.
+
+Require an approved inline intent with objective, allowed paths, acceptance and
+validation. Implement and validate within those bounds in the same agent when
+possible; return actual diff/check evidence. Behavior changes, bugfixes, UI,
+infrastructure, security, data, dependencies or contract impacts require
+reclassification and the applicable specialist gates. No merge, deploy,
+destructive action or scope expansion is authorized by this exception.
+
+The remaining instructions apply to NORMAL/COMPLEX and full-contract execution.
+
 Receive one prompt per execution list, linking the Task's single JSON file
 and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
 All lists live in that file; do not expect JSON inside the Human Task/prompt.

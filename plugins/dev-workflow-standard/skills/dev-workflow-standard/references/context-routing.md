@@ -1,5 +1,9 @@
 # Context Routing and Sector Validation Matrix
 
+Apply this full-contract routing to NORMAL/COMPLEX work. Confirmed TRIVIAL work
+uses the Harness SKILL.md inline path without a v2 JSON or ten-sector matrix.
+Do not reclassify an existing normative v2 contract merely to bypass its gates.
+
 This is a [LOCAL EXTENSION] of the existing Harness contract, not a new runtime
 engine or provider standard. New tasks use `schema_version: 2`. Existing v1
 contracts remain readable and are migrated only when resumed for material work.
