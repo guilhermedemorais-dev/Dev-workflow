@@ -5,6 +5,25 @@ description: "Implement an approved task within its routed sector and required s
 
 # Dev Implementation Standard (Executor Agent)
 
+## Entry path
+
+For confirmed `TRIVIAL` work, resolve the active Harness skill's Change Complexity
+Gate and TRIVIAL inline execution procedure (canonical checkout:
+`plugins/dev-workflow-standard/skills/dev-workflow-standard/SKILL.md`). Read it
+before editing; do not assume sibling plugin-cache paths. It governs this path
+instead of the full-contract preconditions, workflow, GitHub-ready fields and
+receipt/report templates below. If the procedure is unavailable or impact is
+uncertain, return to Harness; never invent an exemption.
+
+Require an approved inline intent with objective, allowed paths, acceptance and
+validation. Implement and validate within those bounds in the same agent when
+possible; return actual diff/check evidence. Behavior changes, bugfixes, UI,
+infrastructure, security, data, dependencies or contract impacts require
+reclassification and the applicable specialist gates. No merge, deploy,
+destructive action or scope expansion is authorized by this exception.
+
+The remaining instructions apply to NORMAL/COMPLEX and full-contract execution.
+
 Receive one prompt per execution list, linking the Task's single JSON file
 and selecting its `execution_lists` entry by `list_id`, never per item/subitem.
 All lists live in that file; do not expect JSON inside the Human Task/prompt.
@@ -81,6 +100,15 @@ The task filename remains stable. Do not use emojis or status prefixes in the
 filename.
 
 ## Workflow
+
+Before a material technical choice or an unresolved implementation failure,
+resolve the active SDD owner's `references/technical-decision-procedure.md`
+(canonical checkout: `plugins/sdd-spec-factory/skills/sdd-spec-factory/references/technical-decision-procedure.md`).
+Apply approved PRD/spec/ADR constraints and original version-matched documentation;
+reuse existing verified decisions. Record rationale and tests in existing evidence,
+not a competing contract. Do not outsource a researchable technical fact to the
+user or add architecture/dependencies to hide a failure. Unresolved normative
+conflicts return to Harness with context, alternatives and a recommendation.
 
 The executor owns build, lint, type-check, and test tooling. For listed tools,
 consult `references/tool-registry.json` and the shared `skill-owned-tools.md`

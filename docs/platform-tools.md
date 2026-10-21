@@ -16,8 +16,9 @@ plugins/dev-environment-standard/
   Tools (macOS)/catalog.json
 ```
 
-Cada catalogo aponta para as implementacoes canonicas dos 11 entrypoints
-proprios: 8 Python, 2 Node e 1 Bash. Scripts compartilhados nao sao duplicados
+Cada catalogo aponta para as implementacoes canonicas dos 12 entrypoints
+proprios: 9 Python, 2 Node e 1 Bash. O novo `compose-scope.py` foi testado
+com fixtures Linux; continua `NOT VALIDATED` nos catalogos Windows e macOS. Scripts compartilhados nao sao duplicados
 nem movidos, preservando os caminhos usados pelas skills e pelos testes.
 Os registros de ferramentas externas continuam pertencendo aos especialistas;
 o catalogo de plataforma nao copia nem substitui `tool-registry.json`.

@@ -2,7 +2,20 @@
 
 End-to-end delivery pipeline across the independent specialist skills. The LLM using
 `dev-workflow-standard` is the engineering harness and is the only role that approves moving from one gate to
-the next. It never writes product code itself; it routes work to executable capabilities and requires invocation plus validation evidence before advancing.
+the next. Outside confirmed TRIVIAL work it never writes product code itself;
+it routes work to executable capabilities and requires invocation plus validation evidence before advancing.
+
+Classify before loading the full pipeline. Confirmed TRIVIAL work uses the
+Harness skill's inline execution procedure: approved objective, paths, acceptance,
+relevant validation and actual evidence, in the same agent when possible. The
+full pipeline below applies to NORMAL/COMPLEX work. Repository-specific stricter
+rules and specialist triggers remain binding.
+
+The Harness SKILL.md routes the complete procedures by phase rather than loading
+all governance on entry. Reuse current compatible capability and tool evidence;
+expand inventory only for missing, stale or insufficient selection. Existing
+approved specs, including Spec Kit artifacts, are referenced by revision instead
+of rewritten. JSON v2 equivalence and mandatory specialist gates remain intact.
 
 ## Skills and roles
 
@@ -209,7 +222,7 @@ The tiers control artifact depth, not validation quality:
 
 | Tier | Typical scope | Minimum contract |
 | --- | --- | --- |
-| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline scope, acceptance criterion, compact sector matrix with N/A reasons, validation and evidence |
+| `TRIVIAL` | localized, low-risk, no behavior or contract change | inline objective, allowed paths, acceptance criterion, validation and actual evidence; no mandatory JSON, sector matrix or separate executor |
 | `NORMAL` | bounded behavior or multi-file change in known architecture | complete Issue/card plus equivalent v2 JSON; focused spec only for unspecified behavior |
 | `COMPLEX` | architecture, migrations, security boundaries, substantial UI, integrations, unresolved decisions | collaborative SDD, reference/design libraries, complete Issue, equivalent v2 JSON, traceability, specialists, review gates |
 

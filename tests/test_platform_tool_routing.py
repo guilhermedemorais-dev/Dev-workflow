@@ -43,7 +43,7 @@ class PlatformRouting(unittest.TestCase):
             with self.subTest(platform=platform), patch.object(sys, 'platform', platform), patch.object(envmod.shutil, 'which', return_value=None):
                 route = self.env.platform_tools()
                 self.assertTrue(route['selected_folder'].endswith(f'Tools ({folder})'))
-                self.assertEqual(len(route['tools']), 11)
+                self.assertEqual(len(route['tools']), len(json.loads(self.catalog(folder).read_text())['tools']))
                 if platform != 'linux':
                     self.assertFalse(any(t['eligible'] for t in route['tools'] if t['validation'] != 'WINDOWS_SUITE'))
         with patch.object(sys, 'platform', 'freebsd'):

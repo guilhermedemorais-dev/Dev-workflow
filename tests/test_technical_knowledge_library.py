@@ -31,7 +31,7 @@ class TechnicalKnowledgeLibraryContract(unittest.TestCase):
     def test_domain_rows_resolve_to_packaged_topic_files(self):
         router = ROUTER.read_text(encoding='utf-8')
         links = re.findall(r'\]\((technical-[^)]+\.md)\)', router)
-        self.assertEqual(set(links), TOPICS)
+        self.assertEqual(set(links) - {'technical-decision-procedure.md'}, TOPICS)
         rows = [row for row in router.splitlines()
                 if row.startswith('| ') and '](' in row]
         self.assertEqual(len(rows), 10)

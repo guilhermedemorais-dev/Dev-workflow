@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import unittest
+from contract_sources import harness_contract
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +35,7 @@ class TestAgentSkillContract(unittest.TestCase):
 
     def test_harness_requires_execution_receipt(self):
         harness = (ORCHESTRATOR / "references/harness-execution.md").read_text(encoding="utf-8")
-        skill = (ORCHESTRATOR / "SKILL.md").read_text(encoding="utf-8")
+        skill = harness_contract()
         self.assertIn("EXECUTION_RECEIPT", harness)
         self.assertIn("ASSIGNED", harness)
         self.assertIn("A task without `invocation_evidence` is `NOT EXECUTED`", harness)
@@ -78,14 +79,14 @@ class TestAgentSkillContract(unittest.TestCase):
             self.assertGreater(validating_pos, receipt_pos, path)
 
     def test_practice_provenance_labels_local_extensions(self):
-        skill = (ORCHESTRATOR / "SKILL.md").read_text(encoding="utf-8")
+        skill = harness_contract()
         self.assertIn("## Practice Provenance", skill)
         self.assertIn("Local architectural decisions", skill)
         self.assertIn("Local extensions", skill)
         self.assertIn("not present", skill.lower())
 
     def test_change_complexity_preserves_validation(self):
-        skill = (ORCHESTRATOR / "SKILL.md").read_text(encoding="utf-8")
+        skill = harness_contract()
         self.assertIn("## Change Complexity Gate", skill)
         for tier in ("`TRIVIAL`", "`NORMAL`", "`COMPLEX`"):
             self.assertIn(tier, skill)

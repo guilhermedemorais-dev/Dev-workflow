@@ -1145,7 +1145,7 @@ Responsabilidades:
   dados sensiveis, uploads, pagamentos ou integracoes externas.
 - Revisar o PR contra specs, task e criterios de aceite.
 - Aprovar ou solicitar rework; relatar status por Banco, API/Backend e Frontend/UI.
-- Nunca implementar codigo de produto diretamente.
+- Nunca implementar codigo de produto diretamente fora do caminho TRIVIAL confirmado.
 
 Essa separacao entre orquestracao e escrita de codigo de produto e uma decisao
 arquitetural local. Ela preserva isolamento de responsabilidade, handoff e
@@ -1154,8 +1154,26 @@ Engineering.
 
 ### Profundidade proporcional
 
+Apple HIG Designer: a integracao condicional de UX usa o repositorio exato
+`axiaoge2/Apple-Hig-Designer`, com pin e licenca MIT preservados. O procedimento
+`plugins/ui-ux-standard/skills/ui-ux-standard/references/apple-hig-routing.md`
+seleciona o guia e somente os recursos pertinentes; nao impoe visual Apple a
+todos os projetos. Decisoes tecnicas materiais usam o procedimento existente de
+SDD com PRD/spec/ADR, versoes reais, fontes originais e evidencia de validacao.
+Redis e fine-tuning sao opcoes condicionais documentadas, nao dependencias
+instaladas nem treinamento automatico ao adicionar uma skill.
+
+O contrato permanente do Harness agora roteia procedimentos por fase. Leia o
+`SKILL.md` inteiro e somente as referencias acionadas pelo trabalho atual;
+nao carregue todas as fases de uma vez. As secoes anteriores continuam mapeadas
+em `docs/workflow-section-migration.json`. Capacidades e evidencias compativeis
+sao reutilizadas, com nova descoberta apenas quando houver lacuna ou mudanca.
+
 - `TRIVIAL`: mudanca localizada e de baixo risco; contrato inline com escopo,
-  criterio de aceite, validacao e evidencia.
+  caminhos permitidos, criterio de aceite, validacao e evidencia. Pode executar
+  no mesmo agente, sem JSON v2, matriz de dez setores, SDD ou receipts separados.
+  O procedimento canonico fica em `dev-workflow-standard/SKILL.md`, secao
+  `TRIVIAL inline execution`. Regras mais estritas do projeto continuam valendo.
 - `NORMAL`: Issue/task concisa e docs existentes; spec focada somente quando o
   comportamento ainda nao estiver especificado.
 - `COMPLEX`: SDD duravel, task executavel, rastreabilidade e especialistas
@@ -1164,6 +1182,11 @@ Engineering.
 O nivel de documentacao muda; validacao, seguranca, UI e evidencias nao sao
 dispensadas quando a superficie afetada exigir esses gates.
 
+Um bugfix funcional, ajuste visual/responsivo ou alteracao de Compose nao entra
+no caminho leve apenas por ter poucas linhas. Reclassifique antes de editar;
+contratos v2 existentes conservam seus gates. Esta e uma correcao de protocolo,
+nao uma medicao de economia de tokens nem um bloqueio executavel de infraestrutura.
+
 ### Papel do Engineering Harness
 
 O `dev-workflow-standard` administra o ciclo de ponta a ponta como **Engineering Harness**. Ele conduz descoberta, escopo, planejamento, roteamento de capacidades, execucao, handoff, validacao, recovery/replan, gates e aprovacao, mas nao absorve as responsabilidades das skills especialistas. A criacao de specs e da task fica com
@@ -1171,7 +1194,8 @@ O `dev-workflow-standard` administra o ciclo de ponta a ponta como **Engineering
 `dev-implementation-standard`. O orquestrador divide o trabalho,
 controla escopo, revisa cada diff/PR e executa a validacao final.
 
-O orquestrador nunca escreve codigo de produto. Depois que as specs e a task
+O orquestrador nunca escreve codigo de produto fora do caminho TRIVIAL confirmado.
+No fluxo NORMAL/COMPLEX, depois que as specs e a task
 estao aprovadas, ele delega a implementacao para `dev-implementation-standard`,
 que pode usar qualquer LLM autorizado como meio de execucao. Para economizar
 contexto e tokens, o orquestrador nao envia o projeto inteiro nem a conversa

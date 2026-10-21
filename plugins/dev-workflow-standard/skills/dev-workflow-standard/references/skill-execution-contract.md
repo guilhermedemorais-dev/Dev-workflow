@@ -1,5 +1,10 @@
 # Skill Execution Contract
 
+For confirmed TRIVIAL work, the Harness SKILL.md inline path replaces separate
+receipt templates with compact actual evidence. Selected skills must still be
+read completely. This exception never applies to a required specialist review
+or permits claiming that another agent executed work.
+
 Installing, listing or naming a skill does not apply its methodology. Every
 orchestrator agent, executor agent or specialist LLM must prove activation.
 
