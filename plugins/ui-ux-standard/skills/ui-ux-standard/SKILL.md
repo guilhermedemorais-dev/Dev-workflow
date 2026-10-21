@@ -81,105 +81,22 @@ named by the contract; divergence blocks a design or validation claim.
 
 ## Component Intelligence
 
-For new screens, sections, or substantial UI work, produce a lightweight
-`COMPONENT_SOURCE_INVENTORY` before implementation.
-
-Use this priority:
-
-1. Existing project components and tokens.
-2. Approved project design references or internal component library.
-3. Official framework or design-system primitives already used by the project.
-4. shadcn-compatible registries and curated component libraries appropriate to
-   the stack.
-5. Custom implementation only when reuse is unsuitable or would cost more than
-   a focused custom component.
-
-Consult `references/component-sources.md` when external components, blocks, or
-templates could materially improve the result.
-
-For every PRD/spec, retain a compact record in its existing references section:
-applicable catalog indexes/metadata consulted and revision, selected source ID or
-project-native reuse, or N/A with reason. Unavailable/stale evidence is NOT_VALIDATED,
-never an invented consultation. Metadata review does not load every source body;
-only selected necessary sources become REQUIRED. Preserve the Harness whole-inventory rule.
-
-Select only an edition/item usable for the approved project without buying a
-license; exclude paid Pro/Enterprise assets. Unknown cost/license is not eligible
-until verified. Zero license cost and OSI open-source status are distinct: retain
-applicable source-available/copy/redistribution restrictions and subtree terms.
-No catalog proves every repository item free or all infrastructure/services free.
-
-When the user/project declares a Next.js/NestJS preference and stack is undecided,
-assess that reference pair through existing catalog IDs, then confirm the PRD.
-Preserve approved stacks; do not apply this preference to undeclared projects. Next server/BFF adapters may call
-Nest-owned domain APIs; do not duplicate business rules or assume Next cannot run backend code.
-
-Use project-native UI first, then the curated catalog matching the actual stack.
-If a concrete gap remains, use targeted Context7 documentation or GitHub official
-source search; record unavailable capabilities and verified fallbacks. Libraries
-are catalog candidates, not standalone installed skills or compulsory dependencies.
-Do not migrate frameworks, replace approved design rules, install every candidate
-or modify global MCP settings. Install only selected dependencies in the approved
-project. Instructions remain OS-neutral; only executable tools use OS catalogs.
-
-For selected or proposed library sources, read [Library source handoff](references/library-source-handoff.md).
-Preserve the same project source ID from PRD to spec and Task; load only the selected
-dependency's purpose-qualified references, not the whole catalog on every task.
-
-Consult `references/component-selection.md` when choosing among several
-components, libraries, templates, or interaction patterns.
-
-Consult `references/anti-ai-design.md` when creating a new marketing page,
-product surface, dashboard, SaaS UI, e-commerce interface, or any screen where
-visual differentiation and perceived product quality matter.
-
-### Required inventory
-
-Return or record:
-
-```text
-COMPONENT_SOURCE_INVENTORY
-- project-native candidates:
-- external candidates searched:
-- selected source/component:
-- stable library ID and project source ID:
-- official repository/docs URL and exact version/commit or UNKNOWN:
-- component path/variant and purpose/module:
-- decision state (PROPOSED/APPROVED/UNKNOWN/EXCLUDED):
-- why selected:
-- adaptation required:
-- license/dependency status:
-- rejected alternatives:
-- custom-build justification, if any:
-```
-
-Do not pretend a source was searched when the relevant browser, registry, MCP,
-CLI, or network capability was unavailable. Mark it `NAO VALIDADO` and proceed
-with the best verified local option.
+For new/substantial UI or a component/source choice, read
+[Component procedure](references/ui-component-procedure.md). Preserve project-native
+reuse, COMPONENT_SOURCE_INVENTORY and source/license evidence; do not load every catalog.
 
 ## Registry and MCP Policy
 
-Own browser, visual, and accessibility tooling through
-`references/tool-registry.json`. Follow the shared `skill-owned-tools.md`
-protocol: consult ignored per-skill runtime state, use its compatible fast
-path, or detect, install from an official supported source when required,
-verify, and persist. Revalidate after a failed visual check or fix. A cached
-Playwright CLI does not prove browser binaries or the project's runtime are
-ready; validate those in the active workspace before claiming coverage.
+When selecting, preparing or verifying UI tools, read
+[Tooling procedure](references/ui-tooling-procedure.md). Reuse compatible local state;
+do not install or rediscover unrelated tools.
 
-When a shadcn-compatible project is detected, prefer registry-aware discovery
-instead of generating JSX from memory.
+## Apple HIG Designer reference selection
 
-- If shadcn MCP is already available, use it to browse and search configured
-  registries before installing candidate components.
-- If MCP is unavailable, use official documentation, the project's shadcn CLI,
-  or public source repositories as discovery fallback.
-- Do not silently modify global MCP configuration or install a new global tool.
-  Propose that environment change separately when it is actually needed.
-- Treat community registries as third-party code. Inspect source and license
-  before adoption.
-- When `components.json` defines registries, inspect those project-approved
-  registries before unrelated public sources.
+For Apple-platform UI, an explicitly requested Apple design direction, or evaluation
+of that direction for a new interface, read [Apple HIG routing](references/apple-hig-routing.md).
+This is conditional, not the default identity of every product. Never load the
+whole HIG package or let it override the approved PRD, web accessibility or stack.
 
 ## Minimal Workflow
 
@@ -187,8 +104,8 @@ instead of generating JSX from memory.
    components, and approved visual references.
 2. Classify the task: preserve, extend, redesign, or create a new surface.
 3. Identify the smallest set of UI patterns and components required.
-4. Build `COMPONENT_SOURCE_INVENTORY` using project-native sources first and
-   approved external sources second.
+4. For new/substantial UI or component selection, build `COMPONENT_SOURCE_INVENTORY`
+   using project-native sources first; otherwise reuse the current applicable inventory.
 5. If visual direction is missing, establish a concise direction or mockup
    before implementation.
 6. Define visual acceptance criteria for hierarchy, layout, states,

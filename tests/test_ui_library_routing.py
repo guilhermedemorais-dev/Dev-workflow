@@ -66,6 +66,7 @@ class UiLibraryRouting(unittest.TestCase):
         self.assertIn('Nonselected candidates are not REQUIRED sources', handoff)
         self.assertIn('not a new runtime/schema/gate', handoff)
         canonical = (UI / 'SKILL.md').read_text(encoding='utf-8')
+        canonical += (UI / 'references/ui-component-procedure.md').read_text(encoding='utf-8')
         self.assertIn('only executable tools use OS catalogs', canonical)
         self.assertIn('not standalone installed skills', canonical)
         self.assertNotIn('../frappe-ui/SKILL.md', canonical)

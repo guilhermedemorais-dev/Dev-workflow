@@ -1,0 +1,16 @@
+[
+  {
+    "heading": "Component Intelligence",
+    "destination": "references/ui-component-procedure.md",
+    "source_sha256": "a6257a3516f71347b0314144e3260fd7aff8e73fced89df52da4d0f30fccdebb",
+    "source_commit": "1c33d8023a46b72af7880eae7477954096741b54",
+    "changes": "Relative links adjusted; obsolete whole-inventory instruction replaced by targeted selection."
+  },
+  {
+    "heading": "Registry and MCP Policy",
+    "destination": "references/ui-tooling-procedure.md",
+    "source_sha256": "dd571ff2f99b5ecee0168d83124494a778350be2cf50bbde872c1da736b7bd34",
+    "source_commit": "1c33d8023a46b72af7880eae7477954096741b54",
+    "changes": "Relative links adjusted."
+  }
+]

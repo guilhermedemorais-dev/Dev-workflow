@@ -10,7 +10,11 @@ REFS = SKILL.parent / "references"
 
 
 def read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    if path == SKILL:
+        for name in ('ui-component-procedure.md', 'ui-tooling-procedure.md'):
+            text += '\n' + (REFS / name).read_text(encoding='utf-8')
+    return text
 
 
 class TestUiUxComponentIntelligence(unittest.TestCase):

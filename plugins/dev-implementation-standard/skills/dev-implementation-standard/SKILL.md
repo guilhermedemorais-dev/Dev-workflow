@@ -101,6 +101,15 @@ filename.
 
 ## Workflow
 
+Before a material technical choice or an unresolved implementation failure,
+resolve the active SDD owner's `references/technical-decision-procedure.md`
+(canonical checkout: `plugins/sdd-spec-factory/skills/sdd-spec-factory/references/technical-decision-procedure.md`).
+Apply approved PRD/spec/ADR constraints and original version-matched documentation;
+reuse existing verified decisions. Record rationale and tests in existing evidence,
+not a competing contract. Do not outsource a researchable technical fact to the
+user or add architecture/dependencies to hide a failure. Unresolved normative
+conflicts return to Harness with context, alternatives and a recommendation.
+
 The executor owns build, lint, type-check, and test tooling. For listed tools,
 consult `references/tool-registry.json` and the shared `skill-owned-tools.md`
 protocol. Prefer repository-native commands and a compatible cached tool state.

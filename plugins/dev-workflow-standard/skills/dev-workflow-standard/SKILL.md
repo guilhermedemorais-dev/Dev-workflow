@@ -67,11 +67,15 @@ checklist of all files. References are relative to this canonical skill director
 | Need new capability, unavailable tool or fallback | references/capability-registry.md | references/provider-routing.md only for provider selection/change; references/skill-owned-tools.md for tool state |
 | Need supplementary context, knowledge or project-local capability | references/workflow-context.md | references/context-retrieval.md; references/continuous-improvement.md only for a verified gap |
 | Material Issue checkpoint/report | references/execution-report-comments.md | Existing receipt and command results, summarized without copying full bodies |
+| Measured retrieval/cache or model-quality gap | references/ai-context-options.md | Existing retrieval first; Redis/training only with demonstrated need and applicable gates |
 
 API research during SDD routes to the existing canonical
 `plugins/sdd-spec-factory/skills/sdd-spec-factory/references/api-research-library.md`.
 Technical decisions route to
 `plugins/sdd-spec-factory/skills/sdd-spec-factory/references/technical-knowledge-router.md`.
+For material choices during execution or review, resolve that SDD owner's
+`references/technical-decision-procedure.md`; require requirement/source/rationale
+and actual validation evidence across all domains, not only infrastructure.
 Resolve the active installed owner bundle rather than assuming sibling caches.
 Missing/stale sources require bounded research and durable reference update;
 never load all domain libraries. See references/workflow-context.md for details.
@@ -102,7 +106,9 @@ provenance remains in references/workflow-responsibilities.md.
   Link durable specs when the tier requires them.
 - **Reject any executable task that does not follow the mandatory task structure for its tier.**
 - Repo docs, PRDs, mockups, architecture notes, and `AGENTS.md` are source of truth.
-- If docs conflict with code, stop and ask for a decision.
+- If docs conflict with code, stop and ask for a decision when approved intent
+  does not resolve the normative conflict. An approved spec may identify a code
+  defect; investigate it without asking the owner to decide a researchable fact.
 - Inspect the real repo, git status, scripts, and runtime before changing environment.
 - Keep changes scoped; preserve public APIs, schemas, payloads, and business
   rules unless explicitly approved.

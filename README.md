@@ -1154,6 +1154,15 @@ Engineering.
 
 ### Profundidade proporcional
 
+Apple HIG Designer: a integracao condicional de UX usa o repositorio exato
+`axiaoge2/Apple-Hig-Designer`, com pin e licenca MIT preservados. O procedimento
+`plugins/ui-ux-standard/skills/ui-ux-standard/references/apple-hig-routing.md`
+seleciona o guia e somente os recursos pertinentes; nao impoe visual Apple a
+todos os projetos. Decisoes tecnicas materiais usam o procedimento existente de
+SDD com PRD/spec/ADR, versoes reais, fontes originais e evidencia de validacao.
+Redis e fine-tuning sao opcoes condicionais documentadas, nao dependencias
+instaladas nem treinamento automatico ao adicionar uma skill.
+
 O contrato permanente do Harness agora roteia procedimentos por fase. Leia o
 `SKILL.md` inteiro e somente as referencias acionadas pelo trabalho atual;
 nao carregue todas as fases de uma vez. As secoes anteriores continuam mapeadas

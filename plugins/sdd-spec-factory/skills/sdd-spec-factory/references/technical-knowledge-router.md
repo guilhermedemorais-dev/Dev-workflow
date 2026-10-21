@@ -12,6 +12,11 @@ For applicable blockchain/client/contract-development choices, consult
 This is source selection outside the unchanged technical-domain table.
 
 ## Evidence precedence
+For a material decision in any domain, use the existing-contract procedure in
+[Technical decisions](technical-decision-procedure.md). Reuse current evidence;
+research gaps rather than load every library. Execution owners apply this same
+procedure when a technical gap emerges after SDD, without restarting Discovery.
+
 1. Existing application source, deployed behavior and explicit accepted project contracts (note conflict between code and docs).
 2. Official version-matched specs and vendor documentation, official standards and maintained implementations.
 3. Reputable implementations and technical literature, verified against first-party references.

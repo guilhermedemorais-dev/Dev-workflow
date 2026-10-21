@@ -1,5 +1,8 @@
 # Task #59 — eficiência do Engineering Harness
 
+This report records revision `1c33d80`. The subsequent decision/UX/Apple HIG
+continuation and current limits are recorded in `evidence-design-delivery.md`.
+
 Task: https://github.com/guilhermedemorais-dev/Dev-workflow/issues/59
 PR: https://github.com/guilhermedemorais-dev/Dev-workflow/pull/60
 Base V1: `af94e8022eaec3e4eedfb4a2a62e13c6b349b9c4`.

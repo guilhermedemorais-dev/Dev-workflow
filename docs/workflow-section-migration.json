@@ -145,8 +145,9 @@
       "heading": "Hard Limits (non-negotiable)",
       "destination": "SKILL.md",
       "source_sha256": "cbc6d1f53b461a77fb0f8f50e3b878e936741f039e34fda82a423dbfc52aaf5c",
-      "destination_sha256": "cbc6d1f53b461a77fb0f8f50e3b878e936741f039e34fda82a423dbfc52aaf5c",
-      "status": "preserved"
+      "destination_sha256": "e0a56b826f40fbd18ad555aba76ff94e67b6e45713de184138ff6b8fbe640bc7",
+      "status": "revised",
+      "reason": "Approved specs can identify code defects; only unresolved normative conflicts need a user decision."
     },
     {
       "heading": "Change Complexity Gate",

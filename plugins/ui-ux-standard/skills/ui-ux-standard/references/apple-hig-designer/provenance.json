@@ -1,0 +1,39 @@
+{
+  "repository": "https://github.com/axiaoge2/Apple-Hig-Designer",
+  "commit": "ff17b91ff2903ecd52940afabf97de5a73c9cd1b",
+  "license": "MIT",
+  "upstream_skill_renamed": "SKILL.md \u2192 GUIDE.md to avoid standalone automatic discovery",
+  "files": [
+    {
+      "source": "SKILL.md",
+      "destination": "GUIDE.md",
+      "sha256": "2d103e415964a97e9d9bb961857a38516dce4dcc46f53d27448f52fc7bc30ae4"
+    },
+    {
+      "source": "REFERENCE.md",
+      "destination": "REFERENCE.md",
+      "sha256": "eec21d86dcf7246bbb086d7739690aabba8bc9b4f779d46e563b94dc7ee132f6"
+    },
+    {
+      "source": "resources/components.jsx",
+      "destination": "resources/components.jsx",
+      "sha256": "927302405667aa00a69b248af04b4ef4baba1945ece4e198b47761bac2aef8c7"
+    },
+    {
+      "source": "resources/design-tokens.css",
+      "destination": "resources/design-tokens.css",
+      "sha256": "c134b60ee0c88646bf875d109472c64804e34401f12830b677a1b228346e71f3"
+    },
+    {
+      "source": "resources/ui-patterns.md",
+      "destination": "resources/ui-patterns.md",
+      "sha256": "683fef501929f0cffaebe1e2123da5bdf5dcef34bdc2465732cc2cadaaa6da1d"
+    }
+  ],
+  "excluded": [
+    "README.md",
+    "README_CN.md",
+    "screenshots/"
+  ],
+  "execution": "Reference examples only; no installer or external code executed."
+}

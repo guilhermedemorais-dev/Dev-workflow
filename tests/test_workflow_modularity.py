@@ -46,7 +46,7 @@ class WorkflowModularity(unittest.TestCase):
                 else:
                     self.assertTrue(row['reason'])
         changed = {x['heading'] for x in rows if x['status'] == 'revised'}
-        self.assertEqual(changed, {'Harness Contract', 'Delegation Rules', 'Mandatory Flow',
+        self.assertEqual(changed, {'Harness Contract', 'Hard Limits (non-negotiable)', 'Delegation Rules', 'Mandatory Flow',
                                    'When to Trigger Each Specialist', 'Context Budget Rules',
                                    'Repository Readiness Bootstrap'})
 
@@ -60,7 +60,7 @@ class WorkflowModularity(unittest.TestCase):
         self.assertEqual(set(original), {x['heading'] for x in self.mapping['sections']})
         for row in self.mapping['sections']:
             self.assertEqual(digest(original[row['heading']]), row['source_sha256'])
-            if row['status'] == 'revised' and row['heading'] not in ('Harness Contract', 'Delegation Rules'):
+            if row['status'] == 'revised' and row['heading'] not in ('Harness Contract', 'Delegation Rules', 'Hard Limits (non-negotiable)'):
                 relocated = original[row['heading']].replace('](../../../../docs/',
                     '](../../../../../docs/').replace('](../../../sdd-spec-factory/',
                     '](../../../../sdd-spec-factory/').replace('](references/', '](')
