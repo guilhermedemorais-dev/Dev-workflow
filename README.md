@@ -2341,3 +2341,14 @@ Para conhecer todas as regras, consulte diretamente:
 - [`workflow-pipeline.md`](docs/workflow-pipeline.md)
 - [`harness-execution.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/harness-execution.md)
 - [`capability-registry.md`](plugins/dev-workflow-standard/skills/dev-workflow-standard/references/capability-registry.md)
+
+## Cinematic UI specialization
+
+`cinematic-web-standard` is bundled **inside the existing UI/UX plugin**, at
+`plugins/ui-ux-standard/skills/cinematic-web-standard/`. It adds opt-in
+scrollytelling, GSAP/ScrollTrigger, Canvas image sequences and media-budget QA.
+It is not a separate plugin, sector, mandatory dependency or permanent process.
+Use the existing UI/UX installation; updating this source does not update an
+already installed host/cache automatically. Instructions are portable; the
+optional frame-extraction helper requires Bash and FFmpeg, while manifest and
+sequence validation use Python. No dependencies/MCPs are installed by this change.
