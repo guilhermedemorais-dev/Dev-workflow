@@ -123,6 +123,38 @@
       ],
       "validation": "WINDOWS_SUITE",
       "reason": "Native Windows10 build19045: full 626-test suite passed, including real native fixtures and secure file guards; external tools/auth still require per-task verification"
+    },
+    {
+      "id": "cinematic-extract-frames",
+      "owner": "ui-ux-standard",
+      "path": "plugins/ui-ux-standard/skills/cinematic-web-standard/scripts/extract_frames.sh",
+      "runtime": "Bash",
+      "validation": "UNSUPPORTED",
+      "reason": "Synthetic media-helper checks in Linux only; no product/browser QA or native OS homologation. Bash extraction additionally requires FFmpeg; WSL routes as Linux."
+    },
+    {
+      "id": "cinematic-make-manifest",
+      "owner": "ui-ux-standard",
+      "path": "plugins/ui-ux-standard/skills/cinematic-web-standard/scripts/make_manifest.py",
+      "runtime": "Python",
+      "validation": "NOT VALIDATED",
+      "reason": "Synthetic media-helper checks in Linux only; no product/browser QA or native OS homologation. Bash extraction additionally requires FFmpeg; WSL routes as Linux.",
+      "minimum_python": [
+        3,
+        11
+      ]
+    },
+    {
+      "id": "cinematic-validate-sequence",
+      "owner": "ui-ux-standard",
+      "path": "plugins/ui-ux-standard/skills/cinematic-web-standard/scripts/validate_sequence.py",
+      "runtime": "Python",
+      "validation": "NOT VALIDATED",
+      "reason": "Synthetic media-helper checks in Linux only; no product/browser QA or native OS homologation. Bash extraction additionally requires FFmpeg; WSL routes as Linux.",
+      "minimum_python": [
+        3,
+        11
+      ]
     }
   ]
 }
