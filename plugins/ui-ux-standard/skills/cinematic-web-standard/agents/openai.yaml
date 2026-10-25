@@ -1,0 +1,13 @@
+interface:
+  display_name: Cinematic Web Standard
+  short_description: Scrollytelling, GSAP, Canvas sequences, media pipeline, and motion
+    QA
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
