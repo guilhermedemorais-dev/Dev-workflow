@@ -504,6 +504,14 @@ Provide the delivery gates using `templates/pr-template.md`,
   dimension of each spec and the security checklist of each PR are validated by
   it.
 
+For approved cinematic/scrollytelling scope only, route the UI/UX plugin's
+`cinematic-web-standard` and its `references/dev-workflow-integration.md`.
+Keep the same module Task and existing UI/UX sector. Specify scene IDs, renderer
+per scene, scroll/pin behavior, media source/status, critical and total preload
+budgets, desktop/mobile variants, reduced-motion fallback, missing-media behavior
+and required browser/performance evidence. Ordinary UI does not load this skill.
+The executor implements; UI/UX and QA retain their independent acceptance.
+
 ## Definition of done for this skill
 
 - The needed specs exist and follow the hierarchy.
