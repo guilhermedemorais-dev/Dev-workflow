@@ -53,6 +53,14 @@ UI/UX slice using the current Harness comparison receipt. Load the exact
 Design Guide, tokens, component library, visual references, mockup and sections
 named by the contract; divergence blocks a design or validation claim.
 
+For cinematic/scrollytelling, scroll-scrubbed sequences or motion-heavy pages,
+select the sibling [Cinematic Web Standard](../cinematic-web-standard/SKILL.md)
+and its [integration handoff](../cinematic-web-standard/references/dev-workflow-integration.md).
+Use it only when triggered by approved scope. UI/UX remains the design/visual
+owner; the cinematic specialist defines scenes, media budgets, reduced motion
+and motion/performance evidence. `dev-implementation-standard` implements.
+Do not load the cinematic methodology for ordinary UI changes.
+
 ## Non-Negotiables
 
 - Inspect existing UI, routes, components, styling stack, dependencies, design
