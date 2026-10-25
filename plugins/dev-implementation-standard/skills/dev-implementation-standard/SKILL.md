@@ -175,6 +175,14 @@ it cannot satisfy backend/integration acceptance. Return changed component
 revisions and actual developer-test evidence to UI/UX and QA for independent
 validation, including final application rendering rather than catalogue alone.
 
+For an approved cinematic/scrollytelling task, read the routed
+`cinematic-web-standard` skill inside the UI/UX plugin and its integration
+reference before implementation. Consume approved scene contracts, media
+budgets, mobile behavior and reduced-motion acceptance; return
+`CINEMATIC_RECEIPT` plus actual motion/performance test evidence to UI/UX and
+QA. Do not treat the developer's receipt as independent visual approval.
+Ordinary frontend tasks do not load this specialization.
+
 ## GitHub Projects Readiness
 
 Do not assume GitHub Projects is available. Keep the task ready for future
